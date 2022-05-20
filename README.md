@@ -3,8 +3,7 @@
 # TheSim
 
 This project is created as part of the _'Software Engineering'_ lecture in summer semester 2022 in the Applied Computer
-Science course at DHBW Mannheim. The aim is to develop a tool that allows the user to code information into images
-using steganography and cryptography.
+Science course at DHBW Mannheim. The aim is to develop a dinosaur simulation.
 
 ---
 
