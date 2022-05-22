@@ -1,4 +1,4 @@
-[//]: # (Author Daniel Czeschner)
+[//]: # (Author Frederik Wolter (TheMorse), Changes by Daniel Czeschner)
 
 # TheSim
 
