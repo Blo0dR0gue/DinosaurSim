@@ -4,11 +4,13 @@ import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.Arrays;
-
+/**
+ * The handler for our dinosaur-simulation
+ *
+ * @author Daniel Czeschner
+ */
 public class SimulationLoop {
 
     private final SimulationMap simulationMap;
