@@ -1,5 +1,9 @@
 package com.dhbw.thesim.core.map;
 
+import javafx.scene.image.Image;
+
+import java.util.Arrays;
+
 /**
  * Represents a landscape
  *
@@ -40,6 +44,15 @@ public class SimulationMap {
     public SimulationMap(String landscapeName) {
         this.landscapeName = landscapeName;
         this.tiles = new Tile[width][height];
+        initMap();
+    }
+
+    //TODO make dynamic
+    private void initMap(){
+        Image tmp = Tile.tmpSprite();
+        for(Tile[] row : tiles){
+            Arrays.fill(row, new Tile(tmp));
+        }
     }
 
     //region getter & setter
