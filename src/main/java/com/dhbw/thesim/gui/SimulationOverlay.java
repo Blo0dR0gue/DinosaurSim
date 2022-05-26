@@ -48,6 +48,7 @@ public class SimulationOverlay extends AnchorPane {
             if (e.getCode() == KeyCode.ESCAPE) {
                 simulationLoop.togglePause();
             }
+            //TODO handle step procedure
             if (e.getCode() == KeyCode.D) {
                 simulationLoop.triggerUpdates();
             }
@@ -57,6 +58,7 @@ public class SimulationOverlay extends AnchorPane {
             simulationLoop.stopSimulationRunner();
         });
 
+        //TODO handle loop
         //simulationLoop.startSimulationRunner();
     }
 
