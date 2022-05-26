@@ -1,51 +1,47 @@
 package com.dhbw.thesim.core.simulation;
 
-import com.dhbw.thesim.core.map.SimulationMap;
-import com.dhbw.thesim.core.map.Tile;
-import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 /**
- * The handler for our dinosaur-simulation
+ * Updates the simulation data (Engine)
  *
  * @author Daniel Czeschner
+ * @see Simulation
  */
 public class SimulationLoop {
 
-    private final SimulationMap simulationMap;
-    private int simulationSpeed;
-    private int stepRange;
+    private int simulationSpeedMultiplier;
+    private int stepRangeMultiplier;
+    private Simulation currentSimulation;
 
-    private final GraphicsContext backgroundGraphics;
-
-    public SimulationLoop(String landscapeName, GraphicsContext graphicsContext){
-        //TODO load via json2objects
-        simulationMap = new SimulationMap(landscapeName);
-
-        backgroundGraphics = graphicsContext;
-
-        drawMap();
+    public SimulationLoop(String landscapeName, GraphicsContext backgroundGraphicsContext, int simulationSpeedMultiplier, int stepRangeMultiplier){
+        currentSimulation = new Simulation(landscapeName, backgroundGraphicsContext);
+        this.simulationSpeedMultiplier = simulationSpeedMultiplier;
+        this.stepRangeMultiplier = stepRangeMultiplier;
     }
 
-    /**
-     * Draws the simulation background
-     */
-    private void drawMap(){
+    private void update(double deltaTime){
 
-        backgroundGraphics.setFill(Color.BLACK);
-        backgroundGraphics.fillRect(0, 0, SimulationOverlay.BACKGROUND_WIDTH, SimulationOverlay.BACKGROUND_HEIGHT);
+    }
 
-        Tile[][] tiles = simulationMap.getTiles();
-        for (int x = 0; x < tiles.length; x++) {
-            for (int y = 0; y < tiles[0].length; y++) {
-                backgroundGraphics.drawImage(
-                        tiles[x][y].getBackground(),
-                        x * Tile.TILE_SIZE,
-                        y * Tile.TILE_SIZE
-                );
-            }
-        }
+    private void updatePositions(){
+
+    }
+
+    public void triggerUpdates(){
+
+    }
+
+    public void startSimulationRunner(){
+
+    }
+
+    public void pauseSimulationRunner(){
+
+    }
+
+    public void stopSimulationRunner(){
+
     }
 
 }

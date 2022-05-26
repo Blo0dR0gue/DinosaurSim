@@ -37,7 +37,7 @@ public class SimulationOverlay extends AnchorPane {
         getChildren().add(sidebar);
 
         //TODO make dynamic
-        simulationLoop = new SimulationLoop("test", canvasGraphics);
+        simulationLoop = new SimulationLoop("test", canvasGraphics, 1, 1);
 
         //Create the Scene
         simulationScene = new Scene(this);
