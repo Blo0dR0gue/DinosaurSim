@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.simulation;
 
+import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
@@ -23,18 +24,24 @@ public class Simulation {
     private final GraphicsContext backgroundGraphics;
     private final ArrayList<SimulationObject> simulationObjects;
 
-    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext) {
+    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay) {
         //TODO load via json2objects
         this.simulationMap = new SimulationMap(landscapeName);
         this.simulationObjects = new ArrayList<>();
 
+        this.simulationObjects.add(new Dinosaur());
+
         this.backgroundGraphics = backgroundGraphicsContext;
 
         drawMap();
+        //TODO
+        spawnObjects(simulationOverlay);
     }
 
-    public void spawnObjects(){
-        //TODO
+    public void spawnObjects(SimulationOverlay simulationOverlay){
+        for (SimulationObject obj: simulationObjects) {
+            simulationOverlay.getChildren().add(obj.getJavaFXObj());
+        }
     }
 
     /**

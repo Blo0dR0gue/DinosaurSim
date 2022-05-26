@@ -5,8 +5,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
@@ -24,7 +26,7 @@ public class SimulationOverlay extends AnchorPane {
     public static final int BACKGROUND_WIDTH = 1620;
     public static final int BACKGROUND_HEIGHT = 1080;
 
-    public SimulationOverlay() {
+    public SimulationOverlay(Stage primaryStage) {
 
         createCanvas();
         createSideBar();
@@ -37,10 +39,25 @@ public class SimulationOverlay extends AnchorPane {
         getChildren().add(sidebar);
 
         //TODO make dynamic
-        simulationLoop = new SimulationLoop("test", canvasGraphics, 1, 1);
+        simulationLoop = new SimulationLoop("test", canvasGraphics, 1, 1, this);
 
         //Create the Scene
         simulationScene = new Scene(this);
+
+        simulationScene.setOnKeyPressed(e -> {
+            if (e.getCode() == KeyCode.ESCAPE) {
+                simulationLoop.togglePause();
+            }
+            if (e.getCode() == KeyCode.D) {
+                simulationLoop.triggerUpdates();
+            }
+        });
+
+        primaryStage.setOnCloseRequest(e -> {
+            simulationLoop.stopSimulationRunner();
+        });
+
+        //simulationLoop.startSimulationRunner();
     }
 
     private void createCanvas() {
