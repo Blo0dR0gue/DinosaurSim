@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.simulation;
 
+import com.dhbw.thesim.core.entity.SimulationObject;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
@@ -21,7 +22,9 @@ public class SimulationLoop {
     }
 
     private void update(double deltaTime){
+        for (SimulationObject obj: currentSimulation.getSimulationObjects()) {
 
+        }
     }
 
     private void updatePositions(){

@@ -1,5 +1,7 @@
 package com.dhbw.thesim.core.entity;
 
+import com.dhbw.thesim.core.simulation.Simulation;
+
 /**
  * It's a plant-object in our simulation, which can be eaten.
  *
@@ -12,7 +14,7 @@ public class Plant extends SimulationObject{
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(double deltaTime, Simulation currentSimulationData) {
 
     }
 }

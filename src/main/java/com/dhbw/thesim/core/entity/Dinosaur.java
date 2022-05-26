@@ -1,5 +1,7 @@
 package com.dhbw.thesim.core.entity;
 
+import com.dhbw.thesim.core.simulation.Simulation;
+
 /**
  * Represents a dinosaur object in our simulation
  *
@@ -12,7 +14,7 @@ public class Dinosaur extends SimulationObject{
     }
 
     @Override
-    public void update(double deltaTime) {
+    public void update(double deltaTime, Simulation currentSimulationData) {
 
     }
 

@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.entity;
 
+import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,7 +19,7 @@ public abstract class SimulationObject {
         imageObj = new ImageView();
     }
 
-    public abstract void update(double deltaTime);
+    public abstract void update(double deltaTime, Simulation currentSimulation);
 
     //region getter & setter
     public void setSprite(Image image) {
