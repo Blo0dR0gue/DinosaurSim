@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 
 /**
- * Handles one simulation
+ * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know
  *
  * @author Daniel Czeschner
  * @see SimulationMap
@@ -55,5 +55,13 @@ public class Simulation {
                 );
             }
         }
+    }
+
+    public SimulationMap getSimulationMap() {
+        return simulationMap;
+    }
+
+    public ArrayList<SimulationObject> getSimulationObjects() {
+        return simulationObjects;
     }
 }
