@@ -1,10 +1,8 @@
 package com.dhbw.thesim.core.simulation;
 
 import com.dhbw.thesim.core.entity.SimulationObject;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.util.Duration;
 
 /**
  * Updates the simulation data (Engine)
@@ -35,7 +33,8 @@ public class SimulationLoop {
     private int stepRangeMultiplier;
 
     //region runner variables
-
+    private boolean running;
+    private boolean paused;
     private double deltaTime = 0;
     private double deltaTimeFPS = 0;
     private long currentTime, lastUpdate = System.currentTimeMillis();
@@ -54,9 +53,8 @@ public class SimulationLoop {
 
     /**
      * The simulation loop thread handler
-     * @see Timeline
      */
-    private Timeline simulationLoop;
+    private Thread simulationLoop;
 
     //endregion
 
@@ -66,48 +64,57 @@ public class SimulationLoop {
      * @param backgroundGraphicsContext
      * @param simulationSpeedMultiplier
      * @param stepRangeMultiplier
+     * @param simulationOverlay
      */
-    public SimulationLoop(String landscapeName, GraphicsContext backgroundGraphicsContext, int simulationSpeedMultiplier, int stepRangeMultiplier) {
-        currentSimulation = new Simulation(landscapeName, backgroundGraphicsContext);
+    public SimulationLoop(String landscapeName, GraphicsContext backgroundGraphicsContext, int simulationSpeedMultiplier, int stepRangeMultiplier, SimulationOverlay simulationOverlay) {
+        currentSimulation = new Simulation(landscapeName, backgroundGraphicsContext, simulationOverlay);
         this.simulationSpeedMultiplier = simulationSpeedMultiplier;
         this.stepRangeMultiplier = stepRangeMultiplier;
 
-        //TODO maybe use AnimationTimer?
+        //TODO remove
+        /* Zucken bei den bewegungen :(
         this.simulationLoop = new Timeline(new KeyFrame(Duration.millis(1), event -> runner()));
-        this.simulationLoop.setCycleCount(Timeline.INDEFINITE);
+        this.simulationLoop.setCycleCount(Timeline.INDEFINITE);*/
 
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
-
-        //TODO remove
-        this.simulationLoop.play();
     }
 
-    private void runner() {
-        currentTime = System.currentTimeMillis();
-        double lastUpdateTimeInSeconds = (currentTime - lastUpdate) / 1000d;
-        deltaTime += lastUpdateTimeInSeconds * simulationSpeedMultiplier;
-        deltaTimeFPS += lastUpdateTimeInSeconds;
-        lastUpdate = currentTime;
+    private final Runnable simLoop = () -> {
+        running = true;
+        double deltaTime = 0;
+        double frameAccumulator = 0;
+        long currentTime, lastUpdate = System.currentTimeMillis();
+        nextDebugStatsTime = System.currentTimeMillis() + 1000;
 
-        //Limits the update rate
-        if (deltaTime >= updateRate) {
-            while (deltaTime >= updateRate) {
-                update(deltaTime);
-                deltaTime -= updateRate;
+        while (running) {
+            currentTime = System.currentTimeMillis();
+            double lastUpdateTimeInSeconds = (currentTime - lastUpdate) / 1000d;
+            deltaTime += lastUpdateTimeInSeconds;
+            frameAccumulator += lastUpdateTimeInSeconds;
+            lastUpdate = currentTime;
+
+            //Limit the update rate
+            if (deltaTime >= updateRate) {
+                while (deltaTime >= updateRate){
+                    if(!paused)
+                        update(deltaTime * simulationSpeedMultiplier);
+                    deltaTime -= updateRate;
+                }
             }
-        }
 
-        //Limits the frame per second
-        if (deltaTimeFPS >= fpsRate) {
-            while (deltaTimeFPS >= fpsRate) {
-                updatePositions();
-                deltaTimeFPS -= fpsRate;
+            //Limit the frames per second
+            if (frameAccumulator >= fpsRate) {
+                while (frameAccumulator >= fpsRate) {
+                    if(!paused)
+                        updatePositions();
+                    frameAccumulator -= fpsRate;
+                }
             }
-        }
 
-        //Debug: Print out the current ups and fps.
-        printStats();
-    }
+            //Print debug stats
+            printStats();
+        }
+    };
 
     private void update(double deltaTime) {
         ups++;
@@ -118,6 +125,9 @@ public class SimulationLoop {
 
     private void updatePositions() {
         fps++;
+        for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
+            obj.updatePosition();
+        }
     }
 
     private void printStats() {
@@ -130,19 +140,23 @@ public class SimulationLoop {
     }
 
     public void triggerUpdates() {
-
+        for (int i = 0; i < 30 * stepRangeMultiplier; i++){
+            update(0.1);
+        }
+        updatePositions();
     }
 
     public void startSimulationRunner() {
-
-    }
-
-    public void pauseSimulationRunner() {
-
+        //TODO maybe use AnimationTimer (test performance)
+        new Thread(simLoop).start();
     }
 
     public void stopSimulationRunner() {
+        running = false;
+    }
 
+    public void togglePause(){
+        paused = !paused;
     }
 
 }

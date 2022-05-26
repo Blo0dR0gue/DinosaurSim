@@ -24,7 +24,7 @@ public class Display extends Application {
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
         //TODO scene-controller?
-        SimulationOverlay simulationOverlay = new SimulationOverlay();
+        SimulationOverlay simulationOverlay = new SimulationOverlay(primaryStage);
         //TODO remove tmp loading simulation overlay (entry is config)
         primaryStage.setScene(simulationOverlay.getSimulationScene());
 
