@@ -3,20 +3,38 @@ package com.dhbw.thesim.core.util;
 import java.util.Objects;
 
 /**
- * Represents a 2d-vector
+ * Represents a 2d-vector for a position on our screen.
  *
  * @author Daniel Czeschner
  */
 public class Vector2D {
 
+    //region variables
+    /**
+     * The x coordinate
+     */
     private double x;
+    /**
+     * The x coordinate
+     */
     private double y;
+    //endregion
 
+    /**
+     * Int constructor
+     * @param xValue The value for the x coordinate
+     * @param yValue The value for the y coordinate.
+     */
     public Vector2D(int xValue, int yValue) {
         x = xValue;
         y = yValue;
     }
 
+    /**
+     * Double constructor
+     * @param xValue The value for the x coordinate.
+     * @param yValue The value for the y coordinate.
+     */
     public Vector2D(double xValue, double yValue) {
         x = xValue;
         y = yValue;
@@ -121,18 +139,35 @@ public class Vector2D {
     }
 
     //region getter & setter
+
+    /**
+     * Gets the current x coordinate
+     * @return The x coordinate.
+     */
     public double getX() {
         return x;
     }
 
+    /**
+     * Sets the current x coordinate
+     * @param x The new x coordinate.
+     */
     public void setX(double x) {
         this.x = x;
     }
 
+    /**
+     * Gets the current y coordinate
+     * @return The y coordinate.
+     */
     public double getY() {
         return y;
     }
 
+    /**
+     * Sets the current y coordinate
+     * @param y The new y coordinate.
+     */
     public void setY(double y) {
         this.y = y;
     }
