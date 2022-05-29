@@ -21,6 +21,7 @@ import java.util.List;
  */
 public class Simulation {
 
+    //region variables
     /**
      * The used {@link SimulationMap}
      * @see SimulationMap
@@ -39,6 +40,15 @@ public class Simulation {
      */
     private final List<SimulationObject> simulationObjects;
 
+    //endregion
+
+    /**
+     * Constructor
+     *
+     * @param landscapeName The name of the used landscape.
+     * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
+     * @param simulationOverlay The {@link SimulationOverlay} object on which {@link SimulationObject}s are spawned.
+     */
     public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay) {
         //TODO load via json2objects
         this.simulationMap = new SimulationMap(landscapeName);
