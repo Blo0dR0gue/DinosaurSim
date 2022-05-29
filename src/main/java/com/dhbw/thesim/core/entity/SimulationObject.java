@@ -2,6 +2,7 @@ package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
+import com.dhbw.thesim.core.statemachine.StateMachine;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -23,6 +24,11 @@ public abstract class SimulationObject {
      * @see Vector2D
      */
     protected Vector2D position;
+
+    /**
+     * The {@link StateMachine} for this {@link SimulationObject}.
+     */
+    protected StateMachine stateMachine;
 
     /**
      * Constructor
