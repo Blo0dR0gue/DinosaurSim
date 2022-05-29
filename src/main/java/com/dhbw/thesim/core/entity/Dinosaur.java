@@ -36,7 +36,8 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Updates the position of a {@link Dinosaur}-object.
+     * Updates the position of the representation for a {@link Dinosaur}-object.
+     * It also changes the image if necessary.
      */
     @Override
     public void updateGraphics() {
