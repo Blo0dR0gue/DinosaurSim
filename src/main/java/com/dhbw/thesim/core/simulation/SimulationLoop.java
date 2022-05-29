@@ -142,7 +142,7 @@ public class SimulationLoop {
     }
 
     public void triggerUpdates() {
-        for (int i = 0; i < 30 * stepRangeMultiplier; i++) {
+        for (int i = 0; i < UPDATES_PER_STEP * stepRangeMultiplier; i++) {
             update(0.1);
         }
         updatePositions();
