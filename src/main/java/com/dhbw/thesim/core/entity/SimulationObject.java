@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.statemachine.StateMachine;
 import com.dhbw.thesim.core.util.Vector2D;
+import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -27,6 +28,12 @@ public abstract class SimulationObject {
     protected Vector2D position;
 
     /**
+     * Offset for the image to center it on the actual position of this {@link SimulationObject}. <br>
+     * The {@link ImageView} has his origin on the top left.
+     */
+    protected Vector2D renderOffset;
+
+    /**
      * The {@link StateMachine} for this {@link SimulationObject}.
      */
     protected StateMachine stateMachine;
@@ -39,6 +46,7 @@ public abstract class SimulationObject {
         imageObj = new ImageView();
         //TODO
         position = new Vector2D(0, 0);
+        renderOffset = new Vector2D(0,0);
     }
 
     /**
@@ -57,12 +65,15 @@ public abstract class SimulationObject {
     //region getter & setter
 
     /**
-     * Sets/Updates and image for the representation of this {@link SimulationObject}
+     * Sets/Updates and image for the representation of this {@link SimulationObject} <br>
+     * This method also updates the {@link #renderOffset} to center the image/sprite.
      *
-     * @param image
+     * @param image The new image, which should be shown.
      */
     public void setSprite(Image image) {
         imageObj.setImage(image);
+        renderOffset.setX(image.getWidth()/2);
+        renderOffset.setY(image.getHeight()/2);
     }
 
     /**
@@ -91,6 +102,16 @@ public abstract class SimulationObject {
      */
     public ImageView getJavaFXObj() {
         return imageObj;
+    }
+
+    /**
+     * Check, if the dinosaur is rendered outside the view range.
+     * @return true, if the {@link SimulationObject} gets rendered outside the view panel.
+     */
+    public boolean isRenderedOutside(){;
+        return (position.getX() - renderOffset.getX()) < 0 || (position.getY() - renderOffset.getY()) < 0 ||
+                position.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
+                position.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
 
     //endregion

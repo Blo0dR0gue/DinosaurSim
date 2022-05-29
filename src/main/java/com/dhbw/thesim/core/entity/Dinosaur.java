@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.entity;
 
+import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import javafx.scene.image.Image;
 
@@ -43,8 +44,9 @@ public class Dinosaur extends SimulationObject {
      */
     @Override
     public void updateGraphics() {
-        imageObj.setTranslateX(position.getX());
-        imageObj.setTranslateY(position.getY());
+        //Center the image.
+        imageObj.setTranslateX(position.getX() - renderOffset.getX());
+        imageObj.setTranslateY(position.getY() - renderOffset.getY());
     }
 
 }
