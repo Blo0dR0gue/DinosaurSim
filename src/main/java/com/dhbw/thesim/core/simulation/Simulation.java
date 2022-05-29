@@ -9,9 +9,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know
+ * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
  *
  * @author Daniel Czeschner
  * @see SimulationMap
@@ -20,24 +21,44 @@ import java.util.ArrayList;
  */
 public class Simulation {
 
+    /**
+     * The used {@link SimulationMap}
+     * @see SimulationMap
+     */
     private final SimulationMap simulationMap;
+    /**
+     * The {@link GraphicsContext} for the background canvas
+     * @see SimulationOverlay
+     * @see javafx.scene.canvas.Canvas
+     * @see GraphicsContext
+     */
     private final GraphicsContext backgroundGraphics;
-    private final ArrayList<SimulationObject> simulationObjects;
+    /**
+     * The List, with all handed {@link SimulationObject}s used in a Simulation.
+     * @see SimulationObject
+     */
+    private final List<SimulationObject> simulationObjects;
 
     public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay) {
         //TODO load via json2objects
         this.simulationMap = new SimulationMap(landscapeName);
         this.simulationObjects = new ArrayList<>();
 
+        //TODO remove temp code
         this.simulationObjects.add(new Dinosaur());
 
         this.backgroundGraphics = backgroundGraphicsContext;
 
+        //Draw the map
         drawMap();
         //TODO
         spawnObjects(simulationOverlay);
     }
 
+    /**
+     * Method, that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects}.
+     * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
+     */
     public void spawnObjects(SimulationOverlay simulationOverlay){
         for (SimulationObject obj: simulationObjects) {
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
@@ -64,11 +85,19 @@ public class Simulation {
         }
     }
 
+    /**
+     * Gets the used {@link SimulationMap}.
+     * @return The currently used {@link SimulationMap}
+     */
     public SimulationMap getSimulationMap() {
         return simulationMap;
     }
 
-    public ArrayList<SimulationObject> getSimulationObjects() {
+    /**
+     * Gets all handled {@link SimulationObject}s.
+     * @return The list {@link Simulation#simulationObjects}.
+     */
+    public List<SimulationObject> getSimulationObjects() {
         return simulationObjects;
     }
 }
