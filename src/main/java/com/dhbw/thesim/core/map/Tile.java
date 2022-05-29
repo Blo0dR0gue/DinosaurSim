@@ -9,7 +9,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.transform.Transform;
 
 /**
- * Represents a background-object in the {@link SimulationMap}-grid
+ * Represents a background-object in the {@link SimulationMap}-grid.
  *
  * @author Daniel Czeschner
  * @see SimulationMap
@@ -17,8 +17,17 @@ import javafx.scene.transform.Transform;
 public class Tile {
 
     //region variables
+    /**
+     * The image, which is rendered for this {@link Tile}.
+     */
     private Image background;
+    /**
+     * Defines, if this tile can only be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can swim.
+     */
     private boolean swimmable;
+    /**
+     * Defines, iff this tile can ony be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can climb.
+     */
     private boolean climbable;
     //region constants
     /**
@@ -29,6 +38,12 @@ public class Tile {
 
     //endregion
 
+    /**
+     * Constructor
+     *
+     * @param image The background for this {@link Tile} object.
+     * @see #background
+     */
     public Tile(Image image) {
         this.background = image;
     }
