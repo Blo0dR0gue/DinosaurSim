@@ -59,7 +59,7 @@ public class SimulationOverlay extends AnchorPane {
         });
 
         //TODO handle loop
-        //simulationLoop.startSimulationRunner();
+        simulationLoop.startSimulationRunner();
     }
 
     private void createCanvas() {

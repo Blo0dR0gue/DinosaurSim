@@ -56,10 +56,19 @@ public class SimulationMap {
     }
 
     //region getter & setter
+
+    /**
+     * Gets the name of the landscape.
+     * @return The name of this map.
+     */
     public String getLandscapeName() {
         return landscapeName;
     }
 
+    /**
+     * Gets all Tiles as an 2-dimensional array.
+     * @return The 2-Dimensional array with all Tiles. Which represents the current map.
+     */
     public Tile[][] getTiles() {
         return tiles;
     }

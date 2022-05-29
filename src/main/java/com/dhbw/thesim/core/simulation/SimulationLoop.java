@@ -20,8 +20,8 @@ public class SimulationLoop {
     private static final int FRAMES_PER_SECOND = 30;
     private static final int UPDATES_PER_STEP = 30;
 
-    private final double updateRate = 1.0d / UPDATES_PER_SECOND;
-    private final double fpsRate = 1.0d / FRAMES_PER_SECOND;
+    private final double UPDATE_RATE = 1.0d / UPDATES_PER_SECOND;
+    private final double FRAME_RATE = 1.0d / FRAMES_PER_SECOND;
     //endregion
 
     /**
@@ -31,7 +31,7 @@ public class SimulationLoop {
     /**
      * Is multiplied on the amount of steps in the simulation step proceedings
      */
-    private int stepRangeMultiplier;
+    private final int stepRangeMultiplier;
 
     //region runner variables
     private boolean running;
@@ -60,13 +60,13 @@ public class SimulationLoop {
     //endregion
 
     /**
-     * Constructor for a simulation runner
+     * Constructor for a simulation runner (TODO rework to add the most to the Simulation-Class?)
      *
-     * @param landscapeName
-     * @param backgroundGraphicsContext
-     * @param simulationSpeedMultiplier
-     * @param stepRangeMultiplier
-     * @param simulationOverlay
+     * @param landscapeName The name for the landscape, which should be used.
+     * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
+     * @param simulationSpeedMultiplier The speed multiplier for the automatic simulation mode.
+     * @param stepRangeMultiplier The range multiplier for how many update calls are made in the step simulation mode.
+     * @param simulationOverlay The {@link SimulationOverlay} in which we handle our {@link SimulationObject}s
      */
     public SimulationLoop(String landscapeName, GraphicsContext backgroundGraphicsContext, int simulationSpeedMultiplier, int stepRangeMultiplier, SimulationOverlay simulationOverlay) {
         currentSimulation = new Simulation(landscapeName, backgroundGraphicsContext, simulationOverlay);
@@ -78,17 +78,24 @@ public class SimulationLoop {
         this.simulationLoop = new Timeline(new KeyFrame(Duration.millis(1), event -> runner()));
         this.simulationLoop.setCycleCount(Timeline.INDEFINITE);*/
 
+        //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
     }
 
-    private final Runnable simLoop = () -> {
+    /**
+     * The Runnable for the {@link #simulationLoop}-thread
+     * In this Thread/Runnable the automatic updates for a the {@link SimulationObject}s of ann {@link Simulation} are handled.
+     */
+    private final Runnable simLoopRunnable = () -> {
         running = true;
         double deltaTime = 0;
         double frameAccumulator = 0;
+
         long currentTime, lastUpdate = System.currentTimeMillis();
-        nextDebugStatsTime = System.currentTimeMillis() + 1000;
 
         while (running) {
+
+            //update the loop variables.
             currentTime = System.currentTimeMillis();
             double lastUpdateTimeInSeconds = (currentTime - lastUpdate) / 1000d;
             deltaTime += lastUpdateTimeInSeconds;
@@ -96,20 +103,22 @@ public class SimulationLoop {
             lastUpdate = currentTime;
 
             //Limit the update rate
-            if (deltaTime >= updateRate) {
-                while (deltaTime >= updateRate) {
+            if (deltaTime >= UPDATE_RATE) {
+                while (deltaTime >= UPDATE_RATE) {
+                    //If we are not paused, trigger an update.
                     if (!paused)
                         update(deltaTime * simulationSpeedMultiplier);
-                    deltaTime -= updateRate;
+                    deltaTime -= UPDATE_RATE;
                 }
             }
 
             //Limit the frames per second
-            if (frameAccumulator >= fpsRate) {
-                while (frameAccumulator >= fpsRate) {
+            if (frameAccumulator >= FRAME_RATE) {
+                while (frameAccumulator >= FRAME_RATE) {
+                    //If we are not paused, trigger a re-render.
                     if (!paused)
-                        updatePositions();
-                    frameAccumulator -= fpsRate;
+                        updateGraphics();
+                    frameAccumulator -= FRAME_RATE;
                 }
             }
 
@@ -118,6 +127,11 @@ public class SimulationLoop {
         }
     };
 
+    /**
+     * Is called each update call.
+     * This method calls the {@link SimulationObject#update(double, Simulation)} method.
+     * @param deltaTime The time since the last update call.
+     */
     private void update(double deltaTime) {
         ups++;
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
@@ -125,13 +139,22 @@ public class SimulationLoop {
         }
     }
 
-    private void updatePositions() {
+    /**
+     * Updates the visuals for each {@link SimulationObject}.
+     * It calls the {@link SimulationObject#updateGraphics()} method.
+     */
+    private void updateGraphics() {
         fps++;
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
-            obj.updatePosition();
+            obj.updateGraphics();
         }
     }
 
+    /**
+     * Debug method, which prints out the current updates per second and frames per second.
+     * Is only used in the automatic updates.
+     * @see #simLoopRunnable
+     */
     private void printStats() {
         if (System.currentTimeMillis() > nextDebugStatsTime) {
             System.out.printf("FPS: %d, UPS: %d%n", fps, ups);
@@ -141,22 +164,37 @@ public class SimulationLoop {
         }
     }
 
+    /**
+     * Triggers updates for the step simulation mode.
+     */
     public void triggerUpdates() {
         for (int i = 0; i < UPDATES_PER_STEP * stepRangeMultiplier; i++) {
             update(0.1);
         }
-        updatePositions();
+        updateGraphics();
     }
 
+    /**
+     * Stats the automatic simulation runner.
+     * @see #simulationLoop
+     */
     public void startSimulationRunner() {
         //TODO maybe use AnimationTimer (test performance)
-        new Thread(simLoop).start();
+        new Thread(simLoopRunnable).start();
     }
 
+    /**
+     * Stops the {@link #simulationLoop}.
+     */
     public void stopSimulationRunner() {
         running = false;
     }
 
+    /**
+     * Pause/Unpause the automatic simulation runner.
+     * @see #simLoopRunnable
+     * @see #simulationLoop
+     */
     public void togglePause() {
         paused = !paused;
     }
