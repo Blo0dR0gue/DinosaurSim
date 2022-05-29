@@ -18,6 +18,7 @@ public class SimulationMap {
     private String landscapeName;
     /**
      * The background grid-field
+     *
      * @see Tile
      */
     private final Tile[][] tiles;
@@ -39,6 +40,7 @@ public class SimulationMap {
 
     /**
      * The constructor for a new simulation map
+     *
      * @param landscapeName The name for this landscape
      */
     public SimulationMap(String landscapeName) {
@@ -48,9 +50,9 @@ public class SimulationMap {
     }
 
     //TODO make dynamic
-    private void initMap(){
+    private void initMap() {
         Image tmp = Tile.tmpSprite();
-        for(Tile[] row : tiles){
+        for (Tile[] row : tiles) {
             Arrays.fill(row, new Tile(tmp));
         }
     }
@@ -59,6 +61,7 @@ public class SimulationMap {
 
     /**
      * Gets the name of the landscape.
+     *
      * @return The name of this map.
      */
     public String getLandscapeName() {
@@ -67,6 +70,7 @@ public class SimulationMap {
 
     /**
      * Gets all Tiles as an 2-dimensional array.
+     *
      * @return The 2-Dimensional array with all Tiles. Which represents the current map.
      */
     public Tile[][] getTiles() {

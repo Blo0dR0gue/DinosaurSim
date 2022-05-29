@@ -21,6 +21,7 @@ public abstract class SimulationObject {
     protected ImageView imageObj;
     /**
      * The position object for this {@link SimulationObject}.
+     *
      * @see Vector2D
      */
     protected Vector2D position;
@@ -37,12 +38,13 @@ public abstract class SimulationObject {
         super();
         imageObj = new ImageView();
         //TODO
-        position = new Vector2D(0,0);
+        position = new Vector2D(0, 0);
     }
 
     /**
      * Is called each update in the {@link SimulationLoop}.
-     * @param deltaTime The time since the last update call in seconds.
+     *
+     * @param deltaTime         The time since the last update call in seconds.
      * @param currentSimulation The current {@link Simulation}-Object with all information to the currently running simulation.
      */
     public abstract void update(double deltaTime, Simulation currentSimulation);
@@ -56,6 +58,7 @@ public abstract class SimulationObject {
 
     /**
      * Sets/Updates and image for the representation of this {@link SimulationObject}
+     *
      * @param image
      */
     public void setSprite(Image image) {
@@ -63,8 +66,9 @@ public abstract class SimulationObject {
     }
 
     /**
-     * Gets the current position on the screen. (Doesn't have to be the position of the graphics)
+     * Gets the current position on the screen. (Doesn't have to be the position of the graphics)  <br>
      * Use this for behaviour updates.
+     *
      * @return The current {@link Vector2D} position.
      */
     public Vector2D getPosition() {
@@ -73,6 +77,7 @@ public abstract class SimulationObject {
 
     /**
      * Sets/Overrides the position of this {@link SimulationObject}
+     *
      * @param position The new {@link Vector2D} for the position.
      */
     public void setPosition(Vector2D position) {
@@ -81,9 +86,10 @@ public abstract class SimulationObject {
 
     /**
      * Gets the current JavaFX object.
+     *
      * @return An {@link ImageView}. It's the representation for this {@link SimulationObject}
      */
-    public ImageView getJavaFXObj(){
+    public ImageView getJavaFXObj() {
         return imageObj;
     }
 

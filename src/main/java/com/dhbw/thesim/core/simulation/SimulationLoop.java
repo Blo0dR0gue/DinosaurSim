@@ -62,11 +62,11 @@ public class SimulationLoop {
     /**
      * Constructor for a simulation runner (TODO rework to add the most to the Simulation-Class?)
      *
-     * @param landscapeName The name for the landscape, which should be used.
+     * @param landscapeName             The name for the landscape, which should be used.
      * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
      * @param simulationSpeedMultiplier The speed multiplier for the automatic simulation mode.
-     * @param stepRangeMultiplier The range multiplier for how many update calls are made in the step simulation mode.
-     * @param simulationOverlay The {@link SimulationOverlay} in which we handle our {@link SimulationObject}s
+     * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
+     * @param simulationOverlay         The {@link SimulationOverlay} in which we handle our {@link SimulationObject}s
      */
     public SimulationLoop(String landscapeName, GraphicsContext backgroundGraphicsContext, int simulationSpeedMultiplier, int stepRangeMultiplier, SimulationOverlay simulationOverlay) {
         currentSimulation = new Simulation(landscapeName, backgroundGraphicsContext, simulationOverlay);
@@ -83,7 +83,7 @@ public class SimulationLoop {
     }
 
     /**
-     * The Runnable for the {@link #simulationLoop}-thread
+     * The Runnable for the {@link #simulationLoop}-thread.  <br>
      * In this Thread/Runnable the automatic updates for a the {@link SimulationObject}s of ann {@link Simulation} are handled.
      */
     private final Runnable simLoopRunnable = () -> {
@@ -128,8 +128,9 @@ public class SimulationLoop {
     };
 
     /**
-     * Is called each update call.
+     * Is called each update call. <br>
      * This method calls the {@link SimulationObject#update(double, Simulation)} method.
+     *
      * @param deltaTime The time since the last update call.
      */
     private void update(double deltaTime) {
@@ -140,7 +141,7 @@ public class SimulationLoop {
     }
 
     /**
-     * Updates the visuals for each {@link SimulationObject}.
+     * Updates the visuals for each {@link SimulationObject}. <br>
      * It calls the {@link SimulationObject#updateGraphics()} method.
      */
     private void updateGraphics() {
@@ -151,8 +152,9 @@ public class SimulationLoop {
     }
 
     /**
-     * Debug method, which prints out the current updates per second and frames per second.
+     * Debug method, which prints out the current updates per second and frames per second. <br>
      * Is only used in the automatic updates.
+     *
      * @see #simLoopRunnable
      */
     private void printStats() {
@@ -176,6 +178,7 @@ public class SimulationLoop {
 
     /**
      * Stats the automatic simulation runner.
+     *
      * @see #simulationLoop
      */
     public void startSimulationRunner() {
@@ -192,6 +195,7 @@ public class SimulationLoop {
 
     /**
      * Pause/Unpause the automatic simulation runner.
+     *
      * @see #simLoopRunnable
      * @see #simulationLoop
      */
