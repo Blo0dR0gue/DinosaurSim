@@ -67,7 +67,7 @@ public class SimulationOverlay extends AnchorPane {
         canvasGraphics = backgroundCanvas.getGraphicsContext2D();
     }
 
-    private void createSideBar(){
+    private void createSideBar() {
         sidebar = new AnchorPane();
 
         sidebar.setPrefWidth(300);
@@ -79,7 +79,7 @@ public class SimulationOverlay extends AnchorPane {
 
     //region getter & setter
 
-    public Scene getSimulationScene(){
+    public Scene getSimulationScene() {
         return simulationScene;
     }
 
@@ -87,7 +87,7 @@ public class SimulationOverlay extends AnchorPane {
         return backgroundCanvas;
     }
 
-    public GraphicsContext getCanvasGraphics(){
+    public GraphicsContext getCanvasGraphics() {
         return canvasGraphics;
     }
 

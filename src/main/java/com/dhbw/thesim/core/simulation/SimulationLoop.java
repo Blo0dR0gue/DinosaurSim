@@ -5,6 +5,7 @@ import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
+ * TODO Comments
  * Updates the simulation data (Engine)
  *
  * @author Daniel Czeschner
@@ -60,6 +61,7 @@ public class SimulationLoop {
 
     /**
      * Constructor for a simulation runner
+     *
      * @param landscapeName
      * @param backgroundGraphicsContext
      * @param simulationSpeedMultiplier
@@ -95,8 +97,8 @@ public class SimulationLoop {
 
             //Limit the update rate
             if (deltaTime >= updateRate) {
-                while (deltaTime >= updateRate){
-                    if(!paused)
+                while (deltaTime >= updateRate) {
+                    if (!paused)
                         update(deltaTime * simulationSpeedMultiplier);
                     deltaTime -= updateRate;
                 }
@@ -105,7 +107,7 @@ public class SimulationLoop {
             //Limit the frames per second
             if (frameAccumulator >= fpsRate) {
                 while (frameAccumulator >= fpsRate) {
-                    if(!paused)
+                    if (!paused)
                         updatePositions();
                     frameAccumulator -= fpsRate;
                 }
@@ -140,7 +142,7 @@ public class SimulationLoop {
     }
 
     public void triggerUpdates() {
-        for (int i = 0; i < 30 * stepRangeMultiplier; i++){
+        for (int i = 0; i < 30 * stepRangeMultiplier; i++) {
             update(0.1);
         }
         updatePositions();
@@ -155,7 +157,7 @@ public class SimulationLoop {
         running = false;
     }
 
-    public void togglePause(){
+    public void togglePause() {
         paused = !paused;
     }
 
