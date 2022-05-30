@@ -21,7 +21,7 @@ public class SimulationOverlay extends AnchorPane {
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
-    private AnchorPane sidebar;
+    private Pane sidebar;
     private SimulationLoop simulationLoop;
 
     public static final int BACKGROUND_WIDTH = 1620;
@@ -71,11 +71,11 @@ public class SimulationOverlay extends AnchorPane {
     }
 
     private void createSideBar() {
-        sidebar = new AnchorPane();
+        sidebar = new Pane();
 
         sidebar.setPrefWidth(300);
         sidebar.setPrefHeight(1080);
-        AnchorPane.setRightAnchor(sidebar, 0d);
+        sidebar.relocate(1920d-300d,0d);
 
         sidebar.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
     }
