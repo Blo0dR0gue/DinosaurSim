@@ -1,5 +1,4 @@
-[//]: # (Author Daniel Czeschner)
-
+[//]: # (Author Frederik Wolter - TheMorse - Changes by Daniel Czeschner )
 # TheSim
 
 This project is created as part of the _'Software Engineering'_ lecture in summer semester 2022 in the Applied Computer
