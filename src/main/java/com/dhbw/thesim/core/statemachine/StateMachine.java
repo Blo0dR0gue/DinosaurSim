@@ -18,4 +18,8 @@ public abstract class StateMachine {
      */
     protected State currentState;
 
+    public void setState(State state){
+        this.currentState = state;
+    }
+
 }

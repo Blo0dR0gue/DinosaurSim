@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
+import com.dhbw.thesim.core.statemachine.state.dinosaur.Wander;
 import javafx.scene.image.Image;
 
 import java.util.Objects;
@@ -15,6 +16,9 @@ import java.util.Objects;
  */
 public class Dinosaur extends SimulationObject {
 
+
+    public final static int PROXIMITY_RANGE = 5;
+
     /**
      * Constructor for a dinosaur object
      */
@@ -22,6 +26,8 @@ public class Dinosaur extends SimulationObject {
         super();
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/dinosaur/test.png")).toString());
         setSprite(image);
+        //TODO
+        setState(new Wander(this));
     }
 
     /**
@@ -32,9 +38,8 @@ public class Dinosaur extends SimulationObject {
      */
     @Override
     public void update(double deltaTime, Simulation currentSimulationData) {
-        //TODO remove tests
-        double lastX = this.getPosition().getX();
-        this.getPosition().setX(lastX + 25 * deltaTime);
+        //TODO
+        currentState.update(deltaTime, currentSimulationData);
     }
 
     /**
