@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import org.json.*;
 
@@ -14,6 +15,10 @@ import org.json.*;
  */
 public class JsonHandler {
     static String workingDirectory;
+    public enum SimulationObjectType{
+        DINO,
+        PLANT
+    }
 
     /**
      * Set the String workingDirectory based on the operating systems appdata specific folder and create a folder "TheSim" if needed
@@ -44,16 +49,14 @@ public class JsonHandler {
 
     /**
      * Parse the local "simulationsobjektKonfig.json" and return its values in a HashMap
-     * @return HashMap containing dinosaurs and plants each nested in an HashMap within an ArrayList
+     * @return HashMap containing dinosaurs or plants each nested in an HashMap with its names
      * @throws IOException when the "defaultSimulationsobjektKonfig.json" cannot be found
      */
-    public static HashMap importSimulationObjectConfig() throws IOException {
+    public static HashMap importSimulationObjectConfig(SimulationObjectType type) throws IOException {
         //this is the idea of the structure:
-        //HashMap1<"Dinosaurierart",ArrayList1<HashMap2<"Name","Dinosauchus">>>
-        //HashMap1<"Pflanzenart",ArrayList2<HashMap3<"Name","Farn">>>
-        HashMap<String,ArrayList> simulationObjects = new HashMap<>();
-        ArrayList<HashMap> dinosaurs = new ArrayList<>();
-        ArrayList<HashMap> plants = new ArrayList<>();
+        //HashMap<"Dinosauchus",<HashMap<"Bild","dinosauchus.png">>>
+        //or HashMap<"Farn",<HashMap<"Bild","farn.png">>>
+        HashMap<String,HashMap<String, Object>> simulationObjects = new HashMap<>();
 
         //get the default "SimulationObject" configuration file
         InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration-files/defaultSimulationsobjektKonfig.json");
@@ -71,31 +74,41 @@ public class JsonHandler {
         JSONTokener jsonTokener = new JSONTokener(inputStreamConfigFile);
         JSONArray jsonArraySimulationObjects = new JSONArray(jsonTokener);
 
-        //add all dinosaurs to the HashMap "simulationObjects" with key "Dinosaurierart"
-        JSONArray jsonArrayDinosaurs = (JSONArray) ((JSONObject)(jsonArraySimulationObjects.get(0))).get("Dinosaurierart");
-        for(int i=0;jsonArrayDinosaurs.length()>i;i++){
-            HashMap<String,Object> dino = new HashMap<>();
-            JSONObject jsonObjectDino = (JSONObject) jsonArrayDinosaurs.get(i);
-            for (String key:jsonObjectDino.keySet()) {
-                dino.put(key,jsonObjectDino.get(key));
+        if (type==SimulationObjectType.DINO) {
+            //add all dinosaurs to the HashMap "simulationObjects"
+            JSONArray jsonArrayDinosaurs = (JSONArray) ((JSONObject) (jsonArraySimulationObjects.get(0))).get("Dinosaurierart");
+            for (int i = 0; jsonArrayDinosaurs.length() > i; i++) {
+                HashMap<String, Object> dino = new HashMap<>();
+                String currentName="";
+                JSONObject jsonObjectDino = (JSONObject) jsonArrayDinosaurs.get(i);
+                for (String key : jsonObjectDino.keySet()) {
+                    if (key.equals("Name")){
+                        currentName=(jsonObjectDino.get(key)).toString();
+                    }else{
+                        dino.put(key, jsonObjectDino.get(key));
+                    }
+                }
+                simulationObjects.put(currentName,dino);
             }
-            dinosaurs.add(dino);
-        }
-        simulationObjects.put("Dinosaurierart",dinosaurs);
-
-        //add all plants to the HashMap "simulationObjects" with key "Pflanzenart"
-        JSONArray jsonArrayPlants = (JSONArray) ((JSONObject)(jsonArraySimulationObjects.get(1))).get("Pflanzenart");
-        for(int i=0;jsonArrayPlants.length()>i;i++){
-            HashMap<String,Object> plant = new HashMap<>();
-            JSONObject jsonObjectPlant = (JSONObject) jsonArrayPlants.get(i);
-            for (String key:jsonObjectPlant.keySet()) {
-                plant.put(key,jsonObjectPlant.get(key));
+        }else if (type==SimulationObjectType.PLANT){
+            //add all plants to the HashMap "simulationObjects"
+            JSONArray jsonArrayPlants = (JSONArray) ((JSONObject)(jsonArraySimulationObjects.get(1))).get("Pflanzenart");
+            for(int i=0;jsonArrayPlants.length()>i;i++){
+                HashMap<String,Object> plant = new HashMap<>();
+                String currentName="";
+                JSONObject jsonObjectPlant = (JSONObject) jsonArrayPlants.get(i);
+                for (String key:jsonObjectPlant.keySet()) {
+                    if (key.equals("Name")){
+                        currentName=(jsonObjectPlant.get(key)).toString();
+                    }else{
+                        plant.put(key, jsonObjectPlant.get(key));
+                    }
+                }
+                simulationObjects.put(currentName,plant);
             }
-            plants.add(plant);
+        }else{
+            System.out.println("No valid SimulationObject Type.");
         }
-        simulationObjects.put("Pflanzenart",plants);
-
-
         return simulationObjects;
     }
 }
