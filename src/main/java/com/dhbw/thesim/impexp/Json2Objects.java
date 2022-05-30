@@ -9,16 +9,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * @author eric stefan
+ * @author Eric Stefan
  */
 public class Json2Objects {
 
-    private static HashMap dinosaurs;
-    private static HashMap plants;
 
     public static ArrayList<SimulationObject> initSimObjects() throws IOException {
-        dinosaurs = JsonHandler.importSimulationObjectConfig(JsonHandler.SimulationObjectType.DINO);
-        plants = JsonHandler.importSimulationObjectConfig(JsonHandler.SimulationObjectType.PLANT);
+        HashMap dinosaurs = JsonHandler.importSimulationObjectConfig(JsonHandler.SimulationObjectType.DINO);
+        HashMap plants = JsonHandler.importSimulationObjectConfig(JsonHandler.SimulationObjectType.PLANT);
 
         ArrayList<SimulationObject> simulationObjects = new ArrayList<>();
 

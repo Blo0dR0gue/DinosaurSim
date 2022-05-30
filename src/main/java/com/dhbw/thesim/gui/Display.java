@@ -26,6 +26,7 @@ public class Display extends Application {
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
         if (screenHeight>1080.0 && screenWidth>1920.0){
+            //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
             if (screenHeight>=(1080.0+37.0)){
                 primaryStage.setMaxHeight(1080.0+37.0);
                 primaryStage.setMaxWidth(1920.0);
@@ -35,6 +36,7 @@ public class Display extends Application {
         }else if (screenHeight<1080.0 && screenWidth<1920.0) {
             System.out.println("Display not possible, because your screen is too small.");
         }else{
+            //TODO currently works with white color around AND currently isn't centred -> this two things should be updated
             primaryStage.setFullScreen(true);
         }
 
