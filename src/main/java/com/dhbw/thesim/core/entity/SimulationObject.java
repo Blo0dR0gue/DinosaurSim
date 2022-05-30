@@ -108,7 +108,7 @@ public abstract class SimulationObject {
      * Check, if the dinosaur is rendered outside the view range.
      * @return true, if the {@link SimulationObject} gets rendered outside the view panel.
      */
-    public boolean isRenderedOutside(){;
+    public boolean isRenderedOutside(){
         return (position.getX() - renderOffset.getX()) < 0 || (position.getY() - renderOffset.getY()) < 0 ||
                 position.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
                 position.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
