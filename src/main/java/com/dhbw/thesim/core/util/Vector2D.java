@@ -70,34 +70,37 @@ public class Vector2D {
     /**
      * Multiplies a value onto this vector
      * @param value The amount, which should be multiplied
-     * @return This vector
+     * @return A new {@link Vector2D} with the updated values.
      */
     public Vector2D multiply(double value) {
-        x *= value;
-        y *= value;
-        return this;
+        return new Vector2D(x * value, y * value);
+    }
+
+    /**
+     * Adds another vector to this vector
+     * @param other The other Vector, which should be added
+     * @return A new {@link Vector2D} with the updated values.
+     */
+    public Vector2D add(Vector2D other) {
+        return new Vector2D(x + other.getX(), y + other.getY());
     }
 
     /**
      * Adds another Vector to this vector
-     * @param other The other Vector, which should be added
-     * @return This vector
+     * @param value The amount, which should be added.
+     * @return A new {@link Vector2D} with the updated values.
      */
-    public Vector2D add(Vector2D other) {
-        x += other.getX();
-        y += other.getY();
-        return this;
+    public Vector2D add(double value) {
+        return new Vector2D(x + value, y + value);
     }
 
     /**
      * Subtracts another Vector from this vector
      * @param other The other Vector, which is used to subtract
-     * @return This vector
+     * @return A new {@link Vector2D} with the updated values.
      */
     public Vector2D subtract(Vector2D other) {
-        x -= other.getX();
-        y -= other.getY();
-        return this;
+        return new Vector2D(x - other.getX(), y - other.getY());
     }
 
     /**
@@ -136,6 +139,25 @@ public class Vector2D {
      */
     public static double dotProduct(Vector2D v1, Vector2D v2) {
         return v1.getX() * v2.getX() + v1.getY() * v2.getY();
+    }
+
+    /**
+     * Checks, if this vector is in range of a target vector.
+     * @param target The other target vector.
+     * @param proximityRange The range, in which this vector needs to be.
+     * @return true, if we are in range.
+     */
+    public boolean isInRangeOf(Vector2D target, double proximityRange) {
+        return Vector2D.distance(this, target) < proximityRange;
+    }
+
+    /**
+     * Gets the direction vector to a target.
+     * @param target The {@link Vector2D} target
+     * @return A {@link Vector2D} direction vector.
+     */
+    public Vector2D direction(Vector2D target){
+        return new Vector2D(target.getX() - x, target.getY() - y).normalize();
     }
 
     //region getter & setter
