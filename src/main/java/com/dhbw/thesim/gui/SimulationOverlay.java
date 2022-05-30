@@ -39,7 +39,7 @@ public class SimulationOverlay extends AnchorPane {
         getChildren().add(backgroundCanvas);
         getChildren().add(sidebar);
 
-        //TODO
+        //TODO get data from config screen
         Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 0);
 
         simulationLoop = new SimulationLoop(1, 1, sim);

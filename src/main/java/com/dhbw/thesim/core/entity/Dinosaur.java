@@ -1,6 +1,5 @@
 package com.dhbw.thesim.core.entity;
 
-import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import javafx.scene.image.Image;
 

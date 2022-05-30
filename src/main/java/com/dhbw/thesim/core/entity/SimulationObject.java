@@ -13,7 +13,7 @@ import javafx.scene.image.ImageView;
  *
  * @author Daniel Czeschner
  */
-public abstract class SimulationObject {
+public abstract class SimulationObject extends StateMachine {
 
     /**
      * The representation object for this {@link SimulationObject}.
@@ -32,11 +32,6 @@ public abstract class SimulationObject {
      * The {@link ImageView} has his origin on the top left.
      */
     protected Vector2D renderOffset;
-
-    /**
-     * The {@link StateMachine} for this {@link SimulationObject}.
-     */
-    protected StateMachine stateMachine;
 
     /**
      * Constructor

@@ -11,11 +11,11 @@ import com.dhbw.thesim.core.statemachine.state.State;
  * @author Daniel Czeschner
  * @see State
  */
-public class StateMachine {
+public abstract class StateMachine {
 
     /**
      * The current State an {@link com.dhbw.thesim.core.entity.SimulationObject} is in.
      */
-    State currentState;
+    protected State currentState;
 
 }
