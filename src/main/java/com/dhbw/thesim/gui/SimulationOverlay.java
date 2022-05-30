@@ -1,5 +1,6 @@
 package com.dhbw.thesim.gui;
 
+import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -38,8 +39,10 @@ public class SimulationOverlay extends AnchorPane {
         getChildren().add(backgroundCanvas);
         getChildren().add(sidebar);
 
-        //TODO make dynamic
-        simulationLoop = new SimulationLoop("test", canvasGraphics, 1, 1, this);
+        //TODO
+        Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 0);
+
+        simulationLoop = new SimulationLoop(1, 1, sim);
 
         //Create the Scene
         simulationScene = new Scene(this);
