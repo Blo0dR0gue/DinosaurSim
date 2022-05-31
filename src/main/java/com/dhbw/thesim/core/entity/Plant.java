@@ -7,12 +7,28 @@ import com.dhbw.thesim.core.simulation.Simulation;
  * <p>
  * TODO
  *
- * @author Daniel Czeschner
+ * @author Daniel Czeschner, Kai Grübener
  */
 public class Plant extends SimulationObject {
 
-    public Plant() {
+    enum type{
+        busch,
+        baum
+        // TODO Welche Pflanzentypen gibt es?
+    }
+
+    private final type plantType;
+    private double growth;
+    private final double growthRate; //TODO brauchen wir das noch? Oder ist das global für alle Pflanzen gültig und in der Logik gespeichert?
+    private final double interactionRange;
+
+
+    public Plant(type plantType, double growth, double growthRate, double interactionRange) {
         super();
+        this.plantType = plantType;
+        this.growth = growth;
+        this.growthRate = growthRate;
+        this.interactionRange = interactionRange;
     }
 
     /**
@@ -33,5 +49,28 @@ public class Plant extends SimulationObject {
     @Override
     public void updateGraphics() {
         //TODO
+    }
+
+    /**
+     * Getter & Setter Methods for a {@link Plant}-object.
+     */
+    public type getPlantType() {
+        return plantType;
+    }
+
+    public double getGrowth() {
+        return growth;
+    }
+
+    public double getGrowthRate() {
+        return growthRate;
+    }
+
+    public double getInteractionRange() {
+        return interactionRange;
+    }
+
+    public void setGrowth(double growth) {
+        this.growth = growth;
     }
 }
