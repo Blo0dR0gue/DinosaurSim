@@ -62,6 +62,12 @@ public class SimulationMap {
         }
     }
 
+    /**
+     * Checks, if gird coordination are inside the grid.
+     * @param gridX The x grid position.
+     * @param gridY The y grid position.
+     * @return true, if the gird position is inside the grid.
+     */
     private boolean isInsideOfGrid(int gridX, int gridY)
     {
         if (gridX >= 0 && gridY >= 0 && gridX < width && gridY < height)
@@ -71,12 +77,22 @@ public class SimulationMap {
         return false;
     }
 
+    /**
+     * Checks, if a {@link Vector2D} point is inside the grid.
+     * @param point The {@link Vector2D}, which should be checked.
+     * @return true, if the point is inside the grid.
+     */
     public boolean isInsideOfGrid(Vector2D point){
         int[] gridPos = getGridPosition(point);
-        return gridPos != null && isInsideOfGrid(gridPos[0], gridPos[1]);
+        return isInsideOfGrid(gridPos[0], gridPos[1]);
     }
 
-
+    /**
+     * Gets the Tile at a specific grid position.
+     * @param gridX The x grid position.
+     * @param gridY The y grid position.
+     * @return {@link Tile} at this position or null
+     */
     public Tile getTileAtPosition(int gridX, int gridY)
     {
         if (isInsideOfGrid(gridX, gridY))
@@ -86,18 +102,49 @@ public class SimulationMap {
         return null;
     }
 
-    public int[] getGridPosition(Vector2D worldPosition){
+    /**
+     * Gets the grid position of a {@link Vector2D}. It is not checked, if this position is inside the grid.
+     * @param worldPosition The {@link Vector2D}, which should be checked.
+     * @return An int array -> [x,y]
+     */
+    private int[] getGridPosition(Vector2D worldPosition){
         int x = (int)Math.floor(worldPosition.getX()/Tile.TILE_SIZE);
         int y = (int)Math.floor(worldPosition.getY()/Tile.TILE_SIZE);
-        if(x < 0 || y < 0)
-            return null;
         return new int[]{x,y};
     }
 
+    /**
+     * Gets a {@link Tile} at a specific {@link Vector2D}.
+     * @param worldPosition The position {@link Vector2D}.
+     * @return {@link Tile} at this position or null.
+     */
     public Tile getTileAtPosition(Vector2D worldPosition)
     {
         int[] pos = getGridPosition(worldPosition);
         return getTileAtPosition(pos[0], pos[1]);
+    }
+
+    /**
+     * Checks, if a tile at a specific {@link Vector2D} position matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
+     * @param worldPosition The {@link Vector2D} position, on which the tile should be checked.
+     * @param canSwim true, if the dinosaur can swim
+     * @param canClimb true, if the dinosaur can climb.
+     * @return true, if the dinosaur can move onto this tile.
+     */
+    public boolean tileMatchedConditions(Vector2D worldPosition, boolean canSwim, boolean canClimb){
+        Tile tile = getTileAtPosition(worldPosition);
+        return tileMatchedConditions(tile, canSwim, canClimb);
+    }
+
+    /**
+     * Checks if a tile matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
+     * @param tile
+     * @param canSwim true, if the dinosaur can swim
+     * @param canClimb true, if the dinosaur can climb.
+     * @return
+     */
+    public boolean tileMatchedConditions(Tile tile, boolean canSwim, boolean canClimb){
+        return !tile.isSwimmable() && !tile.isClimbable() || tile.isSwimmable() && canSwim || tile.isClimbable() && canClimb;
     }
 
     private List<Tile> getTilesInRange(Tile tile, int range)
@@ -122,16 +169,6 @@ public class SimulationMap {
         }
 
         return tileObjects;
-    }
-
-
-    public boolean tileMatchedConditions(Vector2D worldPosition, boolean swimmable, boolean climbable){
-        Tile tile = getTileAtPosition(worldPosition);
-        return tileMatchedConditions(tile, swimmable, climbable);
-    }
-
-    public boolean tileMatchedConditions(Tile tile, boolean swimmable, boolean climbable){
-        return !tile.isSwimmable() && !tile.isClimbable() || tile.isSwimmable() && swimmable || tile.isClimbable() && climbable;
     }
 
     private List<Tile> getTilesInRangeMatchingConditions(Tile tile, int range, boolean swimmable, boolean climbable)
