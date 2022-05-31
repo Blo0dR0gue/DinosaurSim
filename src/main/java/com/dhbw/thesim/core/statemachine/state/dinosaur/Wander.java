@@ -16,26 +16,33 @@ public class Wander extends State {
     /**
      * The target {@link Vector2D} position.
      */
-    private final Vector2D target;
+    private Vector2D target;
 
     /**
      * The normalized direction {@link Vector2D}
      */
-    private final Vector2D direction;
+    private Vector2D direction;
 
+    /**
+     * Helper {@link Dinosaur} variable, to get dinosaur specific variables
+     */
+    private final Dinosaur dinosaur;
 
     public Wander(Dinosaur simulationObject) {
         super(simulationObject);
-
-        //TODO
-        target = new Vector2D(500, 180);
-        direction = simulationObject.getPosition().direction(target);
+        this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        //TODO (speed, etc)
-        simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(40 * deltaTime)));
+
+        if(target == null){
+            target = simulation.getRandomPositionInRange(dinosaur);
+            direction = simulationObject.getPosition().direction(target);
+            System.out.println("Moving to " + target);
+        }
+
+        simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
     }
 
     @Override

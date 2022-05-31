@@ -34,6 +34,6 @@ public class Stand extends State {
 
     @Override
     public void initTransitions() {
-        addTransition(new StateTransition(StateFactory.States.stand, () -> timeSinceStart >= waitTimeInSeconds));
+        addTransition(new StateTransition(StateFactory.States.wander, () -> timeSinceStart >= waitTimeInSeconds));
     }
 }
