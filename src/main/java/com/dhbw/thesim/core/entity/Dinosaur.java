@@ -37,6 +37,7 @@ public class Dinosaur extends SimulationObject {
     private final boolean canSwim;
     private final boolean canClimb;
     private final double reproductionRate;
+    //TODO handle?
     private double reproductionValue;
     private final double interactionRange;
     private final double viewRange;
@@ -71,7 +72,6 @@ public class Dinosaur extends SimulationObject {
         this.canSwim = canSwim;
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
-        this.reproductionValue = reproductionValue;
         this.interactionRange = interactionRange;
         this.viewRange = viewRange;
 
