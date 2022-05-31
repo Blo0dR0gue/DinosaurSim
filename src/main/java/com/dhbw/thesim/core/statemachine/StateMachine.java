@@ -18,8 +18,27 @@ public abstract class StateMachine {
      */
     protected State currentState;
 
-    public void setState(State state){
+    /**
+     * Sets the {@link #currentState}
+     * @param state The state, which now should be used.
+     */
+    public void setState(State state) {
         this.currentState = state;
+    }
+
+    /**
+     * Needs to be called each update call. <br>
+     * This method handles state transitions.
+     */
+    public void stateMachineTick() {
+        State nextState = currentState.checkTransitions();
+
+        if (nextState != null) {
+            //TODO remove debug message
+            System.out.println("Transition to " + nextState.getClass().getSimpleName());
+            setState(nextState);
+        }
+
     }
 
 }

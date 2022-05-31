@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
+import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Wander;
 import javafx.scene.image.Image;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  *
  * @author Daniel Czeschner
  * @see com.dhbw.thesim.core.statemachine.StateMachine
- * @see com.dhbw.thesim.core.statemachine.state.State
+ * @see State
  */
 public class Dinosaur extends SimulationObject {
 
@@ -31,14 +32,16 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Handles the updates for each {@link com.dhbw.thesim.core.statemachine.state.State} of a {@link Dinosaur}-object.
+     * Handles the updates for each {@link State} of a {@link Dinosaur}-object.
      *
      * @param deltaTime             The time since the last update call in seconds.
      * @param currentSimulationData The current {@link Simulation}-Object with all information to the currently running simulation.
      */
     @Override
     public void update(double deltaTime, Simulation currentSimulationData) {
-        //TODO
+        //Check all transitions for the current state and switch to next state is one met.
+        stateMachineTick();
+        //TODO move to stateMachineTick?
         currentState.update(deltaTime, currentSimulationData);
     }
 
