@@ -34,10 +34,15 @@ public abstract class SimulationObject extends StateMachine {
     protected Vector2D renderOffset;
 
     /**
+     * The collision range of this {@link SimulationObject}, in which collisions are counted.
+     */
+    protected final double interactionRange;
+
+    /**
      * Constructor
      */
-    public SimulationObject() {
-        super();
+    public SimulationObject(double interactionRange) {
+        this.interactionRange = interactionRange;
         imageObj = new ImageView();
         //TODO
         position = new Vector2D(0, 0);
@@ -81,6 +86,18 @@ public abstract class SimulationObject extends StateMachine {
         return position;
     }
 
+    public Vector2D getRenderOffset(){
+        return renderOffset;
+    }
+
+    /**
+     * Gets the interaction range, in which collisions are counted.
+     * @return The collision range.
+     */
+    public double getInteractionRange() {
+        return interactionRange;
+    }
+
     /**
      * Sets/Overrides the position of this {@link SimulationObject}
      *
@@ -107,6 +124,12 @@ public abstract class SimulationObject extends StateMachine {
         return (position.getX() - renderOffset.getX()) < 0 || (position.getY() - renderOffset.getY()) < 0 ||
                 position.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
                 position.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
+    }
+
+    public static boolean willBeRenderedOutside(Vector2D targetPosition, Vector2D renderOffset){
+        return (targetPosition.getX() - renderOffset.getX()) < 0 || (targetPosition.getY() - renderOffset.getY()) < 0 ||
+                targetPosition.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
+                targetPosition.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
 
     //endregion
