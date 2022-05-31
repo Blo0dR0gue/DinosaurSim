@@ -103,7 +103,7 @@ public class Dinosaur extends SimulationObject {
      */
     @Override
     public void updateGraphics() {
-        //Center the image.
+        //Center the image and update his position.
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
     }
