@@ -18,6 +18,7 @@ import java.util.Objects;
  */
 public class Dinosaur extends SimulationObject {
 
+    //English?
     public enum type{
         Fleischfresser,
         Pflanzenfresser,
