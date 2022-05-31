@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
+import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -11,6 +12,7 @@ import javafx.scene.paint.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
@@ -44,6 +46,8 @@ public class Simulation {
      */
     private final List<SimulationObject> simulationObjects;
 
+    private final Random random;
+
     //endregion
 
     /**
@@ -58,6 +62,7 @@ public class Simulation {
      */
     public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate) {
         //TODO load via json2objects
+        this.random = new Random();
         this.simulationMap = new SimulationMap(landscapeName);
         this.simulationObjects = new ArrayList<>();
 
@@ -67,7 +72,7 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 Dinosaur.type.Allesfresser, 'D', 0, 0, 0, 25,
                 0, 0, 0, 'M', true, true,
-                0, 5, 10)
+                0, 64, 400)
         );
 
         this.backgroundGraphics = backgroundGraphicsContext;
@@ -125,5 +130,49 @@ public class Simulation {
      */
     public List<SimulationObject> getSimulationObjects() {
         return simulationObjects;
+    }
+
+    private Vector2D getRandomPointInCircle(Vector2D center, double radius) {
+        double randomValue = random.nextDouble();
+        double r = radius + Math.sqrt(randomValue);
+        double theta = randomValue * 2 * Math.PI;
+        return new Vector2D(center.getX() + r * Math.cos(theta), center.getY() + r * Math.sin(theta));
+    }
+
+    private boolean isPointInsideCircle(Vector2D circleCenter, double radius, Vector2D point) {
+        // Compare radius of circle with distance
+        // of its center from given point
+        return (point.getX() - circleCenter.getX()) * (point.getX() - circleCenter.getX()) +
+                (point.getY() - circleCenter.getY()) * (point.getY() - circleCenter.getY()) <= radius * radius;
+    }
+
+    private boolean isPointInsideAnyInteractionRange(Vector2D point) {
+        return simulationObjects.stream().anyMatch(simulationObject -> isPointInsideCircle(simulationObject.getPosition(), simulationObject.getInteractionRange(), point));
+    }
+
+    /**
+     * TODO optimize, very stupid approach. :D
+     * Gets a random position inside a view range of a dinosaur.
+     *
+     * @param dinosaur The {@link Dinosaur}
+     * @return A target {@link Vector2D} position.
+     */
+    public Vector2D getRandomPositionInRange(Dinosaur dinosaur) {
+        Vector2D target = getRandomPointInCircle(dinosaur.getPosition(), dinosaur.getViewRange());
+
+        while (!simulationMap.isInsideOfGrid(target)) {
+            target = getRandomPointInCircle(dinosaur.getPosition(), dinosaur.getViewRange());
+        }
+
+        //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
+        //If so get another point.
+        if (!simulationMap.tileMatchedConditions(target, dinosaur.canSwim(), dinosaur.canClimb()) ||
+                isPointInsideAnyInteractionRange(target) ||
+                SimulationObject.willBeRenderedOutside(target, dinosaur.getRenderOffset())
+        ) {
+            return getRandomPositionInRange(dinosaur);
+        }
+
+        return target;
     }
 }

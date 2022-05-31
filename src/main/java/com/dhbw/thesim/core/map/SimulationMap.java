@@ -1,8 +1,11 @@
 package com.dhbw.thesim.core.map;
 
+import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Represents a landscape
@@ -52,9 +55,109 @@ public class SimulationMap {
     //TODO make dynamic
     private void initMap() {
         Image tmp = Tile.tmpSprite();
-        for (Tile[] row : tiles) {
-            Arrays.fill(row, new Tile(tmp));
+        for(int x = 0; x < width; x++){
+            for(int y = 0; y < height; y++){
+                tiles[x][y] = new Tile(tmp, x, y);
+            }
         }
+    }
+
+    private boolean isInsideOfGrid(int gridX, int gridY)
+    {
+        if (gridX >= 0 && gridY >= 0 && gridX < width && gridY < height)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean isInsideOfGrid(Vector2D point){
+        int[] gridPos = getGridPosition(point);
+        return gridPos != null && isInsideOfGrid(gridPos[0], gridPos[1]);
+    }
+
+
+    public Tile getTileAtPosition(int gridX, int gridY)
+    {
+        if (isInsideOfGrid(gridX, gridY))
+        {
+            return tiles[gridX][gridY];
+        }
+        return null;
+    }
+
+    public int[] getGridPosition(Vector2D worldPosition){
+        int x = (int)Math.floor(worldPosition.getX()/Tile.TILE_SIZE);
+        int y = (int)Math.floor(worldPosition.getY()/Tile.TILE_SIZE);
+        if(x < 0 || y < 0)
+            return null;
+        return new int[]{x,y};
+    }
+
+    public Tile getTileAtPosition(Vector2D worldPosition)
+    {
+        int[] pos = getGridPosition(worldPosition);
+        return getTileAtPosition(pos[0], pos[1]);
+    }
+
+    private List<Tile> getTilesInRange(Tile tile, int range)
+    {
+        List<Tile> tileObjects = new ArrayList<>();
+
+        for (int x = -range; x <= range; x++)
+        {
+            for (int y = -range; y <= range; y++)
+            {
+                //if (x == 0 && y == 0)
+                //    continue;
+
+                int checkX = tile.getGridX() + x;
+                int checkY = tile.getGridY() + y;
+
+                if (isInsideOfGrid(checkX, checkY))
+                {
+                    tileObjects.add(getTileAtPosition(checkX, checkY));
+                }
+            }
+        }
+
+        return tileObjects;
+    }
+
+
+    public boolean tileMatchedConditions(Vector2D worldPosition, boolean swimmable, boolean climbable){
+        Tile tile = getTileAtPosition(worldPosition);
+        return tileMatchedConditions(tile, swimmable, climbable);
+    }
+
+    public boolean tileMatchedConditions(Tile tile, boolean swimmable, boolean climbable){
+        return !tile.isSwimmable() && !tile.isClimbable() || tile.isSwimmable() && swimmable || tile.isClimbable() && climbable;
+    }
+
+    private List<Tile> getTilesInRangeMatchingConditions(Tile tile, int range, boolean swimmable, boolean climbable)
+    {
+        List<Tile> tileObjects = new ArrayList<>();
+
+        for (int x = -range; x <= range; x++)
+        {
+            for (int y = -range; y <= range; y++)
+            {
+                //if (x == 0 && y == 0)
+                //    continue;
+
+                int checkX = tile.getGridX() + x;
+                int checkY = tile.getGridY() + y;
+
+                if (isInsideOfGrid(checkX, checkY))
+                {
+                    Tile tmpTile = getTileAtPosition(checkX, checkY);
+                    if(tileMatchedConditions(tile, swimmable, climbable))
+                        tileObjects.add(tmpTile);
+                }
+            }
+        }
+
+        return tileObjects;
     }
 
     //region getter & setter
@@ -75,6 +178,11 @@ public class SimulationMap {
      */
     public Tile[][] getTiles() {
         return tiles;
+    }
+
+    public Tile getRandomTileInRange(Vector2D center, double radius, Random random) {
+        List<Tile> tiles = getTilesInRange(getTileAtPosition(center), (int)radius);
+        return tiles.get(random.nextInt(tiles.size()));
     }
     //endregion
 }
