@@ -3,7 +3,6 @@ package com.dhbw.thesim.core.entity;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Wander;
-import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
 
 import java.util.Objects;
@@ -24,9 +23,9 @@ public class Dinosaur extends SimulationObject {
         Pflanzenfresser,
         Allesfresser
     }
-    // TODO comments pls
-    private final type dinoType;
-    private final char diet;
+    // TODO comments pls; make final
+    private type dinoType;
+    private char diet;
     private double nutrition;
     private double hydration;
     private int strength; //TODO final?
@@ -34,19 +33,23 @@ public class Dinosaur extends SimulationObject {
     private double weight; //TODO final?
     private double length; //TODO final?
     private double height; //TODO final?
-    private final char gender;
-    private final boolean canSwim;
-    private final boolean canClimb;
-    private final double reproductionRate;
+    private char gender;
+    private boolean canSwim;
+    private boolean canClimb;
+    private double reproductionRate;
     //TODO handle?
     private double reproductionValue;
-    private final double interactionRange;
-    private final double viewRange;
+    private double viewRange;
 
     private SimulationObject target;
     private boolean isChased;
 
     public final static int PROXIMITY_RANGE = 5;
+
+    //TODO remove, if json2object is implemented
+    public Dinosaur(){
+        super(0);
+    }
 
     /**
      * Constructor for a dinosaur object
@@ -56,7 +59,7 @@ public class Dinosaur extends SimulationObject {
                     char gender, boolean canSwim, boolean canClimb,
                     double reproductionRate,
                     double interactionRange, double viewRange){
-        super();
+        super(interactionRange);
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/dinosaur/test.png")).toString());
         setSprite(image);
         //TODO
@@ -73,7 +76,6 @@ public class Dinosaur extends SimulationObject {
         this.canSwim = canSwim;
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
-        this.interactionRange = interactionRange;
         this.viewRange = viewRange;
 
         //TODO check - maybe in states?
@@ -151,11 +153,11 @@ public class Dinosaur extends SimulationObject {
         return gender;
     }
 
-    public boolean isCanSwim() {
+    public boolean canSwim() {
         return canSwim;
     }
 
-    public boolean isCanClimb() {
+    public boolean canClimb() {
         return canClimb;
     }
 
@@ -165,10 +167,6 @@ public class Dinosaur extends SimulationObject {
 
     public double getReproductionValue() {
         return reproductionValue;
-    }
-
-    public double getInteractionRange() {
-        return interactionRange;
     }
 
     public double getViewRange() {
