@@ -18,12 +18,12 @@ import java.util.Objects;
  */
 public class Dinosaur extends SimulationObject {
 
-    enum type{
+    public enum type{
         Fleischfresser,
         Pflanzenfresser,
         Allesfresser
     }
-    // TODO Attrribute für States?
+    // TODO comments pls
     private final type dinoType;
     private final char diet;
     private double nutrition;
@@ -40,8 +40,8 @@ public class Dinosaur extends SimulationObject {
     private double reproductionValue;
     private final double interactionRange;
     private final double viewRange;
+
     private SimulationObject target;
-    private Vector2D moveToPosition;
     private boolean isChased;
 
     public final static int PROXIMITY_RANGE = 5;
@@ -49,15 +49,11 @@ public class Dinosaur extends SimulationObject {
     /**
      * Constructor for a dinosaur object
      */
-    public Dinosaur() { //TODO brauchen wir 2 Konstruktoren?
-        super();
-        Image image = new Image(Objects.requireNonNull(getClass().getResource("/dinosaur/test.png")).toString());
-        setSprite(image);
-        //TODO
-        setState(new Wander(this));
-    }
-
-    public Dinosaur(type dinoType, char diet, double nutrition, double hydration, int strength, int speed, double weight, double length, double height, char gender, boolean canSwim, boolean canClimb, double reproductionRate, double reproductionValue, double interactionRange, double viewRange){
+    public Dinosaur(type dinoType, char diet, double nutrition, double hydration,
+                    int strength, int speed, double weight, double length, double height,
+                    char gender, boolean canSwim, boolean canClimb,
+                    double reproductionRate,
+                    double interactionRange, double viewRange){
         super();
         Image image = new Image(Objects.requireNonNull(getClass().getResource("/dinosaur/test.png")).toString());
         setSprite(image);
@@ -78,9 +74,11 @@ public class Dinosaur extends SimulationObject {
         this.reproductionValue = reproductionValue;
         this.interactionRange = interactionRange;
         this.viewRange = viewRange;
+
+        //TODO check - maybe in states?
         this.target = null;
-        this.moveToPosition = null;
         this.isChased = false;
+
         setState(new Wander(this));
     }
 
@@ -180,10 +178,6 @@ public class Dinosaur extends SimulationObject {
         return target;
     }
 
-    public Vector2D getMoveToPosition() {
-        return moveToPosition;
-    }
-
     public boolean isChased() {
         return isChased;
     }
@@ -222,10 +216,6 @@ public class Dinosaur extends SimulationObject {
 
     public void setTarget(SimulationObject target) {
         this.target = target;
-    }
-
-    public void setMoveToPosition(Vector2D moveToPosition) {
-        this.moveToPosition = moveToPosition;
     }
 
     public void setChased(boolean chased) {

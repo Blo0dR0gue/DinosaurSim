@@ -45,15 +45,16 @@ public class Simulation {
     private final List<SimulationObject> simulationObjects;
 
     //endregion
+
     /**
      * Constructor
      *
-     * @param landscapeName The name of the used landscape.
+     * @param landscapeName             The name of the used landscape.
      * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
-     * @param simulationOverlay The {@link SimulationOverlay} object on which {@link SimulationObject}s are spawned.
-     * @param dinosaurs Map with all dinosaurs, which should be added to this simulation. Key = Dinosaur-Name Value = Amount.
-     * @param plants Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
-     * @param plantGrowthRate The growth rate for each plant.
+     * @param simulationOverlay         The {@link SimulationOverlay} object on which {@link SimulationObject}s are spawned.
+     * @param dinosaurs                 Map with all dinosaurs, which should be added to this simulation. Key = Dinosaur-Name Value = Amount.
+     * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
+     * @param plantGrowthRate           The growth rate for each plant.
      */
     public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate) {
         //TODO load via json2objects
@@ -63,7 +64,11 @@ public class Simulation {
         //TODO handle map calls to json2object
 
         //TODO remove temp code
-        this.simulationObjects.add(new Dinosaur());
+        this.simulationObjects.add(new Dinosaur(
+                Dinosaur.type.Allesfresser, 'D', 0, 0, 0, 25,
+                0, 0, 0, 'M', true, true,
+                0, 5, 10)
+        );
 
         this.backgroundGraphics = backgroundGraphicsContext;
 
