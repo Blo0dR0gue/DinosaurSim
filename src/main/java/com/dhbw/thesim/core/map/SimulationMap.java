@@ -129,7 +129,7 @@ public class SimulationMap {
      * @param worldPosition The {@link Vector2D} position, on which the tile should be checked.
      * @param canSwim true, if the dinosaur can swim
      * @param canClimb true, if the dinosaur can climb.
-     * @return true, if the dinosaur can move onto this tile.
+     * @return true, if the dinosaur can move to this position.
      */
     public boolean tileMatchedConditions(Vector2D worldPosition, boolean canSwim, boolean canClimb){
         Tile tile = getTileAtPosition(worldPosition);
@@ -141,7 +141,7 @@ public class SimulationMap {
      * @param tile
      * @param canSwim true, if the dinosaur can swim
      * @param canClimb true, if the dinosaur can climb.
-     * @return
+     * @return true, if the dinosaur can move onto this tile.
      */
     public boolean tileMatchedConditions(Tile tile, boolean canSwim, boolean canClimb){
         return !tile.isSwimmable() && !tile.isClimbable() || tile.isSwimmable() && canSwim || tile.isClimbable() && canClimb;
