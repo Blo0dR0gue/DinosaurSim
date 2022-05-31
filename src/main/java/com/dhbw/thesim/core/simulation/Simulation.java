@@ -132,6 +132,12 @@ public class Simulation {
         return simulationObjects;
     }
 
+    /**
+     * Get a random point inside a circle.
+     * @param center The center {@link Vector2D} of the circle.
+     * @param radius The radius of this circle.
+     * @return A {@link Vector2D} point.
+     */
     private Vector2D getRandomPointInCircle(Vector2D center, double radius) {
         double randomValue = random.nextDouble();
         double r = radius + Math.sqrt(randomValue);
@@ -139,6 +145,13 @@ public class Simulation {
         return new Vector2D(center.getX() + r * Math.cos(theta), center.getY() + r * Math.sin(theta));
     }
 
+    /**
+     * Checks, if a point is inside a circle
+     * @param circleCenter The center of the circle.
+     * @param radius The radius of this circle.
+     * @param point The {@link Vector2D} point, which should be checked.
+     * @return true, if this point is inside the circle.
+     */
     private boolean isPointInsideCircle(Vector2D circleCenter, double radius, Vector2D point) {
         // Compare radius of circle with distance
         // of its center from given point
@@ -146,13 +159,19 @@ public class Simulation {
                 (point.getY() - circleCenter.getY()) * (point.getY() - circleCenter.getY()) <= radius * radius;
     }
 
+    /**
+     * Check, if a point is inside any interaction range (collision circle) of any simulationobject.
+     * @param point The point, which should be checked.
+     * @return true, if the point is inside any collision circle.
+     * @see #simulationObjects
+     */
     private boolean isPointInsideAnyInteractionRange(Vector2D point) {
         return simulationObjects.stream().anyMatch(simulationObject -> isPointInsideCircle(simulationObject.getPosition(), simulationObject.getInteractionRange(), point));
     }
 
     /**
      * TODO optimize, very stupid approach. :D
-     * Gets a random position inside a view range of a dinosaur.
+     * Gets a random target vector inside a view range of a dinosaur.
      *
      * @param dinosaur The {@link Dinosaur}
      * @return A target {@link Vector2D} position.
@@ -160,8 +179,9 @@ public class Simulation {
     public Vector2D getRandomPositionInRange(Dinosaur dinosaur) {
         Vector2D target = getRandomPointInCircle(dinosaur.getPosition(), dinosaur.getViewRange());
 
-        while (!simulationMap.isInsideOfGrid(target)) {
-            target = getRandomPointInCircle(dinosaur.getPosition(), dinosaur.getViewRange());
+        //Is this point inside the grid?
+        if(!simulationMap.isInsideOfGrid(target)) {
+            return getRandomPositionInRange(dinosaur);
         }
 
         //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
