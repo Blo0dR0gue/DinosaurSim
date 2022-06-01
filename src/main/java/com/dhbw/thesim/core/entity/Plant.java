@@ -23,13 +23,12 @@ public class Plant extends SimulationObject {
 
     //TODO remove, if json2object is implemented
     public Plant(){
-        super(0);
+        super("test" , 0, "nNn");
     }
 
-    public Plant(type plantType, double growth, double growthRate, double interactionRange) {
-        super(interactionRange);
+    public Plant(String name, String imgName, type plantType, double growthRate, double interactionRange) {
+        super(name, interactionRange, "/plant/"+imgName);
         this.plantType = plantType;
-        this.growth = growth;
         this.growthRate = growthRate;
     }
 

@@ -8,6 +8,8 @@ import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Objects;
+
 /**
  * Represents an object, which is handled in our simulation
  *
@@ -34,19 +36,32 @@ public abstract class SimulationObject extends StateMachine {
     protected Vector2D renderOffset;
 
     /**
+     * The type of this {@link SimulationObject}. E.g. "Brachiosaurus"
+     */
+    protected final String type;
+
+    /**
      * The collision range of this {@link SimulationObject}, in which collisions are counted.
      */
     protected final double interactionRange;
 
     /**
      * Constructor
+     *
+     * @param type The type for this object.
+     * @param interactionRange The range, in which collisions are handled.
+     * @param imgPath The full path to an image. E.g. /dinosaur/test.png
      */
-    public SimulationObject(double interactionRange) {
+    public SimulationObject(String type, double interactionRange, String imgPath) {
+        this.type = type;
         this.interactionRange = interactionRange;
-        imageObj = new ImageView();
+        this.imageObj = new ImageView();
         //TODO
-        position = new Vector2D(0, 0);
-        renderOffset = new Vector2D(0,0);
+        this.position = new Vector2D(0, 0);
+        this.renderOffset = new Vector2D(0,0);
+
+        Image image = new Image(Objects.requireNonNull(getClass().getResource(imgPath)).toString());
+        setSprite(image);
     }
 
     /**
@@ -96,6 +111,14 @@ public abstract class SimulationObject extends StateMachine {
      */
     public double getInteractionRange() {
         return interactionRange;
+    }
+
+    /**
+     * Gets the type.
+     * @return The type {@link #type}
+     */
+    public String getType() {
+        return type;
     }
 
     /**

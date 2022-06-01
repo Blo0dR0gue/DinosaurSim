@@ -70,9 +70,9 @@ public class Simulation {
 
         //TODO remove temp code
         this.simulationObjects.add(new Dinosaur(
-                Dinosaur.type.Allesfresser, 'D', 0, 0, 0, 25,
-                0, 0, 0, 'M', true, true,
-                0, 64, 400)
+                "Test", "test.png", 10, 10, 5, 25,
+                0.1, 100, 50, 10, true, true,
+                'f', 400, 64, 'M')
         );
 
         this.backgroundGraphics = backgroundGraphicsContext;

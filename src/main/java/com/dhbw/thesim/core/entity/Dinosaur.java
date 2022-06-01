@@ -2,6 +2,7 @@ package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
+import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Wander;
 import javafx.scene.image.Image;
 
@@ -18,52 +19,54 @@ import java.util.Objects;
 public class Dinosaur extends SimulationObject {
 
     //English?
-    public enum type{
-        Fleischfresser,
-        Pflanzenfresser,
-        Allesfresser
+    //TODO do we need this? Maybe to convert the diet char to a enum for easy usage.
+    public enum dietType {
+        carnivore,
+        herbivore,
+        omnivore
     }
     // TODO comments pls; make final
-    private type dinoType;
-    private char diet;
     private double nutrition;
     private double hydration;
-    private int strength; //TODO final?
-    private int speed; // TODO final?
-    private double weight; //TODO final?
-    private double length; //TODO final?
-    private double height; //TODO final?
-    private char gender;
+    private int strength;
+    private int speed;
+    private double reproductionRate;
+    private double weight;
+    private double length;
+    private double height;
     private boolean canSwim;
     private boolean canClimb;
-    private double reproductionRate;
-    //TODO handle?
-    private double reproductionValue;
+    private char diet;
     private double viewRange;
+
+    private char gender;
+    private double reproductionValue;
+
 
     private SimulationObject target;
     private boolean isChased;
+
+    //TODO check values?
+    private final static double nutritionReductionRate = 0.4;
+    private final static double hydrationReductionRate = 0.4;
 
     public final static int PROXIMITY_RANGE = 5;
 
     //TODO remove, if json2object is implemented
     public Dinosaur(){
-        super(0);
+        super("test",0, "NaN");
     }
 
     /**
      * Constructor for a dinosaur object
      */
-    public Dinosaur(type dinoType, char diet, double nutrition, double hydration,
-                    int strength, int speed, double weight, double length, double height,
-                    char gender, boolean canSwim, boolean canClimb,
-                    double reproductionRate,
-                    double interactionRange, double viewRange){
-        super(interactionRange);
-        Image image = new Image(Objects.requireNonNull(getClass().getResource("/dinosaur/test.png")).toString());
-        setSprite(image);
+    public Dinosaur(String name, String imgName, double nutrition, double hydration,
+                    int strength, int speed, double reproductionRate, double weight, double length, double height,
+                    boolean canSwim, boolean canClimb, char diet, double viewRange,
+                    double interactionRange, char gender){
+        super(name, interactionRange, "/dinosaur/"+imgName);
         //TODO
-        this.dinoType = dinoType;
+        //this.dinoType = dinoType;
         this.diet = diet;
         this.nutrition = nutrition;
         this.hydration = hydration;
@@ -78,11 +81,14 @@ public class Dinosaur extends SimulationObject {
         this.reproductionRate = reproductionRate;
         this.viewRange = viewRange;
 
+        //Initial reproduction value as specified in the software design. This value increases over time.
+        this.reproductionValue = 0;
+
         //TODO check - maybe in states?
         this.target = null;
         this.isChased = false;
 
-        setState(new Wander(this));
+        setState(new Stand(this));
     }
 
     /**
@@ -113,10 +119,6 @@ public class Dinosaur extends SimulationObject {
     /**
      * Getter & Setter Methods for a {@link Dinosaur}-object.
      */
-    public type getDinoType() {
-        return dinoType;
-    }
-
     public char getDiet() {
         return diet;
     }
