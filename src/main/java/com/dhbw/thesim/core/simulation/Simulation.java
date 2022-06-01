@@ -214,11 +214,14 @@ public class Simulation {
 
 
     /**
-     * bresenham line algorithm
+     * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
+     * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
      *
-     * @param start
-     * @param target
-     * @return
+     * @param start The start {@link Vector2D} position in the simulation world.
+     * @param target The target {@link Vector2D} position in the simulation world.
+     * @param canSwim Can the {@link Dinosaur} swim?
+     * @param canClimb Can the {@link Dinosaur} climb?
+     * @return true, if all tiles from the start to the target can be crossed.
      */
     private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb) {
         Tile startTile = simulationMap.getTileAtPosition(start);
@@ -293,6 +296,7 @@ public class Simulation {
             System.out.println(x + " " + y);
 
             if (!simulationMap.tileMatchedConditions(x, y, canSwim, canClimb)) {
+                //If this tile can't be crossed be the dinosaur, return false.
                 return false;
             }
         }
