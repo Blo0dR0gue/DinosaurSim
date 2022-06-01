@@ -11,13 +11,14 @@ import com.dhbw.thesim.core.simulation.Simulation;
  */
 public class Plant extends SimulationObject {
 
-    public enum type{
+    //TODO do we need this?
+    public enum plantType {
         busch,
         baum
-        // TODO Welche Pflanzentypen gibt es?
     }
+
     //TODO comments, make final
-    private type plantType;
+    private Plant.plantType plantType;
     private double growth;
     private double growthRate; //TODO brauchen wir das noch? Oder ist das global für alle Pflanzen gültig und in der Logik gespeichert?
 
@@ -26,9 +27,8 @@ public class Plant extends SimulationObject {
         super("test" , 0, "nNn");
     }
 
-    public Plant(String name, String imgName, type plantType, double growthRate, double interactionRange) {
+    public Plant(String name, String imgName, double interactionRange, double growthRate) {
         super(name, interactionRange, "/plant/"+imgName);
-        this.plantType = plantType;
         this.growthRate = growthRate;
     }
 
@@ -55,7 +55,7 @@ public class Plant extends SimulationObject {
     /**
      * Getter & Setter Methods for a {@link Plant}-object.
      */
-    public type getPlantType() {
+    public Plant.plantType getPlantType() {
         return plantType;
     }
 
