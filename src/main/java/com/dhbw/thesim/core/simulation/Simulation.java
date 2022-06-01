@@ -134,22 +134,33 @@ public class Simulation {
 
     /**
      * Get a random point inside a circle.
+     *
      * @param center The center {@link Vector2D} of the circle.
      * @param radius The radius of this circle.
      * @return A {@link Vector2D} point.
      */
     private Vector2D getRandomPointInCircle(Vector2D center, double radius) {
-        double randomValue = random.nextDouble();
-        double r = radius + Math.sqrt(randomValue);
-        double theta = randomValue * 2 * Math.PI;
-        return new Vector2D(center.getX() + r * Math.cos(theta), center.getY() + r * Math.sin(theta));
+        //We use polar notation to calculate a random point.
+        //The polar angle will be in the range [0, 2 * pi] and the hypotenuse will be in the range [0, radius].
+
+        //Calculate a random angle.
+        double angle = Math.random() * 2 * Math.PI;
+        //Calculate the hypotenuse, which should at least have a length in the upper 75% of the view range.
+        double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
+
+        //Calculate the sites
+        double adjacent = Math.cos(angle) * hypotenuse;
+        double opposite = Math.sin(angle) * hypotenuse;
+
+        return new Vector2D(center.getX() + adjacent, center.getY() + opposite);
     }
 
     /**
      * Checks, if a point is inside a circle
+     *
      * @param circleCenter The center of the circle.
-     * @param radius The radius of this circle.
-     * @param point The {@link Vector2D} point, which should be checked.
+     * @param radius       The radius of this circle.
+     * @param point        The {@link Vector2D} point, which should be checked.
      * @return true, if this point is inside the circle.
      */
     private boolean isPointInsideCircle(Vector2D circleCenter, double radius, Vector2D point) {
@@ -161,6 +172,7 @@ public class Simulation {
 
     /**
      * Check, if a point is inside any interaction range (collision circle) of any simulationobject.
+     *
      * @param point The point, which should be checked.
      * @return true, if the point is inside any collision circle.
      * @see #simulationObjects
@@ -180,7 +192,7 @@ public class Simulation {
         Vector2D target = getRandomPointInCircle(dinosaur.getPosition(), dinosaur.getViewRange());
 
         //Is this point inside the grid?
-        if(!simulationMap.isInsideOfGrid(target)) {
+        if (!simulationMap.isInsideOfGrid(target)) {
             return getRandomPositionInRange(dinosaur);
         }
 
