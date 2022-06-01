@@ -1,0 +1,17 @@
+[
+  {
+    "Dinosaurier":[
+      {"Brachiosaurus":20},
+      {"Abrictosaurus":10},
+      {"Tyrannosaurus Rex":2},
+      {"Deinosuchus":5}
+    ]
+  },
+  {
+    "Pflanzen":[
+      {"Farn":20},
+      {"Ginkgoales":15}
+    ]
+  },
+  {"Landschaft":"Standard-Landschaft"}
+]

@@ -17,7 +17,8 @@ public class JsonHandler {
     static String workingDirectory;
     public enum SimulationObjectType{
         DINO,
-        PLANT
+        PLANT,
+        LANDSCAPE
     }
 
     /**
@@ -77,7 +78,7 @@ public class JsonHandler {
         if (type==SimulationObjectType.DINO) {
             //add all dinosaurs to the HashMap "simulationObjects"
             JSONArray jsonArrayDinosaurs = (JSONArray) ((JSONObject) (jsonArraySimulationObjects.get(0))).get("Dinosaurierart");
-            for (int i = 0; jsonArrayDinosaurs.length() > i; i++) {
+                for (int i = 0; jsonArrayDinosaurs.length() > i; i++) {
                 HashMap<String, Object> dino = new HashMap<>();
                 String currentName="";
                 JSONObject jsonObjectDino = (JSONObject) jsonArrayDinosaurs.get(i);
@@ -110,5 +111,95 @@ public class JsonHandler {
             System.out.println("No valid SimulationObject Type.");
         }
         return simulationObjects;
+    }
+
+    public static HashMap importScenarioConfig(SimulationObjectType type) throws IOException {
+        HashMap<String,Object> hashMap = new HashMap<>();
+
+        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration-files/defaultScenarioKonfig.json");
+        if (inputStreamDefaultConfigFile==null){
+            throw new FileNotFoundException("Cannot find resource file 'defaultScenarioKonfig.json'");
+        }
+        File configFile = new File(workingDirectory+"/defaultScenarioKonfig.json");
+        if (!configFile.exists()) {
+            Files.copy(inputStreamDefaultConfigFile, Path.of(workingDirectory + "/defaultScenarioKonfig.json"));
+        }
+
+        FileInputStream inputStreamConfigFile = new FileInputStream(configFile);
+        JSONTokener jsonTokener = new JSONTokener(inputStreamConfigFile);
+        JSONArray jsonArrayScenario = new JSONArray(jsonTokener);
+
+        if (type==SimulationObjectType.DINO){
+            JSONArray jsonArrayDinosaurs = (JSONArray) ((JSONObject) (jsonArrayScenario.get(0))).get("Dinosaurier");
+            for (int i = 0; jsonArrayDinosaurs.length() > i; i++) {
+                JSONObject jsonObjectDino = (JSONObject) jsonArrayDinosaurs.get(i);
+                String key = jsonObjectDino.keySet().toArray()[0].toString();
+                hashMap.put(key,jsonObjectDino.get(key));
+            }
+        }else if (type==SimulationObjectType.PLANT){
+            JSONArray jsonArrayPlants = (JSONArray) ((JSONObject) (jsonArrayScenario.get(1))).get("Pflanzen");
+            for (int i = 0; jsonArrayPlants.length() > i; i++) {
+                JSONObject jsonObjectPlant = (JSONObject) jsonArrayPlants.get(i);
+                String key = jsonObjectPlant.keySet().toArray()[0].toString();
+                hashMap.put(key,jsonObjectPlant.get(key));
+            }
+        }else {
+            String name = ((JSONObject) (jsonArrayScenario.get(2))).get("Landschaft").toString();
+            hashMap.put("Landscape",name);
+        }
+
+        return hashMap;
+    }
+
+    private static JSONArray createScenarioConfigSimulationObjects(HashMap simulationObjects){
+
+        JSONArray InnerJsonArray = new JSONArray();
+
+        int i=0;
+        for (Object key:simulationObjects.keySet()) {
+            JSONObject simulationObject = new JSONObject();
+            simulationObject.put((String) key,simulationObjects.get(key));
+            InnerJsonArray.put(i,simulationObject);
+            i++;
+        }
+        return InnerJsonArray;
+    }
+
+    public static void exportScenarioConfig(HashMap dinosaurs, HashMap plants, String landscapeValue, String fileName) throws IOException {
+
+        JSONArray wrappingJsonArray = new JSONArray();
+
+        JSONObject wrappingJsonObjectDino = new JSONObject();
+        wrappingJsonObjectDino.put("Dinosaurier",createScenarioConfigSimulationObjects(dinosaurs));
+        wrappingJsonArray.put(0,wrappingJsonObjectDino);
+
+        JSONObject wrappingJsonObjectPlant = new JSONObject();
+        wrappingJsonObjectPlant.put("Pflanzen",createScenarioConfigSimulationObjects(plants));
+        wrappingJsonArray.put(1,wrappingJsonObjectPlant);
+
+        JSONObject JsonObjectLandscape = new JSONObject();
+        JsonObjectLandscape.put("Landschaft",landscapeValue);
+        wrappingJsonArray.put(2,JsonObjectLandscape);
+
+        try {
+            File configFile = new File(workingDirectory+"/"+fileName+".json");
+            if (configFile.createNewFile()) {
+                System.out.println("File created: " + fileName);
+                try {
+                    FileWriter fileWriter = new FileWriter(workingDirectory+"/"+fileName+".json");
+                    fileWriter.write(String.valueOf(wrappingJsonArray));
+                    fileWriter.close();
+                    System.out.println("Successfully written to file: "+ fileName);
+                } catch (IOException e) {
+                    System.out.println("The file "+fileName+".json could not be written to.");
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("File already exists. So please make sure that the file "+fileName+".json does not exist yet, so that no data will be overwritten");
+            }
+        } catch (IOException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
     }
 }
