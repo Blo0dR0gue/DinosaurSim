@@ -1,5 +1,7 @@
 package com.dhbw.thesim.core.entity;
 
+import com.dhbw.thesim.core.map.SimulationMap;
+import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.statemachine.StateMachine;
@@ -22,8 +24,9 @@ public abstract class SimulationObject extends StateMachine {
      * Contains an {@link Image}
      */
     protected ImageView imageObj;
+
     /**
-     * The position object for this {@link SimulationObject}.
+     * The position for this {@link SimulationObject}.
      *
      * @see Vector2D
      */
@@ -81,14 +84,15 @@ public abstract class SimulationObject extends StateMachine {
 
     /**
      * Sets/Updates and image for the representation of this {@link SimulationObject} <br>
-     * This method also updates the {@link #renderOffset} to center the image/sprite.
+     * This method also updates the {@link #renderOffset} to center the image/sprite. <br>
+     * The position of the {@link SimulationObject} is in the middle of the image at the bottom.
      *
      * @param image The new image, which should be shown.
      */
     public void setSprite(Image image) {
         imageObj.setImage(image);
         renderOffset.setX(image.getWidth()/2);
-        renderOffset.setY(image.getHeight()/2);
+        renderOffset.setY(image.getHeight());
     }
 
     /**
@@ -127,6 +131,9 @@ public abstract class SimulationObject extends StateMachine {
      * @param position The new {@link Vector2D} for the position.
      */
     public void setPosition(Vector2D position) {
+        if(Math.abs(position.getX()) > SimulationMap.width * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.height * Tile.TILE_SIZE){
+            position = new Vector2D(0,0);
+        }
         this.position = position;
     }
 

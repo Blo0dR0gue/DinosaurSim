@@ -205,6 +205,99 @@ public class Simulation {
             return getRandomPositionInRange(dinosaur);
         }
 
+        if (!targetTileCanBeReached(dinosaur.getPosition(), target, dinosaur.canSwim(), dinosaur.canClimb())) {
+            return getRandomPositionInRange(dinosaur);
+        }
+
         return target;
     }
+
+
+    /**
+     * bresenham line algorithm
+     *
+     * @param start
+     * @param target
+     * @return
+     */
+    private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb) {
+        Tile startTile = simulationMap.getTileAtPosition(start);
+        Tile targetTile = simulationMap.getTileAtPosition(target);
+
+        //Distance between the tiles. (In x and y direction)
+        int dx = targetTile.getGridX() - startTile.getGridX();
+        int dy = targetTile.getGridY() - startTile.getGridY();
+
+        //Absolute distances.
+        int adx = Math.abs(dx);
+        int ady = Math.abs(dy);
+
+        //Determine the sign of the increment
+        int sdx = (int) Math.signum(dx);
+        int sdy = (int) Math.signum(dy);
+
+        //pd. is parallel step
+        int pdx, pdy;
+
+        //dd. is diagonal step
+        int ddx, ddy;
+
+        //delta in fast and slow direction
+        int deltaSlowDirection, deltaFastDirection;
+
+        //Determine which distance is greater
+        if (adx > ady) {
+            //x is faster
+            pdx = sdx;
+            pdy = 0;
+
+            ddx = sdx;
+            ddy = sdy;
+
+            deltaSlowDirection = ady;
+            deltaFastDirection = adx;
+
+        } else {
+            //y is faster
+            pdx = 0;
+            pdy = sdy;
+
+            ddx = sdx;
+            ddy = sdy;
+
+            deltaSlowDirection = adx;
+            deltaFastDirection = ady;
+        }
+
+        //Loop variables
+        int x = startTile.getGridX();
+        int y = startTile.getGridY();
+        int error = deltaFastDirection / 2;
+
+        for (int i = 0; i < deltaFastDirection; ++i) {
+            //update error term
+            error -= deltaSlowDirection;
+            if (error < 0) {
+                //Make the error term positive again
+                error += deltaFastDirection;
+                //diagonal step: Step in slow direction
+                x += ddx;
+                y += ddy;
+            } else {
+                //parallel step: Step in fast direction
+                x += pdx;
+                y += pdy;
+            }
+
+            //TODO delete debug
+            System.out.println(x + " " + y);
+
+            if (!simulationMap.tileMatchedConditions(x, y, canSwim, canClimb)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
