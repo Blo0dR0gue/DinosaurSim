@@ -217,9 +217,9 @@ public class Simulation {
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
      *
-     * @param start The start {@link Vector2D} position in the simulation world.
-     * @param target The target {@link Vector2D} position in the simulation world.
-     * @param canSwim Can the {@link Dinosaur} swim?
+     * @param start    The start {@link Vector2D} position in the simulation world.
+     * @param target   The target {@link Vector2D} position in the simulation world.
+     * @param canSwim  Can the {@link Dinosaur} swim?
      * @param canClimb Can the {@link Dinosaur} climb?
      * @return true, if all tiles from the start to the target can be crossed.
      */
@@ -302,6 +302,28 @@ public class Simulation {
         }
 
         return true;
+    }
+
+    public boolean doesLineSegmentCollideWithCircleRange(double radius, Vector2D circleOrigin, Vector2D start, Vector2D end) {
+
+        if(isPointInsideCircle(circleOrigin, radius, start) || isPointInsideCircle(circleOrigin, radius, end)){
+            return true;
+        }
+
+        double minDist;
+        double maxDist = Math.max(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
+
+        Vector2D SO = start.subtract(circleOrigin);
+        Vector2D EO = end.subtract(circleOrigin);
+        double triangleAre = Math.abs(Vector2D.crossProduct(SO, EO)) / 2;
+
+        if (Vector2D.dotProduct(circleOrigin.subtract(start), end.subtract(start)) > 0 && Vector2D.dotProduct(circleOrigin.subtract(end), start.subtract(end)) > 0) {
+            minDist = (2 * triangleAre) / Vector2D.distance(start, end);
+        } else {
+            minDist = Math.min(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
+        }
+
+        return minDist <= radius && maxDist >= radius;
     }
 
 }

@@ -142,6 +142,16 @@ public class Vector2D {
     }
 
     /**
+     * Calculates the cross product.
+     * @param v1 The first 2d-vector.
+     * @param v2 The second 2d-vector.
+     * @return The cross product.
+     */
+    public static double crossProduct(Vector2D v1, Vector2D v2){
+        return v1.getX() * v2.getY() - v1.getY() * v2.getX();
+    }
+
+    /**
      * Checks, if this vector is in range of a target vector.
      * @param target The other target vector.
      * @param proximityRange The range, in which this vector needs to be.
