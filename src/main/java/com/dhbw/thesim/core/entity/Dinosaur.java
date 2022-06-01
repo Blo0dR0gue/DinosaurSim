@@ -1,7 +1,9 @@
 package com.dhbw.thesim.core.entity;
 
+import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import javafx.scene.image.Image;
+
 import java.util.Objects;
 
 /**
@@ -25,24 +27,26 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Handles the updates for each {@link com.dhbw.thesim.core.statemachine.state.State} of a {@link Dinosaur}-object.
-     * @param deltaTime The time since the last update call in seconds.
+     *
+     * @param deltaTime             The time since the last update call in seconds.
      * @param currentSimulationData The current {@link Simulation}-Object with all information to the currently running simulation.
      */
     @Override
     public void update(double deltaTime, Simulation currentSimulationData) {
         //TODO remove tests
         double lastX = this.getPosition().getX();
-        this.getPosition().setX(lastX+25*deltaTime);
+        this.getPosition().setX(lastX + 25 * deltaTime);
     }
 
     /**
-     * Updates the position of the representation for a {@link Dinosaur}-object.
+     * Updates the position of the representation for a {@link Dinosaur}-object. <br>
      * It also changes the image if necessary.
      */
     @Override
     public void updateGraphics() {
-        imageObj.setTranslateX(position.getX());
-        imageObj.setTranslateY(position.getY());
+        //Center the image.
+        imageObj.setTranslateX(position.getX() - renderOffset.getX());
+        imageObj.setTranslateY(position.getY() - renderOffset.getY());
     }
 
 }

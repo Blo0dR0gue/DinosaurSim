@@ -1,5 +1,6 @@
 package com.dhbw.thesim.gui;
 
+import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -20,7 +21,7 @@ public class SimulationOverlay extends AnchorPane {
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
-    private AnchorPane sidebar;
+    private Pane sidebar;
     private SimulationLoop simulationLoop;
 
     public static final int BACKGROUND_WIDTH = 1620;
@@ -38,8 +39,10 @@ public class SimulationOverlay extends AnchorPane {
         getChildren().add(backgroundCanvas);
         getChildren().add(sidebar);
 
-        //TODO make dynamic
-        simulationLoop = new SimulationLoop("test", canvasGraphics, 1, 1, this);
+        //TODO
+        Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 0);
+
+        simulationLoop = new SimulationLoop(1, 1, sim);
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -68,11 +71,11 @@ public class SimulationOverlay extends AnchorPane {
     }
 
     private void createSideBar() {
-        sidebar = new AnchorPane();
+        sidebar = new Pane();
 
         sidebar.setPrefWidth(300);
         sidebar.setPrefHeight(1080);
-        AnchorPane.setRightAnchor(sidebar, 0d);
+        sidebar.relocate(1920d-300d,0d);
 
         sidebar.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
     }

@@ -1,6 +1,7 @@
 module com.dhbw.thesim {
     requires javafx.controls;
     requires javafx.fxml;
+    requires org.json;
 
 
     opens com.dhbw.thesim to javafx.fxml;
