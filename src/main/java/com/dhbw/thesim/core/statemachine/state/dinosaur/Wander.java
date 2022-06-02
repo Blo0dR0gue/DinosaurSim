@@ -36,7 +36,7 @@ public class Wander extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
 
-        if(target == null){
+        if (target == null) {
             target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
             direction = simulationObject.getPosition().direction(target);
             System.out.println("Moving to " + target);
@@ -54,6 +54,7 @@ public class Wander extends State {
 
     /**
      * Are we in range of our {@link #target}
+     *
      * @return true, if we are in the {@link Dinosaur#PROXIMITY_RANGE} to the {@link #target}.
      */
     private boolean arrived() {
