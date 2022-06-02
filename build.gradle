@@ -14,6 +14,7 @@ repositories {
 
 ext {
     junitVersion = '5.8.1'
+    mockitoversion = '4.0.0'
 }
 
 sourceCompatibility = '17'
@@ -40,8 +41,8 @@ dependencies {
     // https://mvnrepository.com/artifact/org.json/json
     implementation group: 'org.json', name: 'json', version: '20220320'
 
-
-
+    testImplementation "org.mockito:mockito-inline:${mockitoversion}"
+    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoversion}"
 }
 
 test {
