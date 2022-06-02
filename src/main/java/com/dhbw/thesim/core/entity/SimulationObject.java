@@ -9,6 +9,9 @@ import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 import java.util.Objects;
 
@@ -48,6 +51,10 @@ public abstract class SimulationObject extends StateMachine {
      */
     protected final double interactionRange;
 
+    //TODO remove test objects
+    protected Rectangle test = new Rectangle(0,0,10,10);
+    protected Circle circle;
+
     /**
      * Constructor
      *
@@ -62,6 +69,8 @@ public abstract class SimulationObject extends StateMachine {
         //TODO
         this.position = new Vector2D(0, 0);
         this.renderOffset = new Vector2D(0,0);
+
+        test.setFill(Color.BLUE);
 
         Image image = new Image(Objects.requireNonNull(getClass().getResource(imgPath)).toString());
         setSprite(image);
@@ -144,6 +153,14 @@ public abstract class SimulationObject extends StateMachine {
      */
     public ImageView getJavaFXObj() {
         return imageObj;
+    }
+
+    public Rectangle getTest(){
+        return test;
+    }
+
+    public Circle getCircle(){
+        return circle;
     }
 
     /**

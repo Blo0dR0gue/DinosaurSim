@@ -3,6 +3,9 @@ package com.dhbw.thesim.core.entity;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
+import com.dhbw.thesim.core.util.Vector2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * Represents a dinosaur object in our simulation.
@@ -46,7 +49,7 @@ public class Dinosaur extends SimulationObject {
     private final static double nutritionReductionRate = 0.4;
     private final static double hydrationReductionRate = 0.4;
 
-    public final static int PROXIMITY_RANGE = 5;
+    public final static double PROXIMITY_RANGE = 2.5;
 
     //TODO remove, if json2object is implemented
     public Dinosaur(){
@@ -76,6 +79,9 @@ public class Dinosaur extends SimulationObject {
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
         this.viewRange = viewRange;
+
+        //TODO remove test objects
+        this.circle = new Circle(0,0,viewRange, Color.GREEN);
 
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
@@ -110,6 +116,13 @@ public class Dinosaur extends SimulationObject {
         //Center the image and update his position.
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
+        circle.setTranslateX(position.getX());
+        circle.setTranslateY(position.getY());
+    }
+
+    public void setTest(Vector2D target){
+        test.setTranslateX(target.getX());
+        test.setTranslateY(target.getY());
     }
 
     /**

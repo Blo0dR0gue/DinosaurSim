@@ -9,10 +9,7 @@ import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
@@ -53,7 +50,7 @@ public class Simulation {
     /**
      * Constructor mainly used for test cases
      */
-    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate, Random random){
+    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate, Random random) {
         this.simulationMap = simulationMap;
         this.simulationObjects = new ArrayList<>();
         this.backgroundGraphics = backgroundGraphics;
@@ -69,7 +66,7 @@ public class Simulation {
      * @param dinosaurs                 Map with all dinosaurs, which should be added to this simulation. Key = Dinosaur-Name Value = Amount.
      * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
      * @param plantGrowthRate           The growth rate for each plant.
-     */
+     *///TODO move backgroundGraphicsContext to drawMap function and make public. Also make spawnObjects public and don't call in constructor.
     public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate) {
         //TODO load via json2objects
         this.random = new Random();
@@ -99,7 +96,11 @@ public class Simulation {
      */
     private void spawnObjects(SimulationOverlay simulationOverlay) {
         for (SimulationObject obj : simulationObjects) {
+            //TODO remove test objects
+            simulationOverlay.getChildren().add(obj.getCircle());
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
+            simulationOverlay.getChildren().add(obj.getTest());
+
         }
     }
 
@@ -121,6 +122,91 @@ public class Simulation {
                 );
             }
         }
+    }
+
+    /**
+     * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
+     * @param position The {@link Vector2D} we want sort to.
+     * @param list The list with the {@link SimulationObject}, which should be sorted.
+     * @return The sorted list.
+     */
+    public List<SimulationObject> sortByDistance(Vector2D position, List<SimulationObject> list){
+        list.sort(Comparator.comparingDouble(o -> Vector2D.distance(position, o.getPosition())));
+        return list;
+    }
+
+    /**
+     * Gets all visible simulation objects in range.
+     *
+     * @param position The position {@link Vector2D} we want to check from.
+     * @param viewRange The radius, how far radially we want to check.
+     * @return A {@link ArrayList<SimulationObject>} with all visible {@link SimulationObject}.
+     */
+    public List<SimulationObject> getAllSimulationObjectsInRange(Vector2D position, double viewRange) {
+
+        List<SimulationObject> simulationObjectList = new ArrayList<>();
+
+        //Check all handled simulation objects.
+        for (SimulationObject simulationObject : simulationObjects) {
+
+            //We don't want to check our self.
+            if (simulationObject.getPosition() != position) {
+
+                //Is the other simulation object visible?
+                if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
+                    //Add it to the list, if it is visible.
+                    simulationObjectList.add(simulationObject);
+                }
+
+            }
+
+        }
+
+        return simulationObjectList;
+    }
+
+
+    /**
+     * TODO optimize, very stupid approach. :D
+     * Gets a random target vector inside a view range of a dinosaur.
+     *
+     * @param position     The center of the view radius circle
+     * @param viewRange    The view range as an radius.
+     * @param canSwim      Can the object, which should be tested, swim?
+     * @param canClimb     Can the object, which should be tested, climb?
+     * @param renderOffset The offset for the image of the object.
+     * @return A {@link Vector2D} target position.
+     */
+    public Vector2D getRandomPositionInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
+        Vector2D target = getRandomPointInCircle(position, viewRange);
+
+        //Is this point inside the grid?
+        if (!simulationMap.isInsideOfGrid(target)) {
+            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+        }
+
+        //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
+        //If so get another point.
+        if (!simulationMap.tileMatchedConditions(target, canSwim, canClimb) ||
+                isPointInsideAnyInteractionRange(target) ||
+                SimulationObject.willBeRenderedOutside(target, renderOffset)
+        ) {
+            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+        }
+
+        //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
+        if (!targetTileCanBeReached(position, target, canSwim, canClimb)) {
+            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+        }
+
+        //Check, if this target point is in any interaction range. If so, find another target.
+        for (SimulationObject simulationObject : simulationObjects) {
+            if (simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), position, target)) {
+                return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+            }
+        }
+
+        return target;
     }
 
     /**
@@ -191,50 +277,7 @@ public class Simulation {
     }
 
     /**
-     * TODO optimize, very stupid approach. :D
-     * Gets a random target vector inside a view range of a dinosaur.
-     *
-     * @param position The center of the view radius circle
-     * @param viewRange The view range as an radius.
-     * @param canSwim Can the object, which should be tested, swim?
-     * @param canClimb Can the object, which should be tested, climb?
-     * @param renderOffset The offset for the image of the object.
-     * @return A {@link Vector2D} target position.
-     */
-    public Vector2D getRandomPositionInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
-        Vector2D target = getRandomPointInCircle(position, viewRange);
-
-        //Is this point inside the grid?
-        if (!simulationMap.isInsideOfGrid(target)) {
-            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
-        }
-
-        //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
-        //If so get another point.
-        if (!simulationMap.tileMatchedConditions(target, canSwim, canClimb) ||
-                isPointInsideAnyInteractionRange(target) ||
-                SimulationObject.willBeRenderedOutside(target, renderOffset)
-        ) {
-            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
-        }
-
-        //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
-        if (!targetTileCanBeReached(position, target, canSwim, canClimb)) {
-            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
-        }
-
-        //Check, if this target point is in any interaction range. If so, find another target.
-        for (SimulationObject simulationObject: simulationObjects) {
-            if(simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), position, target)){
-                return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
-            }
-        }
-
-        return target;
-    }
-
-
-    /** TODO move to map?
+     * TODO move to map?
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
      *
@@ -329,14 +372,14 @@ public class Simulation {
      * Checks, if a line segment collide with a view range circle.
      *
      * @param circleOrigin The origin {@link Vector2D} of the range circle.
-     * @param radius The radius of the range circle.
-     * @param start The start {@link Vector2D} of the line segment.
-     * @param end The end {@link Vector2D} of the line segment.
+     * @param radius       The radius of the range circle.
+     * @param start        The start {@link Vector2D} of the line segment.
+     * @param end          The end {@link Vector2D} of the line segment.
      * @return true, if the line collide with the circle.
      */
-    private boolean doesLineSegmentCollideWithCircleRange( Vector2D circleOrigin, double radius, Vector2D start, Vector2D end) {
+    private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end) {
 
-        if(isPointInsideCircle(circleOrigin, radius, start) || isPointInsideCircle(circleOrigin, radius, end)){
+        if (isPointInsideCircle(circleOrigin, radius, start) || isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
 
@@ -354,6 +397,21 @@ public class Simulation {
         }
 
         return minDist <= radius && maxDist >= radius;
+    }
+
+    /**
+     * Checks, if two circles intersect or touch each other.
+     *
+     * @param circleOrigin1 The {@link Vector2D} center point of the first circle.
+     * @param radius1       The radius of the first circle.
+     * @param circleOrigin2 The {@link Vector2D} center point of the second circle.
+     * @param radius2       The radius of the second circle.
+     * @return true, if the circles intersect or touch.
+     */
+    private boolean doTheCirclesIntersect(Vector2D circleOrigin1, double radius1, Vector2D circleOrigin2, double radius2) {
+        double distSq = Math.pow(Vector2D.distance(circleOrigin1, circleOrigin2), 2);
+        double radSumSq = Math.pow(radius1 + radius2, 2);
+        return distSq <= radSumSq;
     }
 
 }

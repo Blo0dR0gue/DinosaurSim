@@ -18,6 +18,7 @@ public class Vector2D {
      * The x coordinate
      */
     private double y;
+
     //endregion
 
     /**

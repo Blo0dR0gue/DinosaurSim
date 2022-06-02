@@ -40,6 +40,7 @@ public class Wander extends State {
             target = simulation.getRandomPositionInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
             direction = simulationObject.getPosition().direction(target);
             System.out.println("Moving to " + target);
+            dinosaur.setTest(target);
         }
 
         simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
