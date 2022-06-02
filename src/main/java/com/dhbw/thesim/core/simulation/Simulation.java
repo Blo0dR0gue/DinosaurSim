@@ -51,6 +51,16 @@ public class Simulation {
     //endregion
 
     /**
+     * Constructor mainly used for test cases
+     */
+    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate, Random random){
+        this.simulationMap = simulationMap;
+        this.simulationObjects = new ArrayList<>();
+        this.backgroundGraphics = backgroundGraphics;
+        this.random = random;
+    }
+
+    /**
      * Constructor
      *
      * @param landscapeName             The name of the used landscape.
@@ -64,6 +74,7 @@ public class Simulation {
         //TODO load via json2objects
         this.random = new Random();
         this.simulationMap = new SimulationMap(landscapeName);
+        this.backgroundGraphics = backgroundGraphicsContext;
         this.simulationObjects = new ArrayList<>();
 
         //TODO handle map calls to json2object
@@ -74,8 +85,6 @@ public class Simulation {
                 0.1, 100, 50, 10, true, true,
                 'f', 400, 64, 'M')
         );
-
-        this.backgroundGraphics = backgroundGraphicsContext;
 
         //Draw the map
         drawMap();
@@ -88,7 +97,7 @@ public class Simulation {
      *
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
-    public void spawnObjects(SimulationOverlay simulationOverlay) {
+    private void spawnObjects(SimulationOverlay simulationOverlay) {
         for (SimulationObject obj : simulationObjects) {
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
         }
@@ -185,35 +194,47 @@ public class Simulation {
      * TODO optimize, very stupid approach. :D
      * Gets a random target vector inside a view range of a dinosaur.
      *
-     * @param dinosaur The {@link Dinosaur}
-     * @return A target {@link Vector2D} position.
+     * @param position The center of the view radius circle
+     * @param viewRange The view range as an radius.
+     * @param canSwim Can the object, which should be tested, swim?
+     * @param canClimb Can the object, which should be tested, climb?
+     * @param renderOffset The offset for the image of the object.
+     * @return A {@link Vector2D} target position.
      */
-    public Vector2D getRandomPositionInRange(Dinosaur dinosaur) {
-        Vector2D target = getRandomPointInCircle(dinosaur.getPosition(), dinosaur.getViewRange());
+    public Vector2D getRandomPositionInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
+        Vector2D target = getRandomPointInCircle(position, viewRange);
 
         //Is this point inside the grid?
         if (!simulationMap.isInsideOfGrid(target)) {
-            return getRandomPositionInRange(dinosaur);
+            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
         }
 
         //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
         //If so get another point.
-        if (!simulationMap.tileMatchedConditions(target, dinosaur.canSwim(), dinosaur.canClimb()) ||
+        if (!simulationMap.tileMatchedConditions(target, canSwim, canClimb) ||
                 isPointInsideAnyInteractionRange(target) ||
-                SimulationObject.willBeRenderedOutside(target, dinosaur.getRenderOffset())
+                SimulationObject.willBeRenderedOutside(target, renderOffset)
         ) {
-            return getRandomPositionInRange(dinosaur);
+            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
         }
 
-        if (!targetTileCanBeReached(dinosaur.getPosition(), target, dinosaur.canSwim(), dinosaur.canClimb())) {
-            return getRandomPositionInRange(dinosaur);
+        //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
+        if (!targetTileCanBeReached(position, target, canSwim, canClimb)) {
+            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+        }
+
+        //Check, if this target point is in any interaction range. If so, find another target.
+        for (SimulationObject simulationObject: simulationObjects) {
+            if(simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getInteractionRange(), simulationObject.getPosition(), position, target)){
+                return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+            }
         }
 
         return target;
     }
 
 
-    /**
+    /** TODO move to map?
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
      *
@@ -304,7 +325,16 @@ public class Simulation {
         return true;
     }
 
-    public boolean doesLineSegmentCollideWithCircleRange(double radius, Vector2D circleOrigin, Vector2D start, Vector2D end) {
+    /**
+     * Checks, if a line segment collide with a view range circle.
+     *
+     * @param radius The radius of the range circle.
+     * @param circleOrigin The origin {@link Vector2D} of the range circle.
+     * @param start The start {@link Vector2D} of the line segment.
+     * @param end The end {@link Vector2D} of the line segment.
+     * @return true, if the line collide with the circle.
+     */
+    private boolean doesLineSegmentCollideWithCircleRange(double radius, Vector2D circleOrigin, Vector2D start, Vector2D end) {
 
         if(isPointInsideCircle(circleOrigin, radius, start) || isPointInsideCircle(circleOrigin, radius, end)){
             return true;

@@ -3,10 +3,6 @@ package com.dhbw.thesim.core.entity;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
-import com.dhbw.thesim.core.statemachine.state.dinosaur.Wander;
-import javafx.scene.image.Image;
-
-import java.util.Objects;
 
 /**
  * Represents a dinosaur object in our simulation.
