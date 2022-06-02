@@ -1,7 +1,6 @@
 package com.dhbw.thesim.gui;
 
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -25,16 +24,31 @@ public class Display extends Application {
         //TODO noch auf Windows testen, ob es mit der screenHeight bei zu großem Bildschirm funktioniert (auf Linux mit Gnome funktionierts)
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
-        if (screenHeight>1080.0 && screenWidth>1920.0){
+
+        double screenOutputScaleVertical = Screen.getPrimary().getOutputScaleY();
+        double screenOutputScaleHorizontal = Screen.getPrimary().getOutputScaleX();
+
+        double scaledScreenHeight = screenHeight*screenOutputScaleVertical;
+        double scaledScreenWidth = screenWidth*screenOutputScaleHorizontal;
+
+        if (screenHeight>1080.0 && screenWidth>1920.0) {
             //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
-            if (screenHeight>=(1080.0+37.0)){
-                primaryStage.setMaxHeight(1080.0+37.0);
-                primaryStage.setMaxWidth(1920.0);
-            }else {
+            if (screenHeight >= (1080.0 + 37.0)) {
+                //primaryStage.setMaxHeight(1080.0+37.0);
+                //primaryStage.setMaxWidth(1920.0);
+            } else {
                 System.out.println("Display not possible, because your screen is too small in height.");
             }
-        }else if (screenHeight<1080.0 && screenWidth<1920.0) {
-            System.out.println("Display not possible, because your screen is too small.");
+        }else if (scaledScreenHeight<1080.0 && scaledScreenWidth < 1920.0){ //If display is at minimum 1080x1920, but is scaled to some degree, check against scaled resolution
+
+            System.out.println("Display not possible, because your screen is too small.\n"
+                        + "Resolution: "+screenHeight+"x"+screenWidth+"\n"
+                        + "Output Scale Vertical: "+screenOutputScaleVertical+"\n"
+                        + "Output Scale Horizontal: "+screenOutputScaleHorizontal+"\n"
+                        + "Scaled Resolution: "+scaledScreenHeight+"x"+scaledScreenWidth
+            );
+
+            //TODO: Exit program on too small resolution
         }else{
             //TODO currently works with white color around AND currently isn't centred -> this two things should be updated
             primaryStage.setFullScreen(true);
