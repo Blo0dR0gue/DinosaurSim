@@ -9,8 +9,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
 /**
@@ -40,13 +38,6 @@ public class SimulationOverlay extends AnchorPane {
         //Add the Canvas and the Sidebar to the StackPane
         getChildren().add(backgroundCanvas);
         getChildren().add(sidebar);
-
-        Circle c = new Circle(500,500,50);
-        c.setFill(Color.GREEN);
-        Line l = new Line(500,500,300,450);
-        l.setStroke(Color.BLUE);
-        getChildren().add(c);
-        getChildren().add(l);
 
         //TODO get data from config screen
         Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 0);
