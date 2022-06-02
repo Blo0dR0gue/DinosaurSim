@@ -101,6 +101,15 @@ public class Simulation {
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
             simulationOverlay.getChildren().add(obj.getTest());
 
+            //Set the object start position
+            if (obj instanceof Dinosaur dinosaur) {
+                //If we are a dinosaur get a free position, where the dinosaur can walk on.
+                dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb()));
+            } else {
+                //Plants only can be spawned on none swimmable and climbable areas.
+                obj.setPosition(getFreePositionInMap(false, false));
+            }
+            
         }
     }
 
@@ -126,11 +135,12 @@ public class Simulation {
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
+     *
      * @param position The {@link Vector2D} we want sort to.
-     * @param list The list with the {@link SimulationObject}, which should be sorted.
+     * @param list     The list with the {@link SimulationObject}, which should be sorted.
      * @return The sorted list.
      */
-    public List<SimulationObject> sortByDistance(Vector2D position, List<SimulationObject> list){
+    public List<SimulationObject> sortByDistance(Vector2D position, List<SimulationObject> list) {
         list.sort(Comparator.comparingDouble(o -> Vector2D.distance(position, o.getPosition())));
         return list;
     }
@@ -138,7 +148,7 @@ public class Simulation {
     /**
      * Gets all visible simulation objects in range.
      *
-     * @param position The position {@link Vector2D} we want to check from.
+     * @param position  The position {@link Vector2D} we want to check from.
      * @param viewRange The radius, how far radially we want to check.
      * @return A {@link ArrayList<SimulationObject>} with all visible {@link SimulationObject}.
      */
@@ -165,6 +175,23 @@ public class Simulation {
         return simulationObjectList;
     }
 
+    /**
+     * Gets a random free position on the grid map
+     *
+     * @param canSwim  Can the {@link Dinosaur} swim.
+     * @param canClimb Can the {@link Dinosaur} climb.
+     * @return A random {@link Vector2D} position.
+     */
+    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb) {
+        Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
+
+        if (isPointInsideAnyInteractionRange(target)) {
+            return getFreePositionInMap(canSwim, canClimb);
+        }
+
+        return target;
+    }
+
 
     /**
      * TODO optimize, very stupid approach. :D
@@ -177,12 +204,12 @@ public class Simulation {
      * @param renderOffset The offset for the image of the object.
      * @return A {@link Vector2D} target position.
      */
-    public Vector2D getRandomPositionInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
+    public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
 
         //Is this point inside the grid?
         if (!simulationMap.isInsideOfGrid(target)) {
-            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+            return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
         }
 
         //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
@@ -191,18 +218,18 @@ public class Simulation {
                 isPointInsideAnyInteractionRange(target) ||
                 SimulationObject.willBeRenderedOutside(target, renderOffset)
         ) {
-            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+            return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
         }
 
         //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
         if (!targetTileCanBeReached(position, target, canSwim, canClimb)) {
-            return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+            return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
         }
 
         //Check, if this target point is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), position, target)) {
-                return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
+                return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
             }
         }
 
