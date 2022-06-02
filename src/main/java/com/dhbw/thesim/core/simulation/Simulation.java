@@ -225,7 +225,7 @@ public class Simulation {
 
         //Check, if this target point is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject: simulationObjects) {
-            if(simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getInteractionRange(), simulationObject.getPosition(), position, target)){
+            if(simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), position, target)){
                 return getRandomPositionInRange(position, viewRange, canSwim, canClimb, renderOffset);
             }
         }
@@ -328,13 +328,13 @@ public class Simulation {
     /**
      * Checks, if a line segment collide with a view range circle.
      *
-     * @param radius The radius of the range circle.
      * @param circleOrigin The origin {@link Vector2D} of the range circle.
+     * @param radius The radius of the range circle.
      * @param start The start {@link Vector2D} of the line segment.
      * @param end The end {@link Vector2D} of the line segment.
      * @return true, if the line collide with the circle.
      */
-    private boolean doesLineSegmentCollideWithCircleRange(double radius, Vector2D circleOrigin, Vector2D start, Vector2D end) {
+    private boolean doesLineSegmentCollideWithCircleRange( Vector2D circleOrigin, double radius, Vector2D start, Vector2D end) {
 
         if(isPointInsideCircle(circleOrigin, radius, start) || isPointInsideCircle(circleOrigin, radius, end)){
             return true;
