@@ -9,7 +9,7 @@ import com.dhbw.thesim.core.util.Vector2D;
 
 /**
  * Represents a {@link State} an {@link Dinosaur} can be in. <br>
- * In this {@link State} the handled {@link Dinosaur} is moving to a random position in range. (TODO)
+ * In this {@link State} the handled {@link Dinosaur} is moving to a random position in range.
  */
 public class Wander extends State {
 
