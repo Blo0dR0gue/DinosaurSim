@@ -45,7 +45,7 @@ public class Tile {
      * @param image The background for this {@link Tile} object.
      * @see #background
      */
-                public Tile(Image image) {
+    public Tile(Image image) {
         this.background = image;
     }
 
