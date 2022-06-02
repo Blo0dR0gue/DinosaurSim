@@ -31,7 +31,7 @@ public class SimulationOverlay extends AnchorPane {
     public static final double BACKGROUND_WIDTH = adjustScale(1620, SCALE_X);
     public static final double BACKGROUND_HEIGHT = adjustScale(1080, SCALE_Y);
 
-    public SimulationOverlay(Stage primaryStage, double scaleX, double scaleY) {
+    public SimulationOverlay(Stage primaryStage) {
 
 
         createCanvas();

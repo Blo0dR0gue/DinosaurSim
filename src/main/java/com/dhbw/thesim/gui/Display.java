@@ -1,7 +1,6 @@
 package com.dhbw.thesim.gui;
 
 import javafx.application.Application;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -59,12 +58,9 @@ public class Display extends Application {
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
         //TODO scene-controller?
-        SimulationOverlay simulationOverlay = new SimulationOverlay(primaryStage, 1.0, 1.0);
+        SimulationOverlay simulationOverlay = new SimulationOverlay(primaryStage);
         //TODO remove tmp loading simulation overlay (entry is config)
         primaryStage.setScene(simulationOverlay.getSimulationScene());
-
-        //primaryStage.setRenderScaleX(1.0/screenOutputScaleHorizontal);
-        //primaryStage.setRenderScaleY(1.0/screenOutputScaleVertical);
 
         //Show the app
         primaryStage.show();
