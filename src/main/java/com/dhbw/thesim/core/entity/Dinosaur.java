@@ -25,6 +25,8 @@ public class Dinosaur extends SimulationObject {
         omnivore
     }
     // TODO comments pls; make final
+    private double nutritionFull;
+    private double hydrationFull;
     private double nutrition;
     private double hydration;
     private int strength;
@@ -79,6 +81,9 @@ public class Dinosaur extends SimulationObject {
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
         this.viewRange = viewRange;
+
+        this.nutritionFull = this.nutrition;
+        this.hydrationFull = this.hydration;
 
         //TODO remove test objects
         this.circle = new Circle(0,0,viewRange, Color.GREEN);
@@ -231,4 +236,41 @@ public class Dinosaur extends SimulationObject {
     public void setChased(boolean chased) {
         isChased = chased;
     }
+
+    /**
+     * Checks, if the {@link Dinosaur} is hungry. <br>
+     * A dinosaur is hungry, if his {@link #nutrition} is 50% or less of the max level.
+     * @return true, if the dinosaur is hungry.
+     */
+    public boolean isHungry(){
+        return nutrition/nutritionFull <= 0.5;
+    }
+
+    /**
+     * Checks, if the {@link Dinosaur} is thirsty. <br>
+     * A dinosaur is thirsty, if his {@link #hydration} is 50% or less of the max level.
+     * @return true, if the dinosaur is thirsty.
+     */
+    public boolean isThirsty(){
+        return hydration/hydrationFull <= 0.5;
+    }
+
+    /**
+     * Checks, if the {@link Dinosaur} died of thirst. <br>
+     * A dinosaur died of thirst, if his {@link #hydration} is 0.
+     * @return true, if the dinosaur died of thirst.
+     */
+    public boolean diedOfThirst(){
+        return hydration <= 0;
+    }
+
+    /**
+     * Checks, if the {@link Dinosaur} died of starvation. <br>
+     * A dinosaur died of starvation, if his {@link #nutrition} is 0.
+     * @return true, if the dinosaur died of starvation.
+     */
+    public boolean diedOfHunger(){
+        return nutrition <= 0;
+    }
+
 }
