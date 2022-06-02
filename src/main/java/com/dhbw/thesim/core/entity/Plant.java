@@ -7,12 +7,29 @@ import com.dhbw.thesim.core.simulation.Simulation;
  * <p>
  * TODO
  *
- * @author Daniel Czeschner
+ * @author Daniel Czeschner, Kai Grübener
  */
 public class Plant extends SimulationObject {
 
-    public Plant() {
-        super();
+    //TODO do we need this?
+    public enum plantType {
+        busch,
+        baum
+    }
+
+    //TODO comments, make final
+    private Plant.plantType plantType;
+    private double growth;
+    private double growthRate; //TODO brauchen wir das noch? Oder ist das global für alle Pflanzen gültig und in der Logik gespeichert?
+
+    //TODO remove, if json2object is implemented
+    public Plant(){
+        super("test" , 0, "nNn");
+    }
+
+    public Plant(String name, String imgName, double interactionRange, double growthRate) {
+        super(name, interactionRange, "/plant/"+imgName);
+        this.growthRate = growthRate;
     }
 
     /**
@@ -33,5 +50,24 @@ public class Plant extends SimulationObject {
     @Override
     public void updateGraphics() {
         //TODO
+    }
+
+    /**
+     * Getter & Setter Methods for a {@link Plant}-object.
+     */
+    public Plant.plantType getPlantType() {
+        return plantType;
+    }
+
+    public double getGrowth() {
+        return growth;
+    }
+
+    public double getGrowthRate() {
+        return growthRate;
+    }
+
+    public void setGrowth(double growth) {
+        this.growth = growth;
     }
 }
