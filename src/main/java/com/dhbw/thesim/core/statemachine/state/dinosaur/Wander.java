@@ -37,7 +37,7 @@ public class Wander extends State {
     public void update(double deltaTime, Simulation simulation) {
 
         if (target == null) {
-            target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
+            target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
             direction = simulationObject.getPosition().direction(target);
             System.out.println("Moving to " + target);
             dinosaur.setTest(target);
@@ -55,17 +55,11 @@ public class Wander extends State {
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
 
         //TODO
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
-                simulation -> dinosaur.isThirsty() && dinosaur.isHungry() && false));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isThirsty() && dinosaur.isHungry() && (simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb()) != null || simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null)));
 
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
-                simulation -> dinosaur.isThirsty() && false));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isThirsty() && simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null));
 
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
-                simulation ->
-                        dinosaur.isHungry() &&
-                                simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
-                                        dinosaur.canSwim(), dinosaur.canClimb()) != null));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isHungry() && simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb()) != null));
     }
 
     /**
