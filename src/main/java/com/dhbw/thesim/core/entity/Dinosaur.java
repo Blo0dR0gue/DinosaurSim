@@ -2,6 +2,7 @@ package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
+import com.dhbw.thesim.core.statemachine.state.dinosaur.Dead;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.paint.Color;
@@ -47,7 +48,7 @@ public class Dinosaur extends SimulationObject {
     private boolean isChased;
 
     //TODO check values?
-    private final static double nutritionReductionRate = 0.4;
+    private final static double nutritionReductionRate = 0.2;
     private final static double hydrationReductionRate = 0.4;
 
     public final static double PROXIMITY_RANGE = 2.5;
@@ -107,9 +108,20 @@ public class Dinosaur extends SimulationObject {
     @Override
     public void update(double deltaTime, Simulation currentSimulationData) {
         //Check all transitions for the current state and switch to next state is one met.
-        stateMachineTick();
+        stateMachineTick(currentSimulationData);
         //TODO move to stateMachineTick?
         currentState.update(deltaTime, currentSimulationData);
+
+        decreaseLifeStats(deltaTime);
+    }
+
+    /**
+     * Reduces the {@link #nutrition} and {@link #hydration} values of the dinosaur.
+     * @param deltaTime The time since the last update call in seconds.
+     */
+    private void decreaseLifeStats(double deltaTime) {
+        //this.hydration -= hydrationReductionRate * deltaTime;
+        this.nutrition -= nutritionReductionRate * deltaTime;
     }
 
     /**
