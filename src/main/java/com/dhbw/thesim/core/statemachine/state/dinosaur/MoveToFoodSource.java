@@ -2,6 +2,7 @@ package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
+import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
@@ -41,25 +42,92 @@ public class MoveToFoodSource extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
 
+        //TODO check condition
         if (dinosaur.getTarget() == null && target == null) {
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
 
                 //TODO
+                SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+                        dinosaur.canSwim(), dinosaur.canClimb());
+
+                Vector2D target2 = simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb());
+
+                if (target1 == null && target2 != null) {
+                    target = target2;
+                    System.out.println("Found water source");
+
+                    targetInteractionRange = Tile.TILE_SIZE / 2 + Dinosaur.PROXIMITY_RANGE;
+                    direction = dinosaur.getPosition().direction(target);
+
+                    dinosaur.setTest(target);
+                } else if (target1 != null && target2 == null) {
+                    dinosaur.setTarget(target1);
+
+                    System.out.println("Found food source");
+
+                    target = dinosaur.getTarget().getPosition();
+                    targetInteractionRange = dinosaur.getTarget().getInteractionRange();
+                    direction = dinosaur.getPosition().direction(target);
+
+                    dinosaur.setTest(target);
+
+                } else if (target1 != null) {
+
+                    if (Vector2D.distance(dinosaur.getPosition(), target2) < Vector2D.distance(dinosaur.getPosition(), target1.getPosition())) {
+                        //water is closer go to water
+
+                        target = target2;
+                        System.out.println("Found water source");
+
+                        targetInteractionRange = Tile.TILE_SIZE / 2 + Dinosaur.PROXIMITY_RANGE;
+
+                    }else {
+                        //Food is closer go to food
+                        dinosaur.setTarget(target1);
+
+                        System.out.println("Found food source");
+
+                        target = dinosaur.getTarget().getPosition();
+                        targetInteractionRange = dinosaur.getTarget().getInteractionRange();
+
+                    }
+                    direction = dinosaur.getPosition().direction(target);
+                    dinosaur.setTest(target);
+
+                }
+
 
             } else if (dinosaur.isHungry()) {
 
                 dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
                         dinosaur.canSwim(), dinosaur.canClimb()));
 
-                target = dinosaur.getTarget().getPosition();
-                targetInteractionRange = dinosaur.getTarget().getInteractionRange();
-                direction = simulationObject.getPosition().direction(target);
+                if (dinosaur.getTarget() != null) {
 
-                dinosaur.setTest(target);
+                    System.out.println("Found food source");
+
+                    target = dinosaur.getTarget().getPosition();
+                    targetInteractionRange = dinosaur.getTarget().getInteractionRange();
+                    direction = dinosaur.getPosition().direction(target);
+
+                    dinosaur.setTest(target);
+                }
+
 
             } else if (dinosaur.isThirsty()) {
 
-                //TODO
+                target = simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb());
+
+                if (target != null) {
+
+                    System.out.println("Found water source");
+
+                    targetInteractionRange = Tile.TILE_SIZE / 2 + Dinosaur.PROXIMITY_RANGE;
+                    direction = dinosaur.getPosition().direction(target);
+
+                    dinosaur.setTest(target);
+
+                }
 
             }
         }
@@ -76,7 +144,7 @@ public class MoveToFoodSource extends State {
     public void initTransitions() {
 
         //We can do this, because the update is called before the next check transitions
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getTarget() == null));
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> target == null));
 
         //If the target is a dinosaur go to the hunt state.
         addTransition(new StateTransition(StateFactory.States.hunt, simulation -> dinosaur.getTarget() instanceof Dinosaur));
@@ -86,7 +154,7 @@ public class MoveToFoodSource extends State {
 
     }
 
-    private boolean reached(Simulation simulation){
+    private boolean reached(Simulation simulation) {
         return simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), target, targetInteractionRange);
     }
 
