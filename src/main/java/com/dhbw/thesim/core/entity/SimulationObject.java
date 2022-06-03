@@ -96,7 +96,7 @@ public abstract class SimulationObject extends StateMachine {
     /**
      * Sets/Updates and image for the representation of this {@link SimulationObject} <br>
      * This method also updates the {@link #renderOffset} to center the image/sprite. <br>
-     * The position of the {@link SimulationObject} is in the middle of the image at the bottom.
+     * The position of the {@link SimulationObject} is in the center of the image.
      *
      * @param image The new image, which should be shown.
      */
