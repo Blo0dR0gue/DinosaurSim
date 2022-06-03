@@ -183,7 +183,7 @@ public class Simulation {
      * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
      * @return The closest {@link SimulationObject}s in range.
      */
-    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange,  Dinosaur.dietType dietType, String type,
+    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
                                                                  boolean canSwim, boolean canClimb) {
 
         List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb);
@@ -314,19 +314,44 @@ public class Simulation {
         return target;
     }
 
+    /**
+     * Checks, if a point with a range (a circle) intersect any interaction range.
+     *
+     * @param target           The target {@link Vector2D} point
+     * @param interactionRange The range of the point (circle), which should be checked.
+     * @return true, if the check circle intersect with any interaction range.
+     */
     private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange) {
-        if(isPointInsideAnyInteractionRange(target)){
+        if (isPointInsideAnyInteractionRange(target)) {
             return true;
         }
 
-        for (SimulationObject simulationObject: simulationObjects) {
-            if(doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())){
+        for (SimulationObject simulationObject : simulationObjects) {
+            if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                 return true;
             }
         }
         return false;
     }
 
+    /**
+     * Checks if a {@link SimulationObject} can move to a position.
+     *
+     * @param start                         The {@link Vector2D} position of the {@link SimulationObject}.
+     * @param target                        The {@link Vector2D} target, where he wants to move.
+     * @param interactionRange              The interaction range of the {@link SimulationObject}.
+     * @param canSwim                       Can the {@link SimulationObject} swim?
+     * @param canClimb                      Can the {@link SimulationObject} climb?
+     * @param renderOffset                  The render offset of the {@link SimulationObject}.
+     * @param ignoreRenderAndTileConditions true, if the render conditions (e.g. rendered outside and tile conditions e.g. the target is swimmable but the {@link SimulationObject} does not) should be ignored
+     * @param ignoreTargetTile              true, if we don't want to check the target tile. (See the linked functions for a better understanding)
+     * @return true, if the {@link SimulationObject} can move to the target
+     * @see SimulationMap#tileMatchedConditions(Vector2D, boolean, boolean)
+     * @see SimulationObject#willBeRenderedOutside(Vector2D, Vector2D)
+     * @see #targetTileCanBeReached(Vector2D, Vector2D, boolean, boolean, boolean)
+     * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
+     * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
+     */
     public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
 
         //Is this point inside the grid?
@@ -347,15 +372,14 @@ public class Simulation {
             return false;
         }
 
-        //Does the point with the interaction range of the moving object intersect with any other interaction range, then find another point.
-        if(!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange)){
+        //If we don't ignore the target tile and
+        //does the point with the interaction range of the moving object intersect with any other interaction range, then find another point.
+        if (!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange)) {
             return false;
         }
-        System.out.println("start");
         //Check, if this target direction is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != start && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTile)) {
-                System.out.println("check");
                 return false;
             }
         }
@@ -455,10 +479,11 @@ public class Simulation {
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
      *
-     * @param start    The start {@link Vector2D} position in the simulation world.
-     * @param target   The target {@link Vector2D} position in the simulation world.
-     * @param canSwim  Can the {@link Dinosaur} swim?
-     * @param canClimb Can the {@link Dinosaur} climb?
+     * @param start            The start {@link Vector2D} position in the simulation world.
+     * @param target           The target {@link Vector2D} position in the simulation world.
+     * @param canSwim          Can the {@link Dinosaur} swim?
+     * @param canClimb         Can the {@link Dinosaur} climb?
+     * @param ignoreTargetTile true, we don't want to check the conditions for the target tile. (Swimmable, Climbable)
      * @return true, if all tiles from the start to the target can be crossed.
      */
     private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, boolean ignoreTargetTile) {
@@ -551,7 +576,7 @@ public class Simulation {
      * @param radius           The radius of the range circle.
      * @param start            The start {@link Vector2D} of the line segment.
      * @param end              The end {@link Vector2D} of the line segment.
-     * @param ignoreTargetTile if true, the end point of the line segment is not checked, if it is inside the circle.
+     * @param ignoreTargetTile if true, then the end point of the line segment is not checked, if it is inside the circle.
      * @return true, if the line collide with the circle.
      */
     private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end, boolean ignoreTargetTile) {
