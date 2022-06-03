@@ -48,8 +48,8 @@ public class Dinosaur extends SimulationObject {
     private boolean isChased;
 
     //TODO check values?
-    private final static double nutritionReductionRate = 0.2;
-    private final static double hydrationReductionRate = 0.4;
+    private final static double nutritionReductionRate = 0.1;
+    private final static double hydrationReductionRate = 0.25;
 
     public final static double PROXIMITY_RANGE = 2.5;
 
@@ -87,7 +87,7 @@ public class Dinosaur extends SimulationObject {
         this.hydrationFull = this.hydration;
 
         //TODO remove test objects
-        this.circle = new Circle(0, 0, viewRange, Color.GREEN);
+        this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
 
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
@@ -120,7 +120,7 @@ public class Dinosaur extends SimulationObject {
      * @param deltaTime The time since the last update call in seconds.
      */
     private void decreaseLifeStats(double deltaTime) {
-        //this.hydration -= hydrationReductionRate * deltaTime;
+        this.hydration -= hydrationReductionRate * deltaTime;
         this.nutrition -= nutritionReductionRate * deltaTime;
     }
 
@@ -257,6 +257,14 @@ public class Dinosaur extends SimulationObject {
      */
     public boolean isHungry() {
         return nutrition / nutritionFull <= 0.5;
+    }
+
+    public double getMaxNutrition(){
+        return nutritionFull;
+    }
+
+    public double getMaxHydration(){
+        return hydrationFull;
     }
 
     /**
