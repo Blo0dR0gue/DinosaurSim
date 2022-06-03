@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.simulation;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
@@ -80,8 +81,17 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "Test", "test.png", 10, 10, 5, 25,
                 0.1, 100, 50, 10, true, true,
-                'f', 400, 64, 'M')
+                'p', 400, 32, 'M')
         );
+
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
 
         //Draw the map
         drawMap();
@@ -95,21 +105,21 @@ public class Simulation {
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
     private void spawnObjects(SimulationOverlay simulationOverlay) {
-        for (SimulationObject obj : simulationObjects) {
-            //TODO remove test objects
-            simulationOverlay.getChildren().add(obj.getCircle());
-            simulationOverlay.getChildren().add(obj.getJavaFXObj());
-            simulationOverlay.getChildren().add(obj.getTest());
 
+        for (SimulationObject obj : simulationObjects) {
             //Set the object start position
             if (obj instanceof Dinosaur dinosaur) {
+                //TODO remove test objects
+                simulationOverlay.getChildren().add(obj.getCircle());
+                simulationOverlay.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb()));
             } else {
                 //Plants only can be spawned on none swimmable and climbable areas.
                 obj.setPosition(getFreePositionInMap(false, false));
             }
-            
+
+            simulationOverlay.getChildren().add(obj.getJavaFXObj());
         }
     }
 
@@ -131,6 +141,87 @@ public class Simulation {
                 );
             }
         }
+    }
+
+    /**
+     * Gets the closest {@link SimulationObject} which can be eaten by the searcher {@link Dinosaur}
+     *
+     * @param position  The {@link Vector2D} position of the seeker.
+     * @param viewRange The view range (as radius) of the seeker.
+     * @param dietType  The {@link Dinosaur.dietType} of the seeker.
+     * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
+     * @return The closest {@link SimulationObject}s in range.
+     */
+    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
+                                                                 boolean canSwim, boolean canClimb) {
+
+        List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb);
+
+        if (dietType != Dinosaur.dietType.omnivore) {
+            List<SimulationObject> sorted = sortByDistance(position, inRange);
+            if (sorted.size() > 0)
+                return sorted.get(0);
+            return null;
+        } else {
+            //An omnivore prioritized plants. So if a plant is in range this will be the target.
+            SimulationObject closest = null;
+            for (SimulationObject simulationObject : inRange) {
+
+                if (closest == null) {
+                    closest = simulationObject;
+                } else {
+                    if (closest instanceof Plant && simulationObject instanceof Plant || closest instanceof Dinosaur && simulationObject instanceof Dinosaur) {
+
+                        //If the distance of the last closest object ist lager than the distance of the current object, which is being checked, set it to the current object.
+                        if (Vector2D.distance(position, closest.getPosition()) > Vector2D.distance(position, simulationObject.getPosition())) {
+                            closest = simulationObject;
+                        }
+
+                    } else if (!(closest instanceof Plant) && simulationObject instanceof Plant) {
+                        closest = simulationObject;
+                    }
+                }
+            }
+            return closest;
+        }
+    }
+
+    /**
+     * Gets all {@link SimulationObject}s which can be eaten by the searcher {@link Dinosaur}
+     *
+     * @param position  The {@link Vector2D} position of the seeker.
+     * @param viewRange The view range (as radius) of the seeker.
+     * @param dietType  The {@link Dinosaur.dietType} of the seeker.
+     * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
+     * @return A list with all eatable {@link SimulationObject}s in range.
+     */
+    public List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
+                                                                  boolean canSwim, boolean canClimb) {
+
+        List<SimulationObject> inRange = new ArrayList<>();
+
+        for (SimulationObject simulationObject : simulationObjects) {
+
+            if (simulationObject.getPosition() != position) {
+                if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
+                    if (dietType == Dinosaur.dietType.herbivore && simulationObject instanceof Plant plant) {
+                        inRange.add(plant);
+                    } else if (dietType == Dinosaur.dietType.carnivore && simulationObject instanceof Dinosaur dinosaur) {
+                        //We don't want to hunt a dinosaur who is the same type as the searcher.
+                        if (!dinosaur.getType().equalsIgnoreCase(type)) {
+                            inRange.add(dinosaur);
+                        }
+                    } else {
+                        //It's an omnivore
+                        inRange.add(simulationObject);
+                    }
+                }
+            }
+        }
+
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), canSwim, canClimb, null, true, true));
+
+        return inRange;
     }
 
     /**
@@ -192,6 +283,35 @@ public class Simulation {
         return target;
     }
 
+    public boolean canMoveTo(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
+
+        //Is this point inside the grid?
+        if (!simulationMap.isInsideOfGrid(target)) {
+            return false;
+        }
+
+        //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
+        //If so get another point.
+        if (!ignoreRenderAndTileConditions && (!simulationMap.tileMatchedConditions(target, canSwim, canClimb) ||
+                SimulationObject.willBeRenderedOutside(target, renderOffset))
+        ) {
+            return false;
+        }
+
+        //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
+        if (!targetTileCanBeReached(start, target, canSwim, canClimb)) {
+            return false;
+        }
+
+        //Check, if this target point is in any interaction range. If so, find another target.
+        for (SimulationObject simulationObject : simulationObjects) {
+            if (simulationObject.getPosition() != start && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTile)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 
     /**
      * TODO optimize, very stupid approach. :D
@@ -207,31 +327,8 @@ public class Simulation {
     public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
 
-        //Is this point inside the grid?
-        if (!simulationMap.isInsideOfGrid(target)) {
+        if (!canMoveTo(position, target, canSwim, canClimb, renderOffset, false, false))
             return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
-        }
-
-        //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
-        //If so get another point.
-        if (!simulationMap.tileMatchedConditions(target, canSwim, canClimb) ||
-                isPointInsideAnyInteractionRange(target) ||
-                SimulationObject.willBeRenderedOutside(target, renderOffset)
-        ) {
-            return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
-        }
-
-        //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
-        if (!targetTileCanBeReached(position, target, canSwim, canClimb)) {
-            return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
-        }
-
-        //Check, if this target point is in any interaction range. If so, find another target.
-        for (SimulationObject simulationObject : simulationObjects) {
-            if (simulationObject.getPosition() != position && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), position, target)) {
-                return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
-            }
-        }
 
         return target;
     }
@@ -402,11 +499,12 @@ public class Simulation {
      * @param radius       The radius of the range circle.
      * @param start        The start {@link Vector2D} of the line segment.
      * @param end          The end {@link Vector2D} of the line segment.
+     * @param ignoreTargetTile if true, it is not checked, if the end point of the line segment is inside the circle.
      * @return true, if the line collide with the circle.
      */
-    private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end) {
+    private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end, boolean ignoreTargetTile) {
 
-        if (isPointInsideCircle(circleOrigin, radius, start) || isPointInsideCircle(circleOrigin, radius, end)) {
+        if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile  && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
 
@@ -423,6 +521,10 @@ public class Simulation {
             minDist = Math.min(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
         }
 
+        //If we ignore the end tile and the vector distance between the end and the origin is inside the radius we return false as specified.
+        if(ignoreTargetTile && Vector2D.distance(circleOrigin, end) <= radius)
+            return false;
+
         return minDist <= radius && maxDist >= radius;
     }
 
@@ -435,7 +537,7 @@ public class Simulation {
      * @param radius2       The radius of the second circle.
      * @return true, if the circles intersect.
      */
-    private boolean doTheCirclesIntersect(Vector2D circleOrigin1, double radius1, Vector2D circleOrigin2, double radius2) {
+    public boolean doTheCirclesIntersect(Vector2D circleOrigin1, double radius1, Vector2D circleOrigin2, double radius2) {
         double distSq = Math.pow(Vector2D.distance(circleOrigin1, circleOrigin2), 2);
         double radSumSq = Math.pow(radius1 + radius2, 2);
         return distSq < radSumSq;
