@@ -24,6 +24,7 @@ public class Dinosaur extends SimulationObject {
         herbivore,
         omnivore
     }
+
     // TODO comments pls; make final
     private double nutritionFull;
     private double hydrationFull;
@@ -37,7 +38,7 @@ public class Dinosaur extends SimulationObject {
     private double height;
     private boolean canSwim;
     private boolean canClimb;
-    private char diet;
+    private dietType diet;
     private double viewRange;
 
     private char gender;
@@ -54,8 +55,8 @@ public class Dinosaur extends SimulationObject {
     public final static double PROXIMITY_RANGE = 2.5;
 
     //TODO remove, if json2object is implemented
-    public Dinosaur(){
-        super("test",0, "NaN");
+    public Dinosaur() {
+        super("test", 0, "NaN");
     }
 
     /**
@@ -64,11 +65,12 @@ public class Dinosaur extends SimulationObject {
     public Dinosaur(String name, String imgName, double nutrition, double hydration,
                     int strength, int speed, double reproductionRate, double weight, double length, double height,
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
-                    double interactionRange, char gender){
-        super(name, interactionRange, "/dinosaur/"+imgName);
+                    double interactionRange, char gender) {
+        super(name, interactionRange, "/dinosaur/" + imgName);
         //TODO
-        //this.dinoType = dinoType;
-        this.diet = diet;
+
+        this.diet = diet == 'a' ? dietType.omnivore : diet == 'f' ? dietType.carnivore : dietType.herbivore;
+
         this.nutrition = nutrition;
         this.hydration = hydration;
         this.strength = strength;
@@ -86,7 +88,7 @@ public class Dinosaur extends SimulationObject {
         this.hydrationFull = this.hydration;
 
         //TODO remove test objects
-        this.circle = new Circle(0,0,viewRange, Color.GREEN);
+        this.circle = new Circle(0, 0, viewRange, Color.GREEN);
 
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
@@ -125,7 +127,7 @@ public class Dinosaur extends SimulationObject {
         circle.setTranslateY(position.getY());
     }
 
-    public void setTest(Vector2D target){
+    public void setTest(Vector2D target) {
         test.setTranslateX(target.getX());
         test.setTranslateY(target.getY());
     }
@@ -133,7 +135,7 @@ public class Dinosaur extends SimulationObject {
     /**
      * Getter & Setter Methods for a {@link Dinosaur}-object.
      */
-    public char getDiet() {
+    public dietType getDiet() {
         return diet;
     }
 
@@ -240,36 +242,40 @@ public class Dinosaur extends SimulationObject {
     /**
      * Checks, if the {@link Dinosaur} is hungry. <br>
      * A dinosaur is hungry, if his {@link #nutrition} is 50% or less of the max level.
+     *
      * @return true, if the dinosaur is hungry.
      */
-    public boolean isHungry(){
-        return nutrition/nutritionFull <= 0.5;
+    public boolean isHungry() {
+        return nutrition / nutritionFull <= 0.5;
     }
 
     /**
      * Checks, if the {@link Dinosaur} is thirsty. <br>
      * A dinosaur is thirsty, if his {@link #hydration} is 50% or less of the max level.
+     *
      * @return true, if the dinosaur is thirsty.
      */
-    public boolean isThirsty(){
-        return hydration/hydrationFull <= 0.5;
+    public boolean isThirsty() {
+        return hydration / hydrationFull <= 0.5;
     }
 
     /**
      * Checks, if the {@link Dinosaur} died of thirst. <br>
      * A dinosaur died of thirst, if his {@link #hydration} is 0.
+     *
      * @return true, if the dinosaur died of thirst.
      */
-    public boolean diedOfThirst(){
+    public boolean diedOfThirst() {
         return hydration <= 0;
     }
 
     /**
      * Checks, if the {@link Dinosaur} died of starvation. <br>
      * A dinosaur died of starvation, if his {@link #nutrition} is 0.
+     *
      * @return true, if the dinosaur died of starvation.
      */
-    public boolean diedOfHunger(){
+    public boolean diedOfHunger() {
         return nutrition <= 0;
     }
 
