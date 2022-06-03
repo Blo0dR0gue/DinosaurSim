@@ -12,6 +12,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 import java.util.Objects;
 
@@ -124,6 +126,15 @@ public abstract class SimulationObject extends StateMachine {
      */
     public double getInteractionRange() {
         return interactionRange;
+    }
+
+    /**
+     * Flips the image vertically.
+     */
+    public void flipImage(){
+        Translate flipTranslation = new Translate(0,imageObj.getImage().getHeight());
+        Rotate flipRotation = new Rotate(180,Rotate.X_AXIS);
+        imageObj.getTransforms().addAll(flipTranslation,flipRotation);
     }
 
     /**

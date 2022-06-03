@@ -13,12 +13,18 @@ import com.dhbw.thesim.core.statemachine.state.State;
 public class Escape extends State {
 
     /**
+     * Helper {@link Dinosaur} variable, to get dinosaur specific variables
+     */
+    private final Dinosaur dinosaur;
+
+    /**
      * Constructor
      *
      * @param simulationObject The handled {@link SimulationObject}
      */
     public Escape(Dinosaur simulationObject) {
         super(simulationObject);
+        this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
     @Override

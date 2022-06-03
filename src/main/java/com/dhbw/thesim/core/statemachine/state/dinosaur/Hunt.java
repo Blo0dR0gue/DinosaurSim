@@ -13,12 +13,18 @@ import com.dhbw.thesim.core.statemachine.state.State;
 public class Hunt extends State {
 
     /**
+     * Helper {@link Dinosaur} variable, to get dinosaur specific variables
+     */
+    private final Dinosaur dinosaur;
+
+    /**
      * Constructor
      *
      * @param simulationObject The handled {@link SimulationObject}
      */
     public Hunt(Dinosaur simulationObject) {
         super(simulationObject);
+        this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
     @Override
