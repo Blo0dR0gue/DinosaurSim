@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.map;
 
+import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -29,11 +30,15 @@ public class Tile {
      * Defines, iff this tile can ony be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can climb.
      */
     private boolean climbable;
+
+    private final int gridX;
+    private final int gridY;
+
     //region constants
     /**
      * The square size for one tile (as specified in the requirement's specification)
      */
-    public static final int TILE_SIZE = 45;
+    public static final double TILE_SIZE = SimulationOverlay.adjustScale(45, SimulationOverlay.SCALE_X);
     //endregion
 
     //endregion
@@ -44,8 +49,10 @@ public class Tile {
      * @param image The background for this {@link Tile} object.
      * @see #background
      */
-    public Tile(Image image) {
+    public Tile(Image image, int gridX, int gridY) {
         this.background = image;
+        this.gridX = gridX;
+        this.gridY = gridY;
     }
 
     //region getter & setter
@@ -72,6 +79,15 @@ public class Tile {
     public void setClimbable(boolean climbable) {
         this.climbable = climbable;
     }
+
+    public int getGridX() {
+        return gridX;
+    }
+
+    public int getGridY() {
+        return gridY;
+    }
+
     //endregion
 
     /**
