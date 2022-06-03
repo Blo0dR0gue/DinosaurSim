@@ -143,7 +143,7 @@ public class JsonHandler {
                 String key = jsonObjectPlant.keySet().toArray()[0].toString();
                 hashMap.put(key,jsonObjectPlant.get(key));
             }
-        }else {
+        }else if(type==SimulationObjectType.LANDSCAPE){
             String name = ((JSONObject) (jsonArrayScenario.get(2))).get("Landschaft").toString();
             hashMap.put("Landscape",name);
         }
