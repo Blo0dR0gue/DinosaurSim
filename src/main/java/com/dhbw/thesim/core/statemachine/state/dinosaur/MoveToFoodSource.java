@@ -43,7 +43,7 @@ public class MoveToFoodSource extends State {
     public void update(double deltaTime, Simulation simulation) {
 
         //TODO check condition
-        if (dinosaur.getTarget() == null && target == null) {
+        if (target == null) {
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
 
                 //TODO
@@ -153,6 +153,9 @@ public class MoveToFoodSource extends State {
 
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
+
+        //If we can't reach the target anymore
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
 
     }
 

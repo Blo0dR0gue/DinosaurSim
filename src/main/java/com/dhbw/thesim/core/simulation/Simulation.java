@@ -84,6 +84,24 @@ public class Simulation {
                 'p', 400, 32, 'M')
         );
 
+        this.simulationObjects.add(new Dinosaur(
+                "Test", "test.png", 10, 10, 5, 25,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'F')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", "test.png", 10, 10, 5, 25,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'M')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", "test.png", 10, 10, 5, 25,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'M')
+        );
+
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
@@ -242,7 +260,7 @@ public class Simulation {
                         if (!dinosaur.getType().equalsIgnoreCase(type)) {
                             inRange.add(dinosaur);
                         }
-                    } else {
+                    } else if(dietType == Dinosaur.dietType.omnivore) {
                         //It's an omnivore
                         inRange.add(simulationObject);
                     }
@@ -380,6 +398,7 @@ public class Simulation {
         //Check, if this target direction is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != start && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTile)) {
+                System.out.println("no");
                 return false;
             }
         }
