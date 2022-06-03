@@ -427,18 +427,18 @@ public class Simulation {
     }
 
     /**
-     * Checks, if two circles intersect or touch each other.
+     * Checks, if two circles intersect.
      *
      * @param circleOrigin1 The {@link Vector2D} center point of the first circle.
      * @param radius1       The radius of the first circle.
      * @param circleOrigin2 The {@link Vector2D} center point of the second circle.
      * @param radius2       The radius of the second circle.
-     * @return true, if the circles intersect or touch.
+     * @return true, if the circles intersect.
      */
     private boolean doTheCirclesIntersect(Vector2D circleOrigin1, double radius1, Vector2D circleOrigin2, double radius2) {
         double distSq = Math.pow(Vector2D.distance(circleOrigin1, circleOrigin2), 2);
         double radSumSq = Math.pow(radius1 + radius2, 2);
-        return distSq <= radSumSq;
+        return distSq < radSumSq;
     }
 
 }
