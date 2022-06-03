@@ -55,7 +55,9 @@ public class Plant extends SimulationObject {
      */
     @Override
     public void updateGraphics() {
-        //TODO
+        //TODO do only once
+        imageObj.setTranslateX(position.getX() - renderOffset.getX());
+        imageObj.setTranslateY(position.getY() - renderOffset.getY());
     }
 
     /**
