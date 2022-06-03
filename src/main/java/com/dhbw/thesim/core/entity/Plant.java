@@ -1,6 +1,8 @@
 package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
 /**
  * It's a plant-object in our simulation, which can be eaten.
@@ -36,6 +38,8 @@ public class Plant extends SimulationObject {
     public Plant(String name, String imgName, double interactionRange, double growthRate) {
         super(name, interactionRange, "/plant/"+imgName);
         this.growthRate = growthRate;
+        this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
+
     }
 
     /**
@@ -58,6 +62,8 @@ public class Plant extends SimulationObject {
         //TODO do only once
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
+        circle.setTranslateX(position.getX());
+        circle.setTranslateY(position.getY());
     }
 
     /**
