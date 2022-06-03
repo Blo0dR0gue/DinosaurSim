@@ -58,6 +58,12 @@ public class Ingestion extends State {
 
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
+        //&& simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isThirsty()));
+
+        //&& simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb()) != null
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isHungry()));
+        /*
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
                 simulation -> done && dinosaur.isThirsty() &&
                         simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null));
@@ -66,7 +72,7 @@ public class Ingestion extends State {
                 simulation ->
                         done && dinosaur.isHungry() &&
                                 simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
-                                        dinosaur.canSwim(), dinosaur.canClimb()) != null));
+                                        dinosaur.canSwim(), dinosaur.canClimb()) != null));*/
 
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> done));
 
