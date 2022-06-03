@@ -17,8 +17,6 @@ import javafx.scene.shape.Circle;
  */
 public class Dinosaur extends SimulationObject {
 
-    //English?
-    //TODO do we need this? Maybe to convert the diet char to a enum for easy usage.
     public enum dietType {
         carnivore,
         herbivore,
