@@ -103,7 +103,7 @@ public abstract class SimulationObject extends StateMachine {
     public void setSprite(Image image) {
         imageObj.setImage(image);
         renderOffset.setX(image.getWidth()/2);
-        renderOffset.setY(image.getHeight());
+        renderOffset.setY(image.getHeight()/2);
     }
 
     /**
