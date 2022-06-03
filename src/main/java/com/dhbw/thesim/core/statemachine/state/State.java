@@ -30,7 +30,7 @@ public abstract class State {
      *
      * @param simulationObject The handled {@link SimulationObject}
      */
-    public State(SimulationObject simulationObject){
+    public State(SimulationObject simulationObject) {
         this.stateTransitionList = new ArrayList<>();
         this.simulationObject = simulationObject;
         //Init all transitions
@@ -39,7 +39,8 @@ public abstract class State {
 
     /**
      * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
-     * @param deltaTime The delta time since the last update call.
+     *
+     * @param deltaTime  The delta time since the last update call.
      * @param simulation The {@link Simulation} data of the currently running simulation.
      */
     public abstract void update(double deltaTime, Simulation simulation);
@@ -52,19 +53,22 @@ public abstract class State {
     /**
      * Adds a {@link StateTransition} to the {@link #stateTransitionList} of this {@link State}. <br>
      * Transitions are checked by the {@link #checkTransitions(Simulation)} function in the order they were added.
+     *
      * @param stateTransition The {@link StateTransition} which should be added.
      */
-    public void addTransition(StateTransition stateTransition){
+    public void addTransition(StateTransition stateTransition) {
         this.stateTransitionList.add(stateTransition);
     }
 
     /**
      * Checks, if any transition is met. If yes, return the next state for this transition otherwise return null.
+     *
+     * @param simulation The current {@link Simulation} data.
      * @return The next {@link State} or null.
      */
-    public State checkTransitions(Simulation simulation){
-        for (StateTransition stateTransition: stateTransitionList) {
-            if(stateTransition.shouldTransition(simulation)){
+    public State checkTransitions(Simulation simulation) {
+        for (StateTransition stateTransition : stateTransitionList) {
+            if (stateTransition.shouldTransition(simulation)) {
                 return stateTransition.getNextState(simulationObject);
             }
         }

@@ -30,6 +30,7 @@ public abstract class StateMachine {
     /**
      * Needs to be called each update call. <br>
      * This method handles state transitions.
+     * @param simulation The current {@link Simulation} data.
      */
     public void stateMachineTick(Simulation simulation) {
         State nextState = currentState.checkTransitions(simulation);

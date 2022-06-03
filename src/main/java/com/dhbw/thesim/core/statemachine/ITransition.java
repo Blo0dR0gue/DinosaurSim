@@ -9,6 +9,11 @@ import com.dhbw.thesim.core.simulation.Simulation;
  */
 public interface ITransition {
 
+    /**
+     * Checks, if a transition is true
+     * @param simulation The current {@link Simulation} data
+     * @return true, if the transition conditions are met.
+     */
     boolean isMet(Simulation simulation);
 
 }

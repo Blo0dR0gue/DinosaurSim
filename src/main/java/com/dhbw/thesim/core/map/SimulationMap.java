@@ -252,10 +252,22 @@ public class SimulationMap {
         return tile;
     }
 
-    public Vector2D getCenterPositionOfTile(Tile tile) {
+    /**
+     * Gets the center {@link Vector2D} world position of a tile.
+     * @param tile The {@link Tile}
+     * @return The center position of the tile.
+     */
+    private Vector2D getCenterPositionOfTile(Tile tile) {
         return getWorldPosition(tile.getGridX(), tile.getGridY()).add(new Vector2D(Tile.TILE_SIZE / 2f, Tile.TILE_SIZE / 2f));
     }
 
+    /**
+     * Gets a random tile, matching a {@link com.dhbw.thesim.core.entity.Dinosaur} conditions.
+     * @param canSwim Can the dinosaur swim?
+     * @param canClimb Cna the dinosaur climb?
+     * @param random A {@link Random}.
+     * @return A random {@link Vector2D} word position matching the conditions.
+     */
     public Vector2D getRandomTileCenterPosition(boolean canSwim, boolean canClimb, Random random) {
         return getCenterPositionOfTile(getRandomTile(canSwim, canClimb, random));
     }
