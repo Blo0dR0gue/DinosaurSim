@@ -49,7 +49,23 @@ public class Wander extends State {
     @Override
     public void initTransitions() {
         //When target is reached -> transition to Stand-state.
-        addTransition(new StateTransition(StateFactory.States.stand, this::arrived));
+
+        addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
+        addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
+
+        //TODO
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
+                simulation -> dinosaur.isThirsty() && dinosaur.isHungry() && false));
+
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
+                simulation -> dinosaur.isThirsty() && false));
+
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
+                simulation ->
+                        dinosaur.isHungry() &&
+                                simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+                                        dinosaur.canSwim(), dinosaur.canClimb()) != null));
     }
 
     /**
