@@ -13,6 +13,11 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
 public class Stand extends State {
 
     /**
+     * Helper {@link Dinosaur} variable, to get dinosaur specific variables
+     */
+    private final Dinosaur dinosaur;
+
+    /**
      * Time since we entered this state.
      */
     private double timeSinceStart;
@@ -24,6 +29,7 @@ public class Stand extends State {
 
     public Stand(Dinosaur simulationObject) {
         super(simulationObject);
+        this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
     @Override
@@ -34,6 +40,7 @@ public class Stand extends State {
 
     @Override
     public void initTransitions() {
+        addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
         addTransition(new StateTransition(StateFactory.States.wander, (simulation) -> timeSinceStart >= waitTimeInSeconds));
     }
 }

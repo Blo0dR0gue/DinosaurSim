@@ -58,6 +58,8 @@ public class Ingestion extends State {
     @Override
     public void initTransitions() {
 
+        addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
                 simulation -> done && dinosaur.isThirsty() &&
                         simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null));

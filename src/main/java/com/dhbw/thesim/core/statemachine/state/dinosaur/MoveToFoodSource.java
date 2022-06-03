@@ -143,6 +143,8 @@ public class MoveToFoodSource extends State {
     @Override
     public void initTransitions() {
 
+        addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
         //We can do this, because the update is called before the next check transitions
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> target == null));
 
