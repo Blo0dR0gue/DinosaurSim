@@ -577,7 +577,8 @@ public class Simulation {
         if (ignoreTargetTile && Vector2D.distance(circleOrigin, end) == 0)
             return false;
 
-        System.out.println(minDist + " " + maxDist + " " + radius + " " + circleOrigin);
+        //TODO FIX TODO?
+        //System.out.println(minDist + " " + maxDist + " " + radius + " " + circleOrigin);
 
         return minDist <= radius && maxDist >= radius;
     }
