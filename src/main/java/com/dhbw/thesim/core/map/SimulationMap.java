@@ -61,8 +61,10 @@ public class SimulationMap {
             }
         }
 
-        for(int i = 0; i < height; i++){
-            tiles[15][i].setSwimmable(true);
+        for (int x = 8; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                tiles[x][y].setSwimmable(true);
+            }
         }
 
 
@@ -172,44 +174,39 @@ public class SimulationMap {
      * @param canClimb true, if the dinosaur can climb.
      * @return true, if the dinosaur can move onto this tile.
      */
-    public boolean tileMatchedConditions(Tile tile, boolean canSwim, boolean canClimb) {
+    private boolean tileMatchedConditions(Tile tile, boolean canSwim, boolean canClimb) {
         return tile != null && (!tile.isSwimmable() && !tile.isClimbable() || tile.isSwimmable() && canSwim || tile.isClimbable() && canClimb);
     }
 
-    private List<Tile> getTilesInRange(Tile tile, int range) {
-        List<Tile> tileObjects = new ArrayList<>();
-
-        for (int x = -range; x <= range; x++) {
-            for (int y = -range; y <= range; y++) {
-                //if (x == 0 && y == 0)
-                //    continue;
-
-                int checkX = tile.getGridX() + x;
-                int checkY = tile.getGridY() + y;
-
-                if (isInsideOfGrid(checkX, checkY)) {
-                    tileObjects.add(getTileAtPosition(checkX, checkY));
-                }
-            }
-        }
-
-        return tileObjects;
+    private boolean tileConditionsAre(Tile tile, boolean swimmable, boolean climbable) {
+        return tile.isSwimmable() == swimmable && tile.isClimbable() == climbable;
     }
 
-    private List<Tile> getTilesInRangeMatchingConditions(Tile tile, int range, boolean swimmable, boolean climbable) {
+
+    /**
+     * Get all {@link Tile} in range, which met the condisions.
+     *
+     * @param tile      The tile, from where we want to check
+     * @param range     The range of tiles.
+     * @param swimmable Do the matching {@link Tile}s need to be swimmable
+     * @param climbable Do the matching {@link Tile}s need to be climbable
+     * @return A List with all matching tiles.
+     */
+    private List<Tile> getTilesInRangeWhereConditionsAre(Tile tile, int range, boolean swimmable, boolean climbable) {
         List<Tile> tileObjects = new ArrayList<>();
 
         for (int x = -range; x <= range; x++) {
             for (int y = -range; y <= range; y++) {
-                //if (x == 0 && y == 0)
-                //    continue;
+
+                if (x == 0 && y == 0)
+                    continue;
 
                 int checkX = tile.getGridX() + x;
                 int checkY = tile.getGridY() + y;
 
                 if (isInsideOfGrid(checkX, checkY)) {
                     Tile tmpTile = getTileAtPosition(checkX, checkY);
-                    if (tileMatchedConditions(tile, swimmable, climbable))
+                    if (tileConditionsAre(tmpTile, swimmable, climbable))
                         tileObjects.add(tmpTile);
                 }
             }
@@ -238,11 +235,6 @@ public class SimulationMap {
         return tiles;
     }
 
-    public Tile getRandomTileInRange(Vector2D center, double radius, Random random) {
-        List<Tile> tiles = getTilesInRange(getTileAtPosition(center), (int) radius);
-        return tiles.get(random.nextInt(tiles.size()));
-    }
-
     /**
      * Gets a random tile on the map, matching the conditions.
      *
@@ -261,11 +253,34 @@ public class SimulationMap {
     }
 
     public Vector2D getCenterPositionOfTile(Tile tile) {
-        return getWorldPosition(tile.getGridX(), tile.getGridY()).add(new Vector2D(Tile.TILE_SIZE/2f, Tile.TILE_SIZE/2f));
+        return getWorldPosition(tile.getGridX(), tile.getGridY()).add(new Vector2D(Tile.TILE_SIZE / 2f, Tile.TILE_SIZE / 2f));
     }
 
-    public Vector2D getRandomTileCenterPosition(boolean canSwim, boolean canClimb, Random random){
+    public Vector2D getRandomTileCenterPosition(boolean canSwim, boolean canClimb, Random random) {
         return getCenterPositionOfTile(getRandomTile(canSwim, canClimb, random));
+    }
+
+    /**
+     * Gets all center coordinates of tiles that satisfy the requirements.
+     *
+     * @param origin    The world position from which we want to check
+     * @param range     The radial range (e.g. view range)
+     * @param swimmable Do the tile need to be swimmable (water tile)
+     * @param climbable Do the tile need to be climbable (mountain tile)
+     * @return A list of {@link Vector2D} with all center coordinates
+     */
+    public List<Vector2D> getMidCoordinatesOfMatchingTiles(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+        List<Vector2D> matchingPosition = new ArrayList<>();
+
+        Tile startTile = getTileAtPosition(origin);
+
+        int localRange = (int) Math.ceil(range / Tile.TILE_SIZE);
+
+        for (Tile tile : getTilesInRangeWhereConditionsAre(startTile, localRange, swimmable, climbable)) {
+            matchingPosition.add(getCenterPositionOfTile(tile));
+        }
+
+        return matchingPosition;
     }
 
     //endregion
