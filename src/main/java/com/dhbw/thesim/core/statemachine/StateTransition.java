@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.statemachine;
 
 import com.dhbw.thesim.core.entity.SimulationObject;
+import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
@@ -16,8 +17,8 @@ public record StateTransition(StateFactory.States nextState,
      * Should we transition to the {@link #nextState}.
      * @return true, if the condition of {@link #stateTransition} is met.
      */
-    public boolean shouldTransition() {
-        return stateTransition.isMet();
+    public boolean shouldTransition(Simulation simulation) {
+        return stateTransition.isMet(simulation);
     }
 
     /**

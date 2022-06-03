@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.statemachine;
 
+import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 
 /**
@@ -30,8 +31,8 @@ public abstract class StateMachine {
      * Needs to be called each update call. <br>
      * This method handles state transitions.
      */
-    public void stateMachineTick() {
-        State nextState = currentState.checkTransitions();
+    public void stateMachineTick(Simulation simulation) {
+        State nextState = currentState.checkTransitions(simulation);
 
         if (nextState != null) {
             //TODO remove debug message

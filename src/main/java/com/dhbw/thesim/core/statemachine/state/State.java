@@ -51,7 +51,7 @@ public abstract class State {
 
     /**
      * Adds a {@link StateTransition} to the {@link #stateTransitionList} of this {@link State}. <br>
-     * Transitions are checked by the {@link #checkTransitions()} function in the order they were added.
+     * Transitions are checked by the {@link #checkTransitions(Simulation)} function in the order they were added.
      * @param stateTransition The {@link StateTransition} which should be added.
      */
     public void addTransition(StateTransition stateTransition){
@@ -62,9 +62,9 @@ public abstract class State {
      * Checks, if any transition is met. If yes, return the next state for this transition otherwise return null.
      * @return The next {@link State} or null.
      */
-    public State checkTransitions(){
+    public State checkTransitions(Simulation simulation){
         for (StateTransition stateTransition: stateTransitionList) {
-            if(stateTransition.shouldTransition()){
+            if(stateTransition.shouldTransition(simulation)){
                 return stateTransition.getNextState(simulationObject);
             }
         }

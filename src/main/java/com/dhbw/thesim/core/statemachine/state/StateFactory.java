@@ -2,8 +2,7 @@ package com.dhbw.thesim.core.statemachine.state;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
-import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
-import com.dhbw.thesim.core.statemachine.state.dinosaur.Wander;
+import com.dhbw.thesim.core.statemachine.state.dinosaur.*;
 
 /**
  * State factory, which creates {@link State}-objects. <br>
@@ -20,8 +19,18 @@ public class StateFactory {
      * Enum with all states, which can be used.
      */
     public enum States {
+        //Dinosaur states
         stand,
-        wander
+        wander,
+        moveToFoodSource,
+        mate,
+        ingestion,
+        hunt,
+        escape,
+        dead,
+        //Plant states
+        grow,
+        grown
     }
 
     /**
@@ -46,7 +55,14 @@ public class StateFactory {
     private static State createDinosaurState(States state, Dinosaur dinosaur) {
         return switch (state) {
             case wander -> new Wander(dinosaur);
+            case moveToFoodSource -> new MoveToFoodSource(dinosaur);
+            case mate -> new Mate(dinosaur);
+            case ingestion -> new Ingestion(dinosaur);
+            case hunt -> new Hunt(dinosaur);
+            case escape -> new Escape(dinosaur);
+            case dead -> new Dead(dinosaur);
             case stand -> new Stand(dinosaur);
+            default -> throw new IllegalStateException("Unexpected value: " + state);
         };
     }
 
