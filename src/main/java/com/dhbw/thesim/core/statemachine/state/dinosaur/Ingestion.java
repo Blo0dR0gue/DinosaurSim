@@ -38,8 +38,6 @@ public class Ingestion extends State {
     public void update(double deltaTime, Simulation simulation) {
 
         ingestionTime -=deltaTime;
-        System.out.println(ingestionTime);
-        System.out.println(dinosaur.getTarget());
 
         if(ingestionTime <= 0){
             if(dinosaur.getTarget() == null){
