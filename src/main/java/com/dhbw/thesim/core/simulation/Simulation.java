@@ -80,7 +80,7 @@ public class Simulation {
         //TODO remove temp code
         this.simulationObjects.add(new Dinosaur(
                 "Test", "test.png", 10, 10, 5, 25,
-                0.1, 100, 50, 10, true, true,
+                0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'M')
         );
 
@@ -92,6 +92,13 @@ public class Simulation {
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+
 
         //Draw the map
         drawMap();
@@ -108,15 +115,15 @@ public class Simulation {
 
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
+            simulationOverlay.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
                 //TODO remove test objects
-                simulationOverlay.getChildren().add(obj.getCircle());
                 simulationOverlay.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
-                dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb()));
+                dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange()));
             } else {
                 //Plants only can be spawned on none swimmable and climbable areas.
-                obj.setPosition(getFreePositionInMap(false, false));
+                obj.setPosition(getFreePositionInMap(false, false, obj.getInteractionRange()));
             }
 
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
@@ -143,6 +150,30 @@ public class Simulation {
         }
     }
 
+
+    public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
+        Vector2D target = null;
+        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
+
+        for (Vector2D waterTileCenterPos : waterSourcesInRange) {
+
+            if (target == null) {
+                boolean t1 = isPointInsideCircle(position, viewRange, waterTileCenterPos);
+                boolean t2 = canMoveTo(position, waterTileCenterPos, 0, canSwim, canClimb, null, true, true);
+                if (t1 && t2)
+                    target = waterTileCenterPos;
+            } else //If the distance to another water tile closer than the current target, and we can move to it, change it to the closer one.
+                if (isPointInsideCircle(position, viewRange, waterTileCenterPos) && Vector2D.distance(position, target) > Vector2D.distance(position, waterTileCenterPos) &&
+                        canMoveTo(position, waterTileCenterPos, 0, canSwim, canClimb, null, true, true)) {
+
+                    target = waterTileCenterPos;
+                }
+
+        }
+        System.out.println(target);
+        return target;
+    }
+
     /**
      * Gets the closest {@link SimulationObject} which can be eaten by the searcher {@link Dinosaur}
      *
@@ -152,7 +183,7 @@ public class Simulation {
      * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
      * @return The closest {@link SimulationObject}s in range.
      */
-    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
+    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange,  Dinosaur.dietType dietType, String type,
                                                                  boolean canSwim, boolean canClimb) {
 
         List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb);
@@ -219,7 +250,7 @@ public class Simulation {
             }
         }
 
-        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), canSwim, canClimb, null, true, true));
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
 
         return inRange;
     }
@@ -273,17 +304,30 @@ public class Simulation {
      * @param canClimb Can the {@link Dinosaur} climb.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb) {
+    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange) {
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
 
-        if (isPointInsideAnyInteractionRange(target)) {
-            return getFreePositionInMap(canSwim, canClimb);
+        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange)) {
+            return getFreePositionInMap(canSwim, canClimb, interactionRange);
         }
 
         return target;
     }
 
-    public boolean canMoveTo(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
+    private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange) {
+        if(isPointInsideAnyInteractionRange(target)){
+            return true;
+        }
+
+        for (SimulationObject simulationObject: simulationObjects) {
+            if(doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
 
         //Is this point inside the grid?
         if (!simulationMap.isInsideOfGrid(target)) {
@@ -299,13 +343,19 @@ public class Simulation {
         }
 
         //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
-        if (!targetTileCanBeReached(start, target, canSwim, canClimb)) {
+        if (!targetTileCanBeReached(start, target, canSwim, canClimb, ignoreTargetTile)) {
             return false;
         }
 
-        //Check, if this target point is in any interaction range. If so, find another target.
+        //Does the point with the interaction range of the moving object intersect with any other interaction range, then find another point.
+        if(!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange)){
+            return false;
+        }
+        System.out.println("start");
+        //Check, if this target direction is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != start && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTile)) {
+                System.out.println("check");
                 return false;
             }
         }
@@ -324,11 +374,11 @@ public class Simulation {
      * @param renderOffset The offset for the image of the object.
      * @return A {@link Vector2D} target position.
      */
-    public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
+    public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
 
-        if (!canMoveTo(position, target, canSwim, canClimb, renderOffset, false, false))
-            return getRandomMovementTargetInRange(position, viewRange, canSwim, canClimb, renderOffset);
+        if (!canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false))
+            return getRandomMovementTargetInRange(position, viewRange, interactionRange, canSwim, canClimb, renderOffset);
 
         return target;
     }
@@ -411,7 +461,7 @@ public class Simulation {
      * @param canClimb Can the {@link Dinosaur} climb?
      * @return true, if all tiles from the start to the target can be crossed.
      */
-    private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb) {
+    private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, boolean ignoreTargetTile) {
         Tile startTile = simulationMap.getTileAtPosition(start);
         Tile targetTile = simulationMap.getTileAtPosition(target);
 
@@ -481,12 +531,13 @@ public class Simulation {
             }
 
             //TODO delete debug
-            System.out.println(x + " " + y);
+            //System.out.println(x + " " + y);
 
-            if (!simulationMap.tileMatchedConditions(x, y, canSwim, canClimb)) {
-                //If this tile can't be crossed be the dinosaur, return false.
-                return false;
-            }
+            if (!(ignoreTargetTile && targetTile.getGridX() == x && targetTile.getGridY() == y))
+                if (!simulationMap.tileMatchedConditions(x, y, canSwim, canClimb)) {
+                    //If this tile can't be crossed be the dinosaur, return false.
+                    return false;
+                }
         }
 
         return true;
@@ -494,17 +545,18 @@ public class Simulation {
 
     /**
      * Checks, if a line segment collide with a view range circle.
+     * TODO fix, that a dinosaur cant move through a object (the line can fit through a hole a dinosaur should not :D)
      *
-     * @param circleOrigin The origin {@link Vector2D} of the range circle.
-     * @param radius       The radius of the range circle.
-     * @param start        The start {@link Vector2D} of the line segment.
-     * @param end          The end {@link Vector2D} of the line segment.
-     * @param ignoreTargetTile if true, it is not checked, if the end point of the line segment is inside the circle.
+     * @param circleOrigin     The origin {@link Vector2D} of the range circle.
+     * @param radius           The radius of the range circle.
+     * @param start            The start {@link Vector2D} of the line segment.
+     * @param end              The end {@link Vector2D} of the line segment.
+     * @param ignoreTargetTile if true, the end point of the line segment is not checked, if it is inside the circle.
      * @return true, if the line collide with the circle.
      */
     private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end, boolean ignoreTargetTile) {
 
-        if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile  && isPointInsideCircle(circleOrigin, radius, end)) {
+        if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
 
@@ -521,9 +573,11 @@ public class Simulation {
             minDist = Math.min(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
         }
 
-        //If we ignore the end tile and the vector distance between the end and the origin is inside the radius we return false as specified.
-        if(ignoreTargetTile && Vector2D.distance(circleOrigin, end) <= radius)
+        //If we ignore the end position and the origin and the end position are the same, we return false. (Happens for example, if we move to a food source (food source is target))
+        if (ignoreTargetTile && Vector2D.distance(circleOrigin, end) == 0)
             return false;
+
+        System.out.println(minDist + " " + maxDist + " " + radius + " " + circleOrigin);
 
         return minDist <= radius && maxDist >= radius;
     }
