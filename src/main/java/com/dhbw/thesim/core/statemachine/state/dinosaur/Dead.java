@@ -17,6 +17,8 @@ public class Dead extends State {
      */
     private final Dinosaur dinosaur;
 
+    private boolean triggered = false;
+
     /**
      * Constructor
      *
@@ -29,11 +31,14 @@ public class Dead extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
+        if(!triggered){
+            triggered = true;
+            //TODO delete object from map
+        }
     }
 
     @Override
     public void initTransitions() {
-
+        //Dead = end
     }
 }
