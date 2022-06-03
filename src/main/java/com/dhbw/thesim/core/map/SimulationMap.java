@@ -60,6 +60,12 @@ public class SimulationMap {
                 tiles[x][y] = new Tile(tmp, x, y);
             }
         }
+
+        for(int i = 0; i < height; i++){
+            tiles[15][i].setSwimmable(true);
+        }
+
+
     }
 
     /**
