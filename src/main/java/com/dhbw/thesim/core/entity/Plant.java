@@ -17,6 +17,12 @@ public class Plant extends SimulationObject {
         baum
     }
 
+
+    /**
+     * The level, where a plant is grown.
+     */
+    private static final double maxGrowth = 100;
+
     //TODO comments, make final
     private Plant.plantType plantType;
     private double growth;
@@ -69,5 +75,13 @@ public class Plant extends SimulationObject {
 
     public void setGrowth(double growth) {
         this.growth = growth;
+    }
+
+    /**
+     * Is this {@link Plant} grown
+     * @return true, if the {@link #growth} reached {@link #maxGrowth}
+     */
+    public boolean isGrown(){
+        return growth >= maxGrowth;
     }
 }
