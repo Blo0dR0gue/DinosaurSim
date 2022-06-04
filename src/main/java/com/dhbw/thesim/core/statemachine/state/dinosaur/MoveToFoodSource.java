@@ -57,7 +57,7 @@ public class MoveToFoodSource extends State {
                     System.out.println("Found water source");
 
                     targetInteractionRange = Tile.TILE_SIZE / 2 + Dinosaur.PROXIMITY_RANGE;
-                    direction = dinosaur.getPosition().direction(target);
+                    direction = dinosaur.getPosition().directionToTarget(target);
 
                     dinosaur.setTest(target);
                 } else if (target1 != null && target2 == null) {
@@ -67,7 +67,7 @@ public class MoveToFoodSource extends State {
 
                     target = dinosaur.getTarget().getPosition();
                     targetInteractionRange = dinosaur.getTarget().getInteractionRange();
-                    direction = dinosaur.getPosition().direction(target);
+                    direction = dinosaur.getPosition().directionToTarget(target);
 
                     dinosaur.setTest(target);
 
@@ -91,7 +91,7 @@ public class MoveToFoodSource extends State {
                         targetInteractionRange = dinosaur.getTarget().getInteractionRange();
 
                     }
-                    direction = dinosaur.getPosition().direction(target);
+                    direction = dinosaur.getPosition().directionToTarget(target);
                     dinosaur.setTest(target);
 
                 }
@@ -108,7 +108,7 @@ public class MoveToFoodSource extends State {
 
                     target = dinosaur.getTarget().getPosition();
                     targetInteractionRange = dinosaur.getTarget().getInteractionRange();
-                    direction = dinosaur.getPosition().direction(target);
+                    direction = dinosaur.getPosition().directionToTarget(target);
 
                     dinosaur.setTest(target);
                 }
@@ -123,7 +123,7 @@ public class MoveToFoodSource extends State {
                     System.out.println("Found water source");
 
                     targetInteractionRange = Tile.TILE_SIZE / 2 + Dinosaur.PROXIMITY_RANGE;
-                    direction = dinosaur.getPosition().direction(target);
+                    direction = dinosaur.getPosition().directionToTarget(target);
 
                     dinosaur.setTest(target);
 
@@ -132,7 +132,7 @@ public class MoveToFoodSource extends State {
             }
         }
 
-        if (target != null) {
+        if (direction != null) {
 
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
 

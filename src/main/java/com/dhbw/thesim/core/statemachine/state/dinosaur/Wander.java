@@ -39,14 +39,14 @@ public class Wander extends State {
         if (target == null) {
             target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
             if(target != null){
-                direction = simulationObject.getPosition().direction(target);
+                direction = simulationObject.getPosition().directionToTarget(target);
                 System.out.println("Moving to " + target);
                 dinosaur.setTest(target);
             }
 
         }
-
-        simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
+        if(direction != null)
+            simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
     }
 
     @Override

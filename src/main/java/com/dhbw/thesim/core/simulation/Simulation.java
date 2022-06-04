@@ -9,6 +9,7 @@ import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 
 import java.util.*;
 
@@ -46,6 +47,8 @@ public class Simulation {
 
     private final Random random;
 
+    private Line line;
+
     //endregion
 
     /**
@@ -82,7 +85,19 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "Test", "test.png", 10, 10, 5, 25,
                 0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'M')
+                'p', 200, 32, 'M')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", "test.png", 10, 10, 5, 25,
+                0.1, 100, 50, 10, false, true,
+                'p', 200, 32, 'M')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", "test.png", 10, 10, 5, 25,
+                0.1, 100, 50, 10, false, true,
+                'p', 200, 32, 'M')
         );
 
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
@@ -91,6 +106,15 @@ public class Simulation {
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+
+        line = new Line(0, 0, 0, 0);
+        line.setStroke(Color.BLUE);
 
 
         //Draw the map
@@ -121,6 +145,8 @@ public class Simulation {
 
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
         }
+
+        simulationOverlay.getChildren().add(line);
     }
 
     /**
@@ -143,7 +169,15 @@ public class Simulation {
         }
     }
 
-
+    /**
+     * Gets the closest reachable Water source or null.
+     *
+     * @param position  The {@link Vector2D} position, where we check from.
+     * @param viewRange The radial range, we want to check (as radius)
+     * @param canSwim   Does the object, who wants to move to a water tile, can swim?
+     * @param canClimb  Does the object, who wants to move to a water tile, can climb?
+     * @return A {@link Vector2D} target of a water tile or null.
+     */
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
         Vector2D target = null;
         List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
@@ -163,7 +197,6 @@ public class Simulation {
                 }
 
         }
-        System.out.println(target);
         return target;
     }
 
@@ -330,6 +363,7 @@ public class Simulation {
     }
 
     /**
+     * TODO optimize?
      * Checks if a {@link SimulationObject} can move to a position.
      *
      * @param start                         The {@link Vector2D} position of the {@link SimulationObject}.
@@ -344,7 +378,7 @@ public class Simulation {
      * @see SimulationMap#tileMatchedConditions(Vector2D, boolean, boolean)
      * @see SimulationObject#willBeRenderedOutside(Vector2D, Vector2D)
      * @see #targetTileCanBeReached(Vector2D, Vector2D, boolean, boolean, boolean)
-     * @see #doesPointWithRangeIntersectAnyInteractionRange(Vector2D, double, Vector2D) 
+     * @see #doesPointWithRangeIntersectAnyInteractionRange(Vector2D, double, Vector2D)
      * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
      */
     public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
@@ -372,10 +406,10 @@ public class Simulation {
         if (!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, start)) {
             return false;
         }
+
         //Check, if this target direction is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != start && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTile)) {
-                System.out.println("no");
                 return false;
             }
         }
@@ -384,7 +418,6 @@ public class Simulation {
 
 
     /**
-     * TODO optimize, very stupid approach. :D
      * Gets a random target vector inside a view range of a dinosaur.
      *
      * @param position     The center of the view radius circle
@@ -397,10 +430,21 @@ public class Simulation {
     public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
 
-        if (!canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false))
-            return getRandomMovementTargetInRange(position, viewRange, interactionRange, canSwim, canClimb, renderOffset);
+        //try it max. 500 times to get a target
+        int maximumAttempts = 500;
 
-        return target;
+        while (maximumAttempts > 0) {
+            if(canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)){
+                return target;
+            }
+            target = getRandomPointInCircle(position, viewRange);
+            maximumAttempts--;
+        }
+
+        /*if (!canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false))
+            return getRandomMovementTargetInRange(position, viewRange, interactionRange, canSwim, canClimb, renderOffset);*/
+
+        return null;
     }
 
     /**
@@ -433,7 +477,7 @@ public class Simulation {
         //The polar angle will be in the range [0, 2 * pi] and the hypotenuse will be in the range [0, radius].
 
         //Calculate a random angle.
-        double angle = Math.random() * 2 * Math.PI;
+        double angle = random.nextDouble(0, 1) * 2 * Math.PI;
         //Calculate the hypotenuse, which should at least have a length in the upper 75% of the view range.
         double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
 
@@ -585,6 +629,12 @@ public class Simulation {
         if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
+
+        line.setStartX(start.getX());
+        line.setStartY(start.getY());
+
+        line.setEndX(end.getX());
+        line.setEndY(end.getY());
 
         double minDist;
         double maxDist = Math.max(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
