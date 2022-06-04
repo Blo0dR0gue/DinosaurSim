@@ -85,12 +85,6 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "Test", "test.png", 10, 10, 5, 25,
                 0.1, 100, 50, 10, false, true,
-                'p', 200, 32, 'M')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
-                0.1, 100, 50, 10, false, true,
                 'p', 500, 32, 'M')
         );
 
@@ -105,6 +99,24 @@ public class Simulation {
         drawMap();
         //TODO
         spawnObjects(simulationOverlay);
+    }
+
+    /**
+     * Gets the used {@link SimulationMap}.
+     *
+     * @return The currently used {@link SimulationMap}
+     */
+    public SimulationMap getSimulationMap() {
+        return simulationMap;
+    }
+
+    /**
+     * Gets all handled {@link SimulationObject}s.
+     *
+     * @return The list {@link Simulation#simulationObjects}.
+     */
+    public List<SimulationObject> getSimulationObjects() {
+        return simulationObjects;
     }
 
     /**
@@ -247,7 +259,7 @@ public class Simulation {
                 if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     if (dietType == Dinosaur.dietType.herbivore && simulationObject instanceof Plant plant) {
                         //TODO canBeEaten in simulationobject as abstract?
-                        if(plant.isGrown())
+                        if (plant.isGrown())
                             inRange.add(plant);
                     } else if (dietType == Dinosaur.dietType.carnivore && simulationObject instanceof Dinosaur dinosaur) {
                         //We don't want to hunt a dinosaur who is the same type as the searcher.
@@ -408,12 +420,14 @@ public class Simulation {
     /**
      * Gets a random target vector inside a view range of a dinosaur.
      *
-     * @param position     The center of the view radius circle
-     * @param viewRange    The view range as an radius.
-     * @param canSwim      Can the object, which should be tested, swim?
-     * @param canClimb     Can the object, which should be tested, climb?
-     * @param renderOffset The offset for the image of the object.
+     * @param position         The position of the {@link SimulationObject} which wants to move.
+     * @param viewRange        The view range as a radius.
+     * @param interactionRange The interaction as a radius.
+     * @param canSwim          Can the object, which should be tested, swim?
+     * @param canClimb         Can the object, which should be tested, climb?
+     * @param renderOffset     The offset for the image of the object.
      * @return A {@link Vector2D} target position.
+     * @see #getRandomPointInCircle(Vector2D, double) 
      */
     public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
@@ -422,7 +436,7 @@ public class Simulation {
         int maximumAttempts = 500;
 
         while (maximumAttempts > 0) {
-            if(canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)){
+            if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
                 return target;
             }
             target = getRandomPointInCircle(position, viewRange);
@@ -436,21 +450,33 @@ public class Simulation {
     }
 
     /**
-     * Gets the used {@link SimulationMap}.
+     * Get a random target facing in a direction with an offset of +-PI/3. <br>
      *
-     * @return The currently used {@link SimulationMap}
+     * @param position         The position of the {@link SimulationObject} which wants to move.
+     * @param viewRange        The view range as a radius.
+     * @param interactionRange The interaction as a radius.
+     * @param canSwim          Can the object, which should be tested, swim?
+     * @param canClimb         Can the object, which should be tested, climb?
+     * @param renderOffset     The offset for the image of the object.
+     * @param direction        The normalized direction Vector we want move to.
+     * @return A {@link Vector2D} target position.
+     * @see #getRandomPositionInsideCircleRangeInDirection(Vector2D, double, Vector2D) 
      */
-    public SimulationMap getSimulationMap() {
-        return simulationMap;
-    }
+    public Vector2D getRandomMovementTargetInRangeInDirection(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, Vector2D direction) {
+        Vector2D target = getRandomPositionInsideCircleRangeInDirection(position, viewRange, direction);
 
-    /**
-     * Gets all handled {@link SimulationObject}s.
-     *
-     * @return The list {@link Simulation#simulationObjects}.
-     */
-    public List<SimulationObject> getSimulationObjects() {
-        return simulationObjects;
+        //try it max. 500 times to get a target
+        int maximumAttempts = 500;
+
+        while (maximumAttempts > 0) {
+            if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
+                return target;
+            }
+            target = getRandomPositionInsideCircleRangeInDirection(position, viewRange, direction);
+            maximumAttempts--;
+        }
+
+        return null;
     }
 
     /**
@@ -467,6 +493,52 @@ public class Simulation {
         //Calculate a random angle.
         double angle = random.nextDouble(0, 1) * 2 * Math.PI;
         //Calculate the hypotenuse, which should at least have a length in the upper 75% of the view range.
+        double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
+
+        //Calculate the sites
+        double adjacent = Math.cos(angle) * hypotenuse;
+        double opposite = Math.sin(angle) * hypotenuse;
+
+        return new Vector2D(center.getX() + adjacent, center.getY() + opposite);
+    }
+
+    /**
+     * Get a random position facing in a direction with an offset of +-PI/3. <br>
+     *
+     * @param center The circle {@link Vector2D} position from which we check.
+     * @param radius The radial range of the circle.
+     * @param dir    A direction {@link Vector2D}
+     * @return A random {@link Vector2D}.
+     */
+    private Vector2D getRandomPositionInsideCircleRangeInDirection(Vector2D center, double radius, Vector2D dir) {
+        double deg = Vector2D.angleToVector(dir);
+
+        System.out.println(Math.toDegrees(deg));
+
+        if (deg < 0) {
+            deg = 2 * Math.PI + deg;
+        }
+
+        double low = deg - Math.PI / 3;
+        double high = deg + Math.PI / 3;
+
+        if (low < 0) {
+            low = 2 * Math.PI + low;
+        }
+
+        if (high < 0) {
+            high = 2 * Math.PI + high;
+        }
+
+        if (low > high) {
+            double tmp = low;
+            low = high;
+            high = tmp;
+        }
+
+        double angle = random.nextDouble(low, high);
+        System.out.println(Math.toDegrees(angle));
+
         double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
 
         //Calculate the sites
