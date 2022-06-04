@@ -78,17 +78,6 @@ public class Simulation {
         //TODO handle map calls to json2object
 
         //TODO remove temp code
-        this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'M')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'F')
-        );
 
         this.simulationObjects.add(new Dinosaur(
                 "Test", "test.png", 10, 10, 5, 25,
@@ -96,20 +85,6 @@ public class Simulation {
                 'p', 400, 32, 'M')
         );
 
-        this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'M')
-        );
-
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
@@ -260,7 +235,7 @@ public class Simulation {
                         if (!dinosaur.getType().equalsIgnoreCase(type)) {
                             inRange.add(dinosaur);
                         }
-                    } else if(dietType == Dinosaur.dietType.omnivore) {
+                    } else if (dietType == Dinosaur.dietType.omnivore) {
                         //It's an omnivore
                         inRange.add(simulationObject);
                     }
@@ -325,7 +300,7 @@ public class Simulation {
     public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange) {
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
 
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange)) {
+        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
             return getFreePositionInMap(canSwim, canClimb, interactionRange);
         }
 
@@ -337,17 +312,19 @@ public class Simulation {
      *
      * @param target           The target {@link Vector2D} point
      * @param interactionRange The range of the point (circle), which should be checked.
+     * @param ignore           This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
      * @return true, if the check circle intersect with any interaction range.
      */
-    private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange) {
-        if (isPointInsideAnyInteractionRange(target)) {
+    private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, Vector2D ignore) {
+        if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
 
         for (SimulationObject simulationObject : simulationObjects) {
-            if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
-                return true;
-            }
+            if (simulationObject.getPosition() != ignore)
+                if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
+                    return true;
+                }
         }
         return false;
     }
@@ -367,7 +344,7 @@ public class Simulation {
      * @see SimulationMap#tileMatchedConditions(Vector2D, boolean, boolean)
      * @see SimulationObject#willBeRenderedOutside(Vector2D, Vector2D)
      * @see #targetTileCanBeReached(Vector2D, Vector2D, boolean, boolean, boolean)
-     * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
+     * @see #doesPointWithRangeIntersectAnyInteractionRange(Vector2D, double, Vector2D) 
      * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
      */
     public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
@@ -392,7 +369,7 @@ public class Simulation {
 
         //If we don't ignore the target tile and
         //does the point with the interaction range of the moving object intersect with any other interaction range, then find another point.
-        if (!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange)) {
+        if (!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, start)) {
             return false;
         }
         //Check, if this target direction is in any interaction range. If so, find another target.
@@ -485,12 +462,17 @@ public class Simulation {
     /**
      * Check, if a point is inside any interaction range (collision circle) of any simulationobject.
      *
-     * @param point The point, which should be checked.
+     * @param point  The point, which should be checked.
+     * @param ignore This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
      * @return true, if the point is inside any collision circle.
      * @see #simulationObjects
      */
-    private boolean isPointInsideAnyInteractionRange(Vector2D point) {
-        return simulationObjects.stream().anyMatch(simulationObject -> isPointInsideCircle(simulationObject.getPosition(), simulationObject.getInteractionRange(), point));
+    private boolean isPointInsideAnyInteractionRange(Vector2D point, Vector2D ignore) {
+        return simulationObjects.stream().anyMatch(simulationObject -> {
+            if (simulationObject.getPosition() != ignore)
+                return isPointInsideCircle(simulationObject.getPosition(), simulationObject.getInteractionRange(), point);
+            return false;
+        });
     }
 
     /**

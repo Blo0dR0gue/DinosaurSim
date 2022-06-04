@@ -56,10 +56,14 @@ public class Wander extends State {
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
-
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false)));
-
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> target==null));
+
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> {
+            boolean back = !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false);
+            if(back)
+                System.out.println("cant move there");
+            return back;
+        }));
 
         //TODO
         //&& (simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb()) != null || simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null)
