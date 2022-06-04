@@ -23,7 +23,7 @@ public class Growing extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        grow();
+        grow(deltaTime);
     }
 
     @Override
@@ -31,9 +31,9 @@ public class Growing extends State {
         addTransition(new StateTransition(StateFactory.States.grown, simulation -> plant.isGrown()));
     }
 
-    private void grow() {
+    private void grow(double deltaTime) {
         if (plant.getGrowth() < Plant.MAX_GROWTH) {
-            plant.setGrowth(plant.getGrowth() + plant.getGrowthRate());
+            plant.setGrowth(plant.getGrowth() + plant.getGrowthRate()*deltaTime);
         }
     }
 
