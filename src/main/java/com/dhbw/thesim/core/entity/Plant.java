@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
+import com.dhbw.thesim.core.statemachine.state.plant.Growing;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -19,11 +20,10 @@ public class Plant extends SimulationObject {
         baum
     }
 
-
     /**
      * The level, where a plant is grown.
      */
-    private static final double maxGrowth = 100;
+    public static final double MAX_GROWTH = 100;
 
     //TODO comments, make final
     private Plant.plantType plantType;
@@ -39,7 +39,7 @@ public class Plant extends SimulationObject {
         super(name, interactionRange, "/plant/"+imgName);
         this.growthRate = growthRate;
         this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
-
+        this.setState(new Growing(this));
     }
 
     /**
@@ -51,7 +51,8 @@ public class Plant extends SimulationObject {
      */
     @Override
     public void update(double deltaTime, Simulation currentSimulationData) {
-        //TODO
+        stateMachineTick(currentSimulationData);
+        currentState.update(deltaTime, currentSimulationData);
     }
 
     /**
@@ -85,11 +86,15 @@ public class Plant extends SimulationObject {
         this.growth = growth;
     }
 
+    public void eat(){
+        setGrowth(0);
+    }
+
     /**
      * Is this {@link Plant} grown
-     * @return true, if the {@link #growth} reached {@link #maxGrowth}
+     * @return true, if the {@link #growth} reached {@link #MAX_GROWTH}
      */
     public boolean isGrown(){
-        return growth >= maxGrowth;
+        return growth >= MAX_GROWTH;
     }
 }

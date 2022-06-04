@@ -91,25 +91,9 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "Test", "test.png", 10, 10, 5, 25,
                 0.1, 100, 50, 10, false, true,
-                'p', 200, 32, 'M')
+                'p', 500, 32, 'M')
         );
 
-        this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
-                0.1, 100, 50, 10, false, true,
-                'p', 200, 32, 'M')
-        );
-
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
 
@@ -262,14 +246,18 @@ public class Simulation {
             if (simulationObject.getPosition() != position) {
                 if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     if (dietType == Dinosaur.dietType.herbivore && simulationObject instanceof Plant plant) {
-                        inRange.add(plant);
+                        //TODO canBeEaten in simulationobject as abstract?
+                        if(plant.isGrown())
+                            inRange.add(plant);
                     } else if (dietType == Dinosaur.dietType.carnivore && simulationObject instanceof Dinosaur dinosaur) {
                         //We don't want to hunt a dinosaur who is the same type as the searcher.
                         if (!dinosaur.getType().equalsIgnoreCase(type)) {
+                            //TODO check if we can even eat him (strength)
                             inRange.add(dinosaur);
                         }
                     } else if (dietType == Dinosaur.dietType.omnivore) {
                         //It's an omnivore
+                        //TODO check if we can even eat him (strength) or its a plant and its grown
                         inRange.add(simulationObject);
                     }
                 }

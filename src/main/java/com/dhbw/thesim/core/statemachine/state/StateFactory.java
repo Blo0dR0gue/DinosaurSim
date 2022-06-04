@@ -1,8 +1,11 @@
 package com.dhbw.thesim.core.statemachine.state;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.*;
+import com.dhbw.thesim.core.statemachine.state.plant.Growing;
+import com.dhbw.thesim.core.statemachine.state.plant.Grown;
 
 /**
  * State factory, which creates {@link State}-objects. <br>
@@ -29,26 +32,44 @@ public class StateFactory {
         escape,
         dead,
         //Plant states
-        grow,
+        growing,
         grown
     }
 
     /**
      * Creates a {@link State}-object based on the {@link States} enum.
-     * @param state The {@link States} enum entry for the next state.
+     *
+     * @param state            The {@link States} enum entry for the next state.
      * @param simulationObject The {@link SimulationObject} which is creating the new state.
      * @return The next {@link State}.
      */
-    public static State createState(States state, SimulationObject simulationObject){
-        if(simulationObject instanceof Dinosaur dinosaur)
+    public static State createState(States state, SimulationObject simulationObject) {
+        if (simulationObject instanceof Dinosaur dinosaur)
             return createDinosaurState(state, dinosaur);
-        //TODO plant
+        else if (simulationObject instanceof Plant plant)
+            return createPlantState(state, plant);
         return null;
     }
 
     /**
      * Creates a State, a {@link Dinosaur} can be in.
+     *
      * @param state The {@link States} enum entry for the next state.
+     * @param plant The {@link Plant} which is creating the new state.
+     * @return The next {@link State}.
+     */
+    private static State createPlantState(States state, Plant plant) {
+        return switch (state) {
+            case growing -> new Growing(plant);
+            case grown -> new Grown(plant);
+            default -> throw new IllegalStateException("Unexpected value: " + state);
+        };
+    }
+
+    /**
+     * Creates a State, a {@link Dinosaur} can be in.
+     *
+     * @param state    The {@link States} enum entry for the next state.
      * @param dinosaur The {@link Dinosaur} which is creating the new state.
      * @return The next {@link State}.
      */
