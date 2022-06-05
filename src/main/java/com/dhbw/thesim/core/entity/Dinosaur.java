@@ -115,6 +115,20 @@ public class Dinosaur extends SimulationObject {
         decreaseLifeStats(deltaTime);
     }
 
+    @Override
+    public void eat() {
+        setNutrition(0);
+        setHydration(0);
+        //TODO remove object from map
+    }
+
+    @Override
+    public boolean canBeEaten(double checkValue) {
+        //If the other dinosaur is stronger than this one, it can be eaten by the other.
+        //And this dino needs to be alive.
+        return checkValue > getStrength() && getHydration() > 0 && getNutrition() > 0;
+    }
+
     /**
      * Reduces the {@link #nutrition} and {@link #hydration} values of the dinosaur.
      * @param deltaTime The time since the last update call in seconds.

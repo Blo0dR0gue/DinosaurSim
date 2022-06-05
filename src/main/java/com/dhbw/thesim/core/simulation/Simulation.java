@@ -203,12 +203,13 @@ public class Simulation {
      * @param viewRange The view range (as radius) of the seeker.
      * @param dietType  The {@link Dinosaur.dietType} of the seeker.
      * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
+     * @param strength The strength of the seeker.
      * @return The closest {@link SimulationObject}s in range.
      */
     public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
-                                                                 boolean canSwim, boolean canClimb) {
+                                                                 boolean canSwim, boolean canClimb, double strength) {
 
-        List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb);
+        List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb, strength);
 
         if (dietType != Dinosaur.dietType.omnivore) {
             List<SimulationObject> sorted = sortByDistance(position, inRange);
@@ -240,7 +241,8 @@ public class Simulation {
     }
 
     /**
-     * Gets all {@link SimulationObject}s which can be eaten by the searcher {@link Dinosaur}
+     * Gets all {@link SimulationObject}s which can be eaten by the searcher {@link Dinosaur} <br>
+     * It is also been checked, if the food source can be eaten by the searcher.
      *
      * @param position  The {@link Vector2D} position of the seeker.
      * @param viewRange The view range (as radius) of the seeker.
@@ -249,7 +251,7 @@ public class Simulation {
      * @return A list with all eatable {@link SimulationObject}s in range.
      */
     public List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
-                                                                  boolean canSwim, boolean canClimb) {
+                                                                  boolean canSwim, boolean canClimb, double strength) {
 
         List<SimulationObject> inRange = new ArrayList<>();
 
@@ -258,19 +260,17 @@ public class Simulation {
             if (simulationObject.getPosition() != position) {
                 if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     if (dietType == Dinosaur.dietType.herbivore && simulationObject instanceof Plant plant) {
-                        //TODO canBeEaten in simulationobject as abstract?
-                        if (plant.isGrown())
+                        if (plant.canBeEaten(strength))
                             inRange.add(plant);
                     } else if (dietType == Dinosaur.dietType.carnivore && simulationObject instanceof Dinosaur dinosaur) {
                         //We don't want to hunt a dinosaur who is the same type as the searcher.
-                        if (!dinosaur.getType().equalsIgnoreCase(type)) {
-                            //TODO check if we can even eat him (strength)
+                        if (!dinosaur.getType().equalsIgnoreCase(type) && dinosaur.canBeEaten(strength)) {
                             inRange.add(dinosaur);
                         }
                     } else if (dietType == Dinosaur.dietType.omnivore) {
                         //It's an omnivore
-                        //TODO check if we can even eat him (strength) or its a plant and its grown
-                        inRange.add(simulationObject);
+                        if((simulationObject instanceof Plant || simulationObject instanceof Dinosaur) && simulationObject.canBeEaten(strength))
+                            inRange.add(simulationObject);
                     }
                 }
             }

@@ -67,6 +67,16 @@ public class Plant extends SimulationObject {
         circle.setTranslateY(position.getY());
     }
 
+     @Override
+     public void eat(){
+        setGrowth(0);
+     }
+
+    @Override
+    public boolean canBeEaten(double checkValue) {
+        return isGrown();
+    }
+
     /**
      * Getter & Setter Methods for a {@link Plant}-object.
      */
@@ -84,10 +94,6 @@ public class Plant extends SimulationObject {
 
     public void setGrowth(double growth) {
         this.growth = growth;
-    }
-
-    public void eat(){
-        setGrowth(0);
     }
 
     /**
