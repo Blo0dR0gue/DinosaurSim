@@ -62,6 +62,8 @@ public class Wander extends State {
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
+        addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
+
         //If we have no target, go to stand.
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> target == null));
 

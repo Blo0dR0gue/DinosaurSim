@@ -35,7 +35,7 @@ public abstract class StateMachine {
      * @param simulation The current {@link Simulation} data.
      */
     public void stateMachineTick(Simulation simulation) {
-        State nextState = currentState.checkTransitions(simulation);
+         State nextState = currentState.checkTransitions(simulation);
 
         if (nextState != null) {
             //TODO remove debug message

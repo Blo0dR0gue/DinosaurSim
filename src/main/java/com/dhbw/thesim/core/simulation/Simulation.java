@@ -92,9 +92,15 @@ public class Simulation {
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
+                "Test", "test.png", 100, 100, 5, 25,
                 0.1, 100, 50, 10, false, true,
-                'p', 500, 32, 'M')
+                'p', 200, 32, 'M')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "type2", "test.png", 10, 7, 20, 45,
+                0.1, 100, 50, 10, false, true,
+                'f', 1000, 32, 'M')
         );
 
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
@@ -542,11 +548,11 @@ public class Simulation {
     private Vector2D getRandomPositionInsideCircleRangeInDirection(Vector2D center, double radius, Vector2D dir) {
         double deg = Vector2D.angleToVector(dir);
 
-        System.out.println(Math.toDegrees(deg));
-
         if (deg < 0) {
             deg = 2 * Math.PI + deg;
         }
+
+        System.out.println(Math.toDegrees(deg));
 
         double low = deg - Math.PI / 3;
         double high = deg + Math.PI / 3;
@@ -574,7 +580,9 @@ public class Simulation {
         double adjacent = Math.cos(angle) * hypotenuse;
         double opposite = Math.sin(angle) * hypotenuse;
 
-        return new Vector2D(center.getX() + adjacent, center.getY() + opposite);
+        System.out.println(opposite + " " + adjacent);
+
+        return new Vector2D(center.getX() + adjacent, center.getY() + -opposite);
     }
 
     /**

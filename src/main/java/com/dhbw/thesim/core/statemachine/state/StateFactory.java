@@ -31,6 +31,7 @@ public class StateFactory {
         hunt,
         escape,
         dead,
+        noop,
         //Plant states
         growing,
         grown
@@ -83,6 +84,7 @@ public class StateFactory {
             case escape -> new Escape(dinosaur);
             case dead -> new Dead(dinosaur);
             case stand -> new Stand(dinosaur);
+            case noop -> new NoOp(dinosaur);
             default -> throw new IllegalStateException("Unexpected value: " + state);
         };
     }

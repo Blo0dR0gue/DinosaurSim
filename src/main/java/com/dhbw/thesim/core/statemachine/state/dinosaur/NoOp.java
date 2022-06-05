@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
+
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
@@ -9,25 +10,24 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
 /**
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
- * In this {@link State} the handled {@link Dinosaur} tries mate with another {@link Dinosaur}.
+ * In this state a {@link Dinosaur} got caught by another dinosaur. <br>
+ * The dinosaur should stay on the map until the ingestion state of the hunter finished.
  *
  * @author Daniel Czeschner
  */
-public class Mate extends State {
+public class NoOp extends State{
 
-    /**
-     * Helper {@link Dinosaur} variable, to get dinosaur specific variables
-     */
-    private final Dinosaur dinosaur;
+
+    private Dinosaur dinosaur;
 
     /**
      * Constructor
      *
      * @param simulationObject The handled {@link Dinosaur}
      */
-    public Mate(Dinosaur simulationObject) {
+    public NoOp(Dinosaur simulationObject) {
         super(simulationObject);
-        this.dinosaur = (Dinosaur) this.simulationObject;
+        this.dinosaur = simulationObject;
     }
 
     @Override
@@ -37,12 +37,7 @@ public class Mate extends State {
 
     @Override
     public void initTransitions() {
-        //The dinosaur died.
+        //The dinosaur got eaten.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
-
-        addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
-
-
     }
-
 }

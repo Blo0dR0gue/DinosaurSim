@@ -2,7 +2,6 @@ package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
-import com.dhbw.thesim.core.statemachine.state.dinosaur.Dead;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.paint.Color;
@@ -42,6 +41,12 @@ public class Dinosaur extends SimulationObject {
 
     private char gender;
     private double reproductionValue;
+
+    /**
+     * Used, when the dinosaur got caught by a hunter. <br>
+     * The dinosaur should not run away when his dies.
+     */
+    private boolean forceNoOp = false;
 
 
     private SimulationObject target;
@@ -259,7 +264,23 @@ public class Dinosaur extends SimulationObject {
         this.target = target;
     }
 
-    public void setChased(boolean chased) {
+    /**
+     * Force the dinosaur to the {@link com.dhbw.thesim.core.statemachine.state.dinosaur.NoOp} state. <br>
+     * Used when the dinosaur got caught by his hunter.
+     */
+    public void forceNoOp(){
+        this.forceNoOp = true;
+    }
+
+    /**
+     * Is the dinosaur forced to the stand state
+     * @return true, if it is forced to the stand state.
+     */
+    public boolean isForcedToNoOp(){
+        return this.forceNoOp;
+    }
+
+    public void setIsChased(boolean chased) {
         isChased = chased;
     }
 
