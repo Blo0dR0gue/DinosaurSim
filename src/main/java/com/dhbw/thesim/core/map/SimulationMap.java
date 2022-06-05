@@ -66,8 +66,6 @@ public class SimulationMap {
                 tiles[x][y].setSwimmable(true);
             }
         }
-
-
     }
 
     /**
@@ -254,6 +252,7 @@ public class SimulationMap {
 
     /**
      * Gets the center {@link Vector2D} world position of a tile.
+     *
      * @param tile The {@link Tile}
      * @return The center position of the tile.
      */
@@ -263,9 +262,10 @@ public class SimulationMap {
 
     /**
      * Gets a random tile, matching a {@link com.dhbw.thesim.core.entity.Dinosaur} conditions.
-     * @param canSwim Can the dinosaur swim?
+     *
+     * @param canSwim  Can the dinosaur swim?
      * @param canClimb Cna the dinosaur climb?
-     * @param random A {@link Random}.
+     * @param random   A {@link Random}.
      * @return A random {@link Vector2D} word position matching the conditions.
      */
     public Vector2D getRandomTileCenterPosition(boolean canSwim, boolean canClimb, Random random) {

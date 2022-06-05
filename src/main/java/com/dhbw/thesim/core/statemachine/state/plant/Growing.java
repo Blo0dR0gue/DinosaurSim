@@ -33,7 +33,7 @@ public class Growing extends State {
 
     private void grow(double deltaTime) {
         if (plant.getGrowth() < Plant.MAX_GROWTH) {
-            plant.setGrowth(plant.getGrowth() + plant.getGrowthRate()*deltaTime);
+            plant.setGrowth(plant.getGrowth() + plant.getGrowthRate() * deltaTime);
         }
     }
 

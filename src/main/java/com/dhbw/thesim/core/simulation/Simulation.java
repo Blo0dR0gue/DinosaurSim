@@ -92,7 +92,7 @@ public class Simulation {
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 1, 10, 5, 25,
+                "Test", "test.png", 10, 10, 5, 25,
                 0.1, 100, 50, 10, false, true,
                 'p', 500, 32, 'M')
         );
@@ -132,7 +132,7 @@ public class Simulation {
     /**
      * Remove all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
      */
-    public void removeDeletedObjects(){
+    public void removeDeletedObjects() {
         simulationObjects.removeAll(toBeRemoved);
         toBeRemoved.clear();
     }
@@ -169,7 +169,7 @@ public class Simulation {
      *
      * @param simulationObject The {@link SimulationObject} which should be removed.
      */
-    public void deleteObject(SimulationObject simulationObject){
+    public void deleteObject(SimulationObject simulationObject) {
         this.toBeRemoved.add(simulationObject);
         Platform.runLater(() -> simulationOverlay.getChildren().remove(simulationObject.getJavaFXObj()));
     }
@@ -232,7 +232,7 @@ public class Simulation {
      * @param viewRange The view range (as radius) of the seeker.
      * @param dietType  The {@link Dinosaur.dietType} of the seeker.
      * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
-     * @param strength The strength of the seeker.
+     * @param strength  The strength of the seeker.
      * @return The closest {@link SimulationObject}s in range.
      */
     public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
@@ -298,7 +298,7 @@ public class Simulation {
                         }
                     } else if (dietType == Dinosaur.dietType.omnivore) {
                         //It's an omnivore
-                        if((simulationObject instanceof Plant || simulationObject instanceof Dinosaur) && simulationObject.canBeEaten(strength))
+                        if ((simulationObject instanceof Plant || simulationObject instanceof Dinosaur) && simulationObject.canBeEaten(strength))
                             inRange.add(simulationObject);
                     }
                 }
@@ -456,7 +456,7 @@ public class Simulation {
      * @param canClimb         Can the object, which should be tested, climb?
      * @param renderOffset     The offset for the image of the object.
      * @return A {@link Vector2D} target position.
-     * @see #getRandomPointInCircle(Vector2D, double) 
+     * @see #getRandomPointInCircle(Vector2D, double)
      */
     public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
@@ -489,7 +489,7 @@ public class Simulation {
      * @param renderOffset     The offset for the image of the object.
      * @param direction        The normalized direction Vector we want move to.
      * @return A {@link Vector2D} target position.
-     * @see #getRandomPositionInsideCircleRangeInDirection(Vector2D, double, Vector2D) 
+     * @see #getRandomPositionInsideCircleRangeInDirection(Vector2D, double, Vector2D)
      */
     public Vector2D getRandomMovementTargetInRangeInDirection(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, Vector2D direction) {
         Vector2D target = getRandomPositionInsideCircleRangeInDirection(position, viewRange, direction);

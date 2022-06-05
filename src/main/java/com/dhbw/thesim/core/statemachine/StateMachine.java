@@ -21,6 +21,7 @@ public abstract class StateMachine {
 
     /**
      * Sets the {@link #currentState}
+     *
      * @param state The state, which now should be used.
      */
     public void setState(State state) {
@@ -30,6 +31,7 @@ public abstract class StateMachine {
     /**
      * Needs to be called each update call. <br>
      * This method handles state transitions.
+     *
      * @param simulation The current {@link Simulation} data.
      */
     public void stateMachineTick(Simulation simulation) {

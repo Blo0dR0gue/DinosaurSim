@@ -31,12 +31,12 @@ public class Plant extends SimulationObject {
     private double growthRate; //TODO brauchen wir das noch? Oder ist das global für alle Pflanzen gültig und in der Logik gespeichert?
 
     //TODO remove, if json2object is implemented
-    public Plant(){
-        super("test" , 0, "nNn");
+    public Plant() {
+        super("test", 0, "nNn");
     }
 
     public Plant(String name, String imgName, double interactionRange, double growthRate) {
-        super(name, interactionRange, "/plant/"+imgName);
+        super(name, interactionRange, "/plant/" + imgName);
         this.growthRate = growthRate;
         this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
         this.setState(new Growing(this));
@@ -67,10 +67,10 @@ public class Plant extends SimulationObject {
         circle.setTranslateY(position.getY());
     }
 
-     @Override
-     public void eat(){
+    @Override
+    public void eat() {
         setGrowth(0);
-     }
+    }
 
     @Override
     public boolean canBeEaten(double checkValue) {
@@ -98,9 +98,10 @@ public class Plant extends SimulationObject {
 
     /**
      * Is this {@link Plant} grown
+     *
      * @return true, if the {@link #growth} reached {@link #MAX_GROWTH}
      */
-    public boolean isGrown(){
+    public boolean isGrown() {
         return growth >= MAX_GROWTH;
     }
 }

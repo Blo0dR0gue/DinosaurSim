@@ -46,14 +46,14 @@ public class Wander extends State {
 
         if (target == null) {
             target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
-            if(target != null){
+            if (target != null) {
                 direction = simulationObject.getPosition().directionToTarget(target);
                 System.out.println("Moving to " + target);
                 dinosaur.setTest(target);
             }
 
         }
-        if(direction != null)
+        if (direction != null)
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
     }
 
@@ -63,7 +63,7 @@ public class Wander extends State {
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
         //If we have no target, go to stand.
-        addTransition(new StateTransition(StateFactory.States.stand, simulation -> target==null));
+        addTransition(new StateTransition(StateFactory.States.stand, simulation -> target == null));
 
         //When target is reached -> transition to Stand-state.
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
@@ -71,7 +71,7 @@ public class Wander extends State {
         //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> {
             boolean back = !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false);
-            if(back)
+            if (back)
                 System.out.println("cant move there");
             return back;
         }));

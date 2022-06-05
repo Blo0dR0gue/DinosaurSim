@@ -43,13 +43,13 @@ public class Ingestion extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
 
-        ingestionTime -=deltaTime;
+        ingestionTime -= deltaTime;
 
-        if(ingestionTime <= 0){
-            if(dinosaur.getTarget() == null){
+        if (ingestionTime <= 0) {
+            if (dinosaur.getTarget() == null) {
                 //we drink
                 dinosaur.setHydration(dinosaur.getMaxHydration());
-            }else {
+            } else {
                 //we eat
                 dinosaur.getTarget().eat();
                 dinosaur.setNutrition(dinosaur.getMaxNutrition());

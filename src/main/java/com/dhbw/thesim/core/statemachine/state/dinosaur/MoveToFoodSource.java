@@ -80,7 +80,7 @@ public class MoveToFoodSource extends State {
 
                         targetInteractionRange = Tile.TILE_SIZE / 2 + Dinosaur.PROXIMITY_RANGE;
 
-                    }else {
+                    } else {
                         //Food is closer go to food
                         dinosaur.setTarget(target1);
 

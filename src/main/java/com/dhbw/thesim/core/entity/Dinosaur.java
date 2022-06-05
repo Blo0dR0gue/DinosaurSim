@@ -130,6 +130,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Reduces the {@link #nutrition} and {@link #hydration} values of the dinosaur.
+     *
      * @param deltaTime The time since the last update call in seconds.
      */
     private void decreaseLifeStats(double deltaTime) {
@@ -272,11 +273,11 @@ public class Dinosaur extends SimulationObject {
         return nutrition / nutritionFull <= 0.5;
     }
 
-    public double getMaxNutrition(){
+    public double getMaxNutrition() {
         return nutritionFull;
     }
 
-    public double getMaxHydration(){
+    public double getMaxHydration() {
         return hydrationFull;
     }
 

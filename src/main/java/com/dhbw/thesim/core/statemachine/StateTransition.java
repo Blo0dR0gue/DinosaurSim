@@ -15,6 +15,7 @@ public record StateTransition(StateFactory.States nextState,
 
     /**
      * Should we transition to the {@link #nextState}.
+     *
      * @return true, if the condition of {@link #stateTransition} is met.
      */
     public boolean shouldTransition(Simulation simulation) {
@@ -23,6 +24,7 @@ public record StateTransition(StateFactory.States nextState,
 
     /**
      * Gets the next {@link State} using the {@link StateFactory}.
+     *
      * @param simulationObject The {@link SimulationObject} which is transition to the next state.
      * @return The next {@link State}.
      */
