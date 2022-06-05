@@ -12,7 +12,6 @@ import com.dhbw.thesim.core.statemachine.state.State;
  */
 public class Dead extends State {
 
-
     private boolean triggered = false;
 
     /**
@@ -26,7 +25,7 @@ public class Dead extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        if(!triggered){
+        if (!triggered) {
             triggered = true;
             //Remove the object from the simulation
             simulation.deleteObject(this.simulationObject);
