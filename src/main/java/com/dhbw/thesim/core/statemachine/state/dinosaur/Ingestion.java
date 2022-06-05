@@ -1,7 +1,6 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
-import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
@@ -46,9 +45,7 @@ public class Ingestion extends State {
                 dinosaur.setHydration(dinosaur.getMaxHydration());
             }else {
                 //we eat
-                //TODO add eat to simulationobject
-                Plant plant = (Plant) dinosaur.getTarget();
-                plant.eat();
+                dinosaur.getTarget().eat();
                 dinosaur.setNutrition(dinosaur.getMaxNutrition());
                 dinosaur.setTarget(null);
             }
@@ -60,7 +57,11 @@ public class Ingestion extends State {
     @Override
     public void initTransitions() {
 
+        //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
+        //If we have simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to wander.
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
         //&& simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isThirsty()));

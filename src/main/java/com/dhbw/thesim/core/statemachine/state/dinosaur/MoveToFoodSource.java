@@ -42,13 +42,11 @@ public class MoveToFoodSource extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
 
-        //TODO check condition
         if (target == null) {
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
 
-                //TODO
                 SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
-                        dinosaur.canSwim(), dinosaur.canClimb());
+                        dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength());
 
                 Vector2D target2 = simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb());
 
@@ -96,11 +94,10 @@ public class MoveToFoodSource extends State {
 
                 }
 
-
             } else if (dinosaur.isHungry()) {
 
                 dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
-                        dinosaur.canSwim(), dinosaur.canClimb()));
+                        dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()));
 
                 if (dinosaur.getTarget() != null) {
 
@@ -143,10 +140,14 @@ public class MoveToFoodSource extends State {
     @Override
     public void initTransitions() {
 
+        //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
         //We can do this, because the update is called before the next check transitions
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> target == null));
+
+        //If we hava simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to wander.
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
         //If the target is a dinosaur go to the hunt state.
         addTransition(new StateTransition(StateFactory.States.hunt, simulation -> dinosaur.getTarget() instanceof Dinosaur));

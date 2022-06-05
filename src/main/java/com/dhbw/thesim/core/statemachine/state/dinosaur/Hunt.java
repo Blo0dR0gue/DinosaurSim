@@ -3,7 +3,9 @@ package com.dhbw.thesim.core.statemachine.state.dinosaur;
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
+import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
+import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
 /**
  * TODO
@@ -34,6 +36,12 @@ public class Hunt extends State {
 
     @Override
     public void initTransitions() {
+
+        //The dinosaur died.
+        addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
+        //If we have a simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to wander.
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
     }
 

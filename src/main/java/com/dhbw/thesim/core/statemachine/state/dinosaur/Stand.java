@@ -40,6 +40,7 @@ public class Stand extends State {
 
     @Override
     public void initTransitions() {
+        //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
         //TODO
