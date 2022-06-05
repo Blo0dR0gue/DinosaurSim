@@ -92,17 +92,35 @@ public class Simulation {
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 100, 100, 5, 25,
+                "Test", "test.png", 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
-                'p', 200, 32, 'M')
+                'p', 400, 32, 'M')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", "test.png", 1, 100, 20, 45,
+                "type2", "test.png", 20, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
-                'f', 1000, 32, 'M')
+                'f', 590, 32, 'F')
         );
 
+        this.simulationObjects.add(new Dinosaur(
+                "type2", "test.png", 15, 14, 20, 45,
+                0.1, 100, 50, 10, false, true,
+                'f', 370, 32, 'M')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "type3", "test.png", 15, 14, 27, 35,
+                0.1, 100, 50, 10, false, true,
+                'a', 370, 32, 'M')
+        );
+
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
 

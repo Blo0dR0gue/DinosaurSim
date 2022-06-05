@@ -88,6 +88,9 @@ public class Hunt extends State {
         //We can do this here, because the update is called before the next check transitions
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> target == null || dinosaur.getTarget() == null));
 
+        //The other dinosaur escaped
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
+
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
 
@@ -96,7 +99,6 @@ public class Hunt extends State {
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), simulationObject.getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
-
 
     }
 

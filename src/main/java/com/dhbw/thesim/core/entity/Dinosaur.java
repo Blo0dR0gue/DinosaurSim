@@ -92,7 +92,7 @@ public class Dinosaur extends SimulationObject {
         this.hydrationFull = this.hydration;
 
         //TODO remove test objects
-        this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
+        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore?Color.GREEN:this.diet==dietType.omnivore?Color.BLUE:Color.RED);
 
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;

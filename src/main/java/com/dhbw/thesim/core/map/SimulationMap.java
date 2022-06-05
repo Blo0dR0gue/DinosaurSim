@@ -61,7 +61,7 @@ public class SimulationMap {
             }
         }
 
-        for (int x = 8; x < width; x++) {
+        for (int x = 15; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 tiles[x][y].setSwimmable(true);
             }

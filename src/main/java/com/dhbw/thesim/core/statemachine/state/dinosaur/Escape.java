@@ -46,8 +46,8 @@ public class Escape extends State {
 
                 if (target == null) {
                     //If we can't get a direction away from the hunter get a random direction.
-                    target = simulation.getRandomMovementTargetInRangeInDirection(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(),
-                            dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), directionOfHunter);
+                    target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(),
+                            dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
                 }
             }
             if(target != null)
