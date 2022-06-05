@@ -133,6 +133,7 @@ public class SimulationLoop {
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
             obj.update(deltaTime, currentSimulation);
         }
+        currentSimulation.removeDeletedObjects();
     }
 
     /**

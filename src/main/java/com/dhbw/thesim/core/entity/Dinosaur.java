@@ -117,9 +117,8 @@ public class Dinosaur extends SimulationObject {
 
     @Override
     public void eat() {
-        setNutrition(0);
-        setHydration(0);
-        //TODO remove object from map
+        setNutrition(-100);
+        setHydration(-100);
     }
 
     @Override

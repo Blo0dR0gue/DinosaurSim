@@ -7,6 +7,7 @@ import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
+import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -45,6 +46,13 @@ public class Simulation {
      */
     private final List<SimulationObject> simulationObjects;
 
+    /**
+     * A List with all {@link SimulationObject}s, which will be removed at the end of a {@link SimulationLoop} update.
+     */
+    private List<SimulationObject> toBeRemoved;
+
+    private SimulationOverlay simulationOverlay;
+
     private final Random random;
 
     private Line line;
@@ -77,13 +85,14 @@ public class Simulation {
         this.simulationMap = new SimulationMap(landscapeName);
         this.backgroundGraphics = backgroundGraphicsContext;
         this.simulationObjects = new ArrayList<>();
+        this.toBeRemoved = new ArrayList<>();
 
         //TODO handle map calls to json2object
 
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 10, 10, 5, 25,
+                "Test", "test.png", 1, 10, 5, 25,
                 0.1, 100, 50, 10, false, true,
                 'p', 500, 32, 'M')
         );
@@ -98,6 +107,7 @@ public class Simulation {
         //Draw the map
         drawMap();
         //TODO
+        this.simulationOverlay = simulationOverlay;
         spawnObjects(simulationOverlay);
     }
 
@@ -117,6 +127,23 @@ public class Simulation {
      */
     public List<SimulationObject> getSimulationObjects() {
         return simulationObjects;
+    }
+
+    /**
+     * Remove all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
+     */
+    public void removeDeletedObjects(){
+        simulationObjects.removeAll(toBeRemoved);
+        toBeRemoved.clear();
+    }
+
+    /**
+     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects}.
+     *
+     * @param simulationObject The {@link SimulationObject} which should be removed.
+     */
+    public void addToBeRemoved(SimulationObject simulationObject){
+        this.toBeRemoved.add(simulationObject);
     }
 
     /**
@@ -143,6 +170,10 @@ public class Simulation {
         }
 
         simulationOverlay.getChildren().add(line);
+    }
+
+    public void deleteObject(SimulationObject simulationObject){
+        Platform.runLater(() -> simulationOverlay.getChildren().remove(simulationObject.getJavaFXObj()));
     }
 
     /**
