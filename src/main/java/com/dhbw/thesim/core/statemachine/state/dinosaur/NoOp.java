@@ -39,5 +39,9 @@ public class NoOp extends State{
     public void initTransitions() {
         //The dinosaur got eaten.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
+        //TODO logic?
+        //The dinosaur died before this one got eaten.
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> !dinosaur.isForcedToNoOp()));
     }
 }

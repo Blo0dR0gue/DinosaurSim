@@ -273,6 +273,14 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
+     * Resets the force.
+     * @see #forceNoOp
+     */
+    public void resetForceNoOp(){
+        this.forceNoOp = false;
+    }
+
+    /**
      * Is the dinosaur forced to the stand state
      * @return true, if it is forced to the stand state.
      */

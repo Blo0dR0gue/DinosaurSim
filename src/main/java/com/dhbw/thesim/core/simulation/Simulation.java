@@ -98,7 +98,7 @@ public class Simulation {
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", "test.png", 10, 7, 20, 45,
+                "type2", "test.png", 1, 100, 20, 45,
                 0.1, 100, 50, 10, false, true,
                 'f', 1000, 32, 'M')
         );
@@ -552,8 +552,6 @@ public class Simulation {
             deg = 2 * Math.PI + deg;
         }
 
-        System.out.println(Math.toDegrees(deg));
-
         double low = deg - Math.PI / 3;
         double high = deg + Math.PI / 3;
 
@@ -572,6 +570,8 @@ public class Simulation {
         }
 
         double angle = random.nextDouble(low, high);
+
+        System.out.println(Math.toDegrees(deg));
         System.out.println(Math.toDegrees(angle));
 
         double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
@@ -579,8 +579,6 @@ public class Simulation {
         //Calculate the sites
         double adjacent = Math.cos(angle) * hypotenuse;
         double opposite = Math.sin(angle) * hypotenuse;
-
-        System.out.println(opposite + " " + adjacent);
 
         return new Vector2D(center.getX() + adjacent, center.getY() + -opposite);
     }

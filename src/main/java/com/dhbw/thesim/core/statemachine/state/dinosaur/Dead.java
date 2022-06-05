@@ -14,6 +14,8 @@ public class Dead extends State {
 
     private boolean triggered = false;
 
+    private final Dinosaur dinosaur;
+
     /**
      * Constructor
      *
@@ -21,15 +23,24 @@ public class Dead extends State {
      */
     public Dead(Dinosaur simulationObject) {
         super(simulationObject);
+        this.dinosaur = simulationObject;
     }
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
+
         if (!triggered) {
+            //Reset the hunted dinosaur
+            if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur target) {
+                target.resetForceNoOp();
+                target.setIsChased(false);
+                target.setTarget(null);
+            }
             triggered = true;
             //Remove the object from the simulation
             simulation.deleteObject(this.simulationObject);
         }
+
     }
 
     @Override
