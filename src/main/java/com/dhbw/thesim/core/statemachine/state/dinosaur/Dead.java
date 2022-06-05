@@ -28,8 +28,8 @@ public class Dead extends State {
     public void update(double deltaTime, Simulation simulation) {
         if(!triggered){
             triggered = true;
+            //Remove the object from the simulation
             simulation.deleteObject(this.simulationObject);
-            simulation.addToBeRemoved(this.simulationObject);
         }
     }
 

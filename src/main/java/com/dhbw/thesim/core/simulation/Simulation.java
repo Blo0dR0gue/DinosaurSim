@@ -138,15 +138,6 @@ public class Simulation {
     }
 
     /**
-     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects}.
-     *
-     * @param simulationObject The {@link SimulationObject} which should be removed.
-     */
-    public void addToBeRemoved(SimulationObject simulationObject){
-        this.toBeRemoved.add(simulationObject);
-    }
-
-    /**
      * Method, that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects}.
      *
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
@@ -172,7 +163,14 @@ public class Simulation {
         simulationOverlay.getChildren().add(line);
     }
 
+    /**
+     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects} to the {@link #toBeRemoved} list.
+     * The object is also been removed from the visuals.
+     *
+     * @param simulationObject The {@link SimulationObject} which should be removed.
+     */
     public void deleteObject(SimulationObject simulationObject){
+        this.toBeRemoved.add(simulationObject);
         Platform.runLater(() -> simulationOverlay.getChildren().remove(simulationObject.getJavaFXObj()));
     }
 
