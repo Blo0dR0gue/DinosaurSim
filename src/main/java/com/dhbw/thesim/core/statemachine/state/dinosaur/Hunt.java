@@ -8,7 +8,8 @@ import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
 /**
- * TODO
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
+ * In this {@link State} the handled {@link Dinosaur} tries to hunt another {@link Dinosaur}.
  *
  * @author Daniel Czeschner
  */
@@ -22,7 +23,7 @@ public class Hunt extends State {
     /**
      * Constructor
      *
-     * @param simulationObject The handled {@link SimulationObject}
+     * @param simulationObject The handled {@link Dinosaur}
      */
     public Hunt(Dinosaur simulationObject) {
         super(simulationObject);

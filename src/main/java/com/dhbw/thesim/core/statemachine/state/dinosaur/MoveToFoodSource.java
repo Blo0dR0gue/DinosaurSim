@@ -10,7 +10,8 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.util.Vector2D;
 
 /**
- * TODO
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
+ * In this {@link State} the handled {@link Dinosaur} tries to move to a food or water source.
  *
  * @author Daniel Czeschner
  */
@@ -32,7 +33,7 @@ public class MoveToFoodSource extends State {
     /**
      * Constructor
      *
-     * @param simulationObject The handled {@link SimulationObject}
+     * @param simulationObject The handled {@link Dinosaur}
      */
     public MoveToFoodSource(Dinosaur simulationObject) {
         super(simulationObject);
@@ -155,11 +156,17 @@ public class MoveToFoodSource extends State {
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
 
-        //If we can't reach the target anymore
+        //If we can't reach the target anymore. (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
 
     }
 
+    /**
+     * Do we have reached the target?
+     *
+     * @param simulation The current {@link Simulation} data.
+     * @return true, if we have reached the target.
+     */
     private boolean reached(Simulation simulation) {
         return simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), target, targetInteractionRange);
     }

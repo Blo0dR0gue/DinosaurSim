@@ -1,14 +1,17 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
 /**
- * Represents a {@link State} an {@link Dinosaur} can be in. <br>
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
  * In this {@link State} the handled {@link Dinosaur} is waiting {@link #waitTimeInSeconds} seconds.
+ *
+ * @author Daniel Czeschner
  */
 public class Stand extends State {
 
@@ -27,6 +30,11 @@ public class Stand extends State {
      */
     private static final double waitTimeInSeconds = 5;
 
+    /**
+     * Constructor
+     *
+     * @param simulationObject The handled {@link Dinosaur}
+     */
     public Stand(Dinosaur simulationObject) {
         super(simulationObject);
         this.dinosaur = (Dinosaur) this.simulationObject;

@@ -8,7 +8,8 @@ import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
 /**
- * TODO
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
+ * In this {@link State} the handled {@link Dinosaur} tries to escape his hunter.
  *
  * @author Daniel Czeschner
  */
@@ -22,7 +23,7 @@ public class Escape extends State {
     /**
      * Constructor
      *
-     * @param simulationObject The handled {@link SimulationObject}
+     * @param simulationObject The handled {@link Dinosaur}
      */
     public Escape(Dinosaur simulationObject) {
         super(simulationObject);

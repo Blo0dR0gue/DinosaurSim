@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
@@ -8,8 +9,10 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.util.Vector2D;
 
 /**
- * Represents a {@link State} an {@link Dinosaur} can be in. <br>
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
  * In this {@link State} the handled {@link Dinosaur} is moving to a random position in range.
+ *
+ * @author Daniel Czeschner
  */
 public class Wander extends State {
 
@@ -28,6 +31,11 @@ public class Wander extends State {
      */
     private final Dinosaur dinosaur;
 
+    /**
+     * Constructor
+     *
+     * @param simulationObject The handled {@link Dinosaur}
+     */
     public Wander(Dinosaur simulationObject) {
         super(simulationObject);
         this.dinosaur = (Dinosaur) this.simulationObject;
@@ -60,6 +68,7 @@ public class Wander extends State {
         //When target is reached -> transition to Stand-state.
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
 
+        //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> {
             boolean back = !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false);
             if(back)

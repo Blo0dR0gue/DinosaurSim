@@ -8,16 +8,22 @@ import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
 /**
- * TODO
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
+ * In this {@link State} the handled {@link Dinosaur} tries to eat/drink a source.
  *
  * @author Daniel Czeschner
  */
 public class Ingestion extends State {
 
+    /**
+     * The time the dinosaur needs to eat/drink the source.
+     */
     private double ingestionTime = 2;
 
+    /**
+     * Helper to trigger a transition, if the dinosaur finished this state.
+     */
     private boolean done = false;
-
 
     /**
      * Helper {@link Dinosaur} variable, to get dinosaur specific variables
@@ -27,7 +33,7 @@ public class Ingestion extends State {
     /**
      * Constructor
      *
-     * @param simulationObject The handled {@link SimulationObject}
+     * @param simulationObject The handled {@link Dinosaur}
      */
     public Ingestion(Dinosaur simulationObject) {
         super(simulationObject);
@@ -60,25 +66,16 @@ public class Ingestion extends State {
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
-        //If we have simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to wander.
+        //If the dinosaur have a simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to wander.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
-        //&& simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null
+        //If the dinosaur is thirsty and a water tile is in range, transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isThirsty()));
 
-        //&& simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb()) != null
+        //If the dinosaur is hungry and a food source is in range, transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isHungry()));
-        /*
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
-                simulation -> done && dinosaur.isThirsty() &&
-                        simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null));
 
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource,
-                simulation ->
-                        done && dinosaur.isHungry() &&
-                                simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
-                                        dinosaur.canSwim(), dinosaur.canClimb()) != null));*/
-
+        //If we are done, go to the wander-state.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> done));
 
 
