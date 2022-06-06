@@ -1,7 +1,15 @@
 package com.dhbw.thesim;
 
 import com.dhbw.thesim.gui.Display;
+import com.dhbw.thesim.impexp.Json2Objects;
+import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.application.Application;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.jar.JarEntry;
+
+import static com.dhbw.thesim.impexp.Json2Objects.initSimObjects;
 
 /**
  * Main entrypoint in this app.
@@ -10,8 +18,35 @@ import javafx.application.Application;
  */
 public class Main {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException {
         Application.launch(Display.class,args);
+
+        //Testen von JsonHandler: TODO nur zum Testen, daher später entfernen
+            JsonHandler.setDirectory();
+
+            JsonHandler.exportDefaultScenarioConfig();
+            JsonHandler.exportDefaultSimulationObjectsConfig();
+
+            HashMap<String,Integer> tempDino = new HashMap<>();
+            tempDino.put("Abrictosaurus",3);
+            HashMap<String,Integer> tempPlant = new HashMap<>();
+            tempPlant.put("Farn",4);
+            JsonHandler.exportScenarioConfig(tempDino,tempPlant,"landschaftsName", 9.0, "testScenarioKonfig");
+
+        //Testen von Json2Objects: TODO nur zum Testen, daher später entfernen
+            HashMap<String,Integer> testInitDino=new HashMap<>();
+            testInitDino.put("Abrictosaurus",2);
+            HashMap<String,Integer> testInitPlant=new HashMap<>();
+            testInitPlant.put("Farn",4);
+            Json2Objects.initSimObjects(testInitDino, testInitPlant, 3.0);
+            /*
+            Json2Objects.getSimulationObjects(Json2Objects.Type.empty, JsonHandler.SimulationObjectType.DINO);
+            Json2Objects.getSimulationObjects(Json2Objects.Type.imported, JsonHandler.SimulationObjectType.PLANT);
+            Json2Objects.getSimulationObjects(Json2Objects.Type.imported, JsonHandler.SimulationObjectType.LANDSCAPE);
+            */
+
+        //initSimObjects("minimalTestingScenarioKonfig");
+        //Json2Objects.getSimulationObjects("minimalTestingScenarioKonfig",Json2Objects.Type.imported, JsonHandler.SimulationObjectType.DINO);
     }
 
 }

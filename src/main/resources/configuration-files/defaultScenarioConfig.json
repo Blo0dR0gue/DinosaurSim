@@ -11,7 +11,8 @@
     "Pflanzen":[
       {"Farn":20},
       {"Ginkgoales":15}
-    ]
+    ],
+    "Pflanzenwachstum": 3.0
   },
   {"Landschaft":"Standard-Landschaft"}
 ]

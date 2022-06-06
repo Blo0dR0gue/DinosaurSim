@@ -4,6 +4,8 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 
+import java.util.HashMap;
+
 /**
  * Represents a dinosaur object in our simulation.
  * Takes care to update each State and switch between them.
@@ -24,8 +26,8 @@ public class Dinosaur extends SimulationObject {
     // TODO comments pls; make final
     private double nutrition;
     private double hydration;
-    private int strength;
-    private int speed;
+    private double strength;
+    private double speed;
     private double reproductionRate;
     private double weight;
     private double length;
@@ -57,7 +59,7 @@ public class Dinosaur extends SimulationObject {
      * Constructor for a dinosaur object
      */
     public Dinosaur(String name, String imgName, double nutrition, double hydration,
-                    int strength, int speed, double reproductionRate, double weight, double length, double height,
+                    double strength, double speed, double reproductionRate, double weight, double length, double height,
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
                     double interactionRange, char gender){
         super(name, interactionRange, "/dinosaur/"+imgName);
@@ -127,11 +129,11 @@ public class Dinosaur extends SimulationObject {
         return hydration;
     }
 
-    public int getStrength() {
+    public double getStrength() {
         return strength;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
