@@ -8,4 +8,5 @@ module com.dhbw.thesim {
     exports com.dhbw.thesim;
     exports com.dhbw.thesim.gui;
     opens com.dhbw.thesim.gui to javafx.fxml;
+    opens com.dhbw.thesim.gui.controllers to javafx.fxml;
 }
