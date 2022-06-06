@@ -8,7 +8,6 @@ import javafx.scene.shape.Circle;
 /**
  * It's a plant-object in our simulation, which can be eaten.
  * <p>
- * TODO
  *
  * @author Daniel Czeschner, Kai Grübener
  */

@@ -32,7 +32,7 @@ public class Mate extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
+        //TODO make it work
     }
 
     @Override

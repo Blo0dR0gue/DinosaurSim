@@ -62,13 +62,13 @@ public abstract class SimulationObject extends StateMachine {
      *
      * @param type             The type for this object.
      * @param interactionRange The range, in which collisions are handled.
-     * @param imgPath          The full path to an image. E.g. /dinosaur/test.png
+     * @param imgPath          The full path to an image. E.g. /dinosaur/test.png   //TODO maybe pass a image via spritelibF?
      */
     public SimulationObject(String type, double interactionRange, String imgPath) {
         this.type = type;
         this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
-        //TODO
+
         this.position = new Vector2D(0, 0);
         this.renderOffset = new Vector2D(0, 0);
 

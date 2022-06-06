@@ -13,6 +13,8 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  * In this state a {@link Dinosaur} got caught by another dinosaur. <br>
  * The dinosaur should stay on the map until the ingestion state of the hunter finished.
  *
+ * TODO get rid of noop if possible?
+ *
  * @author Daniel Czeschner
  */
 public class NoOp extends State{

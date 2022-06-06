@@ -66,6 +66,8 @@ public class Escape extends State {
 
     @Override
     public void initTransitions() {
+        //TODO check transitions / transitions oder
+
 
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
