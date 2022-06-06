@@ -57,13 +57,13 @@ public class SimulationMap {
         Image tmp = Tile.tmpSprite();
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                tiles[x][y] = new Tile(tmp, x, y);
+                tiles[x][y] = new Tile(tmp, x, y, false, false);
             }
         }
 
         for (int x = 15; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                tiles[x][y].setSwimmable(true);
+                tiles[x][y] = new Tile(tmp, x, y, true, false);
             }
         }
     }
