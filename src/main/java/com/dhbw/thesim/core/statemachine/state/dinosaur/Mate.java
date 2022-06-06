@@ -33,6 +33,7 @@ public class Mate extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
         //TODO make it work
+        //Neuen dino erzeugen, der die eigenschaften von vater und mutter erbt wie im entwurf beschrieben. (Mutationen, etc)
     }
 
     @Override
