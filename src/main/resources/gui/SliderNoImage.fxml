@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+
+<VBox fx:id="vbox_outer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label fx:id="label" text="Titel">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Slider fx:id="slider" majorTickUnit="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" snapToTicks="true" />
+   </children>
+</VBox>
