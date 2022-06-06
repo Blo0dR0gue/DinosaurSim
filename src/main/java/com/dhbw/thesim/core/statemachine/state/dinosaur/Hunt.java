@@ -89,6 +89,8 @@ public class Hunt extends State {
         //We can do this here, because the update is called before the next check transitions
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> target == null || dinosaur.getTarget() == null));
 
+        addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
+
         //The other dinosaur escaped
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
 
