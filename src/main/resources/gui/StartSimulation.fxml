@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="outer_borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <top>
+      <VBox fx:id="top_vbox" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label fx:id="top_vbox_label_top" text="Neue Simulation" />
+            <Label fx:id="top_vbox_label_bottom" text="Konfiguration" />
+         </children>
+      </VBox>
+   </top>
+   <right>
+      <BorderPane fx:id="start_borderPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <top>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="start_borderPane_label_top" text="Dinosaurier" />
+                  <Label fx:id="start_borderPane_label_bottom" text="Simulation" />
+               </children>
+            </VBox>
+         </top>
+         <bottom>
+            <Button fx:id="start_borderPane_button" mnemonicParsing="false" text="START" BorderPane.alignment="CENTER" />
+         </bottom>
+      </BorderPane>
+   </right>
+   <center>
+      <VBox fx:id="center_vbox" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox fx:id="center_vbox_hbox" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <ListView fx:id="listView1" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="listView2" prefHeight="200.0" prefWidth="200.0" />
+                  <ListView fx:id="listView3" prefHeight="200.0" prefWidth="200.0" />
+               </children>
+            </HBox>
+            <BorderPane fx:id="borderPane_bottom" prefHeight="200.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </center>
+</BorderPane>
