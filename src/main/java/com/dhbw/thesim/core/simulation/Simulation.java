@@ -16,7 +16,7 @@ import java.util.*;
 
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
- *
+ * <p>
  * TODO handle simulation end, user interactions (Dinosaur clicks and show stats, etc.)
  *
  * @author Daniel Czeschner
@@ -576,11 +576,11 @@ public class Simulation {
         double high = deg + Math.PI / 3;
 
         if (low < 0) {
-            low = 2 * Math.PI + low;
+            low = 0;//2 * Math.PI + low;
         }
 
-        if (high < 0) {
-            high = 2 * Math.PI + high;
+        if (high > 2 * Math.PI) {
+            high = 2 * Math.PI;//2 * Math.PI + high;
         }
 
         if (low > high) {
@@ -598,9 +598,9 @@ public class Simulation {
 
         //Calculate the sites
         double adjacent = Math.cos(angle) * hypotenuse;
-        double opposite = Math.sin(angle) * hypotenuse;
+        double opposite = -Math.sin(angle) * hypotenuse;
 
-        return new Vector2D(center.getX() + adjacent, center.getY() + -opposite);
+        return new Vector2D(center.getX() + adjacent, center.getY() + opposite);
     }
 
     /**
