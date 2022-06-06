@@ -172,10 +172,10 @@ public class Simulation {
 
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
-            simulationOverlay.getChildren().add(obj.getCircle());
+            simulationOverlay.centerPane.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
                 //TODO remove test objects
-                simulationOverlay.getChildren().add(obj.getTest());
+                simulationOverlay.centerPane.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange()));
             } else {
@@ -183,10 +183,10 @@ public class Simulation {
                 obj.setPosition(getFreePositionInMap(false, false, obj.getInteractionRange()));
             }
 
-            simulationOverlay.getChildren().add(obj.getJavaFXObj());
+            simulationOverlay.centerPane.getChildren().add(obj.getJavaFXObj());
         }
 
-        simulationOverlay.getChildren().add(line);
+        simulationOverlay.centerPane.getChildren().add(line);
     }
 
     /**
@@ -197,7 +197,7 @@ public class Simulation {
      */
     public void deleteObject(SimulationObject simulationObject) {
         this.toBeRemoved.add(simulationObject);
-        Platform.runLater(() -> simulationOverlay.getChildren().remove(simulationObject.getJavaFXObj()));
+        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().remove(simulationObject.getJavaFXObj()));
     }
 
     /**

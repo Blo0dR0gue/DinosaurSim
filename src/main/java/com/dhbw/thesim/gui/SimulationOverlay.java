@@ -6,39 +6,47 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
  *
- * @author Daniel Czeschner, Tamina Mühlenberg
+ * @author Daniel Czeschner, Tamina Mühlenberg, Robin Khatri Chetri
  */
-public class SimulationOverlay extends AnchorPane {
+public class SimulationOverlay extends BorderPane {
 
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
     private Pane sidebar;
     private SimulationLoop simulationLoop;
+    public AnchorPane centerPane;
 
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
 
     public SimulationOverlay(Stage primaryStage) {
-
+        //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
+        centerPane = new AnchorPane();
+        centerPane.setMaxWidth(Display.adjustScale(1920, Display.SCALE_X));
+        centerPane.setMaxHeight(Display.adjustScale(1080, Display.SCALE_Y));
+        centerPane.setMinWidth(Display.adjustScale(1920, Display.SCALE_X));
+        centerPane.setMinHeight(Display.adjustScale(1080, Display.SCALE_Y));
 
         createCanvas();
         createSideBar();
 
-        setPrefHeight(Display.adjustScale(1080, Display.SCALE_X));
-        setPrefWidth(Display.adjustScale(1920, Display.SCALE_Y));
+        //Add the Canvas and the Sidebar to the AnchorPane
+        centerPane.getChildren().add(backgroundCanvas);
+        centerPane.getChildren().add(sidebar);
 
-        //Add the Canvas and the Sidebar to the StackPane
-        getChildren().add(backgroundCanvas);
-        getChildren().add(sidebar);
+        //Lay out the AnchorPane in the center position of the BorderPane
+        setCenter(centerPane);
 
         //TODO get data from config screen
         Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 10);
@@ -47,6 +55,18 @@ public class SimulationOverlay extends AnchorPane {
 
         //Create the Scene
         simulationScene = new Scene(this);
+
+        //Set a background image for fullscreen mode if screen resolution is higher than 1920x1080
+        //TODO Background image or colored background?
+        Image img = new Image("/background/background.jpg");
+        simulationScene.setFill(new ImagePattern(img, 0, 0, 1, 1, true));
+        BackgroundImage bImg = new BackgroundImage(img,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                new BackgroundSize(1.0,1.0,true,true,false,false));
+        Background bGround = new Background(bImg);
+        setBackground(bGround);
 
         simulationScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
