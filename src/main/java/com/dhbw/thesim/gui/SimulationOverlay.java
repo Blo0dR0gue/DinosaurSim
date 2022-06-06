@@ -2,13 +2,16 @@ package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -16,6 +19,8 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
@@ -30,6 +35,7 @@ public class SimulationOverlay extends BorderPane {
     private Pane sidebar;
     private SimulationLoop simulationLoop;
     public AnchorPane centerPane;
+    private Boolean simulationIsRunning ;
 
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
@@ -56,6 +62,7 @@ public class SimulationOverlay extends BorderPane {
         Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 10);
 
         simulationLoop = new SimulationLoop(1, 1, sim);
+        simulationIsRunning = true;
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -112,8 +119,58 @@ public class SimulationOverlay extends BorderPane {
         sidebar.getChildren().add(title);
         StackPane.setAlignment(title, Pos.TOP_CENTER);
         StackPane.setMargin(title, new Insets(10.0,0.0,0.0,0.0));
+
+        //Add the control buttons to the sidebar and add a click listener to each
+        Button playButton = addControlButtonToSidebar("/controls/start.png");
+        playButton.setOnMouseClicked(e -> {
+            if (!simulationIsRunning) {
+                simulationLoop.togglePause();
+                simulationIsRunning = !simulationIsRunning;
+            }
+        });
+        StackPane.setAlignment(playButton, Pos.BOTTOM_LEFT);
+        StackPane.setMargin(playButton, new Insets(0.0,0.0,10.0,0.0));
+        Button pauseButton = addControlButtonToSidebar("/controls/pause.png");
+        pauseButton.setOnMouseClicked(e -> {
+            if (simulationIsRunning) {
+                simulationLoop.togglePause();
+                simulationIsRunning = !simulationIsRunning;
+            }
+        });
+        StackPane.setAlignment(pauseButton, Pos.BOTTOM_CENTER);
+        StackPane.setMargin(pauseButton, new Insets(0.0,0.0,10.0,0.0));
+        Button stopButton = addControlButtonToSidebar("/controls/stop.png");
+        stopButton.setOnMouseClicked(e -> {
+            simulationLoop.stopSimulationRunner();
+            Stage window = (Stage) stopButton.getScene().getWindow();
+            //Load the fxml file into a scene which will be set when the program starts
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/config-screen.fxml"));
+
+            try {
+                Scene configScene = new Scene(fxmlLoader.load());
+                window.setScene(configScene);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            window.setFullScreen(true);
+        });
+        StackPane.setAlignment(stopButton, Pos.BOTTOM_RIGHT);
+        StackPane.setMargin(stopButton, new Insets(0.0,0.0,10.0,0.0));
     }
 
+    private Button addControlButtonToSidebar(String controlImgUrl) {
+        Image controlImg = new Image(controlImgUrl);
+        ImageView controlImageView = new ImageView(controlImg);
+        controlImageView.setFitHeight(40.0);
+        controlImageView.setPreserveRatio(true);
+        Button controlButton = new Button();
+        controlButton.setGraphic(controlImageView);
+        controlButton.styleProperty().set("-fx-background-color: transparent;");
+        sidebar.getChildren().add(controlButton);
+
+        return controlButton;
+    }
     //region getter & setter
 
     public Scene getSimulationScene() {
