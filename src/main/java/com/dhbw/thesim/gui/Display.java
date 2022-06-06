@@ -13,6 +13,18 @@ import javafx.stage.Stage;
  */
 public class Display extends Application {
 
+    public static final double SCALE_X = Screen.getPrimary().getOutputScaleX();
+    public static final double SCALE_Y = Screen.getPrimary().getOutputScaleY();
+
+    /**
+     * @param toScale Dimension Parameter to be scaled to {@code scale}
+     * @param scale   Scale to adjust {@code toScale} to
+     * @return The Dimension {@code toScale} is adjusted with the given Scale {@code scale}
+     */
+    public static double adjustScale(double toScale, double scale) {
+        return (((double) toScale) / scale);
+    }
+
     @Override
     public void start(Stage primaryStage) {
 
@@ -25,11 +37,8 @@ public class Display extends Application {
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
 
-        double screenOutputScaleVertical = Screen.getPrimary().getOutputScaleY();
-        double screenOutputScaleHorizontal = Screen.getPrimary().getOutputScaleX();
-
-        double scaledScreenHeight = screenHeight * screenOutputScaleVertical;
-        double scaledScreenWidth = screenWidth * screenOutputScaleHorizontal;
+        double scaledScreenHeight = screenHeight * SCALE_Y;
+        double scaledScreenWidth = screenWidth * SCALE_X;
 
         if (screenHeight > 1080.0 && screenWidth > 1920.0) {
             //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
@@ -43,8 +52,8 @@ public class Display extends Application {
 
             System.out.println("Display not possible, because your screen is too small.\n"
                     + "Resolution: " + screenHeight + "x" + screenWidth + "\n"
-                    + "Output Scale Vertical: " + screenOutputScaleVertical + "\n"
-                    + "Output Scale Horizontal: " + screenOutputScaleHorizontal + "\n"
+                    + "Output Scale Vertical: " + SCALE_Y + "\n"
+                    + "Output Scale Horizontal: " + SCALE_X + "\n"
                     + "Scaled Resolution: " + scaledScreenHeight + "x" + scaledScreenWidth
             );
 

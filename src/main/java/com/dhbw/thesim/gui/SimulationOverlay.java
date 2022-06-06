@@ -9,7 +9,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -25,11 +24,8 @@ public class SimulationOverlay extends AnchorPane {
     private Pane sidebar;
     private SimulationLoop simulationLoop;
 
-    public static final double SCALE_X = Screen.getPrimary().getOutputScaleX();
-    public static final double SCALE_Y = Screen.getPrimary().getOutputScaleY();
-
-    public static final double BACKGROUND_WIDTH = adjustScale(1620, SCALE_X);
-    public static final double BACKGROUND_HEIGHT = adjustScale(1080, SCALE_Y);
+    public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
+    public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
 
     public SimulationOverlay(Stage primaryStage) {
 
@@ -37,8 +33,8 @@ public class SimulationOverlay extends AnchorPane {
         createCanvas();
         createSideBar();
 
-        setPrefHeight(adjustScale(1080, SCALE_X));
-        setPrefWidth(adjustScale(1920, SCALE_Y));
+        setPrefHeight(Display.adjustScale(1080, Display.SCALE_X));
+        setPrefWidth(Display.adjustScale(1920, Display.SCALE_Y));
 
         //Add the Canvas and the Sidebar to the StackPane
         getChildren().add(backgroundCanvas);
@@ -78,11 +74,11 @@ public class SimulationOverlay extends AnchorPane {
     private void createSideBar() {
         sidebar = new Pane();
 
-        double width = adjustScale(300, SCALE_X);
+        double width = Display.adjustScale(300, Display.SCALE_X);
 
         sidebar.setPrefWidth(width);
-        sidebar.setPrefHeight(adjustScale(1080, SCALE_Y));
-        sidebar.relocate(adjustScale(1920d, SCALE_X) - width, 0d);
+        sidebar.setPrefHeight(Display.adjustScale(1080, Display.SCALE_Y));
+        sidebar.relocate(Display.adjustScale(1920d, Display.SCALE_X) - width, 0d);
 
         sidebar.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
     }
@@ -102,14 +98,5 @@ public class SimulationOverlay extends AnchorPane {
     }
 
     //endregion
-
-    /**
-     * @param toScale Dimension Parameter to be scaled to {@code scale}
-     * @param scale   Scale to adjust {@code toScale} to
-     * @return The Dimension {@code toScale} is adjusted with the given Scale {@code scale}
-     */
-    public static double adjustScale(double toScale, double scale) {
-        return (((double) toScale) / scale);
-    }
 
 }
