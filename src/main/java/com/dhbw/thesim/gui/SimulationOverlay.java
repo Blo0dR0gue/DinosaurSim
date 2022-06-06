@@ -3,14 +3,18 @@ package com.dhbw.thesim.gui;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -92,15 +96,22 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void createSideBar() {
-        sidebar = new Pane();
+        sidebar = new StackPane();
 
-        double width = Display.adjustScale(300, Display.SCALE_X);
-
-        sidebar.setPrefWidth(width);
+        sidebar.setPrefWidth(Display.adjustScale(300, Display.SCALE_X));
         sidebar.setPrefHeight(Display.adjustScale(1080, Display.SCALE_Y));
-        sidebar.relocate(Display.adjustScale(1920d, Display.SCALE_X) - width, 0d);
 
-        sidebar.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
+        AnchorPane.setRightAnchor(sidebar, 0.0);
+
+        sidebar.setBackground(new Background(new BackgroundFill(Color.web("#808080"), CornerRadii.EMPTY, Insets.EMPTY)));
+
+        Label title = new Label("Dinosaurier\nSimulation");
+        title.setTextFill(Color.WHITE);
+        title.setTextAlignment(TextAlignment.CENTER);
+        title.setFont(new Font(20.0));
+        sidebar.getChildren().add(title);
+        StackPane.setAlignment(title, Pos.TOP_CENTER);
+        StackPane.setMargin(title, new Insets(10.0,0.0,0.0,0.0));
     }
 
     //region getter & setter
