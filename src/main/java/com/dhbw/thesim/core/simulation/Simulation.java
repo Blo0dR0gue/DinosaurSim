@@ -17,6 +17,8 @@ import java.util.*;
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
  *
+ * TODO handle simulation end, user interactions (Dinosaur clicks and show stats, etc.)
+ *
  * @author Daniel Czeschner
  * @see SimulationMap
  * @see SimulationObject
