@@ -18,7 +18,7 @@ public class SimulationMap {
     /**
      * The name if the current landscape
      */
-    private String landscapeName;
+    private final String landscapeName;
     /**
      * The background grid-field
      *
@@ -76,10 +76,7 @@ public class SimulationMap {
      * @return true, if the gird position is inside the grid.
      */
     private boolean isInsideOfGrid(int gridX, int gridY) {
-        if (gridX >= 0 && gridY >= 0 && gridX < width && gridY < height) {
-            return true;
-        }
-        return false;
+        return gridX >= 0 && gridY >= 0 && gridX < width && gridY < height;
     }
 
     /**
@@ -90,7 +87,7 @@ public class SimulationMap {
      */
     public boolean isInsideOfGrid(Vector2D point) {
         Vector2D gridPos = getGridPosition(point);
-        return isInsideOfGrid((int)gridPos.getX(), (int)gridPos.getY());
+        return isInsideOfGrid((int) gridPos.getX(), (int) gridPos.getY());
     }
 
     public Vector2D getWorldPosition(int gridX, int gridY) {
@@ -133,7 +130,7 @@ public class SimulationMap {
      */
     public Tile getTileAtPosition(Vector2D worldPosition) {
         Vector2D pos = getGridPosition(worldPosition);
-        return getTileAtPosition((int)pos.getX(), (int)pos.getY());
+        return getTileAtPosition((int) pos.getX(), (int) pos.getY());
     }
 
 
@@ -167,7 +164,7 @@ public class SimulationMap {
     /**
      * Checks if a tile matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
      *
-     * @param tile
+     * @param tile     The {@link Tile} we want to check.
      * @param canSwim  true, if the dinosaur can swim
      * @param canClimb true, if the dinosaur can climb.
      * @return true, if the dinosaur can move onto this tile.
@@ -236,8 +233,8 @@ public class SimulationMap {
     /**
      * Gets a random tile on the map, matching the conditions.
      *
-     * @param canSwim
-     * @param canClimb
+     * @param canSwim  Does the object can swim.
+     * @param canClimb Does the object can climb.
      * @param random   A {@link Random} object.
      * @return A random {@link Tile}.
      */
