@@ -28,10 +28,10 @@ public class Display extends Application {
         double screenOutputScaleVertical = Screen.getPrimary().getOutputScaleY();
         double screenOutputScaleHorizontal = Screen.getPrimary().getOutputScaleX();
 
-        double scaledScreenHeight = screenHeight*screenOutputScaleVertical;
-        double scaledScreenWidth = screenWidth*screenOutputScaleHorizontal;
+        double scaledScreenHeight = screenHeight * screenOutputScaleVertical;
+        double scaledScreenWidth = screenWidth * screenOutputScaleHorizontal;
 
-        if (screenHeight>1080.0 && screenWidth>1920.0) {
+        if (screenHeight > 1080.0 && screenWidth > 1920.0) {
             //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
             if (screenHeight >= (1080.0 + 37.0)) {
                 //primaryStage.setMaxHeight(1080.0+37.0);
@@ -39,17 +39,17 @@ public class Display extends Application {
             } else {
                 System.out.println("Display not possible, because your screen is too small in height.");
             }
-        }else if (scaledScreenHeight<1080.0 && scaledScreenWidth < 1920.0){ //If display is at minimum 1080x1920, but is scaled to some degree, check against scaled resolution
+        } else if (scaledScreenHeight < 1080.0 && scaledScreenWidth < 1920.0) { //If display is at minimum 1080x1920, but is scaled to some degree, check against scaled resolution
 
             System.out.println("Display not possible, because your screen is too small.\n"
-                        + "Resolution: "+screenHeight+"x"+screenWidth+"\n"
-                        + "Output Scale Vertical: "+screenOutputScaleVertical+"\n"
-                        + "Output Scale Horizontal: "+screenOutputScaleHorizontal+"\n"
-                        + "Scaled Resolution: "+scaledScreenHeight+"x"+scaledScreenWidth
+                    + "Resolution: " + screenHeight + "x" + screenWidth + "\n"
+                    + "Output Scale Vertical: " + screenOutputScaleVertical + "\n"
+                    + "Output Scale Horizontal: " + screenOutputScaleHorizontal + "\n"
+                    + "Scaled Resolution: " + scaledScreenHeight + "x" + scaledScreenWidth
             );
 
             //TODO: Exit program on too small resolution
-        }else{
+        } else {
             //TODO currently works with white color around AND currently isn't centred -> this two things should be updated
             primaryStage.setFullScreen(true);
         }
