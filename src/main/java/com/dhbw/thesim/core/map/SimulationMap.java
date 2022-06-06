@@ -89,8 +89,8 @@ public class SimulationMap {
      * @return true, if the point is inside the grid.
      */
     public boolean isInsideOfGrid(Vector2D point) {
-        int[] gridPos = getGridPosition(point);
-        return isInsideOfGrid(gridPos[0], gridPos[1]);
+        Vector2D gridPos = getGridPosition(point);
+        return isInsideOfGrid((int)gridPos.getX(), (int)gridPos.getY());
     }
 
     public Vector2D getWorldPosition(int gridX, int gridY) {
@@ -117,12 +117,12 @@ public class SimulationMap {
      * Gets the grid position of a {@link Vector2D}. It is not checked, if this position is inside the grid.
      *
      * @param worldPosition The {@link Vector2D}, which should be checked.
-     * @return An int array -> [x,y]
+     * @return An {@link Vector2D} with the x,y position.
      */
-    private int[] getGridPosition(Vector2D worldPosition) {
+    private Vector2D getGridPosition(Vector2D worldPosition) {
         int x = (int) Math.floor(worldPosition.getX() / Tile.TILE_SIZE);
         int y = (int) Math.floor(worldPosition.getY() / Tile.TILE_SIZE);
-        return new int[]{x, y};
+        return new Vector2D(x, y);
     }
 
     /**
@@ -132,8 +132,8 @@ public class SimulationMap {
      * @return {@link Tile} at this position or null.
      */
     public Tile getTileAtPosition(Vector2D worldPosition) {
-        int[] pos = getGridPosition(worldPosition);
-        return getTileAtPosition(pos[0], pos[1]);
+        Vector2D pos = getGridPosition(worldPosition);
+        return getTileAtPosition((int)pos.getX(), (int)pos.getY());
     }
 
 
