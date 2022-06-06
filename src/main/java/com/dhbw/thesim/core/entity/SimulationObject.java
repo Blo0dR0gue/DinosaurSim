@@ -74,6 +74,7 @@ public abstract class SimulationObject extends StateMachine {
 
         test.setFill(Color.BLUE);
 
+        //TODO use sprite lib and don't create the image here.
         Image image = new Image(Objects.requireNonNull(getClass().getResource(imgPath)).toString());
         setSprite(image);
     }
