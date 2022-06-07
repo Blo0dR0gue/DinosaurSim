@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
  * Main JavaFx Application
  * TODO gui stuff :D
  *
- * @author Daniel Czeschner, Eric Stefan
+ * @author Daniel Czeschner, Eric Stefan, Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class Display extends Application {
 
@@ -74,6 +74,7 @@ public class Display extends Application {
         //We don't want to exit the fullscreen when keys are pressed
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
+        //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
         configScreen.initializeListeners();
         primaryStage.setScene(new Scene(configScreen));
@@ -83,7 +84,6 @@ public class Display extends Application {
     }
 
     /**
-     *
      * @param filename Name of the FXML File
      * @param controllerClass Class of the Controller to the corresponding FXML File
      * @return Loads the FXML File into a controller of the given class and returns that controller instance
@@ -91,6 +91,7 @@ public class Display extends Application {
     public static Object makeFXMLController(String filename, Class<?> controllerClass){
         FXMLLoader loader = new FXMLLoader();
 
+        // Try to load the fxml into a controller
         try {
             Object controller = controllerClass.getConstructor().newInstance();
             loader.setRoot(controller);
@@ -106,7 +107,6 @@ public class Display extends Application {
                  IOException e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

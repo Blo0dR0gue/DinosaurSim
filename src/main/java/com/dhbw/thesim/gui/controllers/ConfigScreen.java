@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * The Controller Class for the Configuration Screen FXML file
- * @author Robin Khatri Chetri
+ * The Control CLass for the Configuration Screen FXML file
+ * @author Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class ConfigScreen extends AnchorPane {
     @FXML
@@ -58,14 +58,25 @@ public class ConfigScreen extends AnchorPane {
     @FXML
     public GridPane gridPane;
 
+    /**
+     * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
+     * is getting to create the specified controller
+     */
     public ConfigScreen() {
 
     }
 
+    /**
+     * This method creates and initializes a new instance of from the FXML {@link ConfigScreen}
+     * @return The newly created and initialized {@link ConfigScreen}
+     */
     public static ConfigScreen newInstance() {
         return (ConfigScreen) Display.makeFXMLController("config-screen.fxml", ConfigScreen.class);
     }
 
+    /**
+     * Method to initialize the Configuration Screen, its listeners and adding custom controls dynamically
+     */
     public void initialize() {
         initializeListeners();
         //adding dinos to list
@@ -87,6 +98,10 @@ public class ConfigScreen extends AnchorPane {
             dinoListView.getItems().add(dinoListItem);
         }
     }
+
+    /**
+     * Adds all specified event handlers to the specified {@link javafx.scene.Node}
+     */
     public void initializeListeners() {
         // When the start button is clicked the current scene gets replaced by the SimulationOverlay scene
         startSimulationButton.setOnAction(event -> {

@@ -15,6 +15,10 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 
+/**
+ * The Custom Control Class provides a dino list item for the {@link javafx.scene.control.ListView} of dinos
+ * @author Tamina Mühlenberg, Robin Khatri Chetri
+ */
 public class DinoListItem extends HBox {
     @FXML
     public HBox container;
@@ -33,16 +37,27 @@ public class DinoListItem extends HBox {
                 @FXML
                 public Button button_remove;
 
+    /**
+     * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
+     * is getting to create the specified controller
+     */
     public DinoListItem() {
 
     }
 
+    /**
+     * This method creates and initializes a new instance of from the FXML {@link DinoListItem}
+     * @return The newly created and initialized {@link DinoListItem}
+     */
     public static DinoListItem newInstance(){
         return (DinoListItem) Display.makeFXMLController("dino-list-item.fxml", DinoListItem.class);
     }
 
-    public void initialize(String label, Image image){
-        setText(label);
+    /**
+     * Method to initialize the Dino list item, its listeners and setting the label text and image url
+     */
+    public void initialize(String labelText, Image image){
+        setText(labelText);
         setImage(image);
     }
 

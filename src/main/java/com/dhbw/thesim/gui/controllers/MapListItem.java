@@ -12,6 +12,10 @@ import javafx.scene.layout.HBox;
 
 import java.io.IOException;
 
+/**
+ * The Custom Control Class provides a map list item for the {@link javafx.scene.control.ListView} of maps
+ * @author Tamina Mühlenberg, Robin Khatri Chetri
+ */
 public class MapListItem extends HBox {
     @FXML
     public HBox container;
@@ -20,16 +24,27 @@ public class MapListItem extends HBox {
         @FXML
         public ImageView imageView;
 
+    /**
+     * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
+     * is getting to create the specified controller
+     */
     public MapListItem() {
 
     }
 
+    /**
+     * This method creates and initializes a new instance of from the FXML {@link MapListItem}
+     * @return The newly created and initialized {@link MapListItem}
+     */
     public MapListItem newInstance() {
         return (MapListItem) Display.makeFXMLController("map-list-item.fxml", MapListItem.class);
     }
 
-    public void initialize(String label, Image image){
-        setText(label);
+    /**
+     * Method to initialize the Map list item, its listeners and setting the label text and image url
+     */
+    public void initialize(String labelText, Image image){
+        setText(labelText);
         setImage(image);
     }
 

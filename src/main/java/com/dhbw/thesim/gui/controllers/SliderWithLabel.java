@@ -10,6 +10,10 @@ import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
 
+/**
+ * The Custom Control Class provides a {@link Slider} and {@link Label} controls
+ * @author Tamina Mühlenberg, Robin Khatri Chetri
+ */
 public class SliderWithLabel extends GridPane {
     @FXML
     public GridPane gridPane;
@@ -20,6 +24,10 @@ public class SliderWithLabel extends GridPane {
         @FXML
         public Label sliderValueLabel;
 
+    /**
+     * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
+     * is getting to create the specified controller
+     */
     public SliderWithLabel() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/slider-with-label.fxml"));
         fxmlLoader.setRoot(this);
@@ -34,14 +42,24 @@ public class SliderWithLabel extends GridPane {
         initializeListeners();
     }
 
+    /**
+     * This method creates and initializes a new instance of from the FXML {@link SliderWithLabel}
+     * @return The newly created and initialized {@link SliderWithLabel}
+     */
     public static SliderWithLabel newInstance() {
         return (SliderWithLabel) Display.makeFXMLController("slider-with-label.fxml", SliderWithLabel.class);
     }
 
-    public void initialize() {
+    /**
+     * Method to initialize the Slider with corresponding labels, its listeners and setting the label text
+     */
+    public void initialize(String labelText) {
+        setText(labelText);
         initializeListeners();
     }
-
+    /**
+     * Adds all specified event handlers to the specified {@link javafx.scene.Node}
+     */
     private void initializeListeners() {
         //Add change listener on the slider control to reflect its current value in the label
         addListener(slider, sliderValueLabel);
