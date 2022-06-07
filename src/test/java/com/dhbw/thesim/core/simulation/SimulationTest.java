@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class SimulationTest {
 
@@ -40,20 +43,23 @@ class SimulationTest {
     }
 
     @Test
-    void sortByDistance() throws Exception {
+    void sortByDistance(){
 
         List<SimulationObject> simulationObjectList = new ArrayList<>();
 
-        //TODO add powermock
-        //Image myObjectMock = mock(Image.class);
-        //PowerMockito.whenNew(Image.class).withAnyArguments().thenReturn(myObjectMock);
+        Image myObjectMock = mock(Image.class);
 
-        Plant p2 = new Plant("test", "test.png", 2,2);
-        p2.setPosition(new Vector2D(800,800));
+        Plant p2 = mock(Plant.class);
+        when(p2.getPosition()).thenReturn(new Vector2D(800,800));
+        when(p2.getInteractionRange()).thenReturn(2d);
+        when(p2.getGrowthRate()).thenReturn(2d);
+
         simulationObjectList.add(p2);
 
-        Plant p1 = new Plant("test", "test.png", 2,2);
-        p1.setPosition(new Vector2D(40,40));
+        Plant p1 = mock(Plant.class);
+        when(p1.getPosition()).thenReturn(new Vector2D(40,40));
+        when(p1.getInteractionRange()).thenReturn(2d);
+        when(p1.getGrowthRate()).thenReturn(2d);
         simulationObjectList.add(p1);
 
         Vector2D sortTo = new Vector2D(50,50);
