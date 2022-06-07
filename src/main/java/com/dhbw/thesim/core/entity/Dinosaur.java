@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.util.Vector2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -60,17 +61,17 @@ public class Dinosaur extends SimulationObject {
 
     //TODO remove, if json2object is implemented
     public Dinosaur() {
-        super("test", 0, "NaN");
+        super("test", 0, null);
     }
 
     /**
      * Constructor for a dinosaur object
      */
-    public Dinosaur(String name, String imgName, double nutrition, double hydration,
+    public Dinosaur(String name, Image image, double nutrition, double hydration,
                     int strength, int speed, double reproductionRate, double weight, double length, double height,
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
                     double interactionRange, char gender) {
-        super(name, interactionRange, "/dinosaur/" + imgName);
+        super(name, interactionRange, image);
         //TODO
 
         this.diet = diet == 'a' ? dietType.omnivore : diet == 'f' ? dietType.carnivore : dietType.herbivore;

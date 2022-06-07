@@ -5,6 +5,7 @@ import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.application.Platform;
@@ -94,37 +95,34 @@ public class Simulation {
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", "test.png", 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'M')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", "test.png", 20, 12, 18, 25,
+                "type2", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
                 'f', 590, 32, 'F')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", "test.png", 15, 14, 20, 45,
+                "type2", SpriteLibrary.getInstance().getImage("test.png"), 15, 14, 20, 45,
                 0.1, 100, 50, 10, false, true,
                 'f', 370, 32, 'M')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type3", "test.png", 15, 14, 27, 35,
+                "type3", SpriteLibrary.getInstance().getImage("test.png"), 15, 14, 27, 35,
                 0.1, 100, 50, 10, false, true,
                 'a', 370, 32, 'M')
         );
 
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", "test.png", 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
 
         line = new Line(0, 0, 0, 0);
         line.setStroke(Color.BLUE);

@@ -62,9 +62,9 @@ public abstract class SimulationObject extends StateMachine {
      *
      * @param type             The type for this object.
      * @param interactionRange The range, in which collisions are handled.
-     * @param imgPath          The full path to an image. E.g. /dinosaur/test.png   //TODO maybe pass a image via spritelibF?
+     * @param image            The image, which is used for the representation for this object.
      */
-    public SimulationObject(String type, double interactionRange, String imgPath) {
+    public SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
         this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
@@ -74,8 +74,6 @@ public abstract class SimulationObject extends StateMachine {
 
         test.setFill(Color.BLUE);
 
-        //TODO use sprite lib and don't create the image here.
-        Image image = new Image(Objects.requireNonNull(getClass().getResource(imgPath)).toString());
         setSprite(image);
     }
 

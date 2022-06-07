@@ -2,6 +2,7 @@ package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.plant.Growing;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -31,11 +32,11 @@ public class Plant extends SimulationObject {
 
     //TODO remove, if json2object is implemented
     public Plant() {
-        super("test", 0, "nNn");
+        super("test", 0, null);
     }
 
-    public Plant(String name, String imgName, double interactionRange, double growthRate) {
-        super(name, interactionRange, "/plant/" + imgName);
+    public Plant(String name, Image image, double interactionRange, double growthRate) {
+        super(name, interactionRange, image);
         this.growthRate = growthRate;
         this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
         this.setState(new Growing(this));
