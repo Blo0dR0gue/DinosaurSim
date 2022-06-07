@@ -237,9 +237,7 @@ public class Simulation {
         for (Vector2D waterTileCenterPos : waterSourcesInRange) {
 
             if (target == null) {
-                boolean t1 = isPointInsideCircle(position, viewRange, waterTileCenterPos);
-                boolean t2 = canMoveTo(position, waterTileCenterPos, 0, canSwim, canClimb, null, true, true);
-                if (t1 && t2)
+                if (isPointInsideCircle(position, viewRange, waterTileCenterPos) && canMoveTo(position, waterTileCenterPos, 0, canSwim, canClimb, null, true, true))
                     target = waterTileCenterPos;
             } else //If the distance to another water tile closer than the current target, and we can move to it, change it to the closer one.
                 if (isPointInsideCircle(position, viewRange, waterTileCenterPos) && Vector2D.distance(position, target) > Vector2D.distance(position, waterTileCenterPos) &&
