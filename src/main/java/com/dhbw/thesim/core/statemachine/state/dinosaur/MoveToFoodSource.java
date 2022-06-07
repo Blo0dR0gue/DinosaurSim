@@ -46,7 +46,7 @@ public class MoveToFoodSource extends State {
         if (target == null) {
 
             //reset the target
-            if(dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino){
+            if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 targetDino.setIsChased(false);
             }
             dinosaur.setTarget(null);

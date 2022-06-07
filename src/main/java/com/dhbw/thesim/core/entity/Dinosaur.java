@@ -93,7 +93,7 @@ public class Dinosaur extends SimulationObject {
         this.hydrationFull = this.hydration;
 
         //TODO remove test objects
-        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore?Color.GREEN:this.diet==dietType.omnivore?Color.BLUE:Color.RED);
+        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore ? Color.GREEN : this.diet == dietType.omnivore ? Color.BLUE : Color.RED);
 
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
@@ -269,23 +269,25 @@ public class Dinosaur extends SimulationObject {
      * Force the dinosaur to the {@link com.dhbw.thesim.core.statemachine.state.dinosaur.NoOp} state. <br>
      * Used when the dinosaur got caught by his hunter.
      */
-    public void forceNoOp(){
+    public void forceNoOp() {
         this.forceNoOp = true;
     }
 
     /**
      * Resets the force.
+     *
      * @see #forceNoOp
      */
-    public void resetForceNoOp(){
+    public void resetForceNoOp() {
         this.forceNoOp = false;
     }
 
     /**
      * Is the dinosaur forced to the stand state
+     *
      * @return true, if it is forced to the stand state.
      */
-    public boolean isForcedToNoOp(){
+    public boolean isForcedToNoOp() {
         return this.forceNoOp;
     }
 

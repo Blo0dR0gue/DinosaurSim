@@ -50,11 +50,11 @@ public class SpriteLibrary {
         try {
             assert uri != null;
             try (FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
-                Path folderRootPath = fileSystem.getPath("/"+folderName);
+                Path folderRootPath = fileSystem.getPath("/" + folderName);
                 Stream<Path> walk = Files.walk(folderRootPath, 1);
                 walk.forEach(childFileOrFolder -> {
                     Image image = new Image(childFileOrFolder.toUri().toString());
-                    if (!image.isError()){
+                    if (!image.isError()) {
                         String path = childFileOrFolder.getFileName().toString();
                         //path.substring(0, path.indexOf('.')) //TODO if we only want to store the name of the image. (Maybe better)
                         imageMap.put(path, image);
@@ -67,9 +67,9 @@ public class SpriteLibrary {
         }
     }
 
-    public Image getImage(String name){
+    public Image getImage(String name) {
         Image img = imageMap.get(name);
-        if(img == null)
+        if (img == null)
             img = new Image(Objects.requireNonNull(getClass().getResource("undefined.png")).toString());  //TODO
         return img;
     }

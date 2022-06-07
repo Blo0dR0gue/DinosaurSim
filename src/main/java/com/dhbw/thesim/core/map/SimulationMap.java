@@ -167,11 +167,11 @@ public class SimulationMap {
 
         //Create small desert
         for (int x = 0; x < 3; x++) {
-            for (int y = height-3; y < height; y++) {
+            for (int y = height - 3; y < height; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
             }
         }
-        tiles[3][height-1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), 3, height-1, TILES.sand.swimmable, TILES.sand.climbable);
+        tiles[3][height - 1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), 3, height - 1, TILES.sand.swimmable, TILES.sand.climbable);
 
     }
 

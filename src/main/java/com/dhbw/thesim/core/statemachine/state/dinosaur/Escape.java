@@ -50,7 +50,7 @@ public class Escape extends State {
                             dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
                 }
             }
-            if(target != null)
+            if (target != null)
                 dinosaur.setTest(target);
         }
 
