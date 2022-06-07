@@ -56,7 +56,7 @@
             <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
         </rowConstraints>
         <ListView fx:id="dinoListView" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
-                  GridPane.rowSpan="6"/>
+                  GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
         <RadioButton text="Map A" textFill="white"
                      GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="RIGHT">
             <toggleGroup>
@@ -150,7 +150,7 @@
             </StackPane.margin>
         </Label>
         <fx:define>
-            <Image fx:id="playBtnImage" url="/controls/start.png"/>
+            <Image fx:id="playBtnImage" url="/controls/play.png"/>
         </fx:define>
         <Button fx:id="startSimulationButton" style="-fx-background-color: transparent;"
                 StackPane.alignment="BOTTOM_CENTER">

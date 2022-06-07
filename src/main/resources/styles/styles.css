@@ -1,0 +1,15 @@
+.slider .axis .axis-tick-mark, .slider .axis .axis-minor-tick-mark {
+    -fx-stroke: black;
+}
+
+.list-view {
+    -fx-background-insets: 0; -fx-padding: 0;
+}
+
+.list-view .list-cell {
+    -fx-background-color: #bfbfbf;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #999999;
+}
