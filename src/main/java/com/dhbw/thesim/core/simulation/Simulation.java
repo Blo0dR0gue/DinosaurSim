@@ -8,6 +8,7 @@ import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
+import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -90,26 +91,27 @@ public class Simulation {
         this.simulationObjects = new ArrayList<>();
         this.toBeRemoved = new ArrayList<>();
 
-        //TODO handle map calls to json2object
+        //TODO
+        //this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
 
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
                 "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'M')
+                'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
                 "type2", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
-                'f', 590, 32, 'F')
+                'f', 590, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
                 "type2", SpriteLibrary.getInstance().getImage("test.png"), 15, 14, 20, 45,
                 0.1, 100, 50, 10, false, true,
-                'f', 370, 32, 'M')
+                'f', 370, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
