@@ -9,7 +9,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import com.dhbw.thesim.gui.controllers.SliderWithLabel?>
@@ -57,59 +56,16 @@
         </rowConstraints>
         <ListView fx:id="dinoListView" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
                   GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
-        <RadioButton text="Map A" textFill="white"
-                     GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="RIGHT">
-            <toggleGroup>
-                <ToggleGroup fx:id="mapGroup"/>
-            </toggleGroup>
-            <font>
-                <Font size="17.0"/>
-            </font>
-        </RadioButton>
-        <RadioButton text="Map B" textFill="white"
-                     GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.halignment="RIGHT">
-            <toggleGroup>
-                <fx:reference source="mapGroup"/>
-            </toggleGroup>
-            <font>
-                <Font size="17.0"/>
-            </font>
-        </RadioButton>
-        <ImageView fitWidth="75.0" fitHeight="75.0"
-                   GridPane.columnIndex="6" GridPane.rowIndex="0" GridPane.halignment="CENTER">
-            <Image url="/map/map-a.png"/>
-        </ImageView>
-        <ImageView fitWidth="75.0" fitHeight="75.0"
-                   GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.halignment="CENTER">
-            <Image url="/map/map-b.png"/>
-        </ImageView>
+        <ListView fx:id="mapListView" GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.columnSpan="2"
+                  GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
         <SliderWithLabel text="Pflanzenwachstumrate" GridPane.columnIndex="3" GridPane.rowIndex="0"
                          GridPane.columnSpan="2"/>
-        <Label text="Simulationsschrittweite" textFill="white"
-               GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" GridPane.columnSpan="2">
-            <font>
-                <Font size="17.0"/>
-            </font>
+        <SliderWithLabel text="Simulationsschrittweite"
+                         GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2">
             <GridPane.margin>
                 <Insets left="20.0"/>
             </GridPane.margin>
-        </Label>
-        <Slider fx:id="stepSlider" value="5.0" min="1.0" max="7.0"
-                GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2">
-            <GridPane.margin>
-                <Insets left="20.0"/>
-            </GridPane.margin>
-            <padding>
-                <Insets right="10.0"/>
-            </padding>
-        </Slider>
-        <Label fx:id="stepLabel" text="5" textFill="white"
-               GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2"
-               GridPane.halignment="RIGHT">
-            <font>
-                <Font size="17.0"/>
-            </font>
-        </Label>
+        </SliderWithLabel>
         <RadioButton text="Automatischer Simulationsdurchlauf" textFill="white"
                      GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.columnSpan="2"
                      GridPane.valignment="TOP">

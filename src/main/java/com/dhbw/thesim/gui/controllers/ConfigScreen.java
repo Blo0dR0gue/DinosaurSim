@@ -50,6 +50,8 @@ public class ConfigScreen extends AnchorPane {
     public ListView<DinoListItem> dinoListView;
     @FXML
     public GridPane gridPane;
+    @FXML
+    public ListView<MapListItem> mapListView;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -72,7 +74,8 @@ public class ConfigScreen extends AnchorPane {
      */
     public void initialize() {
         initializeListeners();
-        //adding dinos to list
+
+        //Instantiating and initializing dinos to add all of them to the list view of dinos
         DinoListItem dinoListItem1 = DinoListItem.newInstance();
         dinoListItem1.initialize("Tyrannosaurus Rex", new Image("/dinosaur/t-rex.png"));
 
@@ -89,6 +92,24 @@ public class ConfigScreen extends AnchorPane {
 
         for (DinoListItem dinoListItem : Arrays.asList(dinoListItem1, dinoListItem2, dinoListItem3, dinoListItem4)) {
             dinoListView.getItems().add(dinoListItem);
+        }
+
+        //Toggle group for the map radio buttons, so only one radio button can be active at a time
+        ToggleGroup mapGroup = new ToggleGroup();
+
+        //Instantiating and initializing maps to add all of them to the list view of dinos
+        MapListItem mapListItem1 = MapListItem.newInstance();
+        mapListItem1.initialize("Map A", new Image("/map/map-a.png"));
+        mapListItem1.radioButton.setToggleGroup(mapGroup);
+
+        MapListItem mapListItem2 = MapListItem.newInstance();
+        mapListItem2.initialize("Map B", new Image("/map/map-b.png"));
+        mapListItem2.radioButton.setToggleGroup(mapGroup);
+
+        GridPane.setFillWidth(dinoListView, true);
+
+        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
+            mapListView.getItems().add(mapListItem);
         }
     }
 

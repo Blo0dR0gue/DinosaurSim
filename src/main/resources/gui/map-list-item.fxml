@@ -5,16 +5,22 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<fx:root type="javafx.scene.layout.HBox" fx:id="container" alignment="CENTER_LEFT"
-         maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-         prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2"
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.HBox" fx:id="container" alignment="CENTER_RIGHT"
+         xmlns="http://javafx.com/javafx/11.0.2"
          xmlns:fx="http://javafx.com/fxml/1">
-   <RadioButton fx:id="radioButton" mnemonicParsing="false" text="MapName">
+   <padding>
+      <Insets top="20.0" right="20.0" bottom="20.0"/>
+   </padding>
+   <RadioButton fx:id="radioButton" text="MapName" textFill="white">
+      <HBox.margin>
+         <Insets right="10.0"/>
+      </HBox.margin>
       <font>
-         <Font size="16.0"/>
+         <Font size="17.0"/>
       </font>
    </RadioButton>
-   <ImageView fx:id="imageView" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="imageView" fitHeight="75.0" fitWidth="75.0" preserveRatio="true">
       <Image url="@../dinosaur/test.png"/>
    </ImageView>
 </fx:root>

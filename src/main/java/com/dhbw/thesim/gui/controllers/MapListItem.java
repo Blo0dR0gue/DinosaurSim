@@ -33,7 +33,7 @@ public class MapListItem extends HBox {
      * This method creates and initializes a new instance of from the FXML {@link MapListItem}
      * @return The newly created and initialized {@link MapListItem}
      */
-    public MapListItem newInstance() {
+    public static MapListItem newInstance() {
         return (MapListItem) Display.makeFXMLController("map-list-item.fxml", MapListItem.class);
     }
 
