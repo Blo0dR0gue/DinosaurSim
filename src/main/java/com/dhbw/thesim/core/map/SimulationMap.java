@@ -186,7 +186,7 @@ public class SimulationMap {
      * @param gridY The y grid position.
      * @return true, if the gird position is inside the grid.
      */
-    private boolean isInsideOfGrid(int gridX, int gridY) {
+    public boolean isInsideOfGrid(int gridX, int gridY) {
         return gridX >= 0 && gridY >= 0 && gridX < width && gridY < height;
     }
 

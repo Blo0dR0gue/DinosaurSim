@@ -103,6 +103,30 @@ public class Simulation {
         );
 
         this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
                 "type2", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
                 'f', 590, 32, 'f')
@@ -571,8 +595,8 @@ public class Simulation {
             deg = 2 * Math.PI + deg;
         }
 
-        double low = deg - Math.PI / 3;
-        double high = deg + Math.PI / 3;
+        double low = deg - Math.PI / 4;
+        double high = deg + Math.PI / 4;
 
         if (low < 0) {
             low = 0;//2 * Math.PI + low;
@@ -722,6 +746,10 @@ public class Simulation {
                     //If this tile can't be crossed be the dinosaur, return false.
                     return false;
                 }
+        }
+
+        if(simulationMap.isInsideOfGrid(x,y+1) && !simulationMap.tileMatchedConditions(x,y+1, canSwim, canClimb)){
+            return false;
         }
 
         return true;

@@ -57,7 +57,7 @@ public class Dinosaur extends SimulationObject {
     private final static double nutritionReductionRate = 0.1;
     private final static double hydrationReductionRate = 0.25;
 
-    public final static double PROXIMITY_RANGE = 2.5;
+    public final static double PROXIMITY_RANGE = 5;
 
     //TODO remove, if json2object is implemented
     public Dinosaur() {

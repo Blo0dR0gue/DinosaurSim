@@ -46,11 +46,10 @@ public class Hunt extends State {
                 //TODO let hunted dino run away when the target dino can see this dino
                 targetDino.setIsChased(true);
                 targetDino.setTarget(dinosaur);
+
+                target = targetDino.getPosition();
+                direction = dinosaur.getPosition().directionToTarget(target);
             }
-
-            target = dinosaur.getTarget().getPosition();
-            direction = dinosaur.getPosition().directionToTarget(target);
-
         }
 
         if (direction != null) {
