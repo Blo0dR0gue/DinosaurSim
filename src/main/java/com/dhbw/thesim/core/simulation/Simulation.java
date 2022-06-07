@@ -70,7 +70,7 @@ public class Simulation {
      * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
      * @param plantGrowthRate           The growth rate for each plant.
      */
-    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate) {
+    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, double plantGrowthRate) {
         //TODO load via json2objects
         this.random = new Random();
         this.simulationMap = new SimulationMap(landscapeName);

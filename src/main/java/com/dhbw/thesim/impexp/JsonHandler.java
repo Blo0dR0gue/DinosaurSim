@@ -17,8 +17,7 @@ public class JsonHandler {
     static String workingDirectory;
     public enum SimulationObjectType{
         DINO,
-        PLANT,
-        LANDSCAPE
+        PLANT
     }
     public enum ScenarioConfigParams{
         DINO,
@@ -93,7 +92,7 @@ public class JsonHandler {
      * @return HashMap containing dinosaurs or plants each nested in an HashMap with its names
      * @throws IOException when the "defaultSimulationObjectsConfig.json" cannot be found in the appdata folder "TheSim"
      */
-    public static HashMap importSimulationObjectsConfig(SimulationObjectType type) throws IOException {
+    public static HashMap<String, HashMap<String, Object>> importSimulationObjectsConfig(SimulationObjectType type) throws IOException {
         //this is the idea of the structure:
         //HashMap<"Dinosauchus",<HashMap<"Bild","dinosauchus.png">>>
         //or HashMap<"Farn",<HashMap<"Bild","farn.png">>>
@@ -109,7 +108,7 @@ public class JsonHandler {
         JSONTokener jsonTokener = new JSONTokener(inputStreamConfigFile);
         JSONArray jsonArraySimulationObjects = new JSONArray(jsonTokener);
         //Json Array containing the simulation objects of the chosen SimulationObjectType
-        JSONArray jsonArrayChosenSimulationObjects = new JSONArray();
+        JSONArray jsonArrayChosenSimulationObjects;
 
         if (type == SimulationObjectType.DINO) { //all dinosaurs should be returned
             //initialize the "jsonArrayChosenSimulationObjects" with all dinosaurs as Json Array
@@ -160,7 +159,7 @@ public class JsonHandler {
      *         Special cases are "landscape name" and "plant growth", where there is only one entry in the HashMap with static key
      * @throws IOException if the resource file with the name "fileName" could not be found
      */
-    public static HashMap importScenarioConfig(String fileName, ScenarioConfigParams type) throws IOException {
+    public static HashMap<String,Object> importScenarioConfig(String fileName, ScenarioConfigParams type) throws IOException {
         HashMap<String,Object> scenarioConfigObjects = new HashMap<>();
 
         File configFile = new File(workingDirectory+"/"+fileName+".json");
@@ -201,13 +200,13 @@ public class JsonHandler {
      * @param simulationObjects is a HashMap which contains simulation objects
      * @return a JsonArray with all entrys of "simulationObjects" HashMap cling together
      */
-    private static JSONArray createScenarioConfigSimulationObjects(HashMap simulationObjects){
+    private static JSONArray createScenarioConfigSimulationObjects(HashMap<String,Integer> simulationObjects){
         JSONArray innerJsonArray = new JSONArray();
 
         int i=0;
-        for (Object key:simulationObjects.keySet()) {
+        for (String key:simulationObjects.keySet()) {
             JSONObject simulationObject = new JSONObject();
-            simulationObject.put((String) key,simulationObjects.get(key));
+            simulationObject.put(key,simulationObjects.get(key));
             innerJsonArray.put(i,simulationObject);
             i++;
         }
@@ -223,7 +222,7 @@ public class JsonHandler {
      * @param fileName is the name of the file which will be created
      * @throws IOException if the file "fileName" could not be created or could not be written to
      */
-    public static void exportScenarioConfig(HashMap dinosaurs, HashMap plants, String landscapeName, Double plantGrowth, String fileName) throws IOException {
+    public static void exportScenarioConfig(HashMap<String,Integer> dinosaurs, HashMap<String,Integer> plants, String landscapeName, Double plantGrowth, String fileName) throws IOException{
         //wrappingJsonArray of all objects, in which all objects are added to
         JSONArray wrappingJsonArray = new JSONArray();
 
@@ -244,7 +243,9 @@ public class JsonHandler {
         try {
             File configFile = new File(workingDirectory+"/"+fileName+".json");
             if (!configFile.exists()) {
-                configFile.createNewFile();
+                if (!configFile.createNewFile()){
+                    throw new IOException("The file "+fileName+".json could not be created");
+                }
                 System.out.println("File created: " + fileName);
                 try {
                     FileWriter fileWriter = new FileWriter(workingDirectory+"/"+fileName+".json");
