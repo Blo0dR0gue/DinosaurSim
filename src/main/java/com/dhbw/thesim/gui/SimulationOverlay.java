@@ -20,8 +20,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
  *
@@ -119,7 +117,7 @@ public class SimulationOverlay extends BorderPane {
         StackPane.setMargin(title, new Insets(10.0,0.0,0.0,0.0));
 
         //Add the control buttons to the sidebar and add a click listener to each
-        Button playButton = addControlButtonToSidebar("/controls/start.png");
+        Button playButton = addControlButtonToSidebar("/controls/play.png");
         playButton.setOnAction(e -> {
             if (!simulationIsRunning) {
                 simulationLoop.togglePause();

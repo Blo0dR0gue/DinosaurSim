@@ -4,7 +4,6 @@ import com.dhbw.thesim.gui.Display;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -12,8 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-
-import java.io.IOException;
 
 /**
  * The Custom Control Class provides a dino list item for the {@link javafx.scene.control.ListView} of dinos

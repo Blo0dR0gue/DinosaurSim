@@ -4,13 +4,10 @@ import com.dhbw.thesim.gui.Display;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-
-import java.io.IOException;
 
 /**
  * The Custom Control Class provides a map list item for the {@link javafx.scene.control.ListView} of maps
