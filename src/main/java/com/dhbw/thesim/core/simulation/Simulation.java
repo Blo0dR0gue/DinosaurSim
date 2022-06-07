@@ -134,6 +134,7 @@ public class Simulation {
         drawMap();
         //TODO
         this.simulationOverlay = simulationOverlay;
+        //TODO don't spawn plants in deserts
         spawnObjects(simulationOverlay);
     }
 
@@ -179,7 +180,7 @@ public class Simulation {
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange()));
             } else {
-                //Plants only can be spawned on none swimmable and climbable areas.
+                //Plants only can be spawned on tiles, which allow plant growing
                 obj.setPosition(getFreePositionInMap(false, false, obj.getInteractionRange()));
             }
 

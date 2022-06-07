@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.map;
 
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
 
@@ -49,7 +50,7 @@ public class SimulationMap {
     public SimulationMap(String landscapeName) {
         this.landscapeName = landscapeName;
         this.tiles = new Tile[width][height];
-        initMap();
+        landscapeOne();
     }
 
     //TODO make dynamic
@@ -66,6 +67,116 @@ public class SimulationMap {
                 tiles[x][y] = new Tile(tmp, x, y, true, false);
             }
         }
+
+    }
+
+    private enum TILES {
+        grass("grass.png", false, false),
+        sand("sand.png", false, false),
+        water("water.png", true, false),
+        mountain("mountain.png", false, true);
+
+        public final String imgName;
+        public final boolean swimmable;
+        public final boolean climbable;
+
+        TILES(String imgName, boolean swimmable, boolean climbable) {
+            this.imgName = imgName;
+            this.swimmable = swimmable;
+            this.climbable = climbable;
+        }
+    }
+
+    private void landscapeOne() {
+
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.grass.imgName), x, y, TILES.grass.swimmable, TILES.grass.climbable);
+            }
+        }
+
+        //Create river
+        for (int x = 0; x < 14; x++) {
+            int y = 10;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+        }
+
+        for (int y = 6; y < height - 7; y++) {
+            int x = 13;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+        }
+
+        for (int x = 13; x < 17; x++) {
+            int y = height - 7;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+        }
+
+        //Create lake
+        for (int x = width - 10; x < width - 4; x++) {
+            for (int y = 8; y < 14; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+            }
+        }
+        tiles[width - 11][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), width - 11, 8, TILES.water.swimmable, TILES.water.climbable);
+        tiles[width - 12][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), width - 12, 8, TILES.water.swimmable, TILES.water.climbable);
+
+        //Create desert
+        tiles[width - 5][13] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), width - 4, 14, TILES.sand.swimmable, TILES.sand.climbable);
+
+        for (int x = width - 9; x < width; x++) {
+            for (int y = 0; y < 8; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+            }
+        }
+
+        for (int x = width - 4; x < width; x++) {
+            for (int y = 8; y < 14; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+            }
+        }
+
+        for (int x = width - 3; x < width; x++) {
+            for (int y = 14; y < 16; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+            }
+        }
+
+
+        //Create mountain
+        for (int x = width - 16; x < width - 10; x++) {
+            for (int y = height - 5; y < height; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.mountain.imgName), x, y, TILES.mountain.swimmable, TILES.mountain.climbable);
+            }
+        }
+        for (int x = width - 20; x < width - 16; x++) {
+            for (int y = height - 1; y < height; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.mountain.imgName), x, y, TILES.mountain.swimmable, TILES.mountain.climbable);
+            }
+        }
+
+        //Create small lake
+        for (int x = 0; x < 9; x++) {
+            if (x < 6)
+                for (int y = 0; y < 6; y++) {
+                    tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+                }
+            else
+                tiles[x][0] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, 0, TILES.water.swimmable, TILES.water.climbable);
+        }
+        tiles[6][1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), 6, 1, TILES.water.swimmable, TILES.water.climbable);
+
+        //Create small desert
+        for (int x = 0; x < 3; x++) {
+            for (int y = height-3; y < height; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+            }
+        }
+        tiles[3][height-1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), 3, height-1, TILES.sand.swimmable, TILES.sand.climbable);
+
+    }
+
+    private void landscapeTwo() {
+
     }
 
     /**

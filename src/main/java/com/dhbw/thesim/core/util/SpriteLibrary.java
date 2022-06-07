@@ -2,7 +2,6 @@ package com.dhbw.thesim.core.util;
 
 import javafx.scene.image.Image;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -31,6 +30,7 @@ public class SpriteLibrary {
         imageMap = new HashMap<>();
         loadImages("dinosaur");
         loadImages("plant");
+        loadImages("tile");
     }
 
     public static SpriteLibrary getInstance() {
