@@ -258,6 +258,12 @@ public class Simulation {
         Vector2D target = null;
         List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
 
+        List<Vector2D> sorted = sortByDistance(waterSourcesInRange, position);
+
+        if(sorted.size() > 0)
+            return sorted.get(0);
+        return null;
+/*
         for (Vector2D waterTileCenterPos : waterSourcesInRange) {
 
             if (target == null) {
@@ -271,7 +277,7 @@ public class Simulation {
                 }
 
         }
-        return target;
+        return target;*/
     }
 
     /**
@@ -368,6 +374,18 @@ public class Simulation {
      */
     public List<SimulationObject> sortByDistance(Vector2D position, List<SimulationObject> list) {
         list.sort(Comparator.comparingDouble(o -> Vector2D.distance(position, o.getPosition())));
+        return list;
+    }
+
+    /**
+     * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
+     *
+     * @param position The {@link Vector2D} we want sort to.
+     * @param list     The list with the {@link Vector2D}, which should be sorted.
+     * @return The sorted list.
+     */
+    public List<Vector2D> sortByDistance(List<Vector2D> list, Vector2D position) {
+        list.sort(Comparator.comparingDouble(o -> Vector2D.distance(position, o)));
         return list;
     }
 
