@@ -16,6 +16,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * TODO save images in appdata folder like scenarios
+ *
+ * @author Daniel Czeschnenr
+ */
 public class SpriteLibrary {
 
     private final Map<String, Image> imageMap;
