@@ -13,68 +13,61 @@
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
-<AnchorPane fx:id="container"
-            prefWidth="${screen.bounds.width}" prefHeight="${screen.bounds.height}"
-            xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.dhbw.thesim.gui.controllers.StatisticsController">
-    <children>
-        <StackPane style="-fx-background-color: #808080;"
-              prefWidth="${container.width*0.8}" prefHeight="${container.height*0.15}"
-              AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0">
-            <children>
-                <Label text="Simulationsende&#13;Statistiken" textFill="white" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                    <StackPane.margin>
-                        <Insets left="10.0" />
-                    </StackPane.margin>
-                </Label>
-            </children>
-        </StackPane>
-        <StackPane style="-fx-background-color: #bfbfbf;"
-                   prefWidth="${container.width*0.8}" prefHeight="${container.height*0.85}"
-                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-            <children>
-                <LineChart title="Statistiken">
-                    <xAxis>
-                        <CategoryAxis side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis side="LEFT" />
-                    </yAxis>
-                </LineChart>
-            </children>
-        </StackPane>
-        <StackPane style="-fx-background-color: #808080;"
-              prefWidth="${container.width*0.2}" prefHeight="${container.height}"
-              AnchorPane.rightAnchor="0.0">
-            <children>
-                <Label text="Dinosaurier&#13;Simulation" textFill="white" textAlignment="CENTER" StackPane.alignment="TOP_CENTER">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                    <StackPane.margin>
-                        <Insets top="10.0" />
-                    </StackPane.margin>
-                </Label>
-                <fx:define>
-                    <Image fx:id="restartBtnImage" url="/controls/restart.png" />
-                </fx:define>
-                <Button fx:id="restartSimulationButton" style="-fx-background-color: transparent;"
-                        StackPane.alignment="BOTTOM_CENTER"
-                        onMouseClicked="#onRestartSimulationButtonClick">
-                    <StackPane.margin>
-                        <Insets bottom="30.0" />
-                    </StackPane.margin>
-                    <graphic>
-                        <ImageView fitWidth="75.0" fitHeight="75.0" image="$restartBtnImage" />
-                    </graphic>
-                </Button>
-            </children>
-        </StackPane>
-    </children>
+
+<fx:root type="javafx.scene.layout.AnchorPane" fx:id="container"
+         prefWidth="${screen.bounds.width}" prefHeight="${screen.bounds.height}"
+         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
-        <Screen fx:factory="getPrimary" fx:id="screen" />
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
-</AnchorPane>
+    <StackPane style="-fx-background-color: #808080;"
+               prefWidth="${container.width*0.8}" prefHeight="${container.height*0.15}"
+               AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <Label text="Simulationsende&#13;Statistiken" textFill="white" textAlignment="CENTER"
+               StackPane.alignment="CENTER_LEFT">
+            <font>
+                <Font size="20.0"/>
+            </font>
+            <StackPane.margin>
+                <Insets left="10.0"/>
+            </StackPane.margin>
+        </Label>
+    </StackPane>
+    <StackPane style="-fx-background-color: #bfbfbf;"
+               prefWidth="${container.width*0.8}" prefHeight="${container.height*0.85}"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <LineChart title="Statistiken">
+            <xAxis>
+                <CategoryAxis side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT"/>
+            </yAxis>
+        </LineChart>
+    </StackPane>
+    <StackPane style="-fx-background-color: #808080;"
+               prefWidth="${container.width*0.2}" prefHeight="${container.height}"
+               AnchorPane.rightAnchor="0.0">
+        <Label text="Dinosaurier&#13;Simulation" textFill="white" textAlignment="CENTER"
+               StackPane.alignment="TOP_CENTER">
+            <font>
+                <Font size="20.0"/>
+            </font>
+            <StackPane.margin>
+                <Insets top="10.0"/>
+            </StackPane.margin>
+        </Label>
+        <fx:define>
+            <Image fx:id="restartBtnImage" url="/controls/restart.png"/>
+        </fx:define>
+        <Button fx:id="restartSimulationButton" style="-fx-background-color: transparent;"
+                StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="30.0"/>
+            </StackPane.margin>
+            <graphic>
+                <ImageView fitWidth="75.0" fitHeight="75.0" image="$restartBtnImage"/>
+            </graphic>
+        </Button>
+    </StackPane>
+</fx:root>
