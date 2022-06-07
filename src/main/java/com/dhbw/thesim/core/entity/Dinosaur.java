@@ -8,8 +8,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import java.util.HashMap;
-
 /**
  * Represents a dinosaur object in our simulation.
  * Takes care to update each State and switch between them.
