@@ -119,7 +119,6 @@ public class JsonHandler {
             jsonArrayChosenSimulationObjects = (JSONArray) ((JSONObject) (jsonArraySimulationObjects.get(1))).get("Pflanzenart");
         } else {
             System.out.println("No valid SimulationObject Type.");
-            //TODO: @Daniel -> gibt es ne bessere Möglichkeit als return null
             return null;
         }
 
