@@ -9,6 +9,11 @@ import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
 import java.util.Objects;
 
@@ -48,21 +53,28 @@ public abstract class SimulationObject extends StateMachine {
      */
     protected final double interactionRange;
 
+    //TODO remove test objects
+    protected Rectangle test = new Rectangle(0, 0, 10, 10);
+    protected Circle circle;
+
     /**
      * Constructor
      *
-     * @param type The type for this object.
+     * @param type             The type for this object.
      * @param interactionRange The range, in which collisions are handled.
-     * @param imgPath The full path to an image. E.g. /dinosaur/test.png
+     * @param imgPath          The full path to an image. E.g. /dinosaur/test.png   //TODO maybe pass a image via spritelibF?
      */
     public SimulationObject(String type, double interactionRange, String imgPath) {
         this.type = type;
         this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
-        //TODO
-        this.position = new Vector2D(0, 0);
-        this.renderOffset = new Vector2D(0,0);
 
+        this.position = new Vector2D(0, 0);
+        this.renderOffset = new Vector2D(0, 0);
+
+        test.setFill(Color.BLUE);
+
+        //TODO use sprite lib and don't create the image here.
         Image image = new Image(Objects.requireNonNull(getClass().getResource(imgPath)).toString());
         setSprite(image);
     }
@@ -80,19 +92,32 @@ public abstract class SimulationObject extends StateMachine {
      */
     public abstract void updateGraphics();
 
+    /**
+     * Eats this object
+     */
+    public abstract void eat();
+
+    /**
+     * Checks, if a other object can eat this object.
+     *
+     * @param checkValue A value of another object, which is used to check, if the other object can eat this object.
+     * @return true if this object can be eaten by the other object.
+     */
+    public abstract boolean canBeEaten(double checkValue);
+
     //region getter & setter
 
     /**
      * Sets/Updates and image for the representation of this {@link SimulationObject} <br>
      * This method also updates the {@link #renderOffset} to center the image/sprite. <br>
-     * The position of the {@link SimulationObject} is in the middle of the image at the bottom.
+     * The position of the {@link SimulationObject} is in the center of the image.
      *
      * @param image The new image, which should be shown.
      */
     public void setSprite(Image image) {
         imageObj.setImage(image);
-        renderOffset.setX(image.getWidth()/2);
-        renderOffset.setY(image.getHeight());
+        renderOffset.setX(image.getWidth() / 2);
+        renderOffset.setY(image.getHeight() / 2);
     }
 
     /**
@@ -105,12 +130,13 @@ public abstract class SimulationObject extends StateMachine {
         return position;
     }
 
-    public Vector2D getRenderOffset(){
+    public Vector2D getRenderOffset() {
         return renderOffset;
     }
 
     /**
      * Gets the interaction range, in which collisions are counted.
+     *
      * @return The collision range.
      */
     public double getInteractionRange() {
@@ -118,7 +144,17 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
+     * Flips the image vertically.
+     */
+    public void flipImage() {
+        Translate flipTranslation = new Translate(0, imageObj.getImage().getHeight());
+        Rotate flipRotation = new Rotate(180, Rotate.X_AXIS);
+        imageObj.getTransforms().addAll(flipTranslation, flipRotation);
+    }
+
+    /**
      * Gets the type.
+     *
      * @return The type {@link #type}
      */
     public String getType() {
@@ -131,8 +167,8 @@ public abstract class SimulationObject extends StateMachine {
      * @param position The new {@link Vector2D} for the position.
      */
     public void setPosition(Vector2D position) {
-        if(Math.abs(position.getX()) > SimulationMap.width * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.height * Tile.TILE_SIZE){
-            position = new Vector2D(0,0);
+        if (Math.abs(position.getX()) > SimulationMap.width * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.height * Tile.TILE_SIZE) {
+            position = new Vector2D(0, 0);
         }
         this.position = position;
     }
@@ -146,17 +182,26 @@ public abstract class SimulationObject extends StateMachine {
         return imageObj;
     }
 
+    public Rectangle getTest() {
+        return test;
+    }
+
+    public Circle getCircle() {
+        return circle;
+    }
+
     /**
      * Check, if the dinosaur is rendered outside the view range.
+     *
      * @return true, if the {@link SimulationObject} gets rendered outside the view panel.
      */
-    public boolean isRenderedOutside(){
+    public boolean isRenderedOutside() {
         return (position.getX() - renderOffset.getX()) < 0 || (position.getY() - renderOffset.getY()) < 0 ||
                 position.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
                 position.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
 
-    public static boolean willBeRenderedOutside(Vector2D targetPosition, Vector2D renderOffset){
+    public static boolean willBeRenderedOutside(Vector2D targetPosition, Vector2D renderOffset) {
         return (targetPosition.getX() - renderOffset.getX()) < 0 || (targetPosition.getY() - renderOffset.getY()) < 0 ||
                 targetPosition.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
                 targetPosition.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;

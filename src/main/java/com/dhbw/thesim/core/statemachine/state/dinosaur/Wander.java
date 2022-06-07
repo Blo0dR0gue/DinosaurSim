@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
@@ -8,8 +9,10 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.util.Vector2D;
 
 /**
- * Represents a {@link State} an {@link Dinosaur} can be in. <br>
- * In this {@link State} the handled {@link Dinosaur} is moving to a random position in range. (TODO)
+ * Represents a {@link State} a {@link Dinosaur} can be in. <br>
+ * In this {@link State} the handled {@link Dinosaur} is moving to a random position in range.
+ *
+ * @author Daniel Czeschner
  */
 public class Wander extends State {
 
@@ -28,6 +31,11 @@ public class Wander extends State {
      */
     private final Dinosaur dinosaur;
 
+    /**
+     * Constructor
+     *
+     * @param simulationObject The handled {@link Dinosaur}
+     */
     public Wander(Dinosaur simulationObject) {
         super(simulationObject);
         this.dinosaur = (Dinosaur) this.simulationObject;
@@ -36,23 +44,58 @@ public class Wander extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
 
-        if(target == null){
-            target = simulation.getRandomPositionInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
-            direction = simulationObject.getPosition().direction(target);
-            System.out.println("Moving to " + target);
-        }
+        if (target == null) {
+            target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
+            if (target != null) {
+                direction = simulationObject.getPosition().directionToTarget(target);
+                System.out.println("Moving to " + target);
+                dinosaur.setTest(target);
+            }
 
-        simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
+        }
+        if (direction != null)
+            simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
     }
 
     @Override
     public void initTransitions() {
+        //TODO check transitions / transitions oder
+
+        //The dinosaur died.
+        addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
+
+        addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
+
+        //If we have no target, go to stand.
+        addTransition(new StateTransition(StateFactory.States.stand, simulation -> target == null));
+
         //When target is reached -> transition to Stand-state.
-        addTransition(new StateTransition(StateFactory.States.stand, this::arrived));
+        addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
+
+        //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> {
+            boolean back = !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false);
+            if (back)
+                System.out.println("cant move there");
+            return back;
+        }));
+
+        //If the dinosaur is hungry and thirsty and a water tile or a food source is in range, transition to moveToFoodSource.
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isThirsty() && dinosaur.isHungry()
+                && (simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null || simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null)));
+
+        //If the dinosaur is thirsty and a water tile is in range, transition to moveToFoodSource.
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isThirsty()
+                && simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null));
+
+        //If the dinosaur is hungry and a food source is in range, transition to moveToFoodSource.
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isHungry()
+                && simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null));
     }
 
     /**
      * Are we in range of our {@link #target}
+     *
      * @return true, if we are in the {@link Dinosaur#PROXIMITY_RANGE} to the {@link #target}.
      */
     private boolean arrived() {

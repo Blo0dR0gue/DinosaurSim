@@ -68,11 +68,6 @@ public class SimulationLoop {
         this.simulationSpeedMultiplier = simulationSpeedMultiplier;
         this.stepRangeMultiplier = stepRangeMultiplier;
 
-        //TODO remove
-        /* Zucken bei den bewegungen :(
-        this.simulationLoop = new Timeline(new KeyFrame(Duration.millis(1), event -> runner()));
-        this.simulationLoop.setCycleCount(Timeline.INDEFINITE);*/
-
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
     }
@@ -133,6 +128,7 @@ public class SimulationLoop {
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
             obj.update(deltaTime, currentSimulation);
         }
+        currentSimulation.removeDeletedObjects();
     }
 
     /**
