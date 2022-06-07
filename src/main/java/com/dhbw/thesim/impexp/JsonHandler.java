@@ -242,22 +242,19 @@ public class JsonHandler {
         //create the file and write to it
         try {
             File configFile = new File(workingDirectory+"/"+fileName+".json");
-            if (!configFile.exists()) {
-                if (!configFile.createNewFile()){
-                    throw new IOException("The file "+fileName+".json could not be created");
-                }
+            if (!configFile.createNewFile()){
+                System.out.println("Warning: The file '"+fileName+".json' will be overwritten.");
+            }else{
                 System.out.println("File created: " + fileName);
-                try {
-                    FileWriter fileWriter = new FileWriter(workingDirectory+"/"+fileName+".json");
-                    fileWriter.write(String.valueOf(wrappingJsonArray));
-                    fileWriter.close();
-                    System.out.println("Successfully written to file: "+ fileName);
-                } catch (IOException e) {
-                    System.out.println("The file "+fileName+".json could not be written to.");
-                    e.printStackTrace();
-                }
-            } else {
-                throw new FileAlreadyExistsException("File already exists. So please make sure that the file '"+fileName+".json' does not exist yet, so that no data will be overwritten.");
+            }
+            try {
+                FileWriter fileWriter = new FileWriter(workingDirectory+"/"+fileName+".json");
+                fileWriter.write(String.valueOf(wrappingJsonArray));
+                fileWriter.close();
+                System.out.println("Successfully written to file: "+ fileName);
+            } catch (IOException e) {
+                System.out.println("The file "+fileName+".json could not be written to.");
+                e.printStackTrace();
             }
         } catch (IOException e) {
             System.out.println("An error occurred.");
