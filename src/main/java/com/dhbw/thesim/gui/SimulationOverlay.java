@@ -2,7 +2,7 @@ package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
-import javafx.fxml.FXMLLoader;
+import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -89,9 +89,7 @@ public class SimulationOverlay extends BorderPane {
             }
         });
 
-        primaryStage.setOnCloseRequest(e -> {
-            simulationLoop.stopSimulationRunner();
-        });
+        primaryStage.setOnCloseRequest(e -> simulationLoop.stopSimulationRunner());
 
         //TODO handle loop
         simulationLoop.startSimulationRunner();
@@ -122,7 +120,7 @@ public class SimulationOverlay extends BorderPane {
 
         //Add the control buttons to the sidebar and add a click listener to each
         Button playButton = addControlButtonToSidebar("/controls/start.png");
-        playButton.setOnMouseClicked(e -> {
+        playButton.setOnAction(e -> {
             if (!simulationIsRunning) {
                 simulationLoop.togglePause();
                 simulationIsRunning = !simulationIsRunning;
@@ -131,7 +129,7 @@ public class SimulationOverlay extends BorderPane {
         StackPane.setAlignment(playButton, Pos.BOTTOM_LEFT);
         StackPane.setMargin(playButton, new Insets(0.0,0.0,10.0,0.0));
         Button pauseButton = addControlButtonToSidebar("/controls/pause.png");
-        pauseButton.setOnMouseClicked(e -> {
+        pauseButton.setOnAction(e -> {
             if (simulationIsRunning) {
                 simulationLoop.togglePause();
                 simulationIsRunning = !simulationIsRunning;
@@ -140,18 +138,11 @@ public class SimulationOverlay extends BorderPane {
         StackPane.setAlignment(pauseButton, Pos.BOTTOM_CENTER);
         StackPane.setMargin(pauseButton, new Insets(0.0,0.0,10.0,0.0));
         Button stopButton = addControlButtonToSidebar("/controls/stop.png");
-        stopButton.setOnMouseClicked(e -> {
+        stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
             Stage window = (Stage) stopButton.getScene().getWindow();
-            //Load the fxml file into a scene which will be set when the program starts
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/statistics-endcard.fxml"));
-
-            try {
-                Scene configScene = new Scene(fxmlLoader.load());
-                window.setScene(configScene);
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
+            window.setScene(new Scene(statisticsEndcard));
 
             window.setFullScreen(true);
         });

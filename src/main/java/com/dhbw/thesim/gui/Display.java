@@ -1,26 +1,17 @@
 package com.dhbw.thesim.gui;
 
-import com.dhbw.thesim.gui.controllers.DinoListItem;
-import com.dhbw.thesim.gui.controllers.SliderNoImage;
-import com.dhbw.thesim.gui.controllers.StartSimulation;
+import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import javafx.application.Application;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
 
 /**
  * Main JavaFx Application
@@ -39,7 +30,7 @@ public class Display extends Application {
      * @return The Dimension {@code toScale} is adjusted with the given Scale {@code scale}
      */
     public static double adjustScale(double toScale, double scale) {
-        return (((double) toScale) / scale);
+        return (toScale / scale);
     }
 
     @Override
@@ -83,68 +74,12 @@ public class Display extends Application {
         //We don't want to exit the fullscreen when keys are pressed
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
-        //loading start scene
-        //TODO properly format startScene
-        FXMLLoader startSceneLoader = new FXMLLoader();
-        StartSimulation startSceneController = new StartSimulation();
-        startSceneLoader.setController(startSceneController);
-        startSceneLoader.setLocation(getLocationURL("StartSimulation.fxml"));
-
-        try {
-            startSceneLoader.load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        SliderNoImage pflanzenwachstumsrate_slider = makeSliderNoImage("Pflanzenwachstumsrate");
-
-        startSceneController.borderPane_bottom.setLeft(pflanzenwachstumsrate_slider.vbox_outer);
-
-        //adding dinos to list
-        DinoListItem dinoListItem1 = makeDinoListItem();
-        dinoListItem1.label_name.setText("dino1");
-
-        DinoListItem dinoListItem2 = makeDinoListItem();
-        dinoListItem2.label_name.setText("dino2");
-
-        for (DinoListItem dinoListItem : Arrays.asList(dinoListItem1, dinoListItem2)) {
-            startSceneController.listView1.getItems().add(dinoListItem.hbox_outer);
-        }
-
-        //adding startScene to primary stage
-        Scene scene = new Scene(startSceneController.outer_borderPane);
-        primaryStage.setScene(scene);
-
-        //TODO scene-controller?
-        SimulationOverlay simulationOverlay = new SimulationOverlay(primaryStage);
-        //TODO remove tmp loading simulation overlay (entry is config)
-        //primaryStage.setScene(simulationOverlay.getSimulationScene());
-
-        startSceneController.start_borderPane_button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                primaryStage.setScene(simulationOverlay.getSimulationScene());
-                primaryStage.setFullScreen(true);
-            }
-        });
+        ConfigScreen configScreen = ConfigScreen.newInstance();
+        configScreen.initializeListeners();
+        primaryStage.setScene(new Scene(configScreen));
 
         //Show the app
         primaryStage.show();
-
-
-
-    }
-
-    private DinoListItem makeDinoListItem() {
-        return (DinoListItem) makeFXMLController("DinoListItem.fxml", DinoListItem.class);
-    }
-
-    private SliderNoImage makeSliderNoImage(String name){
-        SliderNoImage sliderNoImage = (SliderNoImage) makeFXMLController("SliderNoImage.fxml", SliderNoImage.class);
-
-        sliderNoImage.label.setText(name);
-
-        return sliderNoImage;
     }
 
     /**
@@ -153,60 +88,26 @@ public class Display extends Application {
      * @param controllerClass Class of the Controller to the corresponding FXML File
      * @return Loads the FXML File into a controller of the given class and returns that controller instance
      */
-    private Object makeFXMLController(String filename, Class controllerClass){
+    public static Object makeFXMLController(String filename, Class<?> controllerClass){
         FXMLLoader loader = new FXMLLoader();
 
         try {
             Object controller = controllerClass.getConstructor().newInstance();
+            loader.setRoot(controller);
             loader.setController(controller);
 
-            loader.setLocation(getLocationURL(filename));
+            loader.setLocation(controllerClass.getResource("/gui/" + filename));
 
             loader.load();
 
             return controller;
 
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                 IOException e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    /**
-     *
-     * @param filename Name of the File, whose URL should be returned
-     * @return call to {@code getLocationURL(filename, folder)} with {@code folder} being the resources folder containing
-     * the gui fxml files
-     */
-    private URL getLocationURL(String filename){
-        String currentWorkingDirectory = System.getProperty("user.dir");
-        currentWorkingDirectory = currentWorkingDirectory.replace('\\', '/');
-        String resourcesFolder = currentWorkingDirectory + "/src/main/resources/gui/";
-
-        return getLocationURL(filename, resourcesFolder);
-    }
-
-    /**
-     *
-     * @param filename Name of the File, whose URL should be returned
-     * @param folder Path to Folder, containing the file, ending with {@code "/"} or {@code "\"}
-     * @return File URL to the file in the given folder
-     */
-    private URL getLocationURL(String filename, String folder){
-        try {
-            return new URL("file:///" + folder.replace('\\', '/') + filename);
-        } catch (MalformedURLException e) {
-            return null;
-        }
     }
 
     @Override
