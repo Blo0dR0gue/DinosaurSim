@@ -144,7 +144,7 @@ public class SimulationOverlay extends BorderPane {
             simulationLoop.stopSimulationRunner();
             Stage window = (Stage) stopButton.getScene().getWindow();
             //Load the fxml file into a scene which will be set when the program starts
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/config-screen.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/statistics-endcard.fxml"));
 
             try {
                 Scene configScene = new Scene(fxmlLoader.load());

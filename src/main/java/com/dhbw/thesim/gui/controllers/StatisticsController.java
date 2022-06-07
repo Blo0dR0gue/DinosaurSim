@@ -26,7 +26,7 @@ public class StatisticsController implements Initializable {
     @FXML
     protected void onRestartSimulationButtonClick() {
         Stage window = (Stage) restartSimulationButton.getScene().getWindow();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/StartSimulation.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/config-screen.fxml"));
 
         try {
             Scene configScene = new Scene(fxmlLoader.load());
