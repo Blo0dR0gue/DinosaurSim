@@ -12,265 +12,154 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.ToggleGroup?>
-<AnchorPane fx:id="container"
-            prefWidth="${screen.bounds.width}" prefHeight="${screen.bounds.height}"
-            xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.dhbw.thesim.gui.controllers.ConfigController">
-    <children>
-        <StackPane style="-fx-background-color: #808080;"
-              prefWidth="${container.width*0.8}" prefHeight="${container.height*0.15}"
-              AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0">
-            <children>
-                <Label text="Neue Simulation&#13;Konfiguration" textFill="white" textAlignment="CENTER" StackPane.alignment="CENTER_LEFT">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                    <StackPane.margin>
-                        <Insets left="10.0" />
-                    </StackPane.margin>
-                </Label>
-            </children>
-        </StackPane>
-        <GridPane gridLinesVisible="false" style="-fx-background-color: #bfbfbf;"
-                   prefWidth="${container.width*0.8}" prefHeight="${container.height*0.85}"
-                   AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-            <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0" />
-                <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0" />
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="23.0" vgrow="SOMETIMES" />
-                <RowConstraints percentHeight="11.0" vgrow="SOMETIMES" />
-            </rowConstraints>
-            <children>
-                <RadioButton text="Map A" textFill="white"
-                             GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="RIGHT">
-                    <toggleGroup>
-                        <ToggleGroup fx:id="mapGroup"/>
-                    </toggleGroup>
-                    <font>
-                        <Font size="17.0"/>
-                    </font>
-                </RadioButton>
-                <RadioButton text="Map B" textFill="white"
-                             GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.halignment="RIGHT">
-                    <toggleGroup>
-                        <fx:reference source="mapGroup"/>
-                    </toggleGroup>
-                    <font>
-                        <Font size="17.0"/>
-                    </font>
-                </RadioButton>
-                <ImageView fitWidth="75.0" fitHeight="75.0"
-                           GridPane.columnIndex="6" GridPane.rowIndex="0" GridPane.halignment="CENTER">
-                    <Image url="/map/map-a.png"/>
-                </ImageView>
-                <ImageView fitWidth="75.0" fitHeight="75.0"
-                           GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.halignment="CENTER">
-                    <Image url="/map/map-b.png"/>
-                </ImageView>
-                <Label text="Pflanzenwachstumsrate" textFill="white"
-                       GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.valignment="TOP">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Slider fx:id="growthRateSlider" value="5.0" min="1.0" max="7.0"
-                        GridPane.columnIndex="3" GridPane.rowIndex="0">
-                    <padding>
-                        <Insets right="10.0"/>
-                    </padding>
-                </Slider>
-                <Label fx:id="growthRateLabel" text="5" textFill="white"
-                       GridPane.columnIndex="3" GridPane.rowIndex="0"
-                       GridPane.halignment="RIGHT">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <ImageView fitWidth="100.0" fitHeight="100.0"
-                           GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.halignment="CENTER">
-                    <Image url="/dinosaur/t-rex.png"/>
-                </ImageView>
-                <Label text="Tyrannosaurus Rex" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.valignment="TOP">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Slider fx:id="rexSlider" value="5.0" min="1.0" max="7.0"
-                        GridPane.columnIndex="1" GridPane.rowIndex="0">
-                    <padding>
-                        <Insets right="10.0"/>
-                    </padding>
-                </Slider>
-                <Label fx:id="rexLabel" text="5" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="0"
-                       GridPane.halignment="RIGHT">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <ImageView fitWidth="100.0" fitHeight="100.0"
-                           GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.halignment="CENTER">
-                    <Image url="/dinosaur/oviraptor.png"/>
-                </ImageView>
-                <Label text="Oviraptor" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Slider fx:id="raptorSlider" value="5.0" min="1.0" max="7.0"
-                        GridPane.columnIndex="1" GridPane.rowIndex="1">
-                    <padding>
-                        <Insets right="10.0"/>
-                    </padding>
-                </Slider>
-                <Label fx:id="raptorLabel" text="5" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="1"
-                       GridPane.halignment="RIGHT">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <ImageView fitWidth="100.0" fitHeight="100.0"
-                           GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.halignment="CENTER">
-                    <Image url="/dinosaur/triceratops.png"/>
-                </ImageView>
-                <Label text="Triceratops" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Slider fx:id="triSlider" value="5.0" min="1.0" max="7.0"
-                        GridPane.columnIndex="1" GridPane.rowIndex="2">
-                    <padding>
-                        <Insets right="10.0"/>
-                    </padding>
-                </Slider>
-                <Label fx:id="triLabel" text="5" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="2"
-                       GridPane.halignment="RIGHT">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <ImageView fitWidth="100.0" fitHeight="100.0"
-                           GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.halignment="CENTER">
-                    <Image url="/dinosaur/brontosaurus.png"/>
-                </ImageView>
-                <Label text="Brontosaurus" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Slider fx:id="brontoSlider" value="5.0" min="1.0" max="7.0"
-                        GridPane.columnIndex="1" GridPane.rowIndex="3">
-                    <padding>
-                        <Insets right="10.0"/>
-                    </padding>
-                </Slider>
-                <Label fx:id="brontoLabel" text="5" textFill="white"
-                       GridPane.columnIndex="1" GridPane.rowIndex="3"
-                       GridPane.halignment="RIGHT">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <Label text="Simulationsschrittweite" textFill="white"
-                       GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" GridPane.columnSpan="2">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                    <GridPane.margin>
-                        <Insets left="20.0"/>
-                    </GridPane.margin>
-                </Label>
-                <Slider fx:id="stepSlider" value="5.0" min="1.0" max="7.0"
-                        GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2">
-                    <GridPane.margin>
-                        <Insets left="20.0"/>
-                    </GridPane.margin>
-                    <padding>
-                        <Insets right="10.0"/>
-                    </padding>
-                </Slider>
-                <Label fx:id="stepLabel" text="5" textFill="white"
-                       GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2"
-                       GridPane.halignment="RIGHT">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Label>
-                <RadioButton text="Automatischer Simulationsdurchlauf" textFill="white"
-                             GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.columnSpan="2" GridPane.valignment="TOP">
-                    <GridPane.margin>
-                        <Insets top="10.0"/>
-                    </GridPane.margin>
-                    <toggleGroup>
-                        <ToggleGroup fx:id="modeGroup"/>
-                    </toggleGroup>
-                    <font>
-                        <Font size="17.0"/>
-                    </font>
-                </RadioButton>
-                <RadioButton text="Manueller Simulationsdurchlauf" textFill="white"
-                             GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
-                    <GridPane.margin>
-                        <Insets bottom="10.0"/>
-                    </GridPane.margin>
-                    <toggleGroup>
-                        <fx:reference source="modeGroup"/>
-                    </toggleGroup>
-                    <font>
-                        <Font size="17.0"/>
-                    </font>
-                </RadioButton>
-            </children>
-        </GridPane>
-        <StackPane style="-fx-background-color: #808080;"
-              prefWidth="${container.width*0.2}" prefHeight="${container.height}"
-              AnchorPane.rightAnchor="0.0">
-            <children>
-                <Label text="Dinosaurier&#13;Simulation" textFill="white" textAlignment="CENTER" StackPane.alignment="TOP_CENTER">
-                    <font>
-                        <Font size="20.0" />
-                    </font>
-                    <StackPane.margin>
-                        <Insets top="10.0" />
-                    </StackPane.margin>
-                </Label>
-                <fx:define>
-                    <Image fx:id="playBtnImage" url="/controls/start.png" />
-                </fx:define>
-                <Button fx:id="startSimulationButton" style="-fx-background-color: transparent;"
-                        StackPane.alignment="BOTTOM_CENTER"
-                        onMouseClicked="#onStartSimulationButtonClick">
-                    <StackPane.margin>
-                        <Insets bottom="30.0" />
-                    </StackPane.margin>
-                    <graphic>
-                        <ImageView fitWidth="75.0" fitHeight="75.0" image="$playBtnImage" />
-                    </graphic>
-                </Button>
-            </children>
-        </StackPane>
-    </children>
+<?import com.dhbw.thesim.gui.controllers.SliderWithLabel?>
+<?import javafx.scene.control.ListView?>
+<fx:root type="javafx.scene.layout.AnchorPane" fx:id="container"
+         prefWidth="${screen.bounds.width}" prefHeight="${screen.bounds.height}"
+         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
     <fx:define>
-        <Screen fx:factory="getPrimary" fx:id="screen" />
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
     </fx:define>
-</AnchorPane>
+    <StackPane style="-fx-background-color: #808080;"
+               prefWidth="${container.width*0.8}" prefHeight="${container.height*0.15}"
+               AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <Label text="Neue Simulation&#13;Konfiguration" textFill="white" textAlignment="CENTER"
+               StackPane.alignment="CENTER_LEFT">
+            <font>
+                <Font size="20.0"/>
+            </font>
+            <StackPane.margin>
+                <Insets left="10.0"/>
+            </StackPane.margin>
+        </Label>
+    </StackPane>
+    <GridPane fx:id="gridPane" gridLinesVisible="true" style="-fx-background-color: #bfbfbf;"
+              prefWidth="${container.width*0.8}" prefHeight="${container.height*0.85}"
+              AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="20.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="15.0"/>
+            <ColumnConstraints hgrow="SOMETIMES" percentWidth="10.0"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="23.0" vgrow="SOMETIMES"/>
+            <RowConstraints percentHeight="11.0" vgrow="SOMETIMES"/>
+        </rowConstraints>
+        <ListView fx:id="dinoListView" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
+                  GridPane.rowSpan="6"/>
+        <RadioButton text="Map A" textFill="white"
+                     GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.halignment="RIGHT">
+            <toggleGroup>
+                <ToggleGroup fx:id="mapGroup"/>
+            </toggleGroup>
+            <font>
+                <Font size="17.0"/>
+            </font>
+        </RadioButton>
+        <RadioButton text="Map B" textFill="white"
+                     GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.halignment="RIGHT">
+            <toggleGroup>
+                <fx:reference source="mapGroup"/>
+            </toggleGroup>
+            <font>
+                <Font size="17.0"/>
+            </font>
+        </RadioButton>
+        <ImageView fitWidth="75.0" fitHeight="75.0"
+                   GridPane.columnIndex="6" GridPane.rowIndex="0" GridPane.halignment="CENTER">
+            <Image url="/map/map-a.png"/>
+        </ImageView>
+        <ImageView fitWidth="75.0" fitHeight="75.0"
+                   GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.halignment="CENTER">
+            <Image url="/map/map-b.png"/>
+        </ImageView>
+        <SliderWithLabel text="Pflanzenwachstumrate" GridPane.columnIndex="3" GridPane.rowIndex="0"
+                         GridPane.columnSpan="2"/>
+        <Label text="Simulationsschrittweite" textFill="white"
+               GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.valignment="TOP" GridPane.columnSpan="2">
+            <font>
+                <Font size="17.0"/>
+            </font>
+            <GridPane.margin>
+                <Insets left="20.0"/>
+            </GridPane.margin>
+        </Label>
+        <Slider fx:id="stepSlider" value="5.0" min="1.0" max="7.0"
+                GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2">
+            <GridPane.margin>
+                <Insets left="20.0"/>
+            </GridPane.margin>
+            <padding>
+                <Insets right="10.0"/>
+            </padding>
+        </Slider>
+        <Label fx:id="stepLabel" text="5" textFill="white"
+               GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2"
+               GridPane.halignment="RIGHT">
+            <font>
+                <Font size="17.0"/>
+            </font>
+        </Label>
+        <RadioButton text="Automatischer Simulationsdurchlauf" textFill="white"
+                     GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.columnSpan="2"
+                     GridPane.valignment="TOP">
+            <GridPane.margin>
+                <Insets top="10.0"/>
+            </GridPane.margin>
+            <toggleGroup>
+                <ToggleGroup fx:id="modeGroup"/>
+            </toggleGroup>
+            <font>
+                <Font size="17.0"/>
+            </font>
+        </RadioButton>
+        <RadioButton text="Manueller Simulationsdurchlauf" textFill="white"
+                     GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.columnSpan="2"
+                     GridPane.valignment="BOTTOM">
+            <GridPane.margin>
+                <Insets bottom="10.0"/>
+            </GridPane.margin>
+            <toggleGroup>
+                <fx:reference source="modeGroup"/>
+            </toggleGroup>
+            <font>
+                <Font size="17.0"/>
+            </font>
+        </RadioButton>
+    </GridPane>
+    <StackPane style="-fx-background-color: #808080;"
+               prefWidth="${container.width*0.2}" prefHeight="${container.height}"
+               AnchorPane.rightAnchor="0.0">
+        <Label text="Dinosaurier&#13;Simulation" textFill="white" textAlignment="CENTER"
+               StackPane.alignment="TOP_CENTER">
+            <font>
+                <Font size="20.0"/>
+            </font>
+            <StackPane.margin>
+                <Insets top="10.0"/>
+            </StackPane.margin>
+        </Label>
+        <fx:define>
+            <Image fx:id="playBtnImage" url="/controls/start.png"/>
+        </fx:define>
+        <Button fx:id="startSimulationButton" style="-fx-background-color: transparent;"
+                StackPane.alignment="BOTTOM_CENTER">
+            <StackPane.margin>
+                <Insets bottom="30.0"/>
+            </StackPane.margin>
+            <graphic>
+                <ImageView fitWidth="75.0" fitHeight="75.0" image="$playBtnImage"/>
+            </graphic>
+        </Button>
+    </StackPane>
+</fx:root>
