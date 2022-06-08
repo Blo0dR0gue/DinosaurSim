@@ -181,13 +181,12 @@ public class Simulation {
     }
 
     /**
-     * Checks if a simulation is finished
-     * TODO
+     * Checks if a simulation is finished.
      *
-     * @return true, if ...
+     * @return true when all dinosaurs are extinct.
      */
     public boolean isOver() {
-        return false;
+        return simulationObjects.isEmpty();
     }
 
     /**
