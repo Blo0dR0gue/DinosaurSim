@@ -40,8 +40,8 @@ public class MapListItem extends HBox {
     /**
      * Method to initialize the Map list item, its listeners and setting the label text and image url
      */
-    public void initialize(String labelText, Image image){
-        setText(labelText);
+    public void initialize(String radioBtnText, Image image){
+        setText(radioBtnText);
         setImage(image);
     }
 
