@@ -14,19 +14,10 @@ public class StateTransition {
 
     StateFactory.States nextState;
     ITransition stateTransition;
-    IOnStateEnter onStateEnter;
-
-    public StateTransition(StateFactory.States nextState,
-                           ITransition stateTransition, IOnStateEnter onStateEnter){
-        this.nextState = nextState;
-        this.stateTransition = stateTransition;
-        this.onStateEnter = onStateEnter;
-    }
 
     public StateTransition(StateFactory.States nextState, ITransition stateTransition){
         this.nextState = nextState;
         this.stateTransition = stateTransition;
-        this.onStateEnter = null;
     }
 
     /**
@@ -36,11 +27,6 @@ public class StateTransition {
      */
     public boolean shouldTransition(Simulation simulation) {
         return stateTransition.isMet(simulation);
-    }
-
-    public void onStateEntered(Simulation simulation){
-        if(onStateEnter != null)
-            onStateEnter.stateEntered(simulation);
     }
 
     /**

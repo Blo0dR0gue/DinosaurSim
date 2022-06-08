@@ -69,7 +69,6 @@ public abstract class State {
     public State checkTransitions(Simulation simulation) {
         for (StateTransition stateTransition : stateTransitionList) {
             if (stateTransition.shouldTransition(simulation)) {
-                stateTransition.onStateEntered(simulation);
                 return stateTransition.getNextState(simulationObject);
             }
         }
