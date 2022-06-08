@@ -39,6 +39,7 @@ public class Dinosaur extends SimulationObject {
     private final boolean canClimb;
     private final dietType diet;
     private final double viewRange;
+    private final long timeOfBirth;
 
     private final char gender;
     private double reproductionValue;
@@ -82,6 +83,7 @@ public class Dinosaur extends SimulationObject {
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
         this.viewRange = viewRange;
+        this.timeOfBirth = System.currentTimeMillis();
 
         this.nutritionFull = this.nutrition;
         this.hydrationFull = this.hydration;
@@ -218,6 +220,8 @@ public class Dinosaur extends SimulationObject {
     public SimulationObject getTarget() {
         return target;
     }
+
+    public long getTimeOfBirth() { return timeOfBirth; }
 
     public boolean isChased() {
         return isChased;
