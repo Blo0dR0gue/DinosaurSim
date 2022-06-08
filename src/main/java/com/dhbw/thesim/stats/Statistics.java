@@ -51,7 +51,16 @@ public class Statistics {
                     for (int i=0; i<allDinoSpecies.size(); i++){
                         if (obj.getType().equals(allDinoSpecies.get(i))){ livingSpeciesCounter.set(i, livingSpeciesCounter.get(i)+1); }
                     }
-                    
+                    if (((Dinosaur) obj).getDiet() == "herbivore"){
+                        livingChasedCounter++;
+                        nutritionChasedCounter += ((Dinosaur) obj).getNutrition();
+                        hydrationChasedCounter += ((Dinosaur) obj).getHydration();
+                    }
+                    else{
+                        livingPredatorsCounter++;
+                        nutritionPredatorsCounter += ((Dinosaur) obj).getNutrition();
+                        hydrationPredatorsCounter += ((Dinosaur) obj).getHydration();
+                    }
                 }
             }
 
