@@ -81,13 +81,16 @@ public class Hunt extends State {
 
     @Override
     public void onExit() {
-
+        //reset the target
+        if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
+            targetDino.setIsChased(false);
+        }
+        if(!dinosaur.isChased())
+            dinosaur.setTarget(null);
     }
 
     @Override
     public void initTransitions() {
-        //TODO check transitions / transitions oder
-
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 

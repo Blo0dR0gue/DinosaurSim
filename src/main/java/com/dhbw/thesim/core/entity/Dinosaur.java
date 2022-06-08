@@ -118,7 +118,7 @@ public class Dinosaur extends SimulationObject {
         //TODO move to stateMachineTick?
         currentState.update(deltaTime, currentSimulationData);
 
-        decreaseLifeStats(deltaTime);
+        updateStats(deltaTime);
     }
 
     @Override
@@ -139,9 +139,10 @@ public class Dinosaur extends SimulationObject {
      *
      * @param deltaTime The time since the last update call in seconds.
      */
-    private void decreaseLifeStats(double deltaTime) {
+    private void updateStats(double deltaTime) {
         this.hydration -= hydrationReductionRate * deltaTime;
         this.nutrition -= nutritionReductionRate * deltaTime;
+        this.reproductionValue += reproductionValue * deltaTime;
     }
 
     /**

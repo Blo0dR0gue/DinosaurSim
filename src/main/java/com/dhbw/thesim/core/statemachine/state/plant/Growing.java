@@ -22,6 +22,11 @@ public class Growing extends State {
     }
 
     @Override
+    public void onExit() {
+        //Nothing to do here
+    }
+
+    @Override
     public void update(double deltaTime, Simulation simulation) {
         grow(deltaTime);
     }
