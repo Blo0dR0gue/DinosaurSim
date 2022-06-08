@@ -134,6 +134,7 @@ public class SimulationLoop {
             //Check if over
             if (runtime <= currentTime || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
+                //TODO callback to GUI
                 System.err.println("ende");
             }
         }

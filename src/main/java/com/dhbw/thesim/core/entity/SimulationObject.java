@@ -60,7 +60,7 @@ public abstract class SimulationObject extends StateMachine {
      * @param interactionRange The range, in which collisions are handled.
      * @param image            The image, which is used for the representation for this object.
      */
-    public SimulationObject(String type, double interactionRange, Image image) {
+    protected SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
         this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
