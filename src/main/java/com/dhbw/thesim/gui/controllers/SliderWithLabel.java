@@ -101,4 +101,28 @@ public class SliderWithLabel extends GridPane {
     public DoubleProperty valueProperty(){
         return slider.valueProperty();
     }
+
+    public double getMax() {
+        return maxValProperty().get();
+    }
+
+    public void setMax(double value) {
+        maxValProperty().set(value);
+    }
+
+    public DoubleProperty maxValProperty() {
+        return slider.maxProperty();
+    }
+
+    public double getMin() {
+        return minValProperty().get();
+    }
+
+    public void setMin(double value) {
+        minValProperty().set(value);
+    }
+
+    public DoubleProperty minValProperty() {
+        return slider.minProperty();
+    }
 }
