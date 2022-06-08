@@ -3,9 +3,12 @@ package com.dhbw.thesim.gui.controllers;
 import com.dhbw.thesim.gui.Display;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -53,9 +56,16 @@ public class DinoListItem extends HBox {
     /**
      * Method to initialize the Dino list item, its listeners and setting the label text and image url
      */
-    public void initialize(String labelText, Image image){
+    public void initialize(String labelText, Image image, ListView<DinoListItem> dinoListView){
         setText(labelText);
         setImage(image);
+        DinoListItem dino = this;
+        button_remove.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                dinoListView.getItems().remove(dino);
+            }
+        });
     }
 
     public String getText() {

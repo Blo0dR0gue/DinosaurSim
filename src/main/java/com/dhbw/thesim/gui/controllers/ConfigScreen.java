@@ -29,22 +29,6 @@ public class ConfigScreen extends AnchorPane {
     @FXML
     public ToggleGroup modeGroup;
     @FXML
-    public Slider rexSlider;
-    @FXML
-    public Label rexLabel;
-    @FXML
-    public Slider raptorSlider;
-    @FXML
-    public Label raptorLabel;
-    @FXML
-    public Slider triSlider;
-    @FXML
-    public Label triLabel;
-    @FXML
-    public Slider brontoSlider;
-    @FXML
-    public Label brontoLabel;
-    @FXML
     public SliderWithLabel plantGrowthSliderWithLabel;
     @FXML
     public ListView<DinoListItem> dinoListView;
@@ -77,16 +61,16 @@ public class ConfigScreen extends AnchorPane {
 
         //Instantiating and initializing dinos to add all of them to the list view of dinos
         DinoListItem dinoListItem1 = DinoListItem.newInstance();
-        dinoListItem1.initialize("Tyrannosaurus Rex", new Image("/dinosaur/t-rex.png"));
+        dinoListItem1.initialize("Tyrannosaurus Rex", new Image("/dinosaur/t-rex.png"), dinoListView);
 
         DinoListItem dinoListItem2 = DinoListItem.newInstance();
-        dinoListItem2.initialize("Oviraptor", new Image("/dinosaur/oviraptor.png"));
+        dinoListItem2.initialize("Oviraptor", new Image("/dinosaur/oviraptor.png"), dinoListView);
 
         DinoListItem dinoListItem3 = DinoListItem.newInstance();
-        dinoListItem3.initialize("Triceratops", new Image("/dinosaur/triceratops.png"));
+        dinoListItem3.initialize("Triceratops", new Image("/dinosaur/triceratops.png"), dinoListView);
 
         DinoListItem dinoListItem4 = DinoListItem.newInstance();
-        dinoListItem4.initialize("Brontosaurus", new Image("/dinosaur/brontosaurus.png"));
+        dinoListItem4.initialize("Brontosaurus", new Image("/dinosaur/brontosaurus.png"), dinoListView);
 
         GridPane.setFillWidth(dinoListView, true);
 
