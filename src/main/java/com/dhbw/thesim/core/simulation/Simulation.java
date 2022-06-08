@@ -103,7 +103,7 @@ public class Simulation {
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("tes2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );

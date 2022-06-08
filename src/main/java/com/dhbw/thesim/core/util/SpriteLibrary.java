@@ -16,16 +16,27 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
+ * The sprite library for the simulation. <br>
+ * Uses the Singleton-Pattern.
  * TODO save images in appdata folder like scenarios
  *
  * @author Daniel Czeschnenr
  */
 public class SpriteLibrary {
 
+    /**
+     * The map with all images.
+     */
     private final Map<String, Image> imageMap;
 
+    /**
+     * The instance of the library object.
+     */
     private static SpriteLibrary INSTANCE;
 
+    /**
+     * Constructor
+     */
     private SpriteLibrary() {
         imageMap = new HashMap<>();
         loadImages("dinosaur");
@@ -33,6 +44,11 @@ public class SpriteLibrary {
         loadImages("tile");
     }
 
+    /**
+     * Gets and/or creates a instance of the {@link SpriteLibrary}
+     *
+     * @return The {@link SpriteLibrary} {@link #INSTANCE} object.
+     */
     public static SpriteLibrary getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new SpriteLibrary();
@@ -40,6 +56,11 @@ public class SpriteLibrary {
         return INSTANCE;
     }
 
+    /**
+     * Loads all images inside a folder.
+     *
+     * @param folderName The folder name
+     */
     private void loadImages(String folderName) {
         URI uri = null;
         try {
@@ -47,11 +68,12 @@ public class SpriteLibrary {
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+        Stream<Path> walk = null;
         try {
             assert uri != null;
             try (FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
                 Path folderRootPath = fileSystem.getPath("/" + folderName);
-                Stream<Path> walk = Files.walk(folderRootPath, 1);
+                walk = Files.walk(folderRootPath, 1);
                 walk.forEach(childFileOrFolder -> {
                     Image image = new Image(childFileOrFolder.toUri().toString());
                     if (!image.isError()) {
@@ -64,13 +86,23 @@ public class SpriteLibrary {
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            if (walk != null)
+                walk.close();
         }
+
     }
 
+    /**
+     * Gets the defined image or the undefined image
+     *
+     * @param name The name of the image.
+     * @return A {@link Image} object
+     */
     public Image getImage(String name) {
         Image img = imageMap.get(name);
         if (img == null)
-            img = new Image(Objects.requireNonNull(getClass().getResource("undefined.png")).toString());  //TODO
+            img = new Image(Objects.requireNonNull(getClass().getResource("/helper/undefined.png")).toString());
         return img;
     }
 
