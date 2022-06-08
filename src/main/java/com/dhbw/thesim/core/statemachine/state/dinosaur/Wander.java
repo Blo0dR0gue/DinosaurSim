@@ -42,6 +42,11 @@ public class Wander extends State {
     }
 
     @Override
+    public void onExit() {
+
+    }
+
+    @Override
     public void update(double deltaTime, Simulation simulation) {
 
         if (target == null) {

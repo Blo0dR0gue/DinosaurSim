@@ -66,6 +66,11 @@ public class Escape extends State {
     }
 
     @Override
+    public void onExit() {
+
+    }
+
+    @Override
     public void initTransitions() {
         //TODO check transitions / transitions oder
 

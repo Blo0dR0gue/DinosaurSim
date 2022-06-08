@@ -38,6 +38,11 @@ public class NoOp extends State {
     }
 
     @Override
+    public void onExit() {
+
+    }
+
+    @Override
     public void initTransitions() {
         //The dinosaur got eaten.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
