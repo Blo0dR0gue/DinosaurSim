@@ -59,6 +59,9 @@ public class ConfigScreen extends AnchorPane {
     public void initialize() {
         initializeListeners();
 
+        //TODO min. 2 dino-arten, min. 1 dino pro art
+        //TODO min. 1 pflanzenart, min. 1 pflanze pro art
+
         //Instantiating and initializing dinos to add all of them to the list view of dinos
         DinoListItem dinoListItem1 = DinoListItem.newInstance();
         dinoListItem1.initialize("Tyrannosaurus Rex", new Image("/dinosaur/t-rex.png"), dinoListView);
