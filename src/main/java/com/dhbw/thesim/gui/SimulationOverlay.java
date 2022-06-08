@@ -2,6 +2,7 @@ package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
+import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -40,7 +41,7 @@ public class SimulationOverlay extends BorderPane {
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
 
-    public SimulationOverlay(Stage primaryStage) {
+    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) {
         //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
         centerPane = new AnchorPane();
         centerPane.setMaxWidth(Display.adjustScale(1920, Display.SCALE_X));
@@ -59,7 +60,7 @@ public class SimulationOverlay extends BorderPane {
         setCenter(centerPane);
 
         //TODO get data from config screen
-        Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 10);
+        Simulation sim = new Simulation("test", canvasGraphics, this, configScreen.getDinoParams(), null, 10);
 
         simulationLoop = new SimulationLoop(1, 1, sim,50, 1);
 

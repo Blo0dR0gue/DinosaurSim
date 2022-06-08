@@ -94,4 +94,9 @@ public class DinoListItem extends HBox {
     public ObjectProperty<Image> imageProperty() {
         return imageView.imageProperty();
     }
+
+    public int getAmount(){
+        return (int) slider.getValue();
+    }
+
 }

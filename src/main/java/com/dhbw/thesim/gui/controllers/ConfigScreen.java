@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 /**
  * The Control CLass for the Configuration Screen FXML file
@@ -103,12 +104,25 @@ public class ConfigScreen extends AnchorPane {
      * Adds all specified event handlers to the specified {@link javafx.scene.Node}
      */
     public void initializeListeners() {
+        ConfigScreen configScreen = this;
         // When the start button is clicked the current scene gets replaced by the SimulationOverlay scene
         startSimulationButton.setOnAction(event -> {
             Stage window = (Stage) startSimulationButton.getScene().getWindow();
-            SimulationOverlay simulationOverlay = new SimulationOverlay(window);
+            SimulationOverlay simulationOverlay = new SimulationOverlay(window, configScreen);
             window.setScene(simulationOverlay.getSimulationScene());
             window.setFullScreen(true);
         });
     }
+
+    public HashMap<String, Integer> getDinoParams(){
+        HashMap<String, Integer> dinos = new HashMap<>();
+
+        for (DinoListItem dinoListItem :
+                dinoListView.getItems()) {
+            dinos.put(dinoListItem.getText(), dinoListItem.getAmount());
+        }
+
+        return dinos;
+    }
+
 }
