@@ -11,9 +11,19 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
  * In this {@link State} the handled {@link Dinosaur} tries mate with another {@link Dinosaur}.
  *
- * @author Daniel Czeschner
+ * @author Daniel Czeschner, Lucas Schaffer
  */
 public class Mate extends State {
+
+    /**
+     * The time the dinosaur needs to mate.
+     */
+    private double mateTime = 2;
+
+    /**
+     * Helper to trigger a transition, if the dinosaur finished this state.
+     */
+    private boolean done = false;
 
     /**
      * Helper {@link Dinosaur} variable, to get dinosaur specific variables
@@ -34,6 +44,18 @@ public class Mate extends State {
     public void update(double deltaTime, Simulation simulation) {
         //TODO make it work
         //Neuen dino erzeugen, der die eigenschaften von vater und mutter erbt wie im entwurf beschrieben. (Mutationen, etc)
+
+        mateTime -= deltaTime;
+
+        if (mateTime <= 0 && !done) {
+            if (dinosaur.getGender()=='f' && dinosaur.getPartner().getPartner()==dinosaur) {
+                simulation.makeBaby(dinosaur, dinosaur.getPartner());
+            }
+            done = true;
+            dinosaur.getPartner().setPartner(null);
+            dinosaur.setPartner(null);
+        }
+
     }
 
     @Override

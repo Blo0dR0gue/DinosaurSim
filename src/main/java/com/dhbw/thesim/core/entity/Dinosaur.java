@@ -18,6 +18,7 @@ import javafx.scene.shape.Circle;
  */
 public class Dinosaur extends SimulationObject {
 
+
     public enum dietType {
         carnivore,
         herbivore,
@@ -52,10 +53,12 @@ public class Dinosaur extends SimulationObject {
 
     private SimulationObject target;
     private boolean isChased;
+    private Dinosaur partner;
 
     //TODO check values?
     private final static double nutritionReductionRate = 0.1;
     private final static double hydrationReductionRate = 0.25;
+    private final static double reproductionValueFull = 100;
 
     public final static double PROXIMITY_RANGE = 5;
 
@@ -95,8 +98,9 @@ public class Dinosaur extends SimulationObject {
         //TODO remove test objects
         this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore ? Color.GREEN : this.diet == dietType.omnivore ? Color.BLUE : Color.RED);
 
+        //TODO set suitable values
         //Initial reproduction value as specified in the software design. This value increases over time.
-        this.reproductionValue = 0;
+        this.reproductionValue = reproductionValueFull;
 
         //TODO check - maybe in states?
         this.target = null;
@@ -134,6 +138,10 @@ public class Dinosaur extends SimulationObject {
         return checkValue > getStrength() && getHydration() > 0 && getNutrition() > 0;
     }
 
+    public boolean isWillingToMate() {
+        return reproductionValue>=reproductionValueFull;
+    }
+
     /**
      * Reduces the {@link #nutrition} and {@link #hydration} values of the dinosaur.
      *
@@ -142,6 +150,8 @@ public class Dinosaur extends SimulationObject {
     private void decreaseLifeStats(double deltaTime) {
         this.hydration -= hydrationReductionRate * deltaTime;
         this.nutrition -= nutritionReductionRate * deltaTime;
+        if (this.reproductionValue<reproductionValueFull)
+            this.reproductionValue += reproductionRate * deltaTime;
     }
 
     /**
@@ -225,6 +235,10 @@ public class Dinosaur extends SimulationObject {
         return target;
     }
 
+    public Dinosaur getPartner() {
+        return partner;
+    }
+
     public boolean isChased() {
         return isChased;
     }
@@ -263,6 +277,10 @@ public class Dinosaur extends SimulationObject {
 
     public void setTarget(SimulationObject target) {
         this.target = target;
+    }
+
+    public void setPartner(Dinosaur partner) {
+        this.partner = partner;
     }
 
     /**

@@ -111,13 +111,13 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
+                'p', 400, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
                 "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
+                'p', 400, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
@@ -363,6 +363,43 @@ public class Simulation {
         inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
 
         return inRange;
+    }
+
+    public SimulationObject getClosestReachableSuitablePartnerInRange(Vector2D position, double viewRange, String type,
+                                                                 boolean canSwim, boolean canClimb, char gender) {
+
+        List<SimulationObject> inRange = findReachableSuitablePartnersInRange(position, viewRange, type, canSwim, canClimb, gender);
+
+
+        List<SimulationObject> sorted = sortByDistance(position, inRange);
+        if (sorted.size() > 0)
+            return sorted.get(0);
+        return null;
+
+    }
+    public List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
+                                                                  boolean canSwim, boolean canClimb, char gender) {
+
+        List<SimulationObject> inRange = new ArrayList<>();
+
+        for (SimulationObject simulationObject : simulationObjects) {
+
+            if (simulationObject.getPosition() != position) {
+                if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
+                    if (simulationObject instanceof Dinosaur dinosaur && dinosaur.getPartner()==null && dinosaur.getType().equalsIgnoreCase(type) && dinosaur.getGender()!=gender && dinosaur.isWillingToMate()) {
+                        inRange.add(dinosaur);
+                    }
+                }
+            }
+        }
+
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
+
+        return inRange;
+    }
+
+    public void makeBaby(Dinosaur mother, Dinosaur father) {
+        System.out.println("Ein Baby entsteht!");
     }
 
     /**

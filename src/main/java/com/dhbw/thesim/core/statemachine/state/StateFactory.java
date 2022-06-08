@@ -26,6 +26,7 @@ public class StateFactory {
         stand,
         wander,
         moveToFoodSource,
+        moveToPartner,
         mate,
         ingestion,
         hunt,
@@ -78,6 +79,7 @@ public class StateFactory {
         return switch (state) {
             case wander -> new Wander(dinosaur);
             case moveToFoodSource -> new MoveToFoodSource(dinosaur);
+            case moveToPartner -> new MoveToPartner(dinosaur);
             case mate -> new Mate(dinosaur);
             case ingestion -> new Ingestion(dinosaur);
             case hunt -> new Hunt(dinosaur);
