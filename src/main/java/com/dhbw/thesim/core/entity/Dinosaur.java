@@ -55,8 +55,8 @@ public class Dinosaur extends SimulationObject {
     private boolean isChased;
 
     //TODO check values?
-    private static final double nutritionReductionRate = 0.1;
-    private static final double hydrationReductionRate = 0.25;
+    private static final double NUTRITION_REDUCTION_RATE = 0.1;
+    private static final double HYDRATION_REDUCTION_RATE = 0.25;
 
     public static final double PROXIMITY_RANGE = 5;
 
@@ -69,7 +69,12 @@ public class Dinosaur extends SimulationObject {
                     double interactionRange, char gender) {
         super(name, interactionRange, image);
 
-        this.diet = diet == 'a' ? dietType.omnivore : diet == 'f' ? dietType.carnivore : dietType.herbivore;
+        if (diet == 'a')
+            this.diet = dietType.omnivore;
+        else if (diet == 'f')
+            this.diet = dietType.carnivore;
+        else
+            this.diet = dietType.herbivore;
 
         this.nutrition = nutrition;
         this.hydration = hydration;
@@ -135,8 +140,8 @@ public class Dinosaur extends SimulationObject {
      * @param deltaTime The time since the last update call in seconds.
      */
     private void updateStats(double deltaTime) {
-        this.hydration -= hydrationReductionRate * deltaTime;
-        this.nutrition -= nutritionReductionRate * deltaTime;
+        this.hydration -= HYDRATION_REDUCTION_RATE * deltaTime;
+        this.nutrition -= NUTRITION_REDUCTION_RATE * deltaTime;
         this.reproductionValue += reproductionValue * deltaTime;
     }
 
@@ -221,7 +226,9 @@ public class Dinosaur extends SimulationObject {
         return target;
     }
 
-    public long getTimeOfBirth() { return timeOfBirth; }
+    public long getTimeOfBirth() {
+        return timeOfBirth;
+    }
 
     public boolean isChased() {
         return isChased;
