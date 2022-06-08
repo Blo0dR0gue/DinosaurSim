@@ -3,6 +3,7 @@
 }
 
 .list-view {
+    -fx-background-color: #bfbfbf;
     -fx-background-insets: 0; -fx-padding: 0;
 }
 
