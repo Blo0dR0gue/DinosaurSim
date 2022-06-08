@@ -65,6 +65,8 @@ public class Hunt extends State {
             //TODO Debug variable
             //dinosaur.setTest(target);
 
+            dinosaur.flipImage(direction);
+
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
 
         } else {

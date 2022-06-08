@@ -97,49 +97,49 @@ public class Simulation {
         //TODO remove temp code
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test.png"), 20, 12, 18, 25,
+                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
                 'f', 590, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test.png"), 15, 14, 20, 45,
+                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 15, 14, 20, 45,
                 0.1, 100, 50, 10, false, true,
                 'f', 370, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type3", SpriteLibrary.getInstance().getImage("test.png"), 15, 14, 27, 35,
+                "type3", SpriteLibrary.getInstance().getImage("test2.png"), 15, 14, 27, 35,
                 0.1, 100, 50, 10, false, true,
                 'a', 370, 32, 'M')
         );
@@ -255,13 +255,22 @@ public class Simulation {
      * @return A {@link Vector2D} target of a water tile or null.
      */
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
-        Vector2D target = null;
         List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
 
         List<Vector2D> sorted = sortByDistance(waterSourcesInRange, position);
 
-        if(sorted.size() > 0)
-            return sorted.get(0);
+        if (sorted.size() > 0) {
+
+            for (Vector2D vector : sorted) {
+
+                if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true)){
+                    return vector;
+                }
+
+            }
+
+        }
+
         return null;
 /*
         for (Vector2D waterTileCenterPos : waterSourcesInRange) {
@@ -462,14 +471,14 @@ public class Simulation {
      * TODO optimize?
      * Checks if a {@link SimulationObject} can move to a position.
      *
-     * @param start                         The {@link Vector2D} position of the {@link SimulationObject}.
-     * @param target                        The {@link Vector2D} target, where he wants to move.
-     * @param interactionRange              The interaction range of the {@link SimulationObject}.
-     * @param canSwim                       Can the {@link SimulationObject} swim?
-     * @param canClimb                      Can the {@link SimulationObject} climb?
-     * @param renderOffset                  The render offset of the {@link SimulationObject}.
-     * @param ignoreRenderAndTileConditions true, if the render conditions (e.g. rendered outside and tile conditions e.g. the target is swimmable but the {@link SimulationObject} does not) should be ignored
-     * @param ignoreTargetTile              true, if we don't want to check the target tile. (See the linked functions for a better understanding)
+     * @param start                  The {@link Vector2D} position of the {@link SimulationObject}.
+     * @param target                 The {@link Vector2D} target, where he wants to move.
+     * @param interactionRange       The interaction range of the {@link SimulationObject}.
+     * @param canSwim                Can the {@link SimulationObject} swim?
+     * @param canClimb               Can the {@link SimulationObject} climb?
+     * @param renderOffset           The render offset of the {@link SimulationObject}.
+     * @param ignoreRenderConditions true, if the render conditions (e.g. rendered outside and tile conditions) should be ignored
+     * @param ignoreTargetTile       true, if we don't want to check the target tile. (See the linked functions for a better understanding)
      * @return true, if the {@link SimulationObject} can move to the target
      * @see SimulationMap#tileMatchedConditions(Vector2D, boolean, boolean)
      * @see SimulationObject#willBeRenderedOutside(Vector2D, Vector2D)
@@ -477,7 +486,7 @@ public class Simulation {
      * @see #doesPointWithRangeIntersectAnyInteractionRange(Vector2D, double, Vector2D)
      * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
      */
-    public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderAndTileConditions, boolean ignoreTargetTile) {
+    public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderConditions, boolean ignoreTargetTile) {
 
         //Is this point inside the grid?
         if (!simulationMap.isInsideOfGrid(target)) {
@@ -486,9 +495,7 @@ public class Simulation {
 
         //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
         //If so get another point.
-        if (!ignoreRenderAndTileConditions && (!simulationMap.tileMatchedConditions(target, canSwim, canClimb) ||
-                SimulationObject.willBeRenderedOutside(target, renderOffset))
-        ) {
+        if (!ignoreRenderConditions && SimulationObject.willBeRenderedOutside(target, renderOffset) || !ignoreTargetTile && !simulationMap.tileMatchedConditions(target, canSwim, canClimb)) {
             return false;
         }
 
@@ -766,7 +773,7 @@ public class Simulation {
                 }
         }
 
-        if(simulationMap.isInsideOfGrid(x,y+1) && !simulationMap.tileMatchedConditions(x,y+1, canSwim, canClimb)){
+        if (simulationMap.isInsideOfGrid(x, y + 1) && !simulationMap.tileMatchedConditions(x, y + 1, canSwim, canClimb)) {
             return false;
         }
 

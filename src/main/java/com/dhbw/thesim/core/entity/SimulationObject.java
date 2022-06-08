@@ -143,12 +143,16 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
-     * Flips the image vertically.
+     * Flips the image facing a direction. <br>
+     * The prerequisite is that the picture is facing to the right.
+     *
+     * @param direction The {@link Vector2D} direction.
      */
-    public void flipImage() {
-        Translate flipTranslation = new Translate(0, imageObj.getImage().getHeight());
-        Rotate flipRotation = new Rotate(180, Rotate.X_AXIS);
-        imageObj.getTransforms().addAll(flipTranslation, flipRotation);
+    public void flipImage(Vector2D direction) {
+        if (direction.getX() < 0)
+            imageObj.setScaleX(-1);
+        else
+            imageObj.setScaleX(1);
     }
 
     /**

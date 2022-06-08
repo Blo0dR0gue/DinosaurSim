@@ -50,6 +50,7 @@ public class Wander extends State {
                 direction = simulationObject.getPosition().directionToTarget(target);
                 System.out.println("Moving to " + target);
                 dinosaur.setTest(target);
+                dinosaur.flipImage(direction);
             }
 
         }

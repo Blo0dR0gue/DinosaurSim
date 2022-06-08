@@ -135,6 +135,9 @@ public class MoveToFoodSource extends State {
                 }
 
             }
+            if(direction != null){
+                dinosaur.flipImage(direction);
+            }
         }
 
         if (direction != null) {
