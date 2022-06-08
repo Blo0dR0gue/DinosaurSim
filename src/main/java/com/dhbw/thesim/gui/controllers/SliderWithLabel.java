@@ -58,6 +58,7 @@ public class SliderWithLabel extends GridPane {
         setText(labelText);
         initializeListeners();
     }
+
     /**
      * Adds all specified event handlers to the specified {@link javafx.scene.Node}
      */
@@ -98,7 +99,7 @@ public class SliderWithLabel extends GridPane {
         valueProperty().set(value);
     }
 
-    public DoubleProperty valueProperty(){
+    public DoubleProperty valueProperty() {
         return slider.valueProperty();
     }
 

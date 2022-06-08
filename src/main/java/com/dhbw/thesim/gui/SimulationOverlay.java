@@ -16,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
@@ -63,6 +64,18 @@ public class SimulationOverlay extends BorderPane {
 
         //Create the Scene
         simulationScene = new Scene(this);
+
+        //Set a background image for fullscreen mode if screen resolution is higher than 1920x1080
+        //TODO Background image or colored background?
+        Image img = new Image("/background/background.jpg");
+        simulationScene.setFill(new ImagePattern(img, 0, 0, 1, 1, true));
+        BackgroundImage bImg = new BackgroundImage(img,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.DEFAULT,
+                new BackgroundSize(1.0,1.0,true,true,false,false));
+        Background bGround = new Background(bImg);
+        setBackground(bGround);
 
         simulationScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
