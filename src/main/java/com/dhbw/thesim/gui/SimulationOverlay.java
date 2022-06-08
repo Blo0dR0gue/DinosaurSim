@@ -16,12 +16,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-import java.util.List;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
@@ -60,7 +57,7 @@ public class SimulationOverlay extends BorderPane {
         setCenter(centerPane);
 
         //TODO get data from config screen
-        Simulation sim = new Simulation("test", canvasGraphics, this, configScreen.getDinoParams(), null, configScreen.getPlantGrowthRate());
+        Simulation sim = new Simulation("test", canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
         simulationLoop = new SimulationLoop(1, 1, sim,50, 1);
 
