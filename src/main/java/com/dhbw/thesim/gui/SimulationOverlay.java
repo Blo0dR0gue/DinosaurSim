@@ -20,6 +20,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
  *
@@ -59,23 +61,10 @@ public class SimulationOverlay extends BorderPane {
         //TODO get data from config screen
         Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 10);
 
-        simulationLoop = new SimulationLoop(1, 1, sim);
-        simulationIsRunning = true;
+        simulationLoop = new SimulationLoop(1, 1, sim, 50, 1);
 
         //Create the Scene
         simulationScene = new Scene(this);
-
-        //Set a background image for fullscreen mode if screen resolution is higher than 1920x1080
-        //TODO Background image or colored background?
-        Image img = new Image("/background/background.jpg");
-        simulationScene.setFill(new ImagePattern(img, 0, 0, 1, 1, true));
-        BackgroundImage bImg = new BackgroundImage(img,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                new BackgroundSize(1.0,1.0,true,true,false,false));
-        Background bGround = new Background(bImg);
-        setBackground(bGround);
 
         simulationScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {

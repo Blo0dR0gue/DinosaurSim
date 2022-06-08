@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.util.Vector2D;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -24,22 +25,23 @@ public class Dinosaur extends SimulationObject {
     }
 
     // TODO comments pls; make final
-    private double nutritionFull;
-    private double hydrationFull;
+    private final double nutritionFull;
+    private final double hydrationFull;
     private double nutrition;
     private double hydration;
-    private int strength;
-    private int speed;
-    private double reproductionRate;
+    private double strength;
+    private double speed;
+    private final double reproductionRate;
     private double weight;
     private double length;
     private double height;
-    private boolean canSwim;
-    private boolean canClimb;
-    private dietType diet;
-    private double viewRange;
+    private final boolean canSwim;
+    private final boolean canClimb;
+    private final dietType diet;
+    private final double viewRange;
+    private final long timeOfBirth;
 
-    private char gender;
+    private final char gender;
     private double reproductionValue;
 
     /**
@@ -53,25 +55,19 @@ public class Dinosaur extends SimulationObject {
     private boolean isChased;
 
     //TODO check values?
-    private final static double nutritionReductionRate = 0.1;
-    private final static double hydrationReductionRate = 0.25;
+    private static final double nutritionReductionRate = 0.1;
+    private static final double hydrationReductionRate = 0.25;
 
-    public final static double PROXIMITY_RANGE = 2.5;
-
-    //TODO remove, if json2object is implemented
-    public Dinosaur() {
-        super("test", 0, "NaN");
-    }
+    public static final double PROXIMITY_RANGE = 5;
 
     /**
      * Constructor for a dinosaur object
      */
-    public Dinosaur(String name, String imgName, double nutrition, double hydration,
-                    int strength, int speed, double reproductionRate, double weight, double length, double height,
+    public Dinosaur(String name, Image image, double nutrition, double hydration,
+                    double strength, double speed, double reproductionRate, double weight, double length, double height,
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
                     double interactionRange, char gender) {
-        super(name, interactionRange, "/dinosaur/" + imgName);
-        //TODO
+        super(name, interactionRange, image);
 
         this.diet = diet == 'a' ? dietType.omnivore : diet == 'f' ? dietType.carnivore : dietType.herbivore;
 
@@ -87,17 +83,17 @@ public class Dinosaur extends SimulationObject {
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
         this.viewRange = viewRange;
+        this.timeOfBirth = System.currentTimeMillis();
 
         this.nutritionFull = this.nutrition;
         this.hydrationFull = this.hydration;
 
         //TODO remove test objects
-        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore?Color.GREEN:this.diet==dietType.omnivore?Color.BLUE:Color.RED);
+        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore ? Color.GREEN : this.diet == dietType.omnivore ? Color.BLUE : Color.RED);
 
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
 
-        //TODO check - maybe in states?
         this.target = null;
         this.isChased = false;
 
@@ -117,7 +113,7 @@ public class Dinosaur extends SimulationObject {
         //TODO move to stateMachineTick?
         currentState.update(deltaTime, currentSimulationData);
 
-        decreaseLifeStats(deltaTime);
+        updateStats(deltaTime);
     }
 
     @Override
@@ -138,9 +134,10 @@ public class Dinosaur extends SimulationObject {
      *
      * @param deltaTime The time since the last update call in seconds.
      */
-    private void decreaseLifeStats(double deltaTime) {
+    private void updateStats(double deltaTime) {
         this.hydration -= hydrationReductionRate * deltaTime;
         this.nutrition -= nutritionReductionRate * deltaTime;
+        this.reproductionValue += reproductionValue * deltaTime;
     }
 
     /**
@@ -176,11 +173,11 @@ public class Dinosaur extends SimulationObject {
         return hydration;
     }
 
-    public int getStrength() {
+    public double getStrength() {
         return strength;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
@@ -223,6 +220,8 @@ public class Dinosaur extends SimulationObject {
     public SimulationObject getTarget() {
         return target;
     }
+
+    public long getTimeOfBirth() { return timeOfBirth; }
 
     public boolean isChased() {
         return isChased;
@@ -268,23 +267,25 @@ public class Dinosaur extends SimulationObject {
      * Force the dinosaur to the {@link com.dhbw.thesim.core.statemachine.state.dinosaur.NoOp} state. <br>
      * Used when the dinosaur got caught by his hunter.
      */
-    public void forceNoOp(){
+    public void forceNoOp() {
         this.forceNoOp = true;
     }
 
     /**
      * Resets the force.
+     *
      * @see #forceNoOp
      */
-    public void resetForceNoOp(){
+    public void resetForceNoOp() {
         this.forceNoOp = false;
     }
 
     /**
      * Is the dinosaur forced to the stand state
+     *
      * @return true, if it is forced to the stand state.
      */
-    public boolean isForcedToNoOp(){
+    public boolean isForcedToNoOp() {
         return this.forceNoOp;
     }
 

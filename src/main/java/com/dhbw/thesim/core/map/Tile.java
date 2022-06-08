@@ -49,10 +49,12 @@ public class Tile {
      * @param image The background for this {@link Tile} object.
      * @see #background
      */
-    public Tile(Image image, int gridX, int gridY) {
+    public Tile(Image image, int gridX, int gridY, boolean swimmable, boolean climbable) {
         this.background = image;
         this.gridX = gridX;
         this.gridY = gridY;
+        this.swimmable = swimmable;
+        this.climbable = climbable;
     }
 
     //region getter & setter
@@ -60,24 +62,12 @@ public class Tile {
         return background;
     }
 
-    public void setBackground(Image background) {
-        this.background = background;
-    }
-
     public boolean isSwimmable() {
         return swimmable;
     }
 
-    public void setSwimmable(boolean swimmable) {
-        this.swimmable = swimmable;
-    }
-
     public boolean isClimbable() {
         return climbable;
-    }
-
-    public void setClimbable(boolean climbable) {
-        this.climbable = climbable;
     }
 
     public int getGridX() {

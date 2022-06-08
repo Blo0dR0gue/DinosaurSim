@@ -62,9 +62,9 @@ public abstract class SimulationObject extends StateMachine {
      *
      * @param type             The type for this object.
      * @param interactionRange The range, in which collisions are handled.
-     * @param imgPath          The full path to an image. E.g. /dinosaur/test.png   //TODO maybe pass a image via spritelibF?
+     * @param image            The image, which is used for the representation for this object.
      */
-    public SimulationObject(String type, double interactionRange, String imgPath) {
+    public SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
         this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
@@ -74,8 +74,6 @@ public abstract class SimulationObject extends StateMachine {
 
         test.setFill(Color.BLUE);
 
-        //TODO use sprite lib and don't create the image here.
-        Image image = new Image(Objects.requireNonNull(getClass().getResource(imgPath)).toString());
         setSprite(image);
     }
 
@@ -116,8 +114,9 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void setSprite(Image image) {
         imageObj.setImage(image);
+        //TODO dont center image. center it to the feet, because it can look like a dinosaur is walking through water. (Simulation calculations need to be changed)
         renderOffset.setX(image.getWidth() / 2);
-        renderOffset.setY(image.getHeight() / 2);
+        renderOffset.setY(image.getHeight() / 2+Dinosaur.PROXIMITY_RANGE);
     }
 
     /**
@@ -144,12 +143,16 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
-     * Flips the image vertically.
+     * Flips the image facing a direction. <br>
+     * The prerequisite is that the picture is facing to the right.
+     *
+     * @param direction The {@link Vector2D} direction.
      */
-    public void flipImage() {
-        Translate flipTranslation = new Translate(0, imageObj.getImage().getHeight());
-        Rotate flipRotation = new Rotate(180, Rotate.X_AXIS);
-        imageObj.getTransforms().addAll(flipTranslation, flipRotation);
+    public void flipImage(Vector2D direction) {
+        if (direction.getX() < 0)
+            imageObj.setScaleX(-1);
+        else
+            imageObj.setScaleX(1);
     }
 
     /**

@@ -42,6 +42,11 @@ public class Wander extends State {
     }
 
     @Override
+    public void onExit() {
+        //Nothing to do here
+    }
+
+    @Override
     public void update(double deltaTime, Simulation simulation) {
 
         if (target == null) {
@@ -50,6 +55,7 @@ public class Wander extends State {
                 direction = simulationObject.getPosition().directionToTarget(target);
                 System.out.println("Moving to " + target);
                 dinosaur.setTest(target);
+                dinosaur.flipImage(direction);
             }
 
         }
