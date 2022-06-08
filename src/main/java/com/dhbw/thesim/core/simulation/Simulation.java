@@ -18,8 +18,6 @@ import java.util.*;
 
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
- * <p>
- * TODO handle simulation end, user interactions (Dinosaur clicks and show stats, etc.)
  *
  * @author Daniel Czeschner
  * @see SimulationMap
@@ -55,10 +53,17 @@ public class Simulation {
      */
     private List<SimulationObject> toBeRemoved;
 
+    /**
+     * The SimulationOverlay, on which the elements get spawned.
+     */
     private SimulationOverlay simulationOverlay;
 
+    /**
+     * A {@link Random} used for e.g. get a random tile.
+     */
     private final Random random;
 
+    //TODO remove
     private Line line;
 
     //endregion
@@ -300,7 +305,7 @@ public class Simulation {
 
         if (dietType != Dinosaur.dietType.omnivore) {
             List<SimulationObject> sorted = sortByDistance(position, inRange);
-            if (sorted.size() > 0)
+            if (!sorted.isEmpty())
                 return sorted.get(0);
             return null;
         } else {
@@ -635,11 +640,11 @@ public class Simulation {
         double high = deg + Math.PI / 4;
 
         if (low < 0) {
-            low = 0;//2 * Math.PI + low;
+            low = 0;
         }
 
         if (high > 2 * Math.PI) {
-            high = 2 * Math.PI;//2 * Math.PI + high;
+            high = 2 * Math.PI;
         }
 
         if (low > high) {
@@ -691,7 +696,6 @@ public class Simulation {
     }
 
     /**
-     * TODO move to map?
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
      *
@@ -824,9 +828,6 @@ public class Simulation {
         //If we ignore the end position and the origin and the end position are the same, we return false. (Happens for example, if we move to a food source (food source is target))
         if (ignoreTargetTile && Vector2D.distance(circleOrigin, end) == 0)
             return false;
-
-        //TODO FIX TODO?
-        //System.out.println(minDist + " " + maxDist + " " + radius + " " + circleOrigin);
 
         return minDist <= radius && maxDist >= radius;
     }
