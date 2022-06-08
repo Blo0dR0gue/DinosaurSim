@@ -54,16 +54,13 @@ public class Hunt extends State {
 
         if (direction != null) {
 
-            //Reset the chased state (Can be retested, if multiple dinos hunt the target.)
+            //set the chased state (Can be retested, if multiple dinos hunt the target.)
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 targetDino.setIsChased(true);
             }
 
             target = dinosaur.getTarget().getPosition();
             direction = dinosaur.getPosition().directionToTarget(target);
-
-            //TODO Debug variable
-            //dinosaur.setTest(target);
 
             dinosaur.flipImage(direction);
 
@@ -85,8 +82,6 @@ public class Hunt extends State {
         if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
             targetDino.setIsChased(false);
         }
-        if(!dinosaur.isChased())
-            dinosaur.setTarget(null);
     }
 
     @Override

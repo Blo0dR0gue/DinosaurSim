@@ -25,22 +25,22 @@ public class Dinosaur extends SimulationObject {
     }
 
     // TODO comments pls; make final
-    private double nutritionFull;
-    private double hydrationFull;
+    private final double nutritionFull;
+    private final double hydrationFull;
     private double nutrition;
     private double hydration;
     private double strength;
     private double speed;
-    private double reproductionRate;
+    private final double reproductionRate;
     private double weight;
     private double length;
     private double height;
-    private boolean canSwim;
-    private boolean canClimb;
-    private dietType diet;
-    private double viewRange;
+    private final boolean canSwim;
+    private final boolean canClimb;
+    private final dietType diet;
+    private final double viewRange;
 
-    private char gender;
+    private final char gender;
     private double reproductionValue;
 
     /**
@@ -54,15 +54,10 @@ public class Dinosaur extends SimulationObject {
     private boolean isChased;
 
     //TODO check values?
-    private final static double nutritionReductionRate = 0.1;
-    private final static double hydrationReductionRate = 0.25;
+    private static final double nutritionReductionRate = 0.1;
+    private static final double hydrationReductionRate = 0.25;
 
-    public final static double PROXIMITY_RANGE = 5;
-
-    //TODO remove, if json2object is implemented
-    public Dinosaur() {
-        super("test", 0, null);
-    }
+    public static final double PROXIMITY_RANGE = 5;
 
     /**
      * Constructor for a dinosaur object
@@ -72,7 +67,6 @@ public class Dinosaur extends SimulationObject {
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
                     double interactionRange, char gender) {
         super(name, interactionRange, image);
-        //TODO
 
         this.diet = diet == 'a' ? dietType.omnivore : diet == 'f' ? dietType.carnivore : dietType.herbivore;
 
@@ -98,7 +92,6 @@ public class Dinosaur extends SimulationObject {
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
 
-        //TODO check - maybe in states?
         this.target = null;
         this.isChased = false;
 

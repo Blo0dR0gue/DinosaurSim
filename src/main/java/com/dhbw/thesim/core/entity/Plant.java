@@ -28,12 +28,7 @@ public class Plant extends SimulationObject {
     //TODO comments, make final
     private Plant.plantType plantType;
     private double growth;
-    private double growthRate; //TODO brauchen wir das noch? Oder ist das global für alle Pflanzen gültig und in der Logik gespeichert?
-
-    //TODO remove, if json2object is implemented
-    public Plant() {
-        super("test", 0, null);
-    }
+    private final double growthRate;
 
     public Plant(String name, Image image, double interactionRange, double growthRate) {
         super(name, interactionRange, image);

@@ -127,13 +127,13 @@ public class Simulation {
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 18, 25,
+                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
-                'f', 590, 32, 'f')
+                'f', 270, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 15, 14, 20, 45,
+                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 14, 20, 45,
                 0.1, 100, 50, 10, false, true,
                 'f', 370, 32, 'm')
         );
@@ -556,9 +556,6 @@ public class Simulation {
             maximumAttempts--;
         }
 
-        /*if (!canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false))
-            return getRandomMovementTargetInRange(position, viewRange, interactionRange, canSwim, canClimb, renderOffset);*/
-
         return null;
     }
 
@@ -648,9 +645,6 @@ public class Simulation {
         }
 
         double angle = random.nextDouble(low, high);
-
-        System.out.println(Math.toDegrees(deg));
-        System.out.println(Math.toDegrees(angle));
 
         double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
 
@@ -772,9 +766,6 @@ public class Simulation {
                 x += pdx;
                 y += pdy;
             }
-
-            //TODO delete debug
-            //System.out.println(x + " " + y);
 
             if (!(ignoreTargetTile && targetTile.getGridX() == x && targetTile.getGridY() == y))
                 if (!simulationMap.tileMatchedConditions(x, y, canSwim, canClimb)) {
