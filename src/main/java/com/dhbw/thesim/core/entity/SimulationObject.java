@@ -112,7 +112,7 @@ public abstract class SimulationObject extends StateMachine {
         imageObj.setImage(image);
         //TODO dont center image. center it to the feet, because it can look like a dinosaur is walking through water. (Simulation calculations need to be changed)
         renderOffset.setX(image.getWidth() / 2);
-        renderOffset.setY(image.getHeight() / 2+Dinosaur.PROXIMITY_RANGE);
+        renderOffset.setY(image.getHeight() / 2 + Dinosaur.PROXIMITY_RANGE);
     }
 
     /**

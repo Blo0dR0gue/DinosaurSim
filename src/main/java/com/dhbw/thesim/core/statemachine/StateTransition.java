@@ -15,7 +15,7 @@ public class StateTransition {
     StateFactory.States nextState;
     ITransition stateTransition;
 
-    public StateTransition(StateFactory.States nextState, ITransition stateTransition){
+    public StateTransition(StateFactory.States nextState, ITransition stateTransition) {
         this.nextState = nextState;
         this.stateTransition = stateTransition;
     }

@@ -76,7 +76,7 @@ public class Tile {
         return climbable;
     }
 
-    public boolean arePlantsAllowed(){
+    public boolean arePlantsAllowed() {
         return canContainPlants;
     }
 
