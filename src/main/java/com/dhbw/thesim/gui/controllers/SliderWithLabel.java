@@ -1,6 +1,7 @@
 package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -87,5 +88,17 @@ public class SliderWithLabel extends GridPane {
 
     public StringProperty textProperty() {
         return label.textProperty();
+    }
+
+    public double getValue() {
+        return valueProperty().doubleValue();
+    }
+
+    public void setValue(double value){
+        valueProperty().set(value);
+    }
+
+    public DoubleProperty valueProperty(){
+        return slider.valueProperty();
     }
 }

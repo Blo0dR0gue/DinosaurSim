@@ -60,7 +60,7 @@ public class SimulationOverlay extends BorderPane {
         setCenter(centerPane);
 
         //TODO get data from config screen
-        Simulation sim = new Simulation("test", canvasGraphics, this, configScreen.getDinoParams(), null, 10);
+        Simulation sim = new Simulation("test", canvasGraphics, this, configScreen.getDinoParams(), null, configScreen.getPlantGrowthRate());
 
         simulationLoop = new SimulationLoop(1, 1, sim,50, 1);
 

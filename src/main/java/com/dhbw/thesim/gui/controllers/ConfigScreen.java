@@ -125,4 +125,8 @@ public class ConfigScreen extends AnchorPane {
         return dinos;
     }
 
+
+    public int getPlantGrowthRate(){
+        return (int) plantGrowthSliderWithLabel.getValue();
+    }
 }
