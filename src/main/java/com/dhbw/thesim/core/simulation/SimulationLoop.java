@@ -55,6 +55,16 @@ public class SimulationLoop {
      */
     private Thread simulationLoop;
 
+    /**
+     * Max amount of steps.
+     */
+    private int maxStepAmount;
+
+    /**
+     * Max amount of time a simulation is running.
+     */
+    private int maxRunTimeInMinutes;
+
     //endregion
 
     /**
@@ -63,10 +73,12 @@ public class SimulationLoop {
      * @param simulationSpeedMultiplier The speed multiplier for the automatic simulation mode.
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
      */
-    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation) {
+    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes) {
         this.currentSimulation = simulation;
         this.simulationSpeedMultiplier = simulationSpeedMultiplier;
         this.stepRangeMultiplier = stepRangeMultiplier;
+        this.maxStepAmount = maxStepAmount;
+        this.maxRunTimeInMinutes = maxRunTimeInMinutes;
 
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;

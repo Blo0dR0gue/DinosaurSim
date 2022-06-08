@@ -50,6 +50,7 @@ public class SimulationMap {
     public SimulationMap(String landscapeName) {
         this.landscapeName = landscapeName;
         this.tiles = new Tile[width][height];
+        //TODO switch landscape name
         landscapeOne();
     }
 
