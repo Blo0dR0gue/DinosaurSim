@@ -7,9 +7,6 @@ import javafx.application.Application;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.jar.JarEntry;
-
-import static com.dhbw.thesim.impexp.Json2Objects.initSimObjects;
 
 /**
  * Main entrypoint in this app.
@@ -19,31 +16,31 @@ import static com.dhbw.thesim.impexp.Json2Objects.initSimObjects;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        Application.launch(Display.class,args);
+        Application.launch(Display.class, args);
 
         //------------------------------------------------------------------------------------------------------------------
         //Testen von JsonHandler: TODO nur zum Testen, bzw. fürs Verständnis
-            JsonHandler.setDirectory();
+        JsonHandler.setDirectory();
 
-            JsonHandler.exportDefaultScenarioConfig();
-            JsonHandler.exportDefaultSimulationObjectsConfig();
+        JsonHandler.exportDefaultScenarioConfig();
+        JsonHandler.exportDefaultSimulationObjectsConfig();
 
-            HashMap<String,Integer> tempDino = new HashMap<>();
-            tempDino.put("Abrictosaurus",3);
-            HashMap<String,Integer> tempPlant = new HashMap<>();
-            tempPlant.put("Farn",4);
-            JsonHandler.exportScenarioConfig(tempDino,tempPlant,"landschaftsName", 9.0, "testScenarioKonfig");
+        HashMap<String, Integer> tempDino = new HashMap<>();
+        tempDino.put("Abrictosaurus", 3);
+        HashMap<String, Integer> tempPlant = new HashMap<>();
+        tempPlant.put("Farn", 4);
+        JsonHandler.exportScenarioConfig(tempDino, tempPlant, "landschaftsName", 9.0, "testScenarioKonfig");
 
         //Testen von Json2Objects: TODO nur zum Testen, bzw. fürs Verständnis
-            HashMap<String,Integer> testInitDino=new HashMap<>();
-            testInitDino.put("Abrictosaurus",2);
-            HashMap<String,Integer> testInitPlant=new HashMap<>();
-            testInitPlant.put("Farn",4);
-            Json2Objects.initSimObjects(testInitDino, testInitPlant, 3.0);
+        HashMap<String, Integer> testInitDino = new HashMap<>();
+        testInitDino.put("Abrictosaurus", 2);
+        HashMap<String, Integer> testInitPlant = new HashMap<>();
+        testInitPlant.put("Farn", 4);
+        Json2Objects.initSimObjects(testInitDino, testInitPlant, 3.0);
 
-            Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "");
-            System.out.println("--------------");
-            Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "testScenarioKonfig");
+        Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "");
+        System.out.println("--------------");
+        Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "testScenarioKonfig");
         //------------------------------------------------------------------------------------------------------------------
     }
 

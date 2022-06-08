@@ -46,16 +46,15 @@ public class Hunt extends State {
                 //TODO let hunted dino run away when the target dino can see this dino
                 targetDino.setIsChased(true);
                 targetDino.setTarget(dinosaur);
+
+                target = targetDino.getPosition();
+                direction = dinosaur.getPosition().directionToTarget(target);
             }
-
-            target = dinosaur.getTarget().getPosition();
-            direction = dinosaur.getPosition().directionToTarget(target);
-
         }
 
         if (direction != null) {
 
-            //Reset the chased state (Can be retested, if multiple dinos hunt the target.)
+            //set the chased state (Can be retested, if multiple dinos hunt the target.)
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 targetDino.setIsChased(true);
             }
@@ -63,8 +62,7 @@ public class Hunt extends State {
             target = dinosaur.getTarget().getPosition();
             direction = dinosaur.getPosition().directionToTarget(target);
 
-            //TODO Debug variable
-            //dinosaur.setTest(target);
+            dinosaur.flipImage(direction);
 
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
 
@@ -79,9 +77,15 @@ public class Hunt extends State {
     }
 
     @Override
-    public void initTransitions() {
-        //TODO check transitions / transitions oder
+    public void onExit() {
+        //reset the target
+        if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
+            targetDino.setIsChased(false);
+        }
+    }
 
+    @Override
+    public void initTransitions() {
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
@@ -89,8 +93,12 @@ public class Hunt extends State {
         //We can do this here, because the update is called before the next check transitions
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> target == null || dinosaur.getTarget() == null));
 
+        addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
+
         //The other dinosaur escaped
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
+        addTransition(new StateTransition(
+                StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null &&
+                !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
 
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));

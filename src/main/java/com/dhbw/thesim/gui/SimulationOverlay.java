@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
  *
@@ -47,7 +49,7 @@ public class SimulationOverlay extends AnchorPane {
         //TODO get data from config screen
         Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 10);
 
-        simulationLoop = new SimulationLoop(1, 1, sim);
+        simulationLoop = new SimulationLoop(1, 1, sim, 50, 1);
 
         //Create the Scene
         simulationScene = new Scene(this);

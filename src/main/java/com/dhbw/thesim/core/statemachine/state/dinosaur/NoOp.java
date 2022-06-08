@@ -13,11 +13,9 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  * In this state a {@link Dinosaur} got caught by another dinosaur. <br>
  * The dinosaur should stay on the map until the ingestion state of the hunter finished.
  *
- * TODO get rid of noop if possible?
- *
  * @author Daniel Czeschner
  */
-public class NoOp extends State{
+public class NoOp extends State {
 
 
     private Dinosaur dinosaur;
@@ -34,7 +32,12 @@ public class NoOp extends State{
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
+        //Nothing to do here
+    }
 
+    @Override
+    public void onExit() {
+        //Nothing to do here
     }
 
     @Override
@@ -42,7 +45,6 @@ public class NoOp extends State{
         //The dinosaur got eaten.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
-        //TODO logic?
         //The dinosaur died before this one got eaten.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> !dinosaur.isForcedToNoOp()));
     }
