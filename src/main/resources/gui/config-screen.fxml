@@ -56,10 +56,12 @@
         </rowConstraints>
         <ListView fx:id="dinoListView" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="2"
                   GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
+        <ListView fx:id="plantListView" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.columnSpan="2"
+                  GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
         <ListView fx:id="mapListView" GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.columnSpan="2"
                   GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
-        <SliderWithLabel text="Pflanzenwachstumrate" value="10.0" GridPane.columnIndex="3" GridPane.rowIndex="0"
-                         GridPane.columnSpan="2"/>
+        <SliderWithLabel text="Pflanzenwachstumrate"
+                         GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
         <SliderWithLabel text="Simulationsschrittweite"
                          GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="2">
             <GridPane.margin>

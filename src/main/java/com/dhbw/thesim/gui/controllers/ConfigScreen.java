@@ -3,6 +3,7 @@ package com.dhbw.thesim.gui.controllers;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
+import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -34,11 +35,13 @@ public class ConfigScreen extends AnchorPane {
     @FXML
     public SliderWithLabel plantGrowthSliderWithLabel;
     @FXML
-    public ListView<DinoListItem> dinoListView;
+    public ListView<ListItem> dinoListView;
     @FXML
     public GridPane gridPane;
     @FXML
     public ListView<MapListItem> mapListView;
+    @FXML
+    public ListView<ListItem> plantListView;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -58,7 +61,8 @@ public class ConfigScreen extends AnchorPane {
 
     /**
      * Method to initialize the Configuration Screen, its listeners and adding custom controls dynamically
-     * @param dinos
+     * @param dinos The {@link ArrayList} of dino GUI parameters returned by
+     * {@link com.dhbw.thesim.impexp.Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
     public void initialize(ArrayList<Object[]> dinos) {
         initializeListeners();
@@ -73,7 +77,7 @@ public class ConfigScreen extends AnchorPane {
             Image image = new Image("/dinosaur/test.png");
             int amount = (int) dino[2];
 
-            DinoListItem dinoListItem = DinoListItem.newInstance();
+            ListItem dinoListItem = ListItem.newInstance();
             dinoListItem.initialize(name, image, amount, dinoListView);
 
             dinoListView.getItems().add(dinoListItem);
@@ -98,6 +102,19 @@ public class ConfigScreen extends AnchorPane {
         for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
             mapListView.getItems().add(mapListItem);
         }
+
+        //Instantiating and initializing maps to add all of them to the list view of dinos
+        ListItem plantListItem1 = ListItem.newInstance();
+        plantListItem1.initialize("Farn", new Image("/plant/farn.png"), 2, plantListView);
+
+        ListItem plantListItem2 = ListItem.newInstance();
+        plantListItem2.initialize("Ginkgoales", new Image("/plant/plantTest.png"), 2, plantListView);
+
+        GridPane.setFillWidth(dinoListView, true);
+
+        for (ListItem plantListItem : Arrays.asList(plantListItem1, plantListItem2)) {
+            plantListView.getItems().add(plantListItem);
+        }
     }
 
     /**
@@ -117,9 +134,9 @@ public class ConfigScreen extends AnchorPane {
     public HashMap<String, Integer> getDinoParams(){
         HashMap<String, Integer> dinos = new HashMap<>();
 
-        for (DinoListItem dinoListItem :
+        for (ListItem listItem :
                 dinoListView.getItems()) {
-            dinos.put(dinoListItem.getText(), dinoListItem.getAmount());
+            dinos.put(listItem.getText(), listItem.getCount());
         }
 
         return dinos;

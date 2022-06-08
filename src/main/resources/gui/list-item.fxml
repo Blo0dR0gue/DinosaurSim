@@ -7,9 +7,14 @@
 
 <fx:root type="javafx.scene.layout.HBox" fx:id="container"
          xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
-   <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../dinosaur/test.png"/>
-   </ImageView>
+   <StackPane>
+      <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="sliderValueLabel" text="0" StackPane.alignment="BOTTOM_LEFT">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+   </StackPane>
    <BorderPane fx:id="borderPane" prefHeight="100.0" HBox.hgrow="ALWAYS">
       <top>
          <Label fx:id="label_name" text="PLATZHALTER" BorderPane.alignment="CENTER" textFill="white">
@@ -19,7 +24,7 @@
          </Label>
       </top>
       <center>
-         <Slider fx:id="slider" majorTickUnit="10.0" minorTickCount="1" showTickLabels="true" showTickMarks="true"
+         <Slider fx:id="slider" max="10.0" majorTickUnit="2.0" minorTickCount="1" showTickLabels="true" showTickMarks="true"
                  snapToTicks="true" BorderPane.alignment="CENTER"/>
       </center>
       <bottom>
