@@ -12,10 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
-
-import java.util.Objects;
 
 /**
  * Represents an object, which is handled in our simulation
@@ -170,7 +166,7 @@ public abstract class SimulationObject extends StateMachine {
      * @param position The new {@link Vector2D} for the position.
      */
     public void setPosition(Vector2D position) {
-        if (Math.abs(position.getX()) > SimulationMap.width * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.height * Tile.TILE_SIZE) {
+        if (Math.abs(position.getX()) > SimulationMap.WIDTH * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.HEIGHT * Tile.TILE_SIZE) {
             position = new Vector2D(0, 0);
         }
         this.position = position;

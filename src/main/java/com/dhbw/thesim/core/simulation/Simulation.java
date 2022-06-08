@@ -214,7 +214,7 @@ public class Simulation {
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange()));
             } else {
                 //Plants only can be spawned on tiles, which allow plant growing
-                obj.setPosition(getFreePositionInMap(false, false, obj.getInteractionRange()));
+                obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, obj.getInteractionRange()));
             }
 
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
@@ -268,7 +268,7 @@ public class Simulation {
 
         List<Vector2D> sorted = sortByDistance(waterSourcesInRange, position);
 
-        if (sorted.size() > 0) {
+        if (!sorted.isEmpty()) {
 
             for (Vector2D vector : sorted) {
 
@@ -281,21 +281,6 @@ public class Simulation {
         }
 
         return null;
-/*
-        for (Vector2D waterTileCenterPos : waterSourcesInRange) {
-
-            if (target == null) {
-                if (isPointInsideCircle(position, viewRange, waterTileCenterPos) && canMoveTo(position, waterTileCenterPos, 0, canSwim, canClimb, null, true, true))
-                    target = waterTileCenterPos;
-            } else //If the distance to another water tile closer than the current target, and we can move to it, change it to the closer one.
-                if (isPointInsideCircle(position, viewRange, waterTileCenterPos) && Vector2D.distance(position, target) > Vector2D.distance(position, waterTileCenterPos) &&
-                        canMoveTo(position, waterTileCenterPos, 0, canSwim, canClimb, null, true, true)) {
-
-                    target = waterTileCenterPos;
-                }
-
-        }
-        return target;*/
     }
 
     /**
@@ -438,10 +423,11 @@ public class Simulation {
     }
 
     /**
-     * Gets a random free position on the grid map
+     * Gets a random free position on the grid map.
      *
-     * @param canSwim  Can the {@link Dinosaur} swim.
-     * @param canClimb Can the {@link Dinosaur} climb.
+     * @param canSwim          Can the {@link Dinosaur} swim.
+     * @param canClimb         Can the {@link Dinosaur} climb.
+     * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
     public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange) {
@@ -449,6 +435,25 @@ public class Simulation {
 
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
             return getFreePositionInMap(canSwim, canClimb, interactionRange);
+        }
+
+        return target;
+    }
+
+    /**
+     * Gets a random free position on the grid map matching the conditions.
+     *
+     * @param climbable        Does the tile need to be climbable.
+     * @param swimmable        Does the tile need to be swimmable.
+     * @param allowPlants      Does the tile need to allow plants?
+     * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
+     * @return A random {@link Vector2D} position.
+     */
+    public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange) {
+        Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
+
+        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
+            return getFreePositionInMap(swimmable, climbable, interactionRange);
         }
 
         return target;
