@@ -7,6 +7,12 @@ import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
+/**
+ * Represents a {@link State} an {@link Plant} can be in. <br>
+ * In this {@link State} the handled {@link Plant} is growing.
+ *
+ * @author Daniel Czeschner
+ */
 public class Growing extends State {
 
     Plant plant;
