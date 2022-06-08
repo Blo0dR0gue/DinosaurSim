@@ -8,21 +8,49 @@ import java.util.HashMap;
 import java.util.List;
 
 @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "unused"})
+
+/**
+ * Class responsible for statistics shown in GUI (methods are called from GUI)
+ * Functionality splits into singleStatistics for a single entity (Dinosaur) ans SimulationStatistics for an overall view at the simulation's end.
+ *
+ * @author Kai Grübener
+ * @see Dinosaur
+ * @see com.dhbw.thesim.core.entity.Dinosaur
+ * @see SimulationObject
+ * @see com.dhbw.thesim.core.entity.SimulationObject
+ */
+
 public class Statistics {
-    //ToDo comments
+
+    /**
+     * Variables:
+     * A list of lists of SimulationObjects -> Evaluating statistics out of multiple SimulationObject-lists to generate a informational graph out of the data
+     * @see SimulationObject
+     * startTime is set in Constructor to determine simulation runtime.
+     */
     private List<List<SimulationObject>> statSimObjects;
     private final long startTime;
 
+    /**
+     * Constructor for class Statistics ->  Called from GUI to generate a statistics-object
+     */
     public Statistics(){
         statSimObjects = new ArrayList<>();
         startTime = System.currentTimeMillis();
     }
 
+    /**
+     * Method appends list of SimulationObjects to statSimObjects
+     * @param simulationObjectList
+     */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList){
         statSimObjects.add(simulationObjectList);
     }
 
-    public void getSimulationStats(){
+    /**
+     * Method responsible for generation of overall statistics
+     */
+    public void getSimulationStats(){ //ToDo Rückgabe entsprechend GUI-Vorgaben implementieren & Methoden testen
         long simulationTime = System.currentTimeMillis() - startTime;
         List<Integer> livingDinosaurs = new ArrayList<>();
         List<List<Integer>> livingSpecies = new ArrayList<>();
@@ -75,6 +103,13 @@ public class Statistics {
         }
     }
 
+    /**
+     * Method responsible for singleStats for a single Dinosaur
+     * @param dino
+     * @param simulationObjectList
+     * @return Returning Hashmap with information according to a single Dinosaur-object
+     * @see Dinosaur
+     */
     public HashMap<String, Double> getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList){
         HashMap<String, Double> singleStats = new HashMap<>();
         singleStats.put("Hunger", dino.getNutrition());
@@ -87,6 +122,13 @@ public class Statistics {
         return singleStats;
     }
 
+    /**
+     * Private method called from getSingleStats() to calculate share of a specified species compared to overall population
+     * @param simulationObjectList
+     * @param dinoType
+     * @return Share of species
+     * @see Dinosaur
+     */
     private double calculateSpeciesPercentage(List<SimulationObject> simulationObjectList, String dinoType){
         int dinoCounter = 0;
         int typeCounter = 0;
@@ -99,6 +141,12 @@ public class Statistics {
         return (double)typeCounter/dinoCounter;
     }
 
+    /**
+     * Private method called from getSimulationStats() to get all dinosaur species appearing in simulation
+     * @param simulationObjectList
+     * @return List of all appearing species of Dinosaurs
+     * @see Dinosaur
+     */
     private List<String> getAllDinoSpecies(List<SimulationObject> simulationObjectList){
         List<String> allDinoSpecies = new ArrayList<>();
         for (SimulationObject obj : simulationObjectList){
