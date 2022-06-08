@@ -1,15 +1,27 @@
 package com.dhbw.thesim.stats;
 
+import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.SimulationObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Statistics {
 
-    public Statistics(){}
+    private List<List<SimulationObject>> statSimObjects;
 
-    //Todo Implement method + set return type
-    public void getSingleStats(){
+    public Statistics(){
+        statSimObjects = new ArrayList<>();
+    }
+
+    public void addSimulationObjectList(List<SimulationObject> simulationObjectList){
+        statSimObjects.add(simulationObjectList);
+    }
+
+    public void getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList){
 
     }
 
-    //ToDO Implement method + set return type
     public void getSimulationStats(){
 
     }
