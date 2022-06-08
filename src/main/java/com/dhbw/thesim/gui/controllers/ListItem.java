@@ -99,7 +99,7 @@ public class ListItem extends HBox {
     }
 
     public Integer getCount() {
-        return ((int) countProperty().get());
+        return countProperty().intValue();
     }
 
     public void setCount(Integer value) {
@@ -110,5 +110,4 @@ public class ListItem extends HBox {
     public DoubleProperty countProperty() {
         return slider.valueProperty();
     }
-
 }
