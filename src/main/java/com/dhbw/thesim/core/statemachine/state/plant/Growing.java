@@ -29,7 +29,8 @@ public class Growing extends State {
 
     @Override
     public void onExit() {
-        //Nothing to do here
+        //Make the plant visible again.
+        plant.getJavaFXObj().setVisible(true);
     }
 
     @Override

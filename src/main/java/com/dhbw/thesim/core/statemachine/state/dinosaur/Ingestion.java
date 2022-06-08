@@ -47,6 +47,7 @@ public class Ingestion extends State {
         ingestionTime -= deltaTime;
 
         if (ingestionTime <= 0) {
+            System.out.println(dinosaur.getTarget());
             if (dinosaur.getTarget() == null) {
                 //we drink
                 dinosaur.setHydration(dinosaur.getMaxHydration());
@@ -57,6 +58,7 @@ public class Ingestion extends State {
                 dinosaur.setTarget(null);
             }
             done = true;
+
         }
 
     }

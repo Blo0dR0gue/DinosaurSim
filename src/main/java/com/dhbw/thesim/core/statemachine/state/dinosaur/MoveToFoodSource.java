@@ -1,6 +1,7 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
@@ -151,8 +152,7 @@ public class MoveToFoodSource extends State {
 
     @Override
     public void onExit() {
-        if(!dinosaur.isChased())
-            dinosaur.setTarget(null);
+
     }
 
     @Override
