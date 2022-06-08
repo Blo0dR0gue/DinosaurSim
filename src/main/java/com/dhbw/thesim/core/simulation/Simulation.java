@@ -181,6 +181,16 @@ public class Simulation {
     }
 
     /**
+     * Checks if a simulation is finished
+     * TODO
+     *
+     * @return true, if ...
+     */
+    public boolean isOver() {
+        return false;
+    }
+
+    /**
      * Remove all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
      */
     public void removeDeletedObjects() {
@@ -263,7 +273,7 @@ public class Simulation {
 
             for (Vector2D vector : sorted) {
 
-                if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true)){
+                if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true)) {
                     return vector;
                 }
 
