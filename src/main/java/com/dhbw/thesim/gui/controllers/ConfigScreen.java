@@ -64,17 +64,15 @@ public class ConfigScreen extends AnchorPane {
      * @param dinos The {@link ArrayList} of dino GUI parameters returned by
      * {@link com.dhbw.thesim.impexp.Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
-    public void initialize(ArrayList<Object[]> dinos) {
+    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants) {
         initializeListeners();
 
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
-        for (Object[] dino :
-                dinos) {
+        for (Object[] dino : dinos) {
             String name = (String) dino[0];
-            //Image image = SpriteLibrary.getInstance().getImage((String) dino[1]); //TODO fix SpriteLibrary crash when image not found
-            Image image = new Image("/dinosaur/test.png");
+            Image image = SpriteLibrary.getInstance().getImage((String) dino[1]); //TODO fix SpriteLibrary crash when image not found
             int amount = (int) dino[2];
 
             ListItem dinoListItem = ListItem.newInstance();
@@ -87,7 +85,6 @@ public class ConfigScreen extends AnchorPane {
 
         //Toggle group for the map radio buttons, so only one radio button can be active at a time
         ToggleGroup mapGroup = new ToggleGroup();
-
         //Instantiating and initializing maps to add all of them to the list view of dinos
         MapListItem mapListItem1 = MapListItem.newInstance();
         mapListItem1.initialize("Map A", new Image("/map/map-a.png"));
@@ -97,22 +94,21 @@ public class ConfigScreen extends AnchorPane {
         mapListItem2.initialize("Map B", new Image("/map/map-b.png"));
         mapListItem2.radioButton.setToggleGroup(mapGroup);
 
-        GridPane.setFillWidth(dinoListView, true);
-
         for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
             mapListView.getItems().add(mapListItem);
         }
 
-        //Instantiating and initializing maps to add all of them to the list view of dinos
-        ListItem plantListItem1 = ListItem.newInstance();
-        plantListItem1.initialize("Farn", new Image("/plant/farn.png"), 2, plantListView);
-
-        ListItem plantListItem2 = ListItem.newInstance();
-        plantListItem2.initialize("Ginkgoales", new Image("/plant/plantTest.png"), 2, plantListView);
-
         GridPane.setFillWidth(dinoListView, true);
 
-        for (ListItem plantListItem : Arrays.asList(plantListItem1, plantListItem2)) {
+        for (Object[] plant : plants) {
+            String name = (String) plant[0];
+//            Image image = SpriteLibrary.getInstance().getImage((String) plant[1]); //TODO fix SpriteLibrary crash when image not found
+            Image image = new Image("/plant/plantTest.png");
+            int amount = (int) plant[2];
+
+            ListItem plantListItem = ListItem.newInstance();
+            plantListItem.initialize(name, image, amount, plantListView);
+
             plantListView.getItems().add(plantListItem);
         }
     }
@@ -142,6 +138,16 @@ public class ConfigScreen extends AnchorPane {
         return dinos;
     }
 
+    public HashMap<String, Integer> getPlantParams(){
+        HashMap<String, Integer> plants = new HashMap<>();
+
+        for (ListItem listItem :
+                plantListView.getItems()) {
+            plants.put(listItem.getText(), listItem.getCount());
+        }
+
+        return plants;
+    }
 
     public int getPlantGrowthRate(){
         return (int) plantGrowthSliderWithLabel.getValue();

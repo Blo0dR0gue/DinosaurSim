@@ -87,7 +87,7 @@ public class Display extends Application {
 
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO));
+        configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO), guiParams.get(JsonHandler.ScenarioConfigParams.PLANT));
 
         primaryStage.setScene(new Scene(configScreen));
 
