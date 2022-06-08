@@ -3,8 +3,7 @@ package com.dhbw.thesim.core.simulation;
 import com.dhbw.thesim.core.entity.SimulationObject;
 
 /**
- * TODO Comments
- * Updates the simulation data (Engine)
+ * Updates the simulation (Engine)
  *
  * @author Daniel Czeschner
  * @see Simulation
@@ -203,7 +202,6 @@ public class SimulationLoop {
      * @see #simulationLoop
      */
     public void startSimulationRunner() {
-        //TODO maybe use AnimationTimer (test performance)
         simulationLoop = new Thread(simLoopRunnable);
         simulationLoop.start();
     }
