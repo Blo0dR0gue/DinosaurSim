@@ -1,6 +1,8 @@
 package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.gui.controllers.ConfigScreen;
+import com.dhbw.thesim.impexp.Json2Objects;
+import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.application.Application;
 
 import javafx.fxml.FXMLLoader;
@@ -12,6 +14,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Main JavaFx Application
@@ -34,7 +38,7 @@ public class Display extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
 
         primaryStage.setTitle("TheSim - A Dinosaur-Simulation");
 
@@ -74,9 +78,17 @@ public class Display extends Application {
         //We don't want to exit the fullscreen when keys are pressed
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
+
+        JsonHandler.setDirectory();
+        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> guiParams = Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "");
+
+        //TODO guiParams.get(JsonHandler.ScenarioConfigParams.PLANT);
+        //TODO guiParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE);
+
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initializeListeners();
+        configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO));
+
         primaryStage.setScene(new Scene(configScreen));
 
         //Show the app

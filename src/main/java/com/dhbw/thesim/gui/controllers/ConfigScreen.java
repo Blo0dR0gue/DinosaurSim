@@ -1,5 +1,6 @@
 package com.dhbw.thesim.gui.controllers;
 
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.fxml.FXML;
@@ -9,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -55,31 +57,28 @@ public class ConfigScreen extends AnchorPane {
 
     /**
      * Method to initialize the Configuration Screen, its listeners and adding custom controls dynamically
+     * @param dinos
      */
-    public void initialize() {
+    public void initialize(ArrayList<Object[]> dinos) {
         initializeListeners();
 
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
-        //Instantiating and initializing dinos to add all of them to the list view of dinos
-        DinoListItem dinoListItem1 = DinoListItem.newInstance();
-        dinoListItem1.initialize("Tyrannosaurus Rex", new Image("/dinosaur/t-rex.png"), dinoListView);
+        for (Object[] dino :
+                dinos) {
+            String name = (String) dino[0];
+            //Image image = SpriteLibrary.getInstance().getImage((String) dino[1]); //TODO fix SpriteLibrary crash when image not found
+            Image image = new Image("/dinosaur/test.png");
+            int amount = (int) dino[2];
 
-        DinoListItem dinoListItem2 = DinoListItem.newInstance();
-        dinoListItem2.initialize("Oviraptor", new Image("/dinosaur/oviraptor.png"), dinoListView);
+            DinoListItem dinoListItem = DinoListItem.newInstance();
+            dinoListItem.initialize(name, image, amount, dinoListView);
 
-        DinoListItem dinoListItem3 = DinoListItem.newInstance();
-        dinoListItem3.initialize("Triceratops", new Image("/dinosaur/triceratops.png"), dinoListView);
-
-        DinoListItem dinoListItem4 = DinoListItem.newInstance();
-        dinoListItem4.initialize("Brontosaurus", new Image("/dinosaur/brontosaurus.png"), dinoListView);
-
-        GridPane.setFillWidth(dinoListView, true);
-
-        for (DinoListItem dinoListItem : Arrays.asList(dinoListItem1, dinoListItem2, dinoListItem3, dinoListItem4)) {
             dinoListView.getItems().add(dinoListItem);
         }
+
+        GridPane.setFillWidth(dinoListView, true);
 
         //Toggle group for the map radio buttons, so only one radio button can be active at a time
         ToggleGroup mapGroup = new ToggleGroup();

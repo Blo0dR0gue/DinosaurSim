@@ -56,9 +56,11 @@ public class DinoListItem extends HBox {
     /**
      * Method to initialize the Dino list item, its listeners and setting the label text and image url
      */
-    public void initialize(String labelText, Image image, ListView<DinoListItem> dinoListView){
+    public void initialize(String labelText, Image image, int amount, ListView<DinoListItem> dinoListView){
         setText(labelText);
         setImage(image);
+        slider.setValue((double) amount);
+
         DinoListItem dinoListItem = this;
         button_remove.setOnAction(new EventHandler<ActionEvent>() {
             @Override
