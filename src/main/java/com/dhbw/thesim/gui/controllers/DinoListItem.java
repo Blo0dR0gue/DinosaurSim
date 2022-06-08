@@ -59,11 +59,12 @@ public class DinoListItem extends HBox {
     public void initialize(String labelText, Image image, ListView<DinoListItem> dinoListView){
         setText(labelText);
         setImage(image);
-        DinoListItem dino = this;
+        DinoListItem dinoListItem = this;
         button_remove.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                dinoListView.getItems().remove(dino);
+                dinoListView.getItems().remove(dinoListItem);
+                //TODO remove dino from hashmap that is passed to simulation
             }
         });
     }
