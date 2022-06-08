@@ -64,7 +64,7 @@ public class ConfigScreen extends AnchorPane {
      * @param dinos The {@link ArrayList} of dino GUI parameters returned by
      * {@link com.dhbw.thesim.impexp.Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
-    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants) {
+    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, ArrayList<Object[]> plantGrowth) {
         initializeListeners();
 
         //TODO min. 2 dino-arten, min. 1 dino pro art
@@ -81,8 +81,6 @@ public class ConfigScreen extends AnchorPane {
             dinoListView.getItems().add(dinoListItem);
         }
 
-        GridPane.setFillWidth(dinoListView, true);
-
         //Toggle group for the map radio buttons, so only one radio button can be active at a time
         ToggleGroup mapGroup = new ToggleGroup();
         //Instantiating and initializing maps to add all of them to the list view of dinos
@@ -98,8 +96,6 @@ public class ConfigScreen extends AnchorPane {
             mapListView.getItems().add(mapListItem);
         }
 
-        GridPane.setFillWidth(dinoListView, true);
-
         for (Object[] plant : plants) {
             String name = (String) plant[0];
 //            Image image = SpriteLibrary.getInstance().getImage((String) plant[1]); //TODO fix SpriteLibrary crash when image not found
@@ -111,6 +107,8 @@ public class ConfigScreen extends AnchorPane {
 
             plantListView.getItems().add(plantListItem);
         }
+
+        plantGrowthSliderWithLabel.setValue((double) plantGrowth.get(0)[0]);
     }
 
     /**
@@ -149,7 +147,7 @@ public class ConfigScreen extends AnchorPane {
         return plants;
     }
 
-    public int getPlantGrowthRate(){
-        return (int) plantGrowthSliderWithLabel.getValue();
+    public double getPlantGrowthRate(){
+        return plantGrowthSliderWithLabel.getValue();
     }
 }

@@ -78,7 +78,6 @@ public class Display extends Application {
         //We don't want to exit the fullscreen when keys are pressed
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
-
         JsonHandler.setDirectory();
         HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> guiParams = Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "");
 
@@ -87,7 +86,7 @@ public class Display extends Application {
 
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO), guiParams.get(JsonHandler.ScenarioConfigParams.PLANT));
+        configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO), guiParams.get(JsonHandler.ScenarioConfigParams.PLANT), guiParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH));
 
         primaryStage.setScene(new Scene(configScreen));
 
