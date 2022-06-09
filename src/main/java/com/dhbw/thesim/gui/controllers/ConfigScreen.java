@@ -113,7 +113,7 @@ public class ConfigScreen extends AnchorPane {
         });
 
         maxSteps.slider.valueProperty()
-                .addListener((observableValue, oldValue, newValue) -> maxSteps.label.textProperty().setValue(
+                .addListener((observableValue, oldValue, newValue) -> maxSteps.sliderValueLabel.textProperty().setValue(
                         String.valueOf(Math.round(newValue.doubleValue()/10)*10)
                 ));
     }
