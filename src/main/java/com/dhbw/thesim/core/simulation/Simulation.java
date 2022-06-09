@@ -87,9 +87,8 @@ public class Simulation {
      * @param dinosaurs                 Map with all dinosaurs, which should be added to this simulation. Key = Dinosaur-Name Value = Amount.
      * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
      * @param plantGrowthRate           The growth rate for each plant.
-     *///TODO move backgroundGraphicsContext to drawMap function and make public. Also make spawnObjects public and don't call in constructor.
-    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, double plantGrowthRate) {
-        //TODO load via json2objects
+     */
+    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate) {
         this.random = new Random();
         this.simulationMap = new SimulationMap(landscapeName);
         this.backgroundGraphics = backgroundGraphicsContext;
@@ -211,10 +210,10 @@ public class Simulation {
 
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
-            simulationOverlay.getChildren().add(obj.getCircle());
+            //simulationOverlay.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
                 //TODO remove test objects
-                simulationOverlay.getChildren().add(obj.getTest());
+                //simulationOverlay.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange()));
             } else {
@@ -271,11 +270,11 @@ public class Simulation {
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
         List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
 
-        List<Vector2D> sorted = sortByDistance(waterSourcesInRange, position);
+        sortByDistance(waterSourcesInRange, position);
 
-        if (!sorted.isEmpty()) {
+        if (!waterSourcesInRange.isEmpty()) {
 
-            for (Vector2D vector : sorted) {
+            for (Vector2D vector : waterSourcesInRange) {
 
                 if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true)) {
                     return vector;
@@ -304,9 +303,9 @@ public class Simulation {
         List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb, strength);
 
         if (dietType != Dinosaur.dietType.omnivore) {
-            List<SimulationObject> sorted = sortByDistance(position, inRange);
-            if (!sorted.isEmpty())
-                return sorted.get(0);
+            sortByDistance(position, inRange);
+            if (!inRange.isEmpty())
+                return inRange.get(0);
             return null;
         } else {
             //An omnivore prioritized plants. So if a plant is in range this will be the target.
@@ -378,11 +377,9 @@ public class Simulation {
      *
      * @param position The {@link Vector2D} we want sort to.
      * @param list     The list with the {@link SimulationObject}, which should be sorted.
-     * @return The sorted list.
      */
-    public List<SimulationObject> sortByDistance(Vector2D position, List<SimulationObject> list) {
+    public void sortByDistance(Vector2D position, List<SimulationObject> list) {
         list.sort(Comparator.comparingDouble(o -> Vector2D.distance(position, o.getPosition())));
-        return list;
     }
 
     /**
@@ -390,41 +387,9 @@ public class Simulation {
      *
      * @param position The {@link Vector2D} we want sort to.
      * @param list     The list with the {@link Vector2D}, which should be sorted.
-     * @return The sorted list.
      */
-    public List<Vector2D> sortByDistance(List<Vector2D> list, Vector2D position) {
+    public void sortByDistance(List<Vector2D> list, Vector2D position) {
         list.sort(Comparator.comparingDouble(o -> Vector2D.distance(position, o)));
-        return list;
-    }
-
-    /**
-     * Gets all visible simulation objects in range.
-     *
-     * @param position  The position {@link Vector2D} we want to check from.
-     * @param viewRange The radius, how far radially we want to check.
-     * @return A {@link ArrayList<SimulationObject>} with all visible {@link SimulationObject}.
-     */
-    public List<SimulationObject> getAllSimulationObjectsInRange(Vector2D position, double viewRange) {
-
-        List<SimulationObject> simulationObjectList = new ArrayList<>();
-
-        //Check all handled simulation objects.
-        for (SimulationObject simulationObject : simulationObjects) {
-
-            //We don't want to check our self.
-            if (simulationObject.getPosition() != position) {
-
-                //Is the other simulation object visible?
-                if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
-                    //Add it to the list, if it is visible.
-                    simulationObjectList.add(simulationObject);
-                }
-
-            }
-
-        }
-
-        return simulationObjectList;
     }
 
     /**
@@ -487,7 +452,6 @@ public class Simulation {
     }
 
     /**
-     * TODO optimize?
      * Checks if a {@link SimulationObject} can move to a position.
      *
      * @param start                  The {@link Vector2D} position of the {@link SimulationObject}.
@@ -791,7 +755,6 @@ public class Simulation {
 
     /**
      * Checks, if a line segment collide with a view range circle.
-     * TODO fix, that a dinosaur cant move through a object (the line can fit through a hole a dinosaur should not :D)
      *
      * @param circleOrigin     The origin {@link Vector2D} of the range circle.
      * @param radius           The radius of the range circle.
