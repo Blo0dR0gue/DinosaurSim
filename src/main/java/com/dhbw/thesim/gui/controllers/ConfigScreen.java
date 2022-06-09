@@ -8,8 +8,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -51,6 +50,8 @@ public class ConfigScreen extends AnchorPane {
     public SliderWithLabel maxSteps;
     @FXML
     public SliderWithLabel maxRuntime;
+    @FXML
+    public SideBar sideBar;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -74,8 +75,6 @@ public class ConfigScreen extends AnchorPane {
      * {@link com.dhbw.thesim.impexp.Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
     public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, ArrayList<Object[]> plantGrowth) {
-        initializeListeners();
-
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
@@ -121,6 +120,8 @@ public class ConfigScreen extends AnchorPane {
 
         GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));
         GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
+
+        initializeListeners();
     }
 
     /**
@@ -166,5 +167,13 @@ public class ConfigScreen extends AnchorPane {
 
     public double getPlantGrowthRate(){
         return plantGrowthSliderWithLabel.getValue();
+    }
+
+    public double getMaxRuntime(){
+        return maxRuntime.getValue();
+    }
+
+    public double getMaxSteps(){
+        return maxSteps.getValue();
     }
 }

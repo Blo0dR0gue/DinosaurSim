@@ -3,9 +3,6 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.stage.Screen?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.control.Label?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.text.Font?>
@@ -13,6 +10,10 @@
 <?import javafx.scene.control.ToggleGroup?>
 <?import com.dhbw.thesim.gui.controllers.SliderWithLabel?>
 <?import javafx.scene.control.ListView?>
+<?import com.dhbw.thesim.gui.controllers.SideBar?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <fx:root type="javafx.scene.layout.AnchorPane" fx:id="container"
          prefWidth="${screen.bounds.width}" prefHeight="${screen.bounds.height}"
          xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
@@ -101,29 +102,19 @@
             </font>
         </RadioButton>
     </GridPane>
-    <StackPane style="-fx-background-color: #808080;"
-               prefWidth="${container.width*0.2}" prefHeight="${container.height}"
-               AnchorPane.rightAnchor="0.0">
-        <Label text="Dinosaurier&#13;Simulation" textFill="white" textAlignment="CENTER"
-               StackPane.alignment="TOP_CENTER">
-            <font>
-                <Font size="20.0"/>
-            </font>
-            <StackPane.margin>
-                <Insets top="10.0"/>
-            </StackPane.margin>
-        </Label>
-        <fx:define>
-            <Image fx:id="playBtnImage" url="/controls/play.png"/>
-        </fx:define>
-        <Button fx:id="startSimulationButton" style="-fx-background-color: transparent;"
-                StackPane.alignment="BOTTOM_CENTER">
-            <StackPane.margin>
-                <Insets bottom="30.0"/>
-            </StackPane.margin>
-            <graphic>
-                <ImageView fitWidth="75.0" fitHeight="75.0" image="$playBtnImage"/>
-            </graphic>
-        </Button>
-    </StackPane>
+    <SideBar fx:id="sideBar" prefWidth="${container.width*0.2}" prefHeight="${container.height}" AnchorPane.rightAnchor="0.0">
+        <footer>
+            <fx:define>
+                <Image fx:id="playBtnImage" url="/controls/play.png"/>
+            </fx:define>
+            <Button fx:id="startSimulationButton" style="-fx-background-color: transparent;">
+                <HBox.margin>
+                    <Insets bottom="30.0"/>
+                </HBox.margin>
+                <graphic>
+                    <ImageView fitWidth="75.0" fitHeight="75.0" image="$playBtnImage"/>
+                </graphic>
+            </Button>
+        </footer>
+    </SideBar>
 </fx:root>

@@ -3,22 +3,17 @@ package com.dhbw.thesim.gui;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.gui.controllers.ConfigScreen;
+import com.dhbw.thesim.gui.controllers.SideBar;
 import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.Font;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 /**
@@ -31,10 +26,10 @@ public class SimulationOverlay extends BorderPane {
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
-    private Pane sidebar;
     private SimulationLoop simulationLoop;
     public AnchorPane centerPane;
-    private Boolean simulationIsRunning ;
+    private Boolean simulationIsRunning;
+    private SideBar sideBar;
 
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
@@ -52,7 +47,7 @@ public class SimulationOverlay extends BorderPane {
 
         //Add the Canvas and the Sidebar to the AnchorPane
         centerPane.getChildren().add(backgroundCanvas);
-        centerPane.getChildren().add(sidebar);
+        centerPane.getChildren().add(sideBar);
 
         //Lay out the AnchorPane in the center position of the BorderPane
         setCenter(centerPane);
@@ -61,6 +56,8 @@ public class SimulationOverlay extends BorderPane {
         Simulation sim = new Simulation("test", canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
         simulationLoop = new SimulationLoop(1, 1, sim,50, 1);
+
+        simulationIsRunning = true;
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -99,43 +96,31 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void createSideBar() {
-        sidebar = new StackPane();
+        sideBar = SideBar.newInstance();
 
-        sidebar.setPrefWidth(Display.adjustScale(300, Display.SCALE_X));
-        sidebar.setPrefHeight(Display.adjustScale(1080, Display.SCALE_Y));
+        sideBar.setPrefWidth(Display.adjustScale(300, Display.SCALE_X));
+        sideBar.setPrefHeight(Display.adjustScale(1080, Display.SCALE_Y));
 
-        AnchorPane.setRightAnchor(sidebar, 0.0);
-
-        sidebar.setBackground(new Background(new BackgroundFill(Color.web("#808080"), CornerRadii.EMPTY, Insets.EMPTY)));
-
-        Label title = new Label("Dinosaurier\nSimulation");
-        title.setTextFill(Color.WHITE);
-        title.setTextAlignment(TextAlignment.CENTER);
-        title.setFont(new Font(20.0));
-        sidebar.getChildren().add(title);
-        StackPane.setAlignment(title, Pos.TOP_CENTER);
-        StackPane.setMargin(title, new Insets(10.0,0.0,0.0,0.0));
+        AnchorPane.setRightAnchor(sideBar, 0.0);
 
         //Add the control buttons to the sidebar and add a click listener to each
-        Button playButton = addControlButtonToSidebar("/controls/play.png");
+        Button playButton = addControlButtonToSideBar("/controls/play.png");
         playButton.setOnAction(e -> {
             if (!simulationIsRunning) {
                 simulationLoop.togglePause();
-                simulationIsRunning = !simulationIsRunning;
+                simulationIsRunning = true ;
             }
         });
-        StackPane.setAlignment(playButton, Pos.BOTTOM_LEFT);
-        StackPane.setMargin(playButton, new Insets(0.0,0.0,10.0,0.0));
-        Button pauseButton = addControlButtonToSidebar("/controls/pause.png");
+
+        Button pauseButton = addControlButtonToSideBar("/controls/pause.png");
         pauseButton.setOnAction(e -> {
             if (simulationIsRunning) {
                 simulationLoop.togglePause();
-                simulationIsRunning = !simulationIsRunning;
+                simulationIsRunning = false;
             }
         });
-        StackPane.setAlignment(pauseButton, Pos.BOTTOM_CENTER);
-        StackPane.setMargin(pauseButton, new Insets(0.0,0.0,10.0,0.0));
-        Button stopButton = addControlButtonToSidebar("/controls/stop.png");
+
+        Button stopButton = addControlButtonToSideBar("/controls/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
             Stage window = (Stage) stopButton.getScene().getWindow();
@@ -144,11 +129,9 @@ public class SimulationOverlay extends BorderPane {
 
             window.setFullScreen(true);
         });
-        StackPane.setAlignment(stopButton, Pos.BOTTOM_RIGHT);
-        StackPane.setMargin(stopButton, new Insets(0.0,0.0,10.0,0.0));
     }
 
-    private Button addControlButtonToSidebar(String controlImgUrl) {
+    private Button addControlButtonToSideBar(String controlImgUrl) {
         Image controlImg = new Image(controlImgUrl);
         ImageView controlImageView = new ImageView(controlImg);
         controlImageView.setFitHeight(40.0);
@@ -156,7 +139,7 @@ public class SimulationOverlay extends BorderPane {
         Button controlButton = new Button();
         controlButton.setGraphic(controlImageView);
         controlButton.styleProperty().set("-fx-background-color: transparent;");
-        sidebar.getChildren().add(controlButton);
+        sideBar.bottomContainer.getChildren().add(controlButton);
 
         return controlButton;
     }
