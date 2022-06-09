@@ -80,43 +80,11 @@ public class ConfigScreen extends AnchorPane {
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
-        for (Object[] dino : dinos) {
-            String name = (String) dino[0];
-            Image image = SpriteLibrary.getInstance().getImage((String) dino[1]); //TODO fix SpriteLibrary crash when image not found
-            int amount = (int) dino[2];
+        populateMapListView();
 
-            ListItem dinoListItem = ListItem.newInstance();
-            dinoListItem.initialize(name, image, amount, dinoListView);
+        populateListView(dinos, dinoListView);
 
-            dinoListView.getItems().add(dinoListItem);
-        }
-
-        //Toggle group for the map radio buttons, so only one radio button can be active at a time
-        ToggleGroup mapGroup = new ToggleGroup();
-        //Instantiating and initializing maps to add all of them to the list view of dinos
-        MapListItem mapListItem1 = MapListItem.newInstance();
-        mapListItem1.initialize("Map A", new Image("/map/map-a.png"));
-        mapListItem1.radioButton.setToggleGroup(mapGroup);
-
-        MapListItem mapListItem2 = MapListItem.newInstance();
-        mapListItem2.initialize("Map B", new Image("/map/map-b.png"));
-        mapListItem2.radioButton.setToggleGroup(mapGroup);
-
-        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
-            mapListView.getItems().add(mapListItem);
-        }
-
-        for (Object[] plant : plants) {
-            String name = (String) plant[0];
-//            Image image = SpriteLibrary.getInstance().getImage((String) plant[1]); //TODO fix SpriteLibrary crash when image not found
-            Image image = new Image("/plant/plantTest.png");
-            int amount = (int) plant[2];
-
-            ListItem plantListItem = ListItem.newInstance();
-            plantListItem.initialize(name, image, amount, plantListView);
-
-            plantListView.getItems().add(plantListItem);
-        }
+        populateListView(plants, plantListView);
 
         plantGrowthSliderWithLabel.setValue(plantGrowthRate);
 
@@ -143,6 +111,36 @@ public class ConfigScreen extends AnchorPane {
             maxRuntime.setVisible(currentSelection.equals(auto));
             maxSteps.setVisible(currentSelection.equals(manual));
         });
+    }
+
+    private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItem> listView) {
+        for (Object[] objects : objectsList) {
+            String name = (String) objects[0];
+            Image image = SpriteLibrary.getInstance().getImage((String) objects[1]); //TODO fix SpriteLibrary crash when image not found
+            int amount = (int) objects[2];
+
+            ListItem listItem = ListItem.newInstance();
+            listItem.initialize(name, image, amount, listView);
+
+            listView.getItems().add(listItem);
+        }
+    }
+
+    private void populateMapListView() {
+        //Toggle group for the map radio buttons, so only one radio button can be active at a time
+        ToggleGroup mapGroup = new ToggleGroup();
+        //Instantiating and initializing maps to add all of them to the list view of dinos
+        MapListItem mapListItem1 = MapListItem.newInstance();
+        mapListItem1.initialize("Map A", new Image("/map/map-a.png"));
+        mapListItem1.radioButton.setToggleGroup(mapGroup);
+
+        MapListItem mapListItem2 = MapListItem.newInstance();
+        mapListItem2.initialize("Map B", new Image("/map/map-b.png"));
+        mapListItem2.radioButton.setToggleGroup(mapGroup);
+
+        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
+            mapListView.getItems().add(mapListItem);
+        }
     }
 
     public HashMap<String, Integer> getDinoParams(){
