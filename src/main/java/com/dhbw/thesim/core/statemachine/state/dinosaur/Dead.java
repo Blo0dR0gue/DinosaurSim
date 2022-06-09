@@ -44,6 +44,11 @@ public class Dead extends State {
     }
 
     @Override
+    public void onExit() {
+        //Nothing to do here.
+    }
+
+    @Override
     public void initTransitions() {
         //Dead = end
     }

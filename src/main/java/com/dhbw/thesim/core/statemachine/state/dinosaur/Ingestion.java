@@ -47,6 +47,7 @@ public class Ingestion extends State {
         ingestionTime -= deltaTime;
 
         if (ingestionTime <= 0) {
+            System.out.println(dinosaur.getTarget());
             if (dinosaur.getTarget() == null) {
                 //we drink
                 dinosaur.setHydration(dinosaur.getMaxHydration());
@@ -57,15 +58,18 @@ public class Ingestion extends State {
                 dinosaur.setTarget(null);
             }
             done = true;
+
         }
 
     }
 
     @Override
+    public void onExit() {
+        //Nothing to do here
+    }
+
+    @Override
     public void initTransitions() {
-        //TODO check transitions / transitions oder
-
-
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 

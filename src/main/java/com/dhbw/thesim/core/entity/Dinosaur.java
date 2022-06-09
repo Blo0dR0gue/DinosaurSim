@@ -26,22 +26,23 @@ public class Dinosaur extends SimulationObject {
     }
 
     // TODO comments pls; make final
-    private double nutritionFull;
-    private double hydrationFull;
+    private final double nutritionFull;
+    private final double hydrationFull;
     private double nutrition;
     private double hydration;
     private double strength;
     private double speed;
-    private double reproductionRate;
+    private final double reproductionRate;
     private double weight;
     private double length;
     private double height;
-    private boolean canSwim;
-    private boolean canClimb;
-    private dietType diet;
-    private double viewRange;
+    private final boolean canSwim;
+    private final boolean canClimb;
+    private final dietType diet;
+    private final double viewRange;
+    private final long timeOfBirth;
 
-    private char gender;
+    private final char gender;
     private double reproductionValue;
 
     /**
@@ -56,16 +57,10 @@ public class Dinosaur extends SimulationObject {
     private Dinosaur partner;
 
     //TODO check values?
-    private final static double nutritionReductionRate = 0.1;
-    private final static double hydrationReductionRate = 0.25;
-    private final static double reproductionValueFull = 100;
+    private static final double NUTRITION_REDUCTION_RATE = 0.1;
+    private static final double HYDRATION_REDUCTION_RATE = 0.25;
 
-    public final static double PROXIMITY_RANGE = 5;
-
-    //TODO remove, if json2object is implemented
-    public Dinosaur() {
-        super("test", 0, null);
-    }
+    public static final double PROXIMITY_RANGE = 5;
 
     /**
      * Constructor for a dinosaur object
@@ -75,9 +70,13 @@ public class Dinosaur extends SimulationObject {
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
                     double interactionRange, char gender) {
         super(name, interactionRange, image);
-        //TODO
 
-        this.diet = diet == 'a' ? dietType.omnivore : diet == 'f' ? dietType.carnivore : dietType.herbivore;
+        if (diet == 'a')
+            this.diet = dietType.omnivore;
+        else if (diet == 'f')
+            this.diet = dietType.carnivore;
+        else
+            this.diet = dietType.herbivore;
 
         this.nutrition = nutrition;
         this.hydration = hydration;
@@ -91,6 +90,7 @@ public class Dinosaur extends SimulationObject {
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
         this.viewRange = viewRange;
+        this.timeOfBirth = System.currentTimeMillis();
 
         this.nutritionFull = this.nutrition;
         this.hydrationFull = this.hydration;
@@ -102,7 +102,6 @@ public class Dinosaur extends SimulationObject {
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = reproductionValueFull;
 
-        //TODO check - maybe in states?
         this.target = null;
         this.isChased = false;
 
@@ -122,7 +121,7 @@ public class Dinosaur extends SimulationObject {
         //TODO move to stateMachineTick?
         currentState.update(deltaTime, currentSimulationData);
 
-        decreaseLifeStats(deltaTime);
+        updateStats(deltaTime);
     }
 
     @Override
@@ -147,11 +146,10 @@ public class Dinosaur extends SimulationObject {
      *
      * @param deltaTime The time since the last update call in seconds.
      */
-    private void decreaseLifeStats(double deltaTime) {
-        this.hydration -= hydrationReductionRate * deltaTime;
-        this.nutrition -= nutritionReductionRate * deltaTime;
-        if (this.reproductionValue<reproductionValueFull)
-            this.reproductionValue += reproductionRate * deltaTime;
+    private void updateStats(double deltaTime) {
+        this.hydration -= HYDRATION_REDUCTION_RATE * deltaTime;
+        this.nutrition -= NUTRITION_REDUCTION_RATE * deltaTime;
+        this.reproductionValue += reproductionValue * deltaTime;
     }
 
     /**
@@ -237,6 +235,8 @@ public class Dinosaur extends SimulationObject {
 
     public Dinosaur getPartner() {
         return partner;
+    public long getTimeOfBirth() {
+        return timeOfBirth;
     }
 
     public boolean isChased() {

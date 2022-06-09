@@ -38,7 +38,7 @@ public abstract class StateMachine {
         State nextState = currentState.checkTransitions(simulation);
 
         if (nextState != null) {
-            //TODO remove debug message
+            currentState.onExit();
             System.out.println(this + ": Transition to " + nextState.getClass().getSimpleName());
             setState(nextState);
         }

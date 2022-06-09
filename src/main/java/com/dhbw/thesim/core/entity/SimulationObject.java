@@ -12,10 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
-
-import java.util.Objects;
 
 /**
  * Represents an object, which is handled in our simulation
@@ -64,7 +60,7 @@ public abstract class SimulationObject extends StateMachine {
      * @param interactionRange The range, in which collisions are handled.
      * @param image            The image, which is used for the representation for this object.
      */
-    public SimulationObject(String type, double interactionRange, Image image) {
+    protected SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
         this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
@@ -116,7 +112,7 @@ public abstract class SimulationObject extends StateMachine {
         imageObj.setImage(image);
         //TODO dont center image. center it to the feet, because it can look like a dinosaur is walking through water. (Simulation calculations need to be changed)
         renderOffset.setX(image.getWidth() / 2);
-        renderOffset.setY(image.getHeight() / 2);
+        renderOffset.setY(image.getHeight() / 2 + Dinosaur.PROXIMITY_RANGE);
     }
 
     /**
@@ -143,12 +139,16 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
-     * Flips the image vertically.
+     * Flips the image facing a direction. <br>
+     * The prerequisite is that the picture is facing to the right.
+     *
+     * @param direction The {@link Vector2D} direction.
      */
-    public void flipImage() {
-        Translate flipTranslation = new Translate(0, imageObj.getImage().getHeight());
-        Rotate flipRotation = new Rotate(180, Rotate.X_AXIS);
-        imageObj.getTransforms().addAll(flipTranslation, flipRotation);
+    public void flipImage(Vector2D direction) {
+        if (direction.getX() < 0)
+            imageObj.setScaleX(-1);
+        else
+            imageObj.setScaleX(1);
     }
 
     /**
@@ -166,7 +166,7 @@ public abstract class SimulationObject extends StateMachine {
      * @param position The new {@link Vector2D} for the position.
      */
     public void setPosition(Vector2D position) {
-        if (Math.abs(position.getX()) > SimulationMap.width * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.height * Tile.TILE_SIZE) {
+        if (Math.abs(position.getX()) > SimulationMap.WIDTH * Tile.TILE_SIZE && Math.abs(position.getY()) > SimulationMap.HEIGHT * Tile.TILE_SIZE) {
             position = new Vector2D(0, 0);
         }
         this.position = position;

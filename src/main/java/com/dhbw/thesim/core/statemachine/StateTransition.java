@@ -10,8 +10,15 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  *
  * @author Daniel Czeschner
  */
-public record StateTransition(StateFactory.States nextState,
-                              ITransition stateTransition) {
+public class StateTransition {
+
+    StateFactory.States nextState;
+    ITransition stateTransition;
+
+    public StateTransition(StateFactory.States nextState, ITransition stateTransition) {
+        this.nextState = nextState;
+        this.stateTransition = stateTransition;
+    }
 
     /**
      * Should we transition to the {@link #nextState}.

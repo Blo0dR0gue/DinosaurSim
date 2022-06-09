@@ -21,15 +21,20 @@ public class Tile {
     /**
      * The image, which is rendered for this {@link Tile}.
      */
-    private Image background;
+    private final Image background;
     /**
      * Defines, if this tile can only be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can swim.
      */
-    private boolean swimmable;
+    private final boolean swimmable;
     /**
      * Defines, iff this tile can ony be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can climb.
      */
-    private boolean climbable;
+    private final boolean climbable;
+
+    /**
+     * Does this tile can contain plants?
+     */
+    private final boolean canContainPlants;
 
     private final int gridX;
     private final int gridY;
@@ -49,12 +54,13 @@ public class Tile {
      * @param image The background for this {@link Tile} object.
      * @see #background
      */
-    public Tile(Image image, int gridX, int gridY, boolean swimmable, boolean climbable) {
+    public Tile(Image image, int gridX, int gridY, boolean swimmable, boolean climbable, boolean canContainPlants) {
         this.background = image;
         this.gridX = gridX;
         this.gridY = gridY;
         this.swimmable = swimmable;
         this.climbable = climbable;
+        this.canContainPlants = canContainPlants;
     }
 
     //region getter & setter
@@ -68,6 +74,10 @@ public class Tile {
 
     public boolean isClimbable() {
         return climbable;
+    }
+
+    public boolean arePlantsAllowed() {
+        return canContainPlants;
     }
 
     public int getGridX() {

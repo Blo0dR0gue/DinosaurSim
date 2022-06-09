@@ -57,10 +57,16 @@ public class Escape extends State {
         if (target != null) {
 
             direction = dinosaur.getPosition().directionToTarget(target);
+            dinosaur.flipImage(direction);
 
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
 
         }
+
+    }
+
+    @Override
+    public void onExit() {
 
     }
 

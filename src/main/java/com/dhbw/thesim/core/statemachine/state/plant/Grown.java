@@ -7,6 +7,12 @@ import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
+/**
+ * Represents a {@link State} an {@link Plant} can be in. <br>
+ * In this {@link State} the handled {@link Plant} is grown and can be eaten.
+ *
+ * @author Daniel Czeschner
+ */
 public class Grown extends State {
 
     Plant plant;
@@ -22,8 +28,15 @@ public class Grown extends State {
     }
 
     @Override
-    public void update(double deltaTime, Simulation simulation) {
+    public void onExit() {
+        //TODO maybe don't hide the plant. instead add a other image for a plant.
+        //Hide the plant
+        plant.getJavaFXObj().setVisible(false);
+    }
 
+    @Override
+    public void update(double deltaTime, Simulation simulation) {
+        //Nothing to do here
     }
 
     @Override

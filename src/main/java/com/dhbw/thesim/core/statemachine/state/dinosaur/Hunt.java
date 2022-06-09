@@ -54,7 +54,7 @@ public class Hunt extends State {
 
         if (direction != null) {
 
-            //Reset the chased state (Can be retested, if multiple dinos hunt the target.)
+            //set the chased state (Can be retested, if multiple dinos hunt the target.)
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 targetDino.setIsChased(true);
             }
@@ -62,8 +62,7 @@ public class Hunt extends State {
             target = dinosaur.getTarget().getPosition();
             direction = dinosaur.getPosition().directionToTarget(target);
 
-            //TODO Debug variable
-            //dinosaur.setTest(target);
+            dinosaur.flipImage(direction);
 
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
 
@@ -78,9 +77,15 @@ public class Hunt extends State {
     }
 
     @Override
-    public void initTransitions() {
-        //TODO check transitions / transitions oder
+    public void onExit() {
+        //reset the target
+        if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
+            targetDino.setIsChased(false);
+        }
+    }
 
+    @Override
+    public void initTransitions() {
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
@@ -91,17 +96,18 @@ public class Hunt extends State {
         addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
 
         //The other dinosaur escaped
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
+        addTransition(new StateTransition(
+                StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null &&
+                !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
 
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
 
-        //If we have a simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to wander.
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
+        //If we have a simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to moveToFoodSource.
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), simulationObject.getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
-
     }
 
     private boolean reached(Simulation simulation) {
