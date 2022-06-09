@@ -27,6 +27,7 @@ public class Display extends Application {
 
     public static final double SCALE_X = Screen.getPrimary().getOutputScaleX();
     public static final double SCALE_Y = Screen.getPrimary().getOutputScaleY();
+    public static Scene configScene;
 
     /**
      * @param toScale Dimension Parameter to be scaled to {@code scale}
@@ -88,7 +89,8 @@ public class Display extends Application {
         ConfigScreen configScreen = ConfigScreen.newInstance();
         configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO), guiParams.get(JsonHandler.ScenarioConfigParams.PLANT), ((double) guiParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0]));
 
-        primaryStage.setScene(new Scene(configScreen));
+        configScene = new Scene(configScreen);
+        primaryStage.setScene(configScene);
 
         //Show the app
         primaryStage.show();

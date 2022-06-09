@@ -2,7 +2,6 @@ package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
 import javafx.fxml.FXML;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -44,8 +43,7 @@ public class StatisticsEndcard extends AnchorPane {
     private void initializeListeners() {
         restartSimulationButton.setOnAction(event -> {
             Stage window = (Stage) restartSimulationButton.getScene().getWindow();
-            ConfigScreen configScreen = ConfigScreen.newInstance();
-            window.setScene(new Scene(configScreen));
+            window.setScene(Display.configScene);
             window.setFullScreen(true);
         });
     }
