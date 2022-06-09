@@ -19,12 +19,11 @@ import java.util.List;
  * @see SimulationObject
  * @see com.dhbw.thesim.core.entity.SimulationObject
  */
-
 public class Statistics {
 
     /**
      * Variables:
-     * A list of lists of SimulationObjects -> Evaluating statistics out of multiple SimulationObject-lists to generate a informational graph out of the data
+     * A list of lists of SimulationObjects -> Evaluating statistics out of multiple SimulationObject-lists to generate an informational graph out of the data
      * @see SimulationObject
      * startTime is set in Constructor to determine simulation runtime.
      */
@@ -41,7 +40,7 @@ public class Statistics {
 
     /**
      * Method appends list of SimulationObjects to statSimObjects
-     * @param simulationObjectList
+     * @param simulationObjectList The list of all current simulationiObjects
      */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList){
         statSimObjects.add(simulationObjectList);
@@ -79,7 +78,7 @@ public class Statistics {
                     for (int i=0; i<allDinoSpecies.size(); i++){
                         if (obj.getType().equals(allDinoSpecies.get(i))){ livingSpeciesCounter.set(i, livingSpeciesCounter.get(i)+1); }
                     }
-                    if (((Dinosaur) obj).getDiet() == "herbivore"){
+                    if (((Dinosaur) obj).getDiet().equals(Dinosaur.dietType.herbivore)){
                         livingChasedCounter++;
                         nutritionChasedCounter += ((Dinosaur) obj).getNutrition();
                         hydrationChasedCounter += ((Dinosaur) obj).getHydration();
@@ -105,8 +104,8 @@ public class Statistics {
 
     /**
      * Method responsible for singleStats for a single Dinosaur
-     * @param dino
-     * @param simulationObjectList
+     * @param dino The dinosaur objects to get its stat-values
+     * @param simulationObjectList The list of all current simulationObjects to calculate species percentage
      * @return Returning Hashmap with information according to a single Dinosaur-object
      * @see Dinosaur
      */
@@ -124,8 +123,8 @@ public class Statistics {
 
     /**
      * Private method called from getSingleStats() to calculate share of a specified species compared to overall population
-     * @param simulationObjectList
-     * @param dinoType
+     * @param simulationObjectList The list of all current simulationObjects
+     * @param dinoType The type of the given dino to split it from other types in calculation
      * @return Share of species
      * @see Dinosaur
      */
@@ -143,7 +142,7 @@ public class Statistics {
 
     /**
      * Private method called from getSimulationStats() to get all dinosaur species appearing in simulation
-     * @param simulationObjectList
+     * @param simulationObjectList The list of all current simulationObjects
      * @return List of all appearing species of Dinosaurs
      * @see Dinosaur
      */
