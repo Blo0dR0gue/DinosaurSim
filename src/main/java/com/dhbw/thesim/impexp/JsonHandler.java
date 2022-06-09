@@ -1,7 +1,6 @@
 package com.dhbw.thesim.impexp;
 
 import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import org.json.*;
  */
 public class JsonHandler {
     //saving the operating systems specific path to its appdata folder
-    static String workingDirectory;
+    private static String workingDirectory;
 
     public enum SimulationObjectType {
         DINO,
@@ -27,6 +26,17 @@ public class JsonHandler {
         PLANT,
         LANDSCAPE,
         PLANT_GROWTH
+    }
+
+    /**
+     * Helper function, to get the working directory of this simulation.
+     *
+     * @return the working directory for this app.
+     */
+    public static String getWorkingDirectory() {
+        if (workingDirectory == null)
+            setDirectory();
+        return workingDirectory;
     }
 
     /**
