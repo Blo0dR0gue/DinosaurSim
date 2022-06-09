@@ -141,7 +141,7 @@ public class ConfigScreen extends AnchorPane {
      */
     private void populateMapListView() {
         //Toggle group for the map radio buttons, so only one radio button can be active at a time
-        ToggleGroup mapGroup = new ToggleGroup();
+        mapGroup = new ToggleGroup();
         //Instantiating and initializing maps to add all of them to the list view of dinos
         MapListItem mapListItem1 = MapListItem.newInstance();
         mapListItem1.initialize("Map A", new Image("/map/map-a.png"));
@@ -176,6 +176,14 @@ public class ConfigScreen extends AnchorPane {
         }
 
         return plants;
+    }
+
+    public RadioButton getMap(){
+        return (RadioButton) mapGroup.getSelectedToggle();
+    }
+
+    public RadioButton getMode(){
+        return (RadioButton) modeGroup.getSelectedToggle();
     }
 
     public double getPlantGrowthRate(){
