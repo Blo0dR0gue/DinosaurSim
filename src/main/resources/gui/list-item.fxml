@@ -29,6 +29,7 @@
       </center>
       <bottom>
          <HBox fx:id="hbox_inner" BorderPane.alignment="CENTER">
+            <!-- TODO Implement viewing information about the corresponding dino via the info button (Popup?) -->
             <fx:define>
                <Image fx:id="infoBtnImage" url="@../controls/arrow-down.png"/>
             </fx:define>

@@ -61,6 +61,15 @@
                   GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
         <ListView fx:id="mapListView" GridPane.columnIndex="5" GridPane.rowIndex="0" GridPane.columnSpan="2"
                   GridPane.rowSpan="6" stylesheets="@../styles/styles.css"/>
+        <!-- TODO Implement adding specified dino types via the add button (Popup?) -->
+        <fx:define>
+            <Image fx:id="addBtnImage" url="@../controls/plus.png"/>
+        </fx:define>
+        <Button fx:id="addDinoButton" style="-fx-background-color: transparent;" GridPane.valignment="TOP">
+            <graphic>
+                <ImageView fitWidth="15.0" fitHeight="15.0" image="$addBtnImage"/>
+            </graphic>
+        </Button>
         <SliderWithLabel fx:id="plantGrowthSliderWithLabel" text="Pflanzenwachstumrate"
                          min="1.0" max="10.0" major="3" minor="2"
                          GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
