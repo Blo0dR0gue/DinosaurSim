@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * The Control CLass for the Configuration Screen FXML file
@@ -74,13 +75,19 @@ public class ConfigScreen extends AnchorPane {
     /**
      * Method to initialize the Configuration Screen, its listeners and adding custom controls dynamically
      * @param dinos The {@link ArrayList} of dino GUI parameters returned by
-     * {@link com.dhbw.thesim.impexp.Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     * @param plants The {@link ArrayList} of plant GUI parameters returned by
+     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     * @param plantGrowthRate The plant growth rate returned by
+     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     * @param landscapeName The name of the desired landscape returned by
+     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
-    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate) {
+    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) {
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
-        populateMapListView();
+        populateMapListView(landscapeName);
 
         populateListView(dinos, dinoListView);
 
@@ -139,7 +146,7 @@ public class ConfigScreen extends AnchorPane {
     /**
      * Method to populate {@link #mapListView} with {@link MapListItem}
      */
-    private void populateMapListView() {
+    private void populateMapListView(String landscapeName) {
         //Toggle group for the map radio buttons, so only one radio button can be active at a time
         mapGroup = new ToggleGroup();
         //Instantiating and initializing maps to add all of them to the list view of dinos
@@ -153,6 +160,13 @@ public class ConfigScreen extends AnchorPane {
 
         for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
             mapListView.getItems().add(mapListItem);
+        }
+
+        //Set toggle for landscape from config file as selected
+        for (Toggle toggle: mapGroup.getToggles()) {
+            if (Objects.equals(((RadioButton) toggle).getText(), landscapeName)) {
+                toggle.setSelected(true);
+            }
         }
     }
     //region getter & setter
