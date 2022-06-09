@@ -98,11 +98,11 @@ public class ListItem extends HBox {
         return imageView.imageProperty();
     }
 
-    public Integer getCount() {
+    public int getCount() {
         return countProperty().intValue();
     }
 
-    public void setCount(Integer value) {
+    public void setCount(int value) {
         countProperty().set(value);
         sliderValueLabel.setText(String.valueOf(value));
     }

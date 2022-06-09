@@ -74,7 +74,7 @@ public class ConfigScreen extends AnchorPane {
      * @param dinos The {@link ArrayList} of dino GUI parameters returned by
      * {@link com.dhbw.thesim.impexp.Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
-    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, ArrayList<Object[]> plantGrowth) {
+    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate) {
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
@@ -116,7 +116,7 @@ public class ConfigScreen extends AnchorPane {
             plantListView.getItems().add(plantListItem);
         }
 
-        plantGrowthSliderWithLabel.setValue((double) plantGrowth.get(0)[0]);
+        plantGrowthSliderWithLabel.setValue(plantGrowthRate);
 
         GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));
         GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
