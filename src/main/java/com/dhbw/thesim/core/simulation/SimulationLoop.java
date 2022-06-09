@@ -3,8 +3,7 @@ package com.dhbw.thesim.core.simulation;
 import com.dhbw.thesim.core.entity.SimulationObject;
 
 /**
- * TODO Comments
- * Updates the simulation data (Engine)
+ * Updates the simulation (Engine)
  *
  * @author Daniel Czeschner
  * @see Simulation
@@ -55,6 +54,16 @@ public class SimulationLoop {
      */
     private Thread simulationLoop;
 
+    /**
+     * Max amount of steps.
+     */
+    private int maxStepAmount;
+
+    /**
+     * Max amount of time a simulation is running.
+     */
+    private int maxRunTimeInMinutes;
+
     //endregion
 
     /**
@@ -62,16 +71,15 @@ public class SimulationLoop {
      *
      * @param simulationSpeedMultiplier The speed multiplier for the automatic simulation mode.
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
+     * @param maxStepAmount             The max amount of steps, that can be triggered.
+     * @param maxRunTimeInMinutes       The max amount of time a simulation is running (In Minutes)
      */
-    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation) {
+    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes) {
         this.currentSimulation = simulation;
         this.simulationSpeedMultiplier = simulationSpeedMultiplier;
         this.stepRangeMultiplier = stepRangeMultiplier;
-
-        //TODO remove
-        /* Zucken bei den bewegungen :(
-        this.simulationLoop = new Timeline(new KeyFrame(Duration.millis(1), event -> runner()));
-        this.simulationLoop.setCycleCount(Timeline.INDEFINITE);*/
+        this.maxStepAmount = maxStepAmount;
+        this.maxRunTimeInMinutes = maxRunTimeInMinutes;
 
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
@@ -87,6 +95,9 @@ public class SimulationLoop {
         double frameAccumulator = 0;
 
         long currentTime, lastUpdate = System.currentTimeMillis();
+
+        //The time, when the sim is finished
+        long runtime = lastUpdate + this.maxRunTimeInMinutes * 60 * 1000;
 
         while (running) {
 
@@ -119,6 +130,12 @@ public class SimulationLoop {
 
             //Print debug stats
             printStats();
+
+            //Check if over
+            if (runtime <= currentTime || this.currentSimulation.isOver()) {
+                this.stopSimulationRunner();
+                System.err.println("ende");
+            }
         }
     };
 
@@ -133,6 +150,7 @@ public class SimulationLoop {
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
             obj.update(deltaTime, currentSimulation);
         }
+        currentSimulation.removeDeletedObjects();
     }
 
     /**
@@ -153,6 +171,7 @@ public class SimulationLoop {
      * @see #simLoopRunnable
      */
     private void printStats() {
+
         if (System.currentTimeMillis() > nextDebugStatsTime) {
             System.out.printf("FPS: %d, UPS: %d%n", fps, ups);
             fps = 0;
@@ -169,6 +188,12 @@ public class SimulationLoop {
             update(0.1);
         }
         updateGraphics();
+        this.maxStepAmount--;
+
+        //check if over
+        if (maxStepAmount <= 0 || currentSimulation.isOver()) {
+            //TODO Callback to gui
+        }
     }
 
     /**
@@ -177,7 +202,6 @@ public class SimulationLoop {
      * @see #simulationLoop
      */
     public void startSimulationRunner() {
-        //TODO maybe use AnimationTimer (test performance)
         simulationLoop = new Thread(simLoopRunnable);
         simulationLoop.start();
     }
@@ -197,6 +221,15 @@ public class SimulationLoop {
      */
     public void togglePause() {
         paused = !paused;
+    }
+
+    /**
+     * Gets the current simulation data
+     *
+     * @return A {@link Simulation} object
+     */
+    public Simulation getCurrentSimulation() {
+        return this.currentSimulation;
     }
 
 }

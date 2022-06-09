@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.List;
+
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
  *
@@ -45,9 +47,9 @@ public class SimulationOverlay extends AnchorPane {
         getChildren().add(sidebar);
 
         //TODO get data from config screen
-        Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 0);
+        Simulation sim = new Simulation("test", canvasGraphics, this, null, null, 10);
 
-        simulationLoop = new SimulationLoop(1, 1, sim);
+        simulationLoop = new SimulationLoop(1, 1, sim, 50, 1);
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -82,7 +84,7 @@ public class SimulationOverlay extends AnchorPane {
 
         sidebar.setPrefWidth(width);
         sidebar.setPrefHeight(adjustScale(1080, SCALE_Y));
-        sidebar.relocate(adjustScale(1920d, SCALE_X)-width,0d);
+        sidebar.relocate(adjustScale(1920d, SCALE_X) - width, 0d);
 
         sidebar.setBackground(new Background(new BackgroundFill(Color.RED, CornerRadii.EMPTY, Insets.EMPTY)));
     }
@@ -104,13 +106,12 @@ public class SimulationOverlay extends AnchorPane {
     //endregion
 
     /**
-     *
      * @param toScale Dimension Parameter to be scaled to {@code scale}
-     * @param scale Scale to adjust {@code toScale} to
+     * @param scale   Scale to adjust {@code toScale} to
      * @return The Dimension {@code toScale} is adjusted with the given Scale {@code scale}
      */
-    public static double adjustScale(double toScale, double scale){
-        return (((double) toScale)/scale);
+    public static double adjustScale(double toScale, double scale) {
+        return (((double) toScale) / scale);
     }
 
 }

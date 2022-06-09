@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.statemachine;
 
+import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 
 /**
@@ -20,6 +21,7 @@ public abstract class StateMachine {
 
     /**
      * Sets the {@link #currentState}
+     *
      * @param state The state, which now should be used.
      */
     public void setState(State state) {
@@ -29,13 +31,15 @@ public abstract class StateMachine {
     /**
      * Needs to be called each update call. <br>
      * This method handles state transitions.
+     *
+     * @param simulation The current {@link Simulation} data.
      */
-    public void stateMachineTick() {
-        State nextState = currentState.checkTransitions();
+    public void stateMachineTick(Simulation simulation) {
+        State nextState = currentState.checkTransitions(simulation);
 
         if (nextState != null) {
-            //TODO remove debug message
-            System.out.println("Transition to " + nextState.getClass().getSimpleName());
+            currentState.onExit();
+            System.out.println(this + ": Transition to " + nextState.getClass().getSimpleName());
             setState(nextState);
         }
 
