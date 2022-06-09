@@ -2,6 +2,7 @@ package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -104,7 +105,7 @@ public class SliderWithLabel extends GridPane {
     }
 
     public double getMax() {
-        return maxValProperty().get();
+        return maxValProperty().doubleValue();
     }
 
     public void setMax(double value) {
@@ -116,7 +117,7 @@ public class SliderWithLabel extends GridPane {
     }
 
     public double getMin() {
-        return minValProperty().get();
+        return minValProperty().doubleValue();
     }
 
     public void setMin(double value) {
@@ -125,5 +126,29 @@ public class SliderWithLabel extends GridPane {
 
     public DoubleProperty minValProperty() {
         return slider.minProperty();
+    }
+
+    public int getMinor() {
+        return minorTickCountProperty().intValue();
+    }
+
+    public void setMinor(int value) {
+        minorTickCountProperty().set(value);
+    }
+
+    public IntegerProperty minorTickCountProperty() {
+        return slider.minorTickCountProperty();
+    }
+
+    public double getMajor() {
+        return majorTickUnitProperty().doubleValue();
+    }
+
+    public void setMajor(double value) {
+        majorTickUnitProperty().set(value);
+    }
+
+    public DoubleProperty majorTickUnitProperty() {
+        return slider.majorTickUnitProperty();
     }
 }

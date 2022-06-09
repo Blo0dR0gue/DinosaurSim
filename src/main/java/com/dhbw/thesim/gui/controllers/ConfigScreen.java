@@ -5,6 +5,7 @@ import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -42,6 +43,14 @@ public class ConfigScreen extends AnchorPane {
     public ListView<MapListItem> mapListView;
     @FXML
     public ListView<ListItem> plantListView;
+    @FXML
+    public RadioButton auto;
+    @FXML
+    public RadioButton manual;
+    @FXML
+    public SliderWithLabel maxSteps;
+    @FXML
+    public SliderWithLabel maxRuntime;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -109,19 +118,27 @@ public class ConfigScreen extends AnchorPane {
         }
 
         plantGrowthSliderWithLabel.setValue((double) plantGrowth.get(0)[0]);
+
+        GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));
+        GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
     }
 
     /**
      * Adds all specified event handlers to the specified {@link javafx.scene.Node}
      */
     public void initializeListeners() {
-        ConfigScreen configScreen = this;
         // When the start button is clicked the current scene gets replaced by the SimulationOverlay scene
         startSimulationButton.setOnAction(event -> {
             Stage window = (Stage) startSimulationButton.getScene().getWindow();
-            SimulationOverlay simulationOverlay = new SimulationOverlay(window, configScreen);
+            SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
             window.setScene(simulationOverlay.getSimulationScene());
             window.setFullScreen(true);
+        });
+
+        // add a change listener
+        modeGroup.selectedToggleProperty().addListener((observableValue, previousSelection, currentSelection) -> {
+            maxRuntime.setVisible(currentSelection.equals(auto));
+            maxSteps.setVisible(currentSelection.equals(manual));
         });
     }
 
