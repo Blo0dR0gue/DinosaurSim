@@ -52,6 +52,8 @@ public class ConfigScreen extends AnchorPane {
     public SliderWithLabel maxRuntime;
     @FXML
     public SideBar sideBar;
+    @FXML
+    public SliderWithLabel stepSliderWithLabel;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -167,6 +169,10 @@ public class ConfigScreen extends AnchorPane {
 
     public double getPlantGrowthRate(){
         return plantGrowthSliderWithLabel.getValue();
+    }
+
+    public double getSimulationSteps(){
+        return stepSliderWithLabel.getValue();
     }
 
     public double getMaxRuntime(){
