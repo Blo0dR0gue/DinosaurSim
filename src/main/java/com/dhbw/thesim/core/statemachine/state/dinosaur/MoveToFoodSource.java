@@ -53,6 +53,9 @@ public class MoveToFoodSource extends State {
 
         if (target == null) {
 
+            //reset the target before selecting a new one.
+            dinosaur.setTarget(null);
+
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
 
                 SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),

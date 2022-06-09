@@ -49,7 +49,6 @@ public class SpriteLibrary {
         loadImages("/dinosaur");
         loadImages("/plant");
         loadImages("/tile");
-
     }
 
     /**
