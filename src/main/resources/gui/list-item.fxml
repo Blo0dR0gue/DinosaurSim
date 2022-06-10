@@ -24,8 +24,9 @@
          </Label>
       </top>
       <center>
-         <Slider fx:id="slider" max="10.0" majorTickUnit="2.0" minorTickCount="1" showTickLabels="true" showTickMarks="true"
-                 snapToTicks="true" BorderPane.alignment="CENTER"/>
+         <Slider fx:id="slider" max="10.0" majorTickUnit="2.0" minorTickCount="1"
+                 showTickLabels="true" showTickMarks="true" snapToTicks="true"
+                 BorderPane.alignment="CENTER"/>
       </center>
       <bottom>
          <HBox fx:id="hbox_inner" BorderPane.alignment="CENTER">
