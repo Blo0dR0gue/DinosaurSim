@@ -36,13 +36,13 @@ public class ConfigScreen extends AnchorPane {
     @FXML
     public SliderWithLabel plantGrowthSliderWithLabel;
     @FXML
-    public ListView<ListItem> dinoListView;
+    public ListView<ListItemWithImage> dinoListView;
     @FXML
     public GridPane gridPane;
     @FXML
     public ListView<MapListItem> mapListView;
     @FXML
-    public ListView<ListItem> plantListView;
+    public ListView<ListItemWithImage> plantListView;
     @FXML
     public RadioButton auto;
     @FXML
@@ -57,6 +57,7 @@ public class ConfigScreen extends AnchorPane {
     public SliderWithLabel stepSliderWithLabel;
     @FXML
     public Label modeRequired;
+
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -137,13 +138,13 @@ public class ConfigScreen extends AnchorPane {
      * @param objectsList {@link ArrayList} containing all objects to populate the list {@link ListView} with
      * @param listView The {@link ListView} which should be populated
      */
-    private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItem> listView) {
+    private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItemWithImage> listView) {
         for (Object[] objects : objectsList) {
             String name = (String) objects[0];
-            Image image = SpriteLibrary.getInstance().getImage((String) objects[1]); //TODO fix SpriteLibrary crash when image not found
+            Image image = SpriteLibrary.getInstance().getImage((String) objects[1]);
             int amount = (int) objects[2];
 
-            ListItem listItem = ListItem.newInstance();
+            ListItemWithImage listItem = ListItemWithImage.newInstance();
             listItem.initialize(name, image, amount, listView);
 
             listView.getItems().add(listItem);
@@ -182,25 +183,22 @@ public class ConfigScreen extends AnchorPane {
     }
     //region getter & setter
     public HashMap<String, Integer> getDinoParams(){
-        HashMap<String, Integer> dinos = new HashMap<>();
-
-        for (ListItem listItem :
-                dinoListView.getItems()) {
-            dinos.put(listItem.getText(), listItem.getCount());
-        }
-
-        return dinos;
+        return getListItemParams(dinoListView);
     }
 
     public HashMap<String, Integer> getPlantParams(){
-        HashMap<String, Integer> plants = new HashMap<>();
+        return getListItemParams(plantListView);
+    }
 
-        for (ListItem listItem :
-                plantListView.getItems()) {
-            plants.put(listItem.getText(), listItem.getCount());
+    private HashMap<String, Integer> getListItemParams(ListView listView){
+        HashMap<String, Integer> items = new HashMap<>();
+
+        for (Object listItem :
+                listView.getItems()) {
+            items.put(((ListItemWithImage) listItem).getText(), ((ListItemWithImage) listItem).getCount());
         }
 
-        return plants;
+        return items;
     }
 
     public RadioButton getMap(){

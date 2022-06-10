@@ -18,7 +18,7 @@ import javafx.scene.layout.HBox;
  * The Custom Control Class provides a list item for the {@link javafx.scene.control.ListView} of dinos or plants
  * @author Tamina Mühlenberg, Robin Khatri Chetri
  */
-public class ListItem extends HBox {
+public class ListItemWithImage extends HBox {
     @FXML
     public HBox container;
     @FXML
@@ -42,29 +42,29 @@ public class ListItem extends HBox {
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
      * is getting to create the specified controller
      */
-    public ListItem() {
+    public ListItemWithImage() {
 
     }
 
     /**
-     * This method creates and initializes a new instance of from the FXML {@link ListItem}
-     * @return The newly created and initialized {@link ListItem}
+     * This method creates and initializes a new instance of from the FXML {@link ListItemWithImage}
+     * @return The newly created and initialized {@link ListItemWithImage}
      */
-    public static ListItem newInstance(){
-        return (ListItem) Display.makeFXMLController("list-item.fxml", ListItem.class);
+    public static ListItemWithImage newInstance(){
+        return (ListItemWithImage) Display.makeFXMLController("list-item.fxml", ListItemWithImage.class);
     }
 
     /**
      * Method to initialize the List item, its listeners and setting the label text and image url
      */
-    public void initialize(String labelText, Image image, int amount, ListView<ListItem> listView){
+    public void initialize(String labelText, Image image, int amount, ListView<ListItemWithImage> listView){
         setText(labelText);
         setImage(image);
         setCount(amount);
 
-        ListItem listItem = this;
+        ListItemWithImage listItemWithImage = this;
         button_remove.setOnAction(event -> {
-            listView.getItems().remove(listItem);
+            listView.getItems().remove(listItemWithImage);
             //TODO remove dino/plant from hashmap that is passed to simulation
         });
 
