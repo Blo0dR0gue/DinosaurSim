@@ -25,7 +25,9 @@ public class ScenarioListItem extends HBox {
     public void initialize(String name, ToggleGroup toggleGroup){
         scenarioFileName = name;
 
-        name = name.toLowerCase().replace("scenarioconfig.json", "");
+        //Remove generated filename substring from name
+        int scenarioConfigIndex = name.toLowerCase().lastIndexOf("scenarioconfig");
+        name = name.toLowerCase().substring(0, scenarioConfigIndex);
 
         radioButton.setText(name);
         radioButton.setToggleGroup(toggleGroup);
