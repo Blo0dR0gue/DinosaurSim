@@ -14,8 +14,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Main JavaFx Application
@@ -86,14 +85,19 @@ public class Display extends Application {
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
         JsonHandler.setDirectory();
-        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> defaultScenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "defaultScenarioConfig");
+        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> defaultScenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "defaultScenarioConfig");
 
         //TODO guiParams.get(JsonHandler.ScenarioConfigParams.PLANT);
         //TODO guiParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE);
 
+        //If plantGrowthRate from the defaultScenarioParams is null, there should be 1.0 returned
+        double plantGrowthRate = ((double) getDefaultIfNull(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH), 1.0).get(0)[0]);
+        //If landscapeName from the defaultScenarioParams is null, there should be "Landschaft1" returned
+        String landscapeName = ((String) getDefaultIfNull(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE), "Landschaft1").get(0)[0]);
+
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), ((double) defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0]), ((String) defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]));
+        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), plantGrowthRate, landscapeName);
 
         configScene = new Scene(configScreen);
         primaryStage.setScene(configScene);
@@ -127,6 +131,10 @@ public class Display extends Application {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private ArrayList<Object[]> getDefaultIfNull(ArrayList<Object[]> list, Object defaultValue){
+        return Optional.ofNullable(list).orElse(new ArrayList<Object[]>(Collections.singleton(new Object[]{defaultValue})));
     }
 
     @Override
