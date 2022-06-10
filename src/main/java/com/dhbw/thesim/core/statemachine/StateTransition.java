@@ -15,6 +15,11 @@ public class StateTransition {
     StateFactory.States nextState;
     ITransition stateTransition;
 
+    /**
+     * Constructor for a normal {@link StateTransition}-object.
+     * @param nextState nextState
+     * @param stateTransition stateTransition
+     */
     public StateTransition(StateFactory.States nextState, ITransition stateTransition) {
         this.nextState = nextState;
         this.stateTransition = stateTransition;
@@ -22,7 +27,6 @@ public class StateTransition {
 
     /**
      * Should we transition to the {@link #nextState}.
-     *
      * @return true, if the condition of {@link #stateTransition} is met.
      */
     public boolean shouldTransition(Simulation simulation) {
@@ -31,7 +35,6 @@ public class StateTransition {
 
     /**
      * Gets the next {@link State} using the {@link StateFactory}.
-     *
      * @param simulationObject The {@link SimulationObject} which is transition to the next state.
      * @return The next {@link State}.
      */
