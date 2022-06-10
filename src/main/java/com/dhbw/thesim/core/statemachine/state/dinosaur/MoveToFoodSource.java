@@ -22,7 +22,14 @@ public class MoveToFoodSource extends State {
      */
     private final Dinosaur dinosaur;
 
+    /**
+     * The target {@link Vector2D} where the dinosaur is walking to.
+     */
     private Vector2D target;
+
+    /**
+     * The interaction range of the target, which should be hit.
+     */
     private double targetInteractionRange;
 
     /**
@@ -44,12 +51,6 @@ public class MoveToFoodSource extends State {
     public void update(double deltaTime, Simulation simulation) {
 
         if (target == null) {
-
-            //reset the target
-            if(dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino){
-                targetDino.setIsChased(false);
-            }
-            dinosaur.setTarget(null);
 
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
 
@@ -135,6 +136,9 @@ public class MoveToFoodSource extends State {
                 }
 
             }
+            if(direction != null){
+                dinosaur.flipImage(direction);
+            }
         }
 
         if (direction != null) {
@@ -146,10 +150,13 @@ public class MoveToFoodSource extends State {
     }
 
     @Override
+    public void onExit() {
+        if(!dinosaur.isChased())
+            dinosaur.setTarget(null);
+    }
+
+    @Override
     public void initTransitions() {
-        //TODO check transitions / transitions oder
-
-
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
@@ -171,7 +178,6 @@ public class MoveToFoodSource extends State {
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
-
     }
 
     /**

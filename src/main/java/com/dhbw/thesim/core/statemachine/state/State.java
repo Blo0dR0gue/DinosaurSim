@@ -38,6 +38,11 @@ public abstract class State {
     }
 
     /**
+     * Is called on state exit
+     */
+    public abstract void onExit();
+
+    /**
      * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
      *
      * @param deltaTime  The delta time since the last update call.

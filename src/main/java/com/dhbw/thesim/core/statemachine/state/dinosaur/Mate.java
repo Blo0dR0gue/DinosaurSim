@@ -37,6 +37,11 @@ public class Mate extends State {
     }
 
     @Override
+    public void onExit() {
+
+    }
+
+    @Override
     public void initTransitions() {
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
