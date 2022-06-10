@@ -21,7 +21,6 @@ public abstract class StateMachine {
 
     /**
      * Sets the {@link #currentState}
-     *
      * @param state The state, which now should be used.
      */
     public void setState(State state) {
@@ -31,18 +30,14 @@ public abstract class StateMachine {
     /**
      * Needs to be called each update call. <br>
      * This method handles state transitions.
-     *
      * @param simulation The current {@link Simulation} data.
      */
     public void stateMachineTick(Simulation simulation) {
         State nextState = currentState.checkTransitions(simulation);
-
         if (nextState != null) {
             currentState.onExit();
             System.out.println(this + ": Transition to " + nextState.getClass().getSimpleName());
             setState(nextState);
         }
-
     }
-
 }
