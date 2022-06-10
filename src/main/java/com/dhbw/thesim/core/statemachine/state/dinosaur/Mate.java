@@ -69,8 +69,10 @@ public class Mate extends State {
 
     @Override
     public void onExit() {
-        dinosaur.getPartner().setPartner(null);
-        dinosaur.setPartner(null);
+        if(dinosaur.getPartner()!=null) {
+            dinosaur.getPartner().setPartner(null);
+            dinosaur.setPartner(null);
+        }
     }
 
     @Override

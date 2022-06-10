@@ -19,7 +19,7 @@ import java.util.*;
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
  *
- * @author Daniel Czeschner
+ * @author Daniel Czeschner, Lucas Schaffer
  * @see SimulationMap
  * @see SimulationObject
  * @see SimulationLoop
@@ -52,6 +52,11 @@ public class Simulation {
      * A List with all {@link SimulationObject}s, which will be removed at the end of a {@link SimulationLoop} update.
      */
     private List<SimulationObject> toBeRemoved;
+
+    /**
+     * A List with all {@link SimulationObject}s, which will be spawned at the end of a {@link SimulationLoop} update.
+     */
+    private List<SimulationObject> toBeSpawned;
 
     /**
      * The SimulationOverlay, on which the elements get spawned.
@@ -94,6 +99,7 @@ public class Simulation {
         this.backgroundGraphics = backgroundGraphicsContext;
         this.simulationObjects = new ArrayList<>();
         this.toBeRemoved = new ArrayList<>();
+        this.toBeSpawned = new ArrayList<>();
 
         //TODO
         //this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
@@ -103,13 +109,13 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
+                'p', 400, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("tes2.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
+                'p', 400, 32, 'f')
         );
 
         this.simulationObjects.add(new Dinosaur(
@@ -122,6 +128,24 @@ public class Simulation {
                 "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'f')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
+        );
+
+        this.simulationObjects.add(new Dinosaur(
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
+                0.1, 100, 50, 10, false, true,
+                'p', 400, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
@@ -133,7 +157,7 @@ public class Simulation {
         this.simulationObjects.add(new Dinosaur(
                 "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 12, 18, 25,
                 0.1, 100, 50, 10, false, true,
-                'f', 270, 32, 'f')
+                'f', 270, 32, 'm')
         );
 
         this.simulationObjects.add(new Dinosaur(
@@ -424,13 +448,31 @@ public class Simulation {
                 mother.getType(), mother.getJavaFXObj().getImage(), 100, 100, strength, speed,
                 reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
 
-        //TODO Find better spawn point
-        //baby.setPosition(getFreePositionInMap(baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
 
-        //TODO add baby to simobjects and spawn it
-        //simulationObjects.add(baby);
+        baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), 1, baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
+
+        spawnObject(baby);
 
         System.out.println("Baby Dinosaur was made");
+    }
+
+    public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
+
+        List<Vector2D> positions = simulationMap.getMidCoordinatesOfMatchingTiles(origin, range*Tile.TILE_SIZE, swimmable, climbable);
+
+        for(Vector2D pos : positions) {
+            if (doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null) == false) {
+                System.out.println("Spawn position found with range " + range);
+                return pos;
+            }
+        }
+
+        if(range<25)
+            return getNearestPositionInMapWhereConditionsAre(origin, range+1, swimmable, climbable, interactionRange);
+        else {
+            System.out.println("No spawn position found");
+            return getFreePositionInMap(swimmable, climbable, interactionRange);
+        }
     }
 
     public double inheritValue(double a, double b) {
@@ -446,6 +488,17 @@ public class Simulation {
 
         return result;
     }
+
+    public void spawnObject(SimulationObject simulationObject) {
+        this.toBeSpawned.add(simulationObject);
+        Platform.runLater(() -> simulationOverlay.getChildren().add(simulationObject.getJavaFXObj()));
+    }
+
+    public void spawnNewObjects() {
+        simulationObjects.addAll(toBeSpawned);
+        toBeSpawned.clear();
+    }
+
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}

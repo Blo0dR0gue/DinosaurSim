@@ -12,7 +12,7 @@ import javafx.scene.shape.Circle;
  * Represents a dinosaur object in our simulation.
  * Takes care to update each State and switch between them.
  *
- * @author Daniel Czeschner, Kai Grübener
+ * @author Daniel Czeschner, Kai Grübener, Lucas Schaffer
  * @see com.dhbw.thesim.core.statemachine.StateMachine
  * @see State
  */

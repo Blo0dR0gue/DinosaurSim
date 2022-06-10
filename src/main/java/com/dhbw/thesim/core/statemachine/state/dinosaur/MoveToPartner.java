@@ -98,7 +98,7 @@ public class MoveToPartner extends State {
     }
 
     /**
-     * Do we have reached the target?
+     * Do we have reached the partner?
      *
      * @param simulation The current {@link Simulation} data.
      * @return true, if we have reached the target.
