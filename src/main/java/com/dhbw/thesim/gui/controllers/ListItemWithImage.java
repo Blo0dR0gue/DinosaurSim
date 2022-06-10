@@ -51,7 +51,7 @@ public class ListItemWithImage extends HBox {
      * @return The newly created and initialized {@link ListItemWithImage}
      */
     public static ListItemWithImage newInstance(){
-        return (ListItemWithImage) Display.makeFXMLController("list-item.fxml", ListItemWithImage.class);
+        return (ListItemWithImage) Display.makeFXMLController("list-item-with-image.fxml", ListItemWithImage.class);
     }
 
     /**
