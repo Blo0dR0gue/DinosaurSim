@@ -20,12 +20,14 @@ public class Hunt extends State {
      */
     private final Dinosaur dinosaur;
 
+    /**
+     * {@link Vector2D}-variables for paths.
+     */
     private Vector2D target;
     private Vector2D direction;
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Hunt(Dinosaur simulationObject) {
@@ -36,36 +38,27 @@ public class Hunt extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
         //TODO what happens if multiple hunters hunt one target.
-
         //Init
         if (target == null && dinosaur.isHungry()) {
             dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
                     dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()));
-
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 //TODO let hunted dino run away when the target dino can see this dino
                 targetDino.setIsChased(true);
                 targetDino.setTarget(dinosaur);
-
                 target = targetDino.getPosition();
                 direction = dinosaur.getPosition().directionToTarget(target);
             }
         }
-
         if (direction != null) {
-
             //set the chased state (Can be retested, if multiple dinos hunt the target.)
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 targetDino.setIsChased(true);
             }
-
             target = dinosaur.getTarget().getPosition();
             direction = dinosaur.getPosition().directionToTarget(target);
-
             dinosaur.flipImage(direction);
-
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
-
         } else {
             //Invalid state
             target = null;
@@ -111,15 +104,11 @@ public class Hunt extends State {
     }
 
     private boolean reached(Simulation simulation) {
-
         boolean caught = simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange());
-
         if (caught) {
             Dinosaur huntedDino = (Dinosaur) dinosaur.getTarget();
             huntedDino.forceNoOp();
         }
         return caught;
-
     }
-
 }
