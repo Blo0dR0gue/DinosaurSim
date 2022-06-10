@@ -43,7 +43,6 @@ public class Plant extends SimulationObject {
     public Plant(String name, Image image, double interactionRange, double growthRate) {
         super(name, interactionRange, image);
         this.growthRate = growthRate;
-        this.circle = new Circle(0, 0, interactionRange, Color.GREEN);
         this.setState(new Growing(this));
     }
 
@@ -68,8 +67,6 @@ public class Plant extends SimulationObject {
         //TODO do only once
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
-        circle.setTranslateX(position.getX());
-        circle.setTranslateY(position.getY());
     }
 
     @Override
