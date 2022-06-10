@@ -101,9 +101,6 @@ public class Dinosaur extends SimulationObject {
         this.nutritionFull = this.nutrition;
         this.hydrationFull = this.hydration;
 
-        //TODO remove test objects
-        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore ? Color.GREEN : this.diet == dietType.omnivore ? Color.BLUE : Color.RED);
-
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
 
@@ -162,13 +159,6 @@ public class Dinosaur extends SimulationObject {
         //Center the image and update his position.
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
-        circle.setTranslateX(position.getX());
-        circle.setTranslateY(position.getY());
-    }
-
-    public void setTest(Vector2D target) {
-        test.setTranslateX(target.getX());
-        test.setTranslateY(target.getY());
     }
 
     /**

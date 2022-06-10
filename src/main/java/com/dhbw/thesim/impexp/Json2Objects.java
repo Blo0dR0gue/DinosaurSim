@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * For creating the needed objects based on the parsed json-files gotten from the class JsonHandler.
@@ -155,8 +157,8 @@ public class Json2Objects {
      * @return an ArrayList containing all SimulationObjects
      * @throws IOException if the simulation objects configuration file can not be found
      */
-    public static ArrayList<SimulationObject> initSimObjects(HashMap<String, Integer> dinosaursAmount, HashMap<String, Integer> plantsAmount, double plantGrowth) throws IOException {
-        ArrayList<SimulationObject> allSimulationObjects = new ArrayList<>();
+    public static List<SimulationObject> initSimObjects(Map<String, Integer> dinosaursAmount, Map<String, Integer> plantsAmount, double plantGrowth) throws IOException {
+        List<SimulationObject> allSimulationObjects = new ArrayList<>();
 
         allSimulationObjects.addAll(initDinos(dinosaursAmount));
         allSimulationObjects.addAll(initPlants(plantsAmount, plantGrowth));
@@ -206,10 +208,10 @@ public class Json2Objects {
      * @return all created dinosaurs (as SimulationObjects) in an ArrayList
      * @throws IOException if the simulation objects configuration file can not be found
      */
-    private static ArrayList<Dinosaur> initDinos(HashMap<String, Integer> dinosaursAmount) throws IOException {
-        ArrayList<Dinosaur> dinosaurs = new ArrayList<>();
+    private static List<Dinosaur> initDinos(Map<String, Integer> dinosaursAmount) throws IOException {
+        List<Dinosaur> dinosaurs = new ArrayList<>();
 
-        HashMap<String, HashMap<String, Object>> DinosaurSpecies = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
+        Map<String, HashMap<String, Object>> DinosaurSpecies = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
 
         //create the dinosaur objects based on the "dinosaursAmount" HashMap
         for (String speciesName : dinosaursAmount.keySet()) { //for each species
@@ -246,10 +248,10 @@ public class Json2Objects {
      * @return all created plants (as SimulationObjects) in an ArrayList
      * @throws IOException if the simulation objects configuration file can not be found
      */
-    private static ArrayList<Plant> initPlants(HashMap<String, Integer> plantsAmount, double plantGrowth) throws IOException {
-        ArrayList<Plant> plants = new ArrayList<>();
+    private static List<Plant> initPlants(Map<String, Integer> plantsAmount, double plantGrowth) throws IOException {
+        List<Plant> plants = new ArrayList<>();
 
-        HashMap<String, HashMap<String, Object>> PlantSpecies = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
+        Map<String, HashMap<String, Object>> PlantSpecies = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
 
         //create the plant objects based on the "plantsAmount" HashMap
         for (String speciesName : plantsAmount.keySet()) { //for each species
