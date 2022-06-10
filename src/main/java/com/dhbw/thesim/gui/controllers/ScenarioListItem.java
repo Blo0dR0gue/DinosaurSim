@@ -12,6 +12,8 @@ public class ScenarioListItem extends HBox {
     @FXML
     RadioButton radioButton;
 
+    private String scenarioFileName;
+
     public ScenarioListItem(){
 
     }
@@ -21,8 +23,16 @@ public class ScenarioListItem extends HBox {
     }
 
     public void initialize(String name, ToggleGroup toggleGroup){
+        scenarioFileName = name;
+
+        name = name.toLowerCase().replace("scenarioconfig.json", "");
+
         radioButton.setText(name);
         radioButton.setToggleGroup(toggleGroup);
         radioButton.setId(name);
+    }
+
+    public String getScenarioFileName() {
+        return scenarioFileName;
     }
 }

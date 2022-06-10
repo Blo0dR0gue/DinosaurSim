@@ -101,22 +101,13 @@ public class ConfigScreen extends AnchorPane {
         GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
 
         ScenarioSelector scenarioSelector = ScenarioSelector.newInstance();
-        scenarioSelector.initialize();
-
-        sideBar.getBody().add(scenarioSelector.container);
-        ToggleGroup scenarioToggleGroup = new ToggleGroup();
-        //TODO get scenario names from config
         try {
-            for (String scenarioName:
-                    JsonHandler.getExistingScenarioFileNames()) {
-                ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
-                scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
-                scenarioSelector.scenarioListView.getItems().add(scenarioListItem);
-            }
+            scenarioSelector.initialize(JsonHandler.getExistingScenarioFileNames());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
 
+        sideBar.getBody().add(scenarioSelector.container);
         initializeListeners();
     }
 
