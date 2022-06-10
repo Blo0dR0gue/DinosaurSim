@@ -8,7 +8,6 @@ import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
-import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -205,19 +204,19 @@ public class Simulation {
     private void spawnObjects(SimulationOverlay simulationOverlay) {
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
-            simulationOverlay.getChildren().add(obj.getCircle());
+            simulationOverlay.centerPane.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
                 //TODO remove test objects
-                //simulationOverlay.getChildren().add(obj.getTest());
+                //simulationOverlay.centerPane.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
             } else if(obj instanceof Plant plant) {
                 //Plants only can be spawned on tiles, which allow plant growing
                 obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange(), plant.getRenderOffset()));
             }
-            simulationOverlay.getChildren().add(obj.getJavaFXObj());
+            simulationOverlay.centerPane.getChildren().add(obj.getJavaFXObj());
         }
-        simulationOverlay.getChildren().add(line);
+        simulationOverlay.centerPane.getChildren().add(line);
     }
 
     /**
@@ -227,7 +226,7 @@ public class Simulation {
      */
     public void deleteObject(SimulationObject simulationObject) {
         this.toBeRemoved.add(simulationObject);
-        Platform.runLater(() -> simulationOverlay.getChildren().remove(simulationObject.getJavaFXObj()));
+        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().remove(simulationObject.getJavaFXObj()));
     }
 
     /**
