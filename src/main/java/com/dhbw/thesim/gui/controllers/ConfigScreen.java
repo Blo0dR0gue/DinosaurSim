@@ -165,12 +165,12 @@ public class ConfigScreen extends AnchorPane {
         //Instantiating and initializing maps to add all of them to the list view of dinos
         MapListItem mapListItem1 = MapListItem.newInstance();
         mapListItem1.initialize("Landschaft 1", new Image("/map/landscape-one.png"));
-        mapListItem1.radioButton.setId("landschaftsName");
+        mapListItem1.radioButton.setId("Landschaft1");
         mapListItem1.radioButton.setToggleGroup(mapGroup);
 
         MapListItem mapListItem2 = MapListItem.newInstance();
         mapListItem2.initialize("Landschaft 2", new Image("/map/landscape-two.png"));
-        mapListItem2.radioButton.setId("landschaftsName2");
+        mapListItem2.radioButton.setId("Landschaft2");
         mapListItem2.radioButton.setToggleGroup(mapGroup);
 
         //Add the map list items to the map list view

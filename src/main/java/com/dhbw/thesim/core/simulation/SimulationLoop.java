@@ -81,6 +81,8 @@ public class SimulationLoop {
         this.maxRunTimeInMinutes = maxRunTimeInMinutes;
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
+
+        updateGraphics();
     }
 
     /**

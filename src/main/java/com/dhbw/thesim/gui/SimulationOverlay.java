@@ -59,7 +59,7 @@ public class SimulationOverlay extends BorderPane {
         //TODO get data from config screen
         Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
-        simulationLoop = new SimulationLoop(isSimulationModeAuto ? 1 : 0, (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
+        simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
 
         simulationIsRunning = true;
 
@@ -82,16 +82,16 @@ public class SimulationOverlay extends BorderPane {
             if (e.getCode() == KeyCode.ESCAPE) {
                 simulationLoop.togglePause();
             }
-            //TODO handle step procedure
-            if (e.getCode() == KeyCode.D) {
-                simulationLoop.triggerUpdates();
+            if (e.getCode() == KeyCode.SPACE) {
+                if(!isSimulationModeAuto)
+                    simulationLoop.triggerUpdates();
             }
         });
 
         primaryStage.setOnCloseRequest(e -> simulationLoop.stopSimulationRunner());
 
-        //TODO handle loop
-        simulationLoop.startSimulationRunner();
+        if(isSimulationModeAuto)
+            simulationLoop.startSimulationRunner();
     }
 
     private void createCanvas() {

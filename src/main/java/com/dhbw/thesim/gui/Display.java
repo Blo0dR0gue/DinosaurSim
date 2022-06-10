@@ -85,7 +85,7 @@ public class Display extends Application {
         //We don't want to exit the fullscreen when keys are pressed
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
-        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> defaultScenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "defaultScenarioConfig");
+        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> defaultScenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "defaultScenarioConfig");
 
         //If plantGrowthRate from the defaultScenarioParams is null, there should be 1.0 returned
         double plantGrowthRate = ((double) getDefaultIfNull(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH), 1.0).get(0)[0]);
