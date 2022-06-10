@@ -37,6 +37,9 @@ public class SimulationMap {
      */
     public static final int HEIGHT = 24;
 
+    public static final String LANDSCAPE_ONE_NAME = "Landschaft1";
+    public static final String LANDSCAPE_TWO_NAME = "Landschaft2";
+
     //endregion
 
     //endregion
@@ -49,10 +52,20 @@ public class SimulationMap {
     public SimulationMap(String landscapeName) {
         this.landscapeName = landscapeName;
         this.tiles = new Tile[WIDTH][HEIGHT];
-        //TODO switch landscape name
-        landscapeTwo();
+
+        //Select a defined landscape based on the name.
+        if (landscapeName.equalsIgnoreCase(LANDSCAPE_ONE_NAME))
+            landscapeOne();
+        else if(landscapeName.equalsIgnoreCase(LANDSCAPE_TWO_NAME))
+            landscapeTwo();
+        else
+            landscapeOne();
     }
 
+    /**
+     * Available tiles. <br>
+     * Enum contains all information for each tile type.
+     */
     private enum TILES {
         GRASS("grass.png", false, false, true),
         SAND("sand.png", false, false, false),
@@ -73,6 +86,12 @@ public class SimulationMap {
         }
     }
 
+    //region landscape definition
+
+    /**
+     * The first landscape. <br>
+     * Defined in code, because json based and procedural generated maps are priority 3 and will be added in a later version .
+     */
     private void landscapeOne() {
 
         for (int x = 0; x < WIDTH; x++) {
@@ -155,6 +174,10 @@ public class SimulationMap {
 
     }
 
+    /**
+     * The second landscape. <br>
+     * Defined in code, because json based and procedural generated maps are priority 3 and will be added in a later version .
+     */
     private void landscapeTwo() {
         //initial
         for (int x = 0; x < WIDTH; x++) {
@@ -165,52 +188,52 @@ public class SimulationMap {
 
         //create river
         for (int x = 0; x < 7; x++) {
-            for (int y=0; y<6; y++){
+            for (int y = 0; y < 6; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = 0; x < 5; x++) {
-            for (int y=6; y<9; y++){
+            for (int y = 6; y < 9; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = 0; x < 3; x++) {
-            for (int y=9; y<11; y++){
+            for (int y = 9; y < 11; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
-        tiles[0][11]= new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), 0, 11, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        tiles[0][11] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), 0, 11, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         for (int x = 7; x < 11; x++) {
-            for (int y=0; y<3; y++){
+            for (int y = 0; y < 3; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
 
         //create second river
-        for (int y=0; y<3; y++){
-            int x = WIDTH-7;
+        for (int y = 0; y < 3; y++) {
+            int x = WIDTH - 7;
             tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
 
         for (int x = WIDTH - 6; x < WIDTH; x++) {
-            for (int y=0; y<8; y++){
+            for (int y = 0; y < 8; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = WIDTH - 4; x < WIDTH; x++) {
-            for (int y=8; y<11; y++){
+            for (int y = 8; y < 11; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
 
         //create lake in the middle
         for (int x = 10; x < 15; x++) {
-            for (int y=10; y<15; y++){
+            for (int y = 10; y < 15; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = 12; x < 15; x++) {
-            int y=15;
+            int y = 15;
             tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
 
@@ -230,17 +253,17 @@ public class SimulationMap {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-        for (int x = WIDTH - 9; x < WIDTH-4; x++) {
+        for (int x = WIDTH - 9; x < WIDTH - 4; x++) {
             for (int y = 8; y < 11; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-        for (int x = WIDTH - 7; x < WIDTH-3; x++) {
+        for (int x = WIDTH - 7; x < WIDTH - 3; x++) {
             for (int y = 17; y < 20; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-        tiles[WIDTH-8][17] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), WIDTH-8, 17, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+        tiles[WIDTH - 8][17] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), WIDTH - 8, 17, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
 
         //create mountain
         for (int x = WIDTH - 3; x < WIDTH; x++) {
@@ -248,17 +271,19 @@ public class SimulationMap {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
-        for (int x = WIDTH - 10; x < WIDTH-3; x++) {
+        for (int x = WIDTH - 10; x < WIDTH - 3; x++) {
             for (int y = HEIGHT - 4; y < HEIGHT; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
-        for (int x = WIDTH - 13; x < WIDTH-10; x++) {
+        for (int x = WIDTH - 13; x < WIDTH - 10; x++) {
             for (int y = HEIGHT - 2; y < HEIGHT; y++) {
                 tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
     }
+
+    //endregion
 
     /**
      * Checks, if gird coordination are inside the grid.
