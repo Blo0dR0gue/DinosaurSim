@@ -24,26 +24,26 @@ import java.util.*;
  * @see SimulationObject
  * @see SimulationLoop
  */
+@SuppressWarnings("unused")
 public class Simulation {
 
     //region variables
     /**
      * The used {@link SimulationMap}
-     *
      * @see SimulationMap
      */
     private final SimulationMap simulationMap;
+
     /**
      * The {@link GraphicsContext} for the background canvas
-     *
      * @see SimulationOverlay
      * @see javafx.scene.canvas.Canvas
      * @see GraphicsContext
      */
+
     private final GraphicsContext backgroundGraphics;
     /**
      * The List, with all handed {@link SimulationObject}s used in a Simulation.
-     *
      * @see SimulationObject
      */
     private final List<SimulationObject> simulationObjects;
@@ -63,13 +63,13 @@ public class Simulation {
      */
     private final Random random;
 
-    //TODO remove
+    //TODO REMOVE!!!
     private Line line;
 
     //endregion
 
     /**
-     * Constructor mainly used for test cases
+     * Constructor used for test cases
      */
     public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate, Random random) {
         this.simulationMap = simulationMap;
@@ -80,7 +80,6 @@ public class Simulation {
 
     /**
      * Constructor
-     *
      * @param landscapeName             The name of the used landscape.
      * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
      * @param simulationOverlay         The {@link SimulationOverlay} object on which {@link SimulationObject}s are spawned.
@@ -98,7 +97,7 @@ public class Simulation {
         //TODO
         //this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
 
-        //TODO remove temp code
+        //TODO REMOVE TEMPORARY CODE!!!
 
         this.simulationObjects.add(new Dinosaur(
                 "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
@@ -168,7 +167,6 @@ public class Simulation {
 
     /**
      * Gets the used {@link SimulationMap}.
-     *
      * @return The currently used {@link SimulationMap}
      */
     public SimulationMap getSimulationMap() {
@@ -177,7 +175,6 @@ public class Simulation {
 
     /**
      * Gets all handled {@link SimulationObject}s.
-     *
      * @return The list {@link Simulation#simulationObjects}.
      */
     public List<SimulationObject> getSimulationObjects() {
@@ -186,7 +183,6 @@ public class Simulation {
 
     /**
      * Checks if a simulation is finished.
-     *
      * @return true when all dinosaurs are extinct.
      */
     public boolean isOver() {
@@ -203,11 +199,9 @@ public class Simulation {
 
     /**
      * Method, that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects}.
-     *
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
     private void spawnObjects(SimulationOverlay simulationOverlay) {
-
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
             //simulationOverlay.getChildren().add(obj.getCircle());
@@ -220,17 +214,14 @@ public class Simulation {
                 //Plants only can be spawned on tiles, which allow plant growing
                 obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, obj.getInteractionRange()));
             }
-
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
         }
-
         simulationOverlay.getChildren().add(line);
     }
 
     /**
      * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects} to the {@link #toBeRemoved} list.
      * The object is also been removed from the visuals.
-     *
      * @param simulationObject The {@link SimulationObject} which should be removed.
      */
     public void deleteObject(SimulationObject simulationObject) {
@@ -242,7 +233,6 @@ public class Simulation {
      * Draws the simulation background
      */
     private void drawMap() {
-
         backgroundGraphics.setFill(Color.BLACK);
         backgroundGraphics.fillRect(0, 0, SimulationOverlay.BACKGROUND_WIDTH, SimulationOverlay.BACKGROUND_HEIGHT);
 
@@ -260,7 +250,6 @@ public class Simulation {
 
     /**
      * Gets the closest reachable Water source or null.
-     *
      * @param position  The {@link Vector2D} position, where we check from.
      * @param viewRange The radial range, we want to check (as radius)
      * @param canSwim   Does the object, who wants to move to a water tile, can swim?
@@ -273,23 +262,17 @@ public class Simulation {
         sortByDistance(waterSourcesInRange, position);
 
         if (!waterSourcesInRange.isEmpty()) {
-
             for (Vector2D vector : waterSourcesInRange) {
-
                 if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true)) {
                     return vector;
                 }
-
             }
-
         }
-
         return null;
     }
 
     /**
      * Gets the closest {@link SimulationObject} which can be eaten by the searcher {@link Dinosaur}
-     *
      * @param position  The {@link Vector2D} position of the seeker.
      * @param viewRange The view range (as radius) of the seeker.
      * @param dietType  The {@link Dinosaur.dietType} of the seeker.
@@ -311,17 +294,14 @@ public class Simulation {
             //An omnivore prioritized plants. So if a plant is in range this will be the target.
             SimulationObject closest = null;
             for (SimulationObject simulationObject : inRange) {
-
                 if (closest == null) {
                     closest = simulationObject;
                 } else {
                     if (closest instanceof Plant && simulationObject instanceof Plant || closest instanceof Dinosaur && simulationObject instanceof Dinosaur) {
-
                         //If the distance of the last closest object ist lager than the distance of the current object, which is being checked, set it to the current object.
                         if (Vector2D.distance(position, closest.getPosition()) > Vector2D.distance(position, simulationObject.getPosition())) {
                             closest = simulationObject;
                         }
-
                     } else if (!(closest instanceof Plant) && simulationObject instanceof Plant) {
                         closest = simulationObject;
                     }
@@ -334,7 +314,6 @@ public class Simulation {
     /**
      * Gets all {@link SimulationObject}s which can be eaten by the searcher {@link Dinosaur} <br>
      * It is also been checked, if the food source can be eaten by the searcher.
-     *
      * @param position  The {@link Vector2D} position of the seeker.
      * @param viewRange The view range (as radius) of the seeker.
      * @param dietType  The {@link Dinosaur.dietType} of the seeker.
@@ -347,7 +326,6 @@ public class Simulation {
         List<SimulationObject> inRange = new ArrayList<>();
 
         for (SimulationObject simulationObject : simulationObjects) {
-
             if (simulationObject.getPosition() != position) {
                 if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     if (dietType == Dinosaur.dietType.herbivore && simulationObject instanceof Plant plant) {
@@ -366,15 +344,12 @@ public class Simulation {
                 }
             }
         }
-
         inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
-
         return inRange;
     }
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
-     *
      * @param position The {@link Vector2D} we want sort to.
      * @param list     The list with the {@link SimulationObject}, which should be sorted.
      */
@@ -384,7 +359,6 @@ public class Simulation {
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
-     *
      * @param position The {@link Vector2D} we want sort to.
      * @param list     The list with the {@link Vector2D}, which should be sorted.
      */
@@ -394,7 +368,6 @@ public class Simulation {
 
     /**
      * Gets a random free position on the grid map.
-     *
      * @param canSwim          Can the {@link Dinosaur} swim.
      * @param canClimb         Can the {@link Dinosaur} climb.
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
@@ -402,17 +375,14 @@ public class Simulation {
      */
     public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange) {
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
-
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
             return getFreePositionInMap(canSwim, canClimb, interactionRange);
         }
-
         return target;
     }
 
     /**
      * Gets a random free position on the grid map matching the conditions.
-     *
      * @param climbable        Does the tile need to be climbable.
      * @param swimmable        Does the tile need to be swimmable.
      * @param allowPlants      Does the tile need to allow plants?
@@ -421,17 +391,14 @@ public class Simulation {
      */
     public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange) {
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
-
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
             return getFreePositionInMap(swimmable, climbable, interactionRange);
         }
-
         return target;
     }
 
     /**
      * Checks, if a point with a range (a circle) intersect any interaction range.
-     *
      * @param target           The target {@link Vector2D} point
      * @param interactionRange The range of the point (circle), which should be checked.
      * @param ignore           This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
@@ -441,7 +408,6 @@ public class Simulation {
         if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
-
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != ignore)
                 if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
@@ -453,7 +419,6 @@ public class Simulation {
 
     /**
      * Checks if a {@link SimulationObject} can move to a position.
-     *
      * @param start                  The {@link Vector2D} position of the {@link SimulationObject}.
      * @param target                 The {@link Vector2D} target, where he wants to move.
      * @param interactionRange       The interaction range of the {@link SimulationObject}.
@@ -502,10 +467,8 @@ public class Simulation {
         return true;
     }
 
-
     /**
      * Gets a random target vector inside a view range of a dinosaur.
-     *
      * @param position         The position of the {@link SimulationObject} which wants to move.
      * @param viewRange        The view range as a radius.
      * @param interactionRange The interaction as a radius.
@@ -517,10 +480,8 @@ public class Simulation {
      */
     public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
         Vector2D target = getRandomPointInCircle(position, viewRange);
-
         //try it max. 500 times to get a target
         int maximumAttempts = 500;
-
         while (maximumAttempts > 0) {
             if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
                 return target;
@@ -528,13 +489,11 @@ public class Simulation {
             target = getRandomPointInCircle(position, viewRange);
             maximumAttempts--;
         }
-
         return null;
     }
 
     /**
      * Get a random target facing in a direction with an offset of +-PI/3. <br>
-     *
      * @param position         The position of the {@link SimulationObject} which wants to move.
      * @param viewRange        The view range as a radius.
      * @param interactionRange The interaction as a radius.
@@ -547,10 +506,8 @@ public class Simulation {
      */
     public Vector2D getRandomMovementTargetInRangeInDirection(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, Vector2D direction) {
         Vector2D target = getRandomPositionInsideCircleRangeInDirection(position, viewRange, direction);
-
         //try it max. 500 times to get a target
         int maximumAttempts = 500;
-
         while (maximumAttempts > 0) {
             if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
                 return target;
@@ -558,13 +515,11 @@ public class Simulation {
             target = getRandomPositionInsideCircleRangeInDirection(position, viewRange, direction);
             maximumAttempts--;
         }
-
         return null;
     }
 
     /**
      * Get a random point inside a circle.
-     *
      * @param center The center {@link Vector2D} of the circle.
      * @param radius The radius of this circle.
      * @return A {@link Vector2D} point.
@@ -587,7 +542,6 @@ public class Simulation {
 
     /**
      * Get a random position facing in a direction with an offset of +-PI/3. <br>
-     *
      * @param center The circle {@link Vector2D} position from which we check.
      * @param radius The radial range of the circle.
      * @param dir    A direction {@link Vector2D}
@@ -595,32 +549,24 @@ public class Simulation {
      */
     private Vector2D getRandomPositionInsideCircleRangeInDirection(Vector2D center, double radius, Vector2D dir) {
         double deg = Vector2D.angleToVector(dir);
-
         if (deg < 0) {
             deg = 2 * Math.PI + deg;
         }
-
         double low = deg - Math.PI / 4;
         double high = deg + Math.PI / 4;
-
         if (low < 0) {
             low = 0;
         }
-
         if (high > 2 * Math.PI) {
             high = 2 * Math.PI;
         }
-
         if (low > high) {
             double tmp = low;
             low = high;
             high = tmp;
         }
-
         double angle = random.nextDouble(low, high);
-
         double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
-
         //Calculate the sites
         double adjacent = Math.cos(angle) * hypotenuse;
         double opposite = -Math.sin(angle) * hypotenuse;
@@ -630,7 +576,6 @@ public class Simulation {
 
     /**
      * Checks, if a point is inside a circle
-     *
      * @param circleCenter The center of the circle.
      * @param radius       The radius of this circle.
      * @param point        The {@link Vector2D} point, which should be checked.
@@ -645,7 +590,6 @@ public class Simulation {
 
     /**
      * Check, if a point is inside any interaction range (collision circle) of any simulationobject.
-     *
      * @param point  The point, which should be checked.
      * @param ignore This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
      * @return true, if the point is inside any collision circle.
@@ -662,7 +606,6 @@ public class Simulation {
     /**
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
-     *
      * @param start            The start {@link Vector2D} position in the simulation world.
      * @param target           The target {@link Vector2D} position in the simulation world.
      * @param canSwim          Can the {@link Dinosaur} swim?
@@ -673,57 +616,43 @@ public class Simulation {
     private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, boolean ignoreTargetTile) {
         Tile startTile = simulationMap.getTileAtPosition(start);
         Tile targetTile = simulationMap.getTileAtPosition(target);
-
         //Distance between the tiles. (In x and y direction)
         int dx = targetTile.getGridX() - startTile.getGridX();
         int dy = targetTile.getGridY() - startTile.getGridY();
-
         //Absolute distances.
         int adx = Math.abs(dx);
         int ady = Math.abs(dy);
-
         //Determine the sign of the increment
         int sdx = (int) Math.signum(dx);
         int sdy = (int) Math.signum(dy);
-
         //pd. is parallel step
         int pdx, pdy;
-
         //dd. is diagonal step
         int ddx, ddy;
-
         //delta in fast and slow direction
         int deltaSlowDirection, deltaFastDirection;
-
         //Determine which distance is greater
         if (adx > ady) {
             //x is faster
             pdx = sdx;
             pdy = 0;
-
             ddx = sdx;
             ddy = sdy;
-
             deltaSlowDirection = ady;
             deltaFastDirection = adx;
-
         } else {
             //y is faster
             pdx = 0;
             pdy = sdy;
-
             ddx = sdx;
             ddy = sdy;
-
             deltaSlowDirection = adx;
             deltaFastDirection = ady;
         }
-
         //Loop variables
         int x = startTile.getGridX();
         int y = startTile.getGridY();
         int error = deltaFastDirection / 2;
-
         for (int i = 0; i < deltaFastDirection; ++i) {
             //update error term
             error -= deltaSlowDirection;
@@ -738,24 +667,17 @@ public class Simulation {
                 x += pdx;
                 y += pdy;
             }
-
             if (!(ignoreTargetTile && targetTile.getGridX() == x && targetTile.getGridY() == y))
                 if (!simulationMap.tileMatchedConditions(x, y, canSwim, canClimb)) {
                     //If this tile can't be crossed be the dinosaur, return false.
                     return false;
                 }
         }
-
-        if (simulationMap.isInsideOfGrid(x, y + 1) && !simulationMap.tileMatchedConditions(x, y + 1, canSwim, canClimb)) {
-            return false;
-        }
-
-        return true;
+        return !simulationMap.isInsideOfGrid(x, y + 1) || simulationMap.tileMatchedConditions(x, y + 1, canSwim, canClimb);
     }
 
     /**
      * Checks, if a line segment collide with a view range circle.
-     *
      * @param circleOrigin     The origin {@link Vector2D} of the range circle.
      * @param radius           The radius of the range circle.
      * @param start            The start {@link Vector2D} of the line segment.
@@ -768,10 +690,8 @@ public class Simulation {
         if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
-
         line.setStartX(start.getX());
         line.setStartY(start.getY());
-
         line.setEndX(end.getX());
         line.setEndY(end.getY());
 
@@ -797,7 +717,6 @@ public class Simulation {
 
     /**
      * Checks, if two circles intersect.
-     *
      * @param circleOrigin1 The {@link Vector2D} center point of the first circle.
      * @param radius1       The radius of the first circle.
      * @param circleOrigin2 The {@link Vector2D} center point of the second circle.
@@ -809,5 +728,4 @@ public class Simulation {
         double radSumSq = Math.pow(radius1 + radius2, 2);
         return distSq < radSumSq;
     }
-
 }
