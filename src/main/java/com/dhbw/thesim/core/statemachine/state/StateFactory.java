@@ -11,8 +11,6 @@ import com.dhbw.thesim.core.statemachine.state.plant.Grown;
  * State factory, which creates {@link State}-objects. <br>
  * Using the Factory Pattern. <br>
  * We use this state factory, because we cant create a object when creating a {@link com.dhbw.thesim.core.statemachine.StateTransition}. This would end in a {@link StackOverflowError}
- * <br>
- * TODO maybe simplify this whole transition, state, etc. thing. (Maybe pass the simobject in the updates?)
  *
  * @author Daniel Czeschner
  */

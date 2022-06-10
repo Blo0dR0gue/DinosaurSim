@@ -15,12 +15,6 @@ import javafx.scene.shape.Circle;
 @SuppressWarnings("unused")
 public class Plant extends SimulationObject {
 
-    //TODO do we need this?
-    public enum plantType {
-        busch,
-        baum
-    }
-
     /**
      * The level, where a plant is grown.
      */
@@ -29,7 +23,6 @@ public class Plant extends SimulationObject {
     /**
      * Used to specify the properties for a {@link Plant}-object.
      */
-    private Plant.plantType plantType;
     private double growth;
     private final double growthRate;
 
@@ -64,7 +57,6 @@ public class Plant extends SimulationObject {
      */
     @Override
     public void updateGraphics() {
-        //TODO do only once
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
     }
@@ -82,9 +74,6 @@ public class Plant extends SimulationObject {
     /**
      * Getter & Setter Methods for a {@link Plant}-object.
      */
-    public Plant.plantType getPlantType() {
-        return plantType;
-    }
 
     public double getGrowth() {
         return growth;
