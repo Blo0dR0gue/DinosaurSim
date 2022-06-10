@@ -6,6 +6,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.statemachine.StateMachine;
 import com.dhbw.thesim.core.util.Vector2D;
+import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -71,6 +72,13 @@ public abstract class SimulationObject extends StateMachine {
 
         test.setFill(Color.BLUE);
 
+
+        //TODO check if possible with our images
+        imageObj.setPreserveRatio(true);
+        imageObj.setFitHeight(interactionRange*2);
+        imageObj.setFitWidth(interactionRange*2);
+        //TODO scale if screen has scaling
+
         setSprite(image);
     }
 
@@ -112,8 +120,13 @@ public abstract class SimulationObject extends StateMachine {
     public void setSprite(Image image) {
         imageObj.setImage(image);
         //TODO dont center image. center it to the feet, because it can look like a dinosaur is walking through water. (Simulation calculations need to be changed)
-        renderOffset.setX(image.getWidth() / 2);
-        renderOffset.setY(image.getHeight() / 2 + Dinosaur.PROXIMITY_RANGE);
+
+        double aspectRatio = image.getWidth() / image.getHeight();
+        double realWidth = Math.min(imageObj.getFitWidth(), imageObj.getFitHeight() * aspectRatio);
+        double realHeight = Math.min(imageObj.getFitHeight(), imageObj.getFitWidth() / aspectRatio);
+
+        renderOffset.setX(realWidth / 2);
+        renderOffset.setY(realHeight / 2 + Dinosaur.PROXIMITY_RANGE);
     }
 
     /**
