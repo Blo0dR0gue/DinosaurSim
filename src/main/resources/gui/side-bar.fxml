@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+<fx:root fx:id="root" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx"
+         xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #808080">
+    <top>
+        <Label text="Dinosaurier&#13;Simulation" textFill="white"
+               textAlignment="CENTER" BorderPane.alignment="TOP_CENTER">
+            <font>
+                <Font size="20.0"/>
+            </font>
+            <StackPane.margin>
+                <Insets top="10.0"/>
+            </StackPane.margin>
+        </Label>
+    </top>
+    <center>
+        <VBox fx:id="centerContainer">
+
+        </VBox>
+    </center>
+    <bottom>
+        <HBox fx:id="bottomContainer" alignment="CENTER" />
+    </bottom>
+</fx:root>

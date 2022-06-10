@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<fx:root type="javafx.scene.layout.HBox" fx:id="container"
+         xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <StackPane>
+      <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+      <Label fx:id="sliderValueLabel" text="0" StackPane.alignment="BOTTOM_LEFT">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+   </StackPane>
+   <BorderPane fx:id="borderPane" prefHeight="100.0" HBox.hgrow="ALWAYS">
+      <top>
+         <Label fx:id="label_name" text="PLATZHALTER" BorderPane.alignment="CENTER" textFill="white">
+            <font>
+               <Font size="16.0"/>
+            </font>
+         </Label>
+      </top>
+      <center>
+         <Slider fx:id="slider" max="10.0" majorTickUnit="2.0" minorTickCount="1"
+                 showTickLabels="true" showTickMarks="true" snapToTicks="true"
+                 BorderPane.alignment="CENTER"/>
+      </center>
+      <bottom>
+         <HBox fx:id="hbox_inner" BorderPane.alignment="CENTER">
+            <!-- TODO Implement viewing information about the corresponding dino via the info button (Popup?) -->
+            <fx:define>
+               <Image fx:id="infoBtnImage" url="@../controls/arrow-down.png"/>
+            </fx:define>
+            <Button fx:id="button_info" style="-fx-background-color: transparent;">
+               <graphic>
+                  <ImageView fitWidth="15.0" fitHeight="15.0" image="$infoBtnImage"/>
+               </graphic>
+            </Button>
+            <fx:define>
+               <Image fx:id="removeBtnImage" url="@../controls/minus.png"/>
+            </fx:define>
+            <Button fx:id="button_remove" style="-fx-background-color: transparent;">
+               <graphic>
+                  <ImageView fitWidth="15.0" fitHeight="15.0" image="$removeBtnImage"/>
+               </graphic>
+            </Button>
+         </HBox>
+      </bottom>
+   </BorderPane>
+</fx:root>

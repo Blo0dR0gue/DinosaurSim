@@ -1,5 +1,6 @@
 package com.dhbw.thesim.core.map;
 
+import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -46,7 +47,7 @@ public class Tile {
     /**
      * The square size for one tile (as specified in the requirement's specification)
      */
-    public static final double TILE_SIZE = SimulationOverlay.adjustScale(45, SimulationOverlay.SCALE_X);
+    public static final double TILE_SIZE = Display.adjustScale(45, Display.SCALE_X);
     //endregion
     //endregion
 
