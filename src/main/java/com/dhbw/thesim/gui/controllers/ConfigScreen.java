@@ -122,7 +122,7 @@ public class ConfigScreen extends AnchorPane {
                 window.setFullScreen(true);
             }
             else {
-                modeRequired.setText("Bitte wählen Sie einen Simulationsmodus aus!");
+                modeRequired.setVisible(true);
             }
         });
 
@@ -130,6 +130,7 @@ public class ConfigScreen extends AnchorPane {
         modeGroup.selectedToggleProperty().addListener((observableValue, previousSelection, currentSelection) -> {
             maxRuntime.setVisible(currentSelection.equals(auto));
             maxSteps.setVisible(currentSelection.equals(manual));
+            modeRequired.setVisible(false);
         });
 
         maxSteps.slider.valueProperty()
