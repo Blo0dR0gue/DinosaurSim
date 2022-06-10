@@ -11,10 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * The Control CLass for the Configuration Screen FXML file
@@ -100,6 +97,19 @@ public class ConfigScreen extends AnchorPane {
 
         GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));
         GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
+
+        ScenarioSelector scenarioSelector = ScenarioSelector.newInstance();
+        scenarioSelector.initialize();
+
+        sideBar.getBody().add(scenarioSelector.container);
+        ToggleGroup scenarioToggleGroup = new ToggleGroup();
+        //TODO get scenario names from config
+        for (String scenarioName:
+                List.of("defaultScenarioConfig")) {
+            ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
+            scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
+            scenarioSelector.scenarioListView.getItems().add(scenarioListItem);
+        }
 
         initializeListeners();
     }
