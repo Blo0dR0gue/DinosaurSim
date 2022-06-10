@@ -16,6 +16,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
  *
@@ -42,8 +44,10 @@ public class SimulationOverlay extends BorderPane {
         centerPane.setMinWidth(Display.adjustScale(1920, Display.SCALE_X));
         centerPane.setMinHeight(Display.adjustScale(1080, Display.SCALE_Y));
 
+        Boolean isSimulationModeAuto = Objects.equals(configScreen.getMode().getId(), "auto");
+
         createCanvas();
-        createSideBar();
+        createSideBar(isSimulationModeAuto);
 
         //Add the Canvas and the Sidebar to the AnchorPane
         centerPane.getChildren().add(backgroundCanvas);
@@ -55,7 +59,7 @@ public class SimulationOverlay extends BorderPane {
         //TODO get data from config screen
         Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
-        simulationLoop = new SimulationLoop(1, (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
+        simulationLoop = new SimulationLoop(isSimulationModeAuto ? 1 : 0, (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
 
         simulationIsRunning = true;
 
@@ -95,7 +99,7 @@ public class SimulationOverlay extends BorderPane {
         canvasGraphics = backgroundCanvas.getGraphicsContext2D();
     }
 
-    private void createSideBar() {
+    private void createSideBar(Boolean isSimModeAuto) {
         sideBar = SideBar.newInstance();
 
         sideBar.setPrefWidth(Display.adjustScale(300, Display.SCALE_X));
@@ -103,23 +107,34 @@ public class SimulationOverlay extends BorderPane {
 
         AnchorPane.setRightAnchor(sideBar, 0.0);
 
-        //Add the control buttons to the sidebar and add a click listener to each
-        Button playButton = addControlButtonToSideBar("/controls/play.png");
-        playButton.setOnAction(e -> {
-            if (!simulationIsRunning) {
+        //Check if automatic simulation mode was selected from the config screen, then add needed controls to sidebar
+        if (isSimModeAuto) {
+            //Add the control buttons for automatic simulation mode to the sidebar and add a click listener to each
+            createToggleButton("/controls/play.png", false);
+
+            createToggleButton("/controls/pause.png", true);
+
+            createStopButton();
+        } else {
+            //Add the control buttons for manual simulation mode to the sidebar and add a click listener to each
+            Button nextStepButton = addControlButtonToSideBar("/controls/next.png");
+            nextStepButton.setOnAction(e -> simulationLoop.triggerUpdates());
+
+            createStopButton();
+        }
+    }
+
+    private void createToggleButton(String controlImgUrl, Boolean toggleOnRunningSimulation) {
+        Button toggleButton = addControlButtonToSideBar(controlImgUrl);
+        toggleButton.setOnAction(e -> {
+            if (simulationIsRunning == toggleOnRunningSimulation) {
                 simulationLoop.togglePause();
-                simulationIsRunning = true ;
+                simulationIsRunning = !simulationIsRunning;
             }
         });
+    }
 
-        Button pauseButton = addControlButtonToSideBar("/controls/pause.png");
-        pauseButton.setOnAction(e -> {
-            if (simulationIsRunning) {
-                simulationLoop.togglePause();
-                simulationIsRunning = false;
-            }
-        });
-
+    private void createStopButton() {
         Button stopButton = addControlButtonToSideBar("/controls/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
