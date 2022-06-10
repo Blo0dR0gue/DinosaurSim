@@ -13,12 +13,10 @@ import com.dhbw.thesim.core.statemachine.state.State;
 public class Dead extends State {
 
     private boolean triggered = false;
-
     private final Dinosaur dinosaur;
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Dead(Dinosaur simulationObject) {
@@ -28,7 +26,6 @@ public class Dead extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
         if (!triggered) {
             //Reset the hunted dinosaur
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur target) {
@@ -40,7 +37,6 @@ public class Dead extends State {
             //Remove the object from the simulation
             simulation.deleteObject(this.simulationObject);
         }
-
     }
 
     @Override

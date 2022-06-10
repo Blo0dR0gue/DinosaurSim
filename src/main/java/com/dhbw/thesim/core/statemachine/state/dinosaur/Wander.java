@@ -33,7 +33,6 @@ public class Wander extends State {
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Wander(Dinosaur simulationObject) {
@@ -48,7 +47,6 @@ public class Wander extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
         if (target == null) {
             target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
             if (target != null) {
@@ -57,7 +55,6 @@ public class Wander extends State {
                 dinosaur.setTest(target);
                 dinosaur.flipImage(direction);
             }
-
         }
         if (direction != null)
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
@@ -97,11 +94,9 @@ public class Wander extends State {
 
     /**
      * Are we in range of our {@link #target}
-     *
      * @return true, if we are in the {@link Dinosaur#PROXIMITY_RANGE} to the {@link #target}.
      */
     private boolean arrived() {
         return target != null && simulationObject.getPosition().isInRangeOf(target, Dinosaur.PROXIMITY_RANGE);
     }
-
 }

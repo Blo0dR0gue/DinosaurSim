@@ -8,18 +8,19 @@ import com.dhbw.thesim.core.entity.SimulationObject;
  * @author Daniel Czeschner
  * @see Simulation
  */
+@SuppressWarnings("unused")
 public class SimulationLoop {
 
     //region variables
 
-    //region simulation update rates
+    /**
+     * Used to specify update rates.
+     */
     private static final int UPDATES_PER_SECOND = 60;
     private static final int FRAMES_PER_SECOND = 30;
     private static final int UPDATES_PER_STEP = 30;
-
     private final double UPDATE_RATE = 1.0d / UPDATES_PER_SECOND;
     private final double FRAME_RATE = 1.0d / FRAMES_PER_SECOND;
-    //endregion
 
     /**
      * Is multiplied on the update rate. <1 means more updates per second
@@ -41,7 +42,6 @@ public class SimulationLoop {
     private long nextDebugStatsTime;
     private int fps, ups;
     //endregion
-
     //endregion
 
     /**
@@ -68,7 +68,6 @@ public class SimulationLoop {
 
     /**
      * Constructor for a simulation runner
-     *
      * @param simulationSpeedMultiplier The speed multiplier for the automatic simulation mode.
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
      * @param maxStepAmount             The max amount of steps, that can be triggered.
@@ -80,7 +79,6 @@ public class SimulationLoop {
         this.stepRangeMultiplier = stepRangeMultiplier;
         this.maxStepAmount = maxStepAmount;
         this.maxRunTimeInMinutes = maxRunTimeInMinutes;
-
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
     }
@@ -93,14 +91,11 @@ public class SimulationLoop {
         running = true;
         double deltaTime = 0;
         double frameAccumulator = 0;
-
         long currentTime, lastUpdate = System.currentTimeMillis();
-
         //The time, when the sim is finished
-        long runtime = lastUpdate + this.maxRunTimeInMinutes * 60 * 1000;
+        long runtime = lastUpdate + (long) this.maxRunTimeInMinutes * 60 * 1000;
 
         while (running) {
-
             //update the loop variables.
             currentTime = System.currentTimeMillis();
             double lastUpdateTimeInSeconds = (currentTime - lastUpdate) / 1000d;
@@ -117,7 +112,6 @@ public class SimulationLoop {
                     deltaTime -= UPDATE_RATE;
                 }
             }
-
             //Limit the frames per second
             if (frameAccumulator >= FRAME_RATE) {
                 while (frameAccumulator >= FRAME_RATE) {
@@ -127,10 +121,8 @@ public class SimulationLoop {
                     frameAccumulator -= FRAME_RATE;
                 }
             }
-
             //Print debug stats
             printStats();
-
             //Check if over
             if (runtime <= currentTime || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
@@ -143,7 +135,6 @@ public class SimulationLoop {
     /**
      * Is called each update call. <br>
      * This method calls the {@link SimulationObject#update(double, Simulation)} method.
-     *
      * @param deltaTime The time since the last update call.
      */
     private void update(double deltaTime) {
@@ -168,11 +159,9 @@ public class SimulationLoop {
     /**
      * Debug method, which prints out the current updates per second and frames per second. <br>
      * Is only used in the automatic updates.
-     *
      * @see #simLoopRunnable
      */
     private void printStats() {
-
         if (System.currentTimeMillis() > nextDebugStatsTime) {
             System.out.printf("FPS: %d, UPS: %d%n", fps, ups);
             fps = 0;
@@ -190,7 +179,6 @@ public class SimulationLoop {
         }
         updateGraphics();
         this.maxStepAmount--;
-
         //check if over
         if (maxStepAmount <= 0 || currentSimulation.isOver()) {
             //TODO Callback to gui
@@ -199,7 +187,6 @@ public class SimulationLoop {
 
     /**
      * Stats the automatic simulation runner.
-     *
      * @see #simulationLoop
      */
     public void startSimulationRunner() {
@@ -216,7 +203,6 @@ public class SimulationLoop {
 
     /**
      * Pause/Unpause the automatic simulation runner.
-     *
      * @see #simLoopRunnable
      * @see #simulationLoop
      */
@@ -226,11 +212,9 @@ public class SimulationLoop {
 
     /**
      * Gets the current simulation data
-     *
      * @return A {@link Simulation} object
      */
     public Simulation getCurrentSimulation() {
         return this.currentSimulation;
     }
-
 }

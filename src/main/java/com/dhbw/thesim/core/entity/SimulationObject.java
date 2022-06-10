@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Daniel Czeschner
  */
+@SuppressWarnings("unused")
 public abstract class SimulationObject extends StateMachine {
 
     /**
@@ -218,6 +219,4 @@ public abstract class SimulationObject extends StateMachine {
                 targetPosition.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
                 targetPosition.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
-
-    //endregion
 }

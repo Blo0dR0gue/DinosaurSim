@@ -19,7 +19,6 @@ public class Grown extends State {
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link SimulationObject}
      */
     public Grown(SimulationObject simulationObject) {

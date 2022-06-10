@@ -15,6 +15,7 @@ import javafx.scene.transform.Transform;
  * @author Daniel Czeschner
  * @see SimulationMap
  */
+@SuppressWarnings("unused")
 public class Tile {
 
     //region variables
@@ -22,10 +23,12 @@ public class Tile {
      * The image, which is rendered for this {@link Tile}.
      */
     private final Image background;
+
     /**
      * Defines, if this tile can only be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can swim.
      */
     private final boolean swimmable;
+
     /**
      * Defines, iff this tile can ony be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can climb.
      */
@@ -45,12 +48,10 @@ public class Tile {
      */
     public static final double TILE_SIZE = SimulationOverlay.adjustScale(45, SimulationOverlay.SCALE_X);
     //endregion
-
     //endregion
 
     /**
      * Constructor
-     *
      * @param image The background for this {@link Tile} object.
      * @see #background
      */
@@ -63,7 +64,9 @@ public class Tile {
         this.canContainPlants = canContainPlants;
     }
 
-    //region getter & setter
+    /**
+     * Getter and setter methods for {@link Tile}-objects.
+     */
     public Image getBackground() {
         return background;
     }
@@ -88,13 +91,7 @@ public class Tile {
         return gridY;
     }
 
-    //endregion
-
-    /**
-     * TODO REMOVE
-     *
-     * @return
-     */
+    //TODO REMOVE!!!
     public static Image tmpSprite() {
         Canvas c = new Canvas(TILE_SIZE, TILE_SIZE);
         GraphicsContext gc = c.getGraphicsContext2D();

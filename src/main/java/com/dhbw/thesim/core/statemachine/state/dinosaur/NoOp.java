@@ -2,7 +2,6 @@ package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 
 import com.dhbw.thesim.core.entity.Dinosaur;
-import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
@@ -22,7 +21,6 @@ public class NoOp extends State {
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public NoOp(Dinosaur simulationObject) {
@@ -44,7 +42,6 @@ public class NoOp extends State {
     public void initTransitions() {
         //The dinosaur got eaten.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
-
         //The dinosaur died before this one got eaten.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> !dinosaur.isForcedToNoOp()));
     }

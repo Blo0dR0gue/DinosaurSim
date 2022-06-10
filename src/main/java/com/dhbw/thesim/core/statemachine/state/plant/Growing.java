@@ -19,7 +19,6 @@ public class Growing extends State {
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link SimulationObject}
      */
     public Growing(Plant simulationObject) {
@@ -48,5 +47,4 @@ public class Growing extends State {
             plant.setGrowth(plant.getGrowth() + plant.getGrowthRate() * deltaTime);
         }
     }
-
 }
