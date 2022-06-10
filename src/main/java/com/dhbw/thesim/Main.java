@@ -20,10 +20,13 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         Application.launch(Display.class,args);
+        JsonHandler.setDirectory();
 
         //------------------------------------------------------------------------------------------------------------------
         //Testen von JsonHandler: TODO nur zum Testen, bzw. fürs Verständnis
-            JsonHandler.setDirectory();
+
+            //ArrayList<String> aller json-Dateien mit Scenario im Namen
+            System.out.println(JsonHandler.getExistingScenarioFileNames());
 
             JsonHandler.exportDefaultScenarioConfig();
             JsonHandler.exportDefaultSimulationObjectsConfig();
