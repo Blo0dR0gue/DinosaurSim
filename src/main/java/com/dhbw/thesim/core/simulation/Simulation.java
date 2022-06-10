@@ -125,7 +125,7 @@ public class Simulation {
         );
 
         this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
+                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 80,
                 0.1, 100, 50, 10, false, true,
                 'p', 400, 32, 'm')
         );
@@ -148,7 +148,7 @@ public class Simulation {
                 'a', 370, 32, 'M')
         );
 
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("birke.png"), 128, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("birke.png"), 64, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("farn.png"), 16, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
