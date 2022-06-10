@@ -35,7 +35,7 @@ public class Main {
             tempDino.put("Abrictosaurus",3);
             HashMap<String,Integer> tempPlant = new HashMap<>();
             tempPlant.put("Farn",4);
-            JsonHandler.exportScenarioConfig(tempDino,tempPlant,"landschaftsName", 9.0, "testScenarioKonfig");
+            JsonHandler.exportScenarioConfig(tempDino,tempPlant,"landschaftsName", 9.0, "test");
 
         //Testen von Json2Objects: TODO nur zum Testen, bzw. fürs Verständnis
             HashMap<String,Integer> testInitDino=new HashMap<>();
@@ -46,7 +46,7 @@ public class Main {
 
             Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "");
             System.out.println("--------------");
-            Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "testScenarioKonfig");
+            Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "testScenarioConfiguration");
         //------------------------------------------------------------------------------------------------------------------
     }
 

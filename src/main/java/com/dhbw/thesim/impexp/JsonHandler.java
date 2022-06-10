@@ -277,19 +277,19 @@ public class JsonHandler {
 
         //create the file and write to it
         try {
-            File configFile = new File(workingDirectory + "/" + fileName + ".json");
+            File configFile = new File(workingDirectory + "/" + fileName + "ScenarioConfiguration.json");
             if (!configFile.createNewFile()) {
                 System.out.println("Warning: The file '" + fileName + ".json' will be overwritten.");
             } else {
-                System.out.println("File created: " + fileName);
+                System.out.println("File created: " + fileName + "ScenarioConfiguration.json");
             }
             try {
-                FileWriter fileWriter = new FileWriter(workingDirectory + "/" + fileName + ".json");
+                FileWriter fileWriter = new FileWriter(workingDirectory + "/" + fileName + "ScenarioConfiguration.json");
                 fileWriter.write(String.valueOf(wrappingJsonArray));
                 fileWriter.close();
-                System.out.println("Successfully written to file: " + fileName);
+                System.out.println("Successfully written to file: " + fileName + "ScenarioConfiguration.json");
             } catch (IOException e) {
-                System.out.println("The file " + fileName + ".json could not be written to.");
+                System.out.println("The file " + fileName + "ScenarioConfiguration.json could not be written to.");
                 e.printStackTrace();
             }
         } catch (IOException e) {
