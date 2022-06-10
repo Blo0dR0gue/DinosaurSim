@@ -32,6 +32,17 @@ public class JsonHandler {
     }
 
     /**
+     * Helper function, to get the working directory of this simulation.
+     *
+     * @return the working directory for this app.
+     */
+    public static String getWorkingDirectory() {
+        if (workingDirectory == null)
+            setDirectory();
+        return workingDirectory;
+    }
+
+    /**
      * Set the String workingDirectory based on the operating systems appdata specific folder and create a folder "TheSim" if needed
      */
     public static void setDirectory() {
