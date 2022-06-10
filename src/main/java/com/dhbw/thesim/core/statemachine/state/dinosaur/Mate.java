@@ -42,25 +42,35 @@ public class Mate extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        //TODO make it work
-        //Neuen dino erzeugen, der die eigenschaften von vater und mutter erbt wie im entwurf beschrieben. (Mutationen, etc)
+        if (dinosaur.getPartner() == null) {
+            Dinosaur temp = (Dinosaur) simulation.getClosestReachableSuitablePartnerInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getGender());
+            if(temp!=null) {
+                dinosaur.setPartner(temp);
+                dinosaur.getPartner().setPartner(dinosaur);
+                System.out.println("Found Partner");
+            }
+            else
+                done=true;
+
+        }
 
         mateTime -= deltaTime;
 
         if (mateTime <= 0 && !done) {
-            if (dinosaur.getGender()=='f' && dinosaur.getPartner().getPartner()==dinosaur) {
+            if (dinosaur.getGender()=='f' && dinosaur.getPartner().getPartner()==dinosaur && stillInReach(simulation)) {
                 simulation.makeBaby(dinosaur, dinosaur.getPartner());
+                dinosaur.getPartner().setReproductionValue(0);
+                dinosaur.setReproductionValue(0);
             }
             done = true;
-            dinosaur.getPartner().setPartner(null);
-            dinosaur.setPartner(null);
         }
 
     }
 
     @Override
     public void onExit() {
-
+        dinosaur.getPartner().setPartner(null);
+        dinosaur.setPartner(null);
     }
 
     @Override
@@ -70,7 +80,24 @@ public class Mate extends State {
 
         addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
 
+        //If the partner isn't willing to mate anymore, transition to wander
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getPartner()!=null&&!dinosaur.getPartner().isWillingToMate()));
 
+        //If the dinosaur is thirsty and a water tile is in range, transition to moveToFoodSource.
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isThirsty()));
+
+        //If the dinosaur is hungry and a food source is in range, transition to moveToFoodSource.
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> done && dinosaur.isHungry()));
+
+        //If we are done, go to the wander-state.
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> done));
+
+
+    }
+
+    private boolean stillInReach(Simulation simulation) {
+
+        return simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), dinosaur.getPartner().getPosition(), dinosaur.getPartner().getInteractionRange());
     }
 
 }

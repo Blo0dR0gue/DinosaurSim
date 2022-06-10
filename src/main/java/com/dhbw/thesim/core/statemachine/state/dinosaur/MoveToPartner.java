@@ -65,6 +65,14 @@ public class MoveToPartner extends State {
     }
 
     @Override
+    public void onExit() {
+        if(dinosaur.getPartner()!=null) {
+            dinosaur.getPartner().setPartner(null);
+            dinosaur.setPartner(null);
+        }
+    }
+
+    @Override
     public void initTransitions() {
         //TODO adapt
 
@@ -75,7 +83,7 @@ public class MoveToPartner extends State {
 
         addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
 
-        //We can do this, because the update is called before the next check transitions
+
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getPartner() == null));
 
 
@@ -85,7 +93,7 @@ public class MoveToPartner extends State {
         addTransition(new StateTransition(StateFactory.States.mate, this::reached));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
 
     }
 

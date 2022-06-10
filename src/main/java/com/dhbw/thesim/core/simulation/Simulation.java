@@ -378,9 +378,9 @@ public class Simulation {
         List<SimulationObject> inRange = findReachableSuitablePartnersInRange(position, viewRange, type, canSwim, canClimb, gender);
 
 
-        List<SimulationObject> sorted = sortByDistance(position, inRange);
-        if (sorted.size() > 0)
-            return sorted.get(0);
+        sortByDistance(position, inRange);
+        if (inRange.size() > 0)
+            return inRange.get(0);
         return null;
 
     }
@@ -406,7 +406,45 @@ public class Simulation {
     }
 
     public void makeBaby(Dinosaur mother, Dinosaur father) {
-        System.out.println("Ein Baby entsteht!");
+
+        double strength =inheritValue(mother.getStrength(), father.getStrength());
+        double speed =inheritValue(mother.getSpeed(), father.getSpeed());
+        double reproductionRate =inheritValue(mother.getReproductionRate(), father.getReproductionRate());
+        double weight =inheritValue(mother.getWeight(), father.getWeight());
+        double length =inheritValue(mother.getLength(), father.getLength());
+        double height =inheritValue(mother.getHeight(), father.getHeight());
+        char gender;
+
+        if (random.nextInt() % 2 == 0)
+            gender = 'm';
+        else
+            gender = 'f';
+
+        Dinosaur baby = new Dinosaur(
+                mother.getType(), mother.getJavaFXObj().getImage(), 100, 100, strength, speed,
+                reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
+
+        //TODO Find better spawn point
+        //baby.setPosition(getFreePositionInMap(baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
+
+        //TODO add baby to simobjects and spawn it
+        //simulationObjects.add(baby);
+
+        System.out.println("Baby Dinosaur was made");
+    }
+
+    public double inheritValue(double a, double b) {
+        double result;
+        if (random.nextInt() % 2 == 0)
+            result = a;
+        else
+            result = b;
+
+        if (random.nextInt(1, 100) <= 20) {
+            result = random.nextDouble(result * 0.7, result * 1.3);
+        }
+
+        return result;
     }
 
     /**

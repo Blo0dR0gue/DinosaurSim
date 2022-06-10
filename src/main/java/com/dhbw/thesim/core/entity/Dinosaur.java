@@ -59,6 +59,7 @@ public class Dinosaur extends SimulationObject {
     //TODO check values?
     private static final double NUTRITION_REDUCTION_RATE = 0.1;
     private static final double HYDRATION_REDUCTION_RATE = 0.25;
+    private static final double REPRODUCTION_VALUE_FULL = 100;
 
     public static final double PROXIMITY_RANGE = 5;
 
@@ -100,7 +101,7 @@ public class Dinosaur extends SimulationObject {
 
         //TODO set suitable values
         //Initial reproduction value as specified in the software design. This value increases over time.
-        this.reproductionValue = reproductionValueFull;
+        this.reproductionValue = REPRODUCTION_VALUE_FULL;
 
         this.target = null;
         this.isChased = false;
@@ -138,7 +139,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     public boolean isWillingToMate() {
-        return reproductionValue>=reproductionValueFull;
+        return reproductionValue>= REPRODUCTION_VALUE_FULL;
     }
 
     /**
@@ -149,7 +150,8 @@ public class Dinosaur extends SimulationObject {
     private void updateStats(double deltaTime) {
         this.hydration -= HYDRATION_REDUCTION_RATE * deltaTime;
         this.nutrition -= NUTRITION_REDUCTION_RATE * deltaTime;
-        this.reproductionValue += reproductionValue * deltaTime;
+        if(reproductionValue<REPRODUCTION_VALUE_FULL)
+            this.reproductionValue += reproductionValue * deltaTime;
     }
 
     /**
@@ -175,6 +177,17 @@ public class Dinosaur extends SimulationObject {
      */
     public dietType getDiet() {
         return diet;
+    }
+    public char getCharDiet() {
+
+        if (diet == dietType.omnivore)
+            return 'a';
+        else if (diet == dietType.carnivore)
+            return 'f';
+        else if (this.diet == dietType.herbivore)
+            return 'p';
+        else
+            return 'x';
     }
 
     public double getNutrition() {
@@ -235,6 +248,8 @@ public class Dinosaur extends SimulationObject {
 
     public Dinosaur getPartner() {
         return partner;
+    }
+
     public long getTimeOfBirth() {
         return timeOfBirth;
     }
