@@ -158,22 +158,17 @@ public class ConfigScreen extends AnchorPane {
         mapGroup = new ToggleGroup();
         //Instantiating and initializing maps to add all of them to the list view of dinos
         MapListItem mapListItem1 = MapListItem.newInstance();
-        mapListItem1.initialize("Landschaft", new Image("/map/landscape-one.png"));
+        mapListItem1.initialize("Landschaft 1", new Image("/map/landscape-one.png"));
         mapListItem1.radioButton.setId("landschaftsName");
         mapListItem1.radioButton.setToggleGroup(mapGroup);
 
         MapListItem mapListItem2 = MapListItem.newInstance();
-        mapListItem2.initialize("Map A", new Image("/map/map-a.png"));
-        mapListItem2.radioButton.setId("mapA");
+        mapListItem2.initialize("Landschaft 2", new Image("/map/landscape-two.png"));
+        mapListItem2.radioButton.setId("landschaftsName2");
         mapListItem2.radioButton.setToggleGroup(mapGroup);
 
-        MapListItem mapListItem3 = MapListItem.newInstance();
-        mapListItem3.initialize("Map B", new Image("/map/map-b.png"));
-        mapListItem3.radioButton.setId("mapB");
-        mapListItem3.radioButton.setToggleGroup(mapGroup);
-
         //Add the map list items to the map list view
-        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2, mapListItem3)) {
+        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
             mapListView.getItems().add(mapListItem);
         }
 
