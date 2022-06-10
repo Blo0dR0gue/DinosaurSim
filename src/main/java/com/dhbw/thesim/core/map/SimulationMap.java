@@ -2,156 +2,145 @@ package com.dhbw.thesim.core.map;
 
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
-import javafx.scene.image.Image;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
- * Represents a landscape
+ * Represents a landscape.
  *
- * @author Daniel Czeschner
+ * @author Daniel Czeschner, Eric Stefan
  */
+@SuppressWarnings("unused")
 public class SimulationMap {
-
-    //region variables
     /**
      * The name if the current landscape
      */
     private final String landscapeName;
     /**
      * The background grid-field
-     *
      * @see Tile
      */
     private final Tile[][] tiles;
 
-    //region constants
-
     /**
      * The width of the grid-field (as specified in the requirement's specification)
      */
-    public static final int width = 36;
+    public static final int WIDTH = 36;
     /**
      * The height of the grid-field (as specified in the requirement's specification)
      */
-    public static final int height = 24;
+    public static final int HEIGHT = 24;
 
-    //endregion
-
-    //endregion
+    public static final String LANDSCAPE_ONE_NAME = "Landschaft1";
+    public static final String LANDSCAPE_TWO_NAME = "Landschaft2";
 
     /**
      * The constructor for a new simulation map
-     *
      * @param landscapeName The name for this landscape
      */
     public SimulationMap(String landscapeName) {
         this.landscapeName = landscapeName;
-        this.tiles = new Tile[width][height];
-        //TODO switch landscape name
-        landscapeOne();
+        this.tiles = new Tile[WIDTH][HEIGHT];
+
+        //Select a defined landscape based on the name.
+        if (landscapeName.equalsIgnoreCase(LANDSCAPE_ONE_NAME))
+            landscapeOne();
+        else if(landscapeName.equalsIgnoreCase(LANDSCAPE_TWO_NAME))
+            landscapeTwo();
+        else
+            landscapeOne();
     }
 
-    //TODO make dynamic
-    private void initMap() {
-        Image tmp = Tile.tmpSprite();
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = new Tile(tmp, x, y, false, false);
-            }
-        }
-
-        for (int x = 15; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = new Tile(tmp, x, y, true, false);
-            }
-        }
-
-    }
-
+    /**
+     * Available tiles. <br>
+     * Enum contains all information for each tile type.
+     */
     private enum TILES {
-        grass("grass.png", false, false),
-        sand("sand.png", false, false),
-        water("water.png", true, false),
-        mountain("mountain.png", false, true);
+        GRASS("grass.png", false, false, true),
+        SAND("sand.png", false, false, false),
+        WATER("water.png", true, false, false),
+        MOUNTAIN("mountain.png", false, true, false),
+        FOREST("forest.png", false, true, true);
 
         public final String imgName;
         public final boolean swimmable;
         public final boolean climbable;
+        public final boolean canContainPlants;
 
-        TILES(String imgName, boolean swimmable, boolean climbable) {
+        TILES(String imgName, boolean swimmable, boolean climbable, boolean canContainPlants) {
             this.imgName = imgName;
             this.swimmable = swimmable;
             this.climbable = climbable;
+            this.canContainPlants = canContainPlants;
         }
     }
 
+    //region landscape definition
+
+    /**
+     * The first landscape. <br>
+     * Defined in code, because json based and procedural generated maps are priority 3 and will be added in a later version .
+     */
     private void landscapeOne() {
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.grass.imgName), x, y, TILES.grass.swimmable, TILES.grass.climbable);
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.GRASS.imgName), x, y, TILES.GRASS.swimmable, TILES.GRASS.climbable, TILES.GRASS.canContainPlants);
             }
         }
 
         //Create river
         for (int x = 0; x < 14; x++) {
             int y = 10;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
-
-        for (int y = 6; y < height - 7; y++) {
+        for (int y = 6; y < HEIGHT - 7; y++) {
             int x = 13;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
-
         for (int x = 13; x < 17; x++) {
-            int y = height - 7;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+            int y = HEIGHT - 7;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
 
         //Create lake
-        for (int x = width - 10; x < width - 4; x++) {
+        for (int x = WIDTH - 10; x < WIDTH - 4; x++) {
             for (int y = 8; y < 14; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
-        tiles[width - 11][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), width - 11, 8, TILES.water.swimmable, TILES.water.climbable);
-        tiles[width - 12][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), width - 12, 8, TILES.water.swimmable, TILES.water.climbable);
+        tiles[WIDTH - 11][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), WIDTH - 11, 8, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        tiles[WIDTH - 12][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), WIDTH - 12, 8, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
 
         //Create desert
-        tiles[width - 5][13] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), width - 4, 14, TILES.sand.swimmable, TILES.sand.climbable);
-
-        for (int x = width - 9; x < width; x++) {
+        tiles[WIDTH - 5][13] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), WIDTH - 4, 14, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.WATER.canContainPlants);
+        for (int x = WIDTH - 9; x < WIDTH; x++) {
             for (int y = 0; y < 8; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-
-        for (int x = width - 4; x < width; x++) {
+        for (int x = WIDTH - 4; x < WIDTH; x++) {
             for (int y = 8; y < 14; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-
-        for (int x = width - 3; x < width; x++) {
+        for (int x = WIDTH - 3; x < WIDTH; x++) {
             for (int y = 14; y < 16; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-
 
         //Create mountain
-        for (int x = width - 16; x < width - 10; x++) {
-            for (int y = height - 5; y < height; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.mountain.imgName), x, y, TILES.mountain.swimmable, TILES.mountain.climbable);
+        for (int x = WIDTH - 16; x < WIDTH - 10; x++) {
+            for (int y = HEIGHT - 5; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
-        for (int x = width - 20; x < width - 16; x++) {
-            for (int y = height - 1; y < height; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.mountain.imgName), x, y, TILES.mountain.swimmable, TILES.mountain.climbable);
+        for (int x = WIDTH - 20; x < WIDTH - 16; x++) {
+            for (int y = HEIGHT - 1; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
 
@@ -159,41 +148,146 @@ public class SimulationMap {
         for (int x = 0; x < 9; x++) {
             if (x < 6)
                 for (int y = 0; y < 6; y++) {
-                    tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, y, TILES.water.swimmable, TILES.water.climbable);
+                    tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
                 }
             else
-                tiles[x][0] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), x, 0, TILES.water.swimmable, TILES.water.climbable);
+                tiles[x][0] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, 0, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
-        tiles[6][1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.water.imgName), 6, 1, TILES.water.swimmable, TILES.water.climbable);
+        tiles[6][1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), 6, 1, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
 
         //Create small desert
         for (int x = 0; x < 3; x++) {
-            for (int y = height - 3; y < height; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), x, y, TILES.sand.swimmable, TILES.sand.climbable);
+            for (int y = HEIGHT - 3; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-        tiles[3][height - 1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.sand.imgName), 3, height - 1, TILES.sand.swimmable, TILES.sand.climbable);
-
-    }
-
-    private void landscapeTwo() {
+        tiles[3][HEIGHT - 1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), 3, HEIGHT - 1, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
 
     }
 
     /**
-     * Checks, if gird coordination are inside the grid.
-     *
+     * The second landscape. <br>
+     * Defined in code, because json based and procedural generated maps are priority 3 and will be added in a later version .
+     */
+    private void landscapeTwo() {
+        //initial
+        for (int x = 0; x < WIDTH; x++) {
+            for (int y = 0; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.GRASS.imgName), x, y, TILES.GRASS.swimmable, TILES.GRASS.climbable, TILES.GRASS.canContainPlants);
+            }
+        }
+
+        //create river
+        for (int x = 0; x < 7; x++) {
+            for (int y = 0; y < 6; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+        for (int x = 0; x < 5; x++) {
+            for (int y = 6; y < 9; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+        for (int x = 0; x < 3; x++) {
+            for (int y = 9; y < 11; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+        tiles[0][11] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), 0, 11, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        for (int x = 7; x < 11; x++) {
+            for (int y = 0; y < 3; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+
+        //create second river
+        for (int y = 0; y < 3; y++) {
+            int x = WIDTH - 7;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        }
+
+        for (int x = WIDTH - 6; x < WIDTH; x++) {
+            for (int y = 0; y < 8; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+        for (int x = WIDTH - 4; x < WIDTH; x++) {
+            for (int y = 8; y < 11; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+
+        //create lake in the middle
+        for (int x = 10; x < 15; x++) {
+            for (int y = 10; y < 15; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            }
+        }
+        for (int x = 12; x < 15; x++) {
+            int y = 15;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        }
+
+        //create little dessert in the middle
+        for (int y = 11; y < 15; y++) {
+            int x = 15;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+        }
+        for (int y = 11; y < 13; y++) {
+            int x = 16;
+            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+        }
+
+        //create big right dessert
+        for (int x = WIDTH - 11; x < WIDTH; x++) {
+            for (int y = 11; y < 17; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+            }
+        }
+        for (int x = WIDTH - 9; x < WIDTH - 4; x++) {
+            for (int y = 8; y < 11; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+            }
+        }
+        for (int x = WIDTH - 7; x < WIDTH - 3; x++) {
+            for (int y = 17; y < 20; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+            }
+        }
+        tiles[WIDTH - 8][17] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), WIDTH - 8, 17, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+
+        //create mountain
+        for (int x = WIDTH - 3; x < WIDTH; x++) {
+            for (int y = HEIGHT - 7; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+            }
+        }
+        for (int x = WIDTH - 10; x < WIDTH - 3; x++) {
+            for (int y = HEIGHT - 4; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+            }
+        }
+        for (int x = WIDTH - 13; x < WIDTH - 10; x++) {
+            for (int y = HEIGHT - 2; y < HEIGHT; y++) {
+                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+            }
+        }
+    }
+
+    //endregion
+
+    /**
+     * Checks, if grid coordination are inside the grid.
      * @param gridX The x grid position.
      * @param gridY The y grid position.
      * @return true, if the gird position is inside the grid.
      */
     public boolean isInsideOfGrid(int gridX, int gridY) {
-        return gridX >= 0 && gridY >= 0 && gridX < width && gridY < height;
+        return gridX >= 0 && gridY >= 0 && gridX < WIDTH && gridY < HEIGHT;
     }
 
     /**
      * Checks, if a {@link Vector2D} point is inside the grid.
-     *
      * @param point The {@link Vector2D}, which should be checked.
      * @return true, if the point is inside the grid.
      */
@@ -210,7 +304,6 @@ public class SimulationMap {
 
     /**
      * Gets the Tile at a specific grid position.
-     *
      * @param gridX The x grid position.
      * @param gridY The y grid position.
      * @return {@link Tile} at this position or null
@@ -224,7 +317,6 @@ public class SimulationMap {
 
     /**
      * Gets the grid position of a {@link Vector2D}. It is not checked, if this position is inside the grid.
-     *
      * @param worldPosition The {@link Vector2D}, which should be checked.
      * @return An {@link Vector2D} with the x,y position.
      */
@@ -236,7 +328,6 @@ public class SimulationMap {
 
     /**
      * Gets a {@link Tile} at a specific {@link Vector2D}.
-     *
      * @param worldPosition The position {@link Vector2D}.
      * @return {@link Tile} at this position or null.
      */
@@ -248,7 +339,6 @@ public class SimulationMap {
 
     /**
      * Checks, if a tile at a specific grid coordination matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
-     *
      * @param gridX    The x grid position.
      * @param gridY    The y grid position.
      * @param canSwim  true, if the dinosaur can swim
@@ -262,7 +352,6 @@ public class SimulationMap {
 
     /**
      * Checks, if a tile at a specific {@link Vector2D} position matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
-     *
      * @param worldPosition The {@link Vector2D} position, on which the tile should be checked.
      * @param canSwim       true, if the dinosaur can swim
      * @param canClimb      true, if the dinosaur can climb.
@@ -275,7 +364,6 @@ public class SimulationMap {
 
     /**
      * Checks if a tile matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
-     *
      * @param tile     The {@link Tile} we want to check.
      * @param canSwim  true, if the dinosaur can swim
      * @param canClimb true, if the dinosaur can climb.
@@ -289,10 +377,8 @@ public class SimulationMap {
         return tile.isSwimmable() == swimmable && tile.isClimbable() == climbable;
     }
 
-
     /**
      * Get all {@link Tile} in range, which met the condisions.
-     *
      * @param tile      The tile, from where we want to check
      * @param range     The range of tiles.
      * @param swimmable Do the matching {@link Tile}s need to be swimmable
@@ -318,7 +404,6 @@ public class SimulationMap {
                 }
             }
         }
-
         return tileObjects;
     }
 
@@ -326,7 +411,6 @@ public class SimulationMap {
 
     /**
      * Gets the name of the landscape.
-     *
      * @return The name of this map.
      */
     public String getLandscapeName() {
@@ -335,7 +419,6 @@ public class SimulationMap {
 
     /**
      * Gets all Tiles as an 2-dimensional array.
-     *
      * @return The 2-Dimensional array with all Tiles. Which represents the current map.
      */
     public Tile[][] getTiles() {
@@ -344,14 +427,13 @@ public class SimulationMap {
 
     /**
      * Gets a random tile on the map, matching the conditions.
-     *
      * @param canSwim  Does the object can swim.
      * @param canClimb Does the object can climb.
      * @param random   A {@link Random} object.
      * @return A random {@link Tile}.
      */
     public Tile getRandomTile(boolean canSwim, boolean canClimb, Random random) {
-        Tile tile = getTileAtPosition(random.nextInt(0, width), random.nextInt(0, height));
+        Tile tile = getTileAtPosition(random.nextInt(0, WIDTH), random.nextInt(0, HEIGHT));
 
         if (!tileMatchedConditions(tile, canSwim, canClimb)) {
             return getRandomTile(canSwim, canClimb, random);
@@ -360,8 +442,24 @@ public class SimulationMap {
     }
 
     /**
+     * Gets a random tile on the map, where the conditions are.
+     * @param canSwim     Does the object can swim.
+     * @param canClimb    Does the object can climb.
+     * @param allowPlants Does the tile need to allow plants.
+     * @param random      A {@link Random} object.
+     * @return A random {@link Tile}.
+     */
+    public Tile getRandomTileWhereConditionsAre(boolean canSwim, boolean canClimb, boolean allowPlants, Random random) {
+        Tile tile = getTileAtPosition(random.nextInt(0, WIDTH), random.nextInt(0, HEIGHT));
+
+        if (!tileConditionsAre(tile, canSwim, canClimb) || tile.arePlantsAllowed() != allowPlants) {
+            return getRandomTileWhereConditionsAre(canSwim, canClimb, allowPlants, random);
+        }
+        return tile;
+    }
+
+    /**
      * Gets the center {@link Vector2D} world position of a tile.
-     *
      * @param tile The {@link Tile}
      * @return The center position of the tile.
      */
@@ -371,7 +469,6 @@ public class SimulationMap {
 
     /**
      * Gets a random tile, matching a {@link com.dhbw.thesim.core.entity.Dinosaur} conditions.
-     *
      * @param canSwim  Can the dinosaur swim?
      * @param canClimb Cna the dinosaur climb?
      * @param random   A {@link Random}.
@@ -382,8 +479,19 @@ public class SimulationMap {
     }
 
     /**
+     * Gets a random {@link Vector2D} of a tile, where conditions are...
+     * @param swimmable   Does the tile need to be swimmable?
+     * @param climbable   Does the tile need to be climbable?
+     * @param allowPlants Does the tile need to allow plants?
+     * @param random      A {@link Random}.
+     * @return A random {@link Vector2D} word position matching the conditions.
+     */
+    public Vector2D getRandomTileCenterPositionWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, Random random) {
+        return getCenterPositionOfTile(getRandomTileWhereConditionsAre(swimmable, climbable, allowPlants, random));
+    }
+
+    /**
      * Gets all center coordinates of tiles that satisfy the requirements.
-     *
      * @param origin    The world position from which we want to check
      * @param range     The radial range (e.g. view range)
      * @param swimmable Do the tile need to be swimmable (water tile)
@@ -400,9 +508,7 @@ public class SimulationMap {
         for (Tile tile : getTilesInRangeWhereConditionsAre(startTile, localRange, swimmable, climbable)) {
             matchingPosition.add(getCenterPositionOfTile(tile));
         }
-
         return matchingPosition;
     }
-
     //endregion
 }

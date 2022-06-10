@@ -39,7 +39,6 @@ public class StateFactory {
 
     /**
      * Creates a {@link State}-object based on the {@link States} enum.
-     *
      * @param state            The {@link States} enum entry for the next state.
      * @param simulationObject The {@link SimulationObject} which is creating the new state.
      * @return The next {@link State}.
@@ -54,7 +53,6 @@ public class StateFactory {
 
     /**
      * Creates a State, a {@link Dinosaur} can be in.
-     *
      * @param state The {@link States} enum entry for the next state.
      * @param plant The {@link Plant} which is creating the new state.
      * @return The next {@link State}.
@@ -69,7 +67,6 @@ public class StateFactory {
 
     /**
      * Creates a State, a {@link Dinosaur} can be in.
-     *
      * @param state    The {@link States} enum entry for the next state.
      * @param dinosaur The {@link Dinosaur} which is creating the new state.
      * @return The next {@link State}.
@@ -88,5 +85,4 @@ public class StateFactory {
             default -> throw new IllegalStateException("Unexpected value: " + state);
         };
     }
-
 }

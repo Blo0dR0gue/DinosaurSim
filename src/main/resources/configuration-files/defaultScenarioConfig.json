@@ -1,18 +1,18 @@
 [
   {
     "Dinosaurier":[
-      {"Brachiosaurus":20},
-      {"Abrictosaurus":10},
+      {"Brachiosaurus":6},
+      {"Abrictosaurus":4},
       {"Tyrannosaurus Rex":2},
-      {"Deinosuchus":5}
+      {"Deinosuchus":4}
     ]
   },
   {
     "Pflanzen":[
-      {"Farn":20},
-      {"Ginkgoales":15}
+      {"Farn":7},
+      {"Ginkgoales":4}
     ],
     "Pflanzenwachstum": 3.0
   },
-  {"Landschaft":"Standard-Landschaft"}
+  {"Landschaft":"Landschaft1"}
 ]

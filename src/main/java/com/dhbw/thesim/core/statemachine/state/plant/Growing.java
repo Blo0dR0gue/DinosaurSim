@@ -19,7 +19,6 @@ public class Growing extends State {
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link SimulationObject}
      */
     public Growing(Plant simulationObject) {
@@ -29,7 +28,8 @@ public class Growing extends State {
 
     @Override
     public void onExit() {
-        //Nothing to do here
+        //Make the plant visible again.
+        plant.getJavaFXObj().setVisible(true);
     }
 
     @Override
@@ -47,5 +47,4 @@ public class Growing extends State {
             plant.setGrowth(plant.getGrowth() + plant.getGrowthRate() * deltaTime);
         }
     }
-
 }

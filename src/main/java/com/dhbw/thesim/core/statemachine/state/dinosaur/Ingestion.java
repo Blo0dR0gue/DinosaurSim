@@ -33,7 +33,6 @@ public class Ingestion extends State {
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Ingestion(Dinosaur simulationObject) {
@@ -43,10 +42,9 @@ public class Ingestion extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
         ingestionTime -= deltaTime;
-
         if (ingestionTime <= 0) {
+            System.out.println(dinosaur.getTarget());
             if (dinosaur.getTarget() == null) {
                 //we drink
                 dinosaur.setHydration(dinosaur.getMaxHydration());
@@ -58,7 +56,6 @@ public class Ingestion extends State {
             }
             done = true;
         }
-
     }
 
     @Override
@@ -84,8 +81,5 @@ public class Ingestion extends State {
 
         //If we are done, go to the wander-state.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> done));
-
-
     }
-
 }

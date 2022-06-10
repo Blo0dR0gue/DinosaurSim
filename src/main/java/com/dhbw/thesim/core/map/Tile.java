@@ -15,21 +15,29 @@ import javafx.scene.transform.Transform;
  * @author Daniel Czeschner
  * @see SimulationMap
  */
+@SuppressWarnings("unused")
 public class Tile {
 
     //region variables
     /**
      * The image, which is rendered for this {@link Tile}.
      */
-    private Image background;
+    private final Image background;
+
     /**
      * Defines, if this tile can only be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can swim.
      */
-    private boolean swimmable;
+    private final boolean swimmable;
+
     /**
      * Defines, iff this tile can ony be crossed, if a {@link com.dhbw.thesim.core.entity.Dinosaur} can climb.
      */
-    private boolean climbable;
+    private final boolean climbable;
+
+    /**
+     * Does this tile can contain plants?
+     */
+    private final boolean canContainPlants;
 
     private final int gridX;
     private final int gridY;
@@ -40,24 +48,25 @@ public class Tile {
      */
     public static final double TILE_SIZE = SimulationOverlay.adjustScale(45, SimulationOverlay.SCALE_X);
     //endregion
-
     //endregion
 
     /**
      * Constructor
-     *
      * @param image The background for this {@link Tile} object.
      * @see #background
      */
-    public Tile(Image image, int gridX, int gridY, boolean swimmable, boolean climbable) {
+    public Tile(Image image, int gridX, int gridY, boolean swimmable, boolean climbable, boolean canContainPlants) {
         this.background = image;
         this.gridX = gridX;
         this.gridY = gridY;
         this.swimmable = swimmable;
         this.climbable = climbable;
+        this.canContainPlants = canContainPlants;
     }
 
-    //region getter & setter
+    /**
+     * Getter and setter methods for {@link Tile}-objects.
+     */
     public Image getBackground() {
         return background;
     }
@@ -70,6 +79,10 @@ public class Tile {
         return climbable;
     }
 
+    public boolean arePlantsAllowed() {
+        return canContainPlants;
+    }
+
     public int getGridX() {
         return gridX;
     }
@@ -78,13 +91,7 @@ public class Tile {
         return gridY;
     }
 
-    //endregion
-
-    /**
-     * TODO REMOVE
-     *
-     * @return
-     */
+    //TODO REMOVE!!!
     public static Image tmpSprite() {
         Canvas c = new Canvas(TILE_SIZE, TILE_SIZE);
         GraphicsContext gc = c.getGraphicsContext2D();
