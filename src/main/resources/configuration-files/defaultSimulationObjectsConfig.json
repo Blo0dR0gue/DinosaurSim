@@ -15,7 +15,7 @@
       "KannKlettern":false,
       "Nahrungsart":"p",
       "Sichtweite":[100.0,150.0],
-      "Interaktionsweite":[45.0,64.0]
+      "Interaktionsweite":[60.0,70.0]
       },
       {"Name":"Abrictosaurus",
       "Bild":"abrictosaurus.png",
@@ -31,7 +31,7 @@
       "KannKlettern":true,
       "Nahrungsart":"a",
       "Sichtweite":[50.0,60.0],
-      "Interaktionsweite":[32.0,45.0]
+      "Interaktionsweite":[32.0,40.0]
       },
       {"Name":"Tyrannosaurus Rex",
       "Bild":"tyrannosaurus_rex.png",
@@ -47,7 +47,7 @@
       "KannKlettern":false,
       "Nahrungsart":"f",
       "Sichtweite":[70.0,100.0],
-      "Interaktionsweite":[35.0,45.0]
+      "Interaktionsweite":[45.0,55.0]
       },
       {"Name":"Deinosuchus",
       "Bild":"deinosuchus.png",
@@ -62,8 +62,8 @@
       "KannSchwimmen":true,
       "KannKlettern":false,
       "Nahrungsart":"f",
-      "Sichtweite":[35.0,40.0],
-      "Interaktionsweite":[20.0,35.0]
+      "Sichtweite":[60.0,80.0],
+      "Interaktionsweite":[40.0,50.0]
       }
     ]
   },
