@@ -4,7 +4,6 @@ import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
-import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -101,11 +100,7 @@ public class ConfigScreen extends AnchorPane {
         GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
 
         ScenarioSelector scenarioSelector = ScenarioSelector.newInstance();
-        try {
-            scenarioSelector.initialize(JsonHandler.getExistingScenarioFileNames());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        scenarioSelector.initialize(this);
 
         sideBar.getBody().add(scenarioSelector.container);
         initializeListeners();
@@ -230,6 +225,10 @@ public class ConfigScreen extends AnchorPane {
 
     public double getMaxSteps(){
         return maxSteps.getValue();
+    }
+
+    public String getLandscapeName() {
+        return getMap().getText();
     }
 
     //endregion

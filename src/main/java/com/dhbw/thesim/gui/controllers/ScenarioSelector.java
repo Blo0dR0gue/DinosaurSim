@@ -1,16 +1,16 @@
 package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
+import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 
 public class ScenarioSelector extends VBox {
     @FXML
@@ -23,8 +23,12 @@ public class ScenarioSelector extends VBox {
     Label saveLabel;
     @FXML
     Button saveButton;
+    @FXML
+    TextField filename;
 
     private ToggleGroup scenarioToggleGroup;
+
+    private ConfigScreen configScreen;
 
     public ScenarioSelector(){
 
@@ -34,14 +38,56 @@ public class ScenarioSelector extends VBox {
         return (ScenarioSelector) Display.makeFXMLController("ScenarioSelector.fxml", ScenarioSelector.class);
     }
 
-    public void initialize(ArrayList<String> existingScenarioFileNames){
+    public void initialize(ConfigScreen configScreen){
         this.scenarioToggleGroup = new ToggleGroup();
-        for (String scenarioName:
-                existingScenarioFileNames) {
-            ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
-            scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
-            scenarioListView.getItems().add(scenarioListItem);
+        try {
+            for (String scenarioName:
+                    JsonHandler.getExistingScenarioFileNames()) {
+                ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
+                scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
+                scenarioListView.getItems().add(scenarioListItem);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
+
+        this.configScreen = configScreen;
+
+        initializeListeners();
+    }
+
+    private void updateScenarioList(){
+        scenarioListView.getItems().clear();
+        try {
+            for (String scenarioName:
+                    JsonHandler.getExistingScenarioFileNames()) {
+                ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
+                scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
+                scenarioListView.getItems().add(scenarioListItem);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initializeListeners(){
+        saveButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String file = filename.getText().strip();
+                if (!file.equals("")) {
+                    try {
+                        JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
+                                configScreen.getLandscapeName(), configScreen.getPlantGrowthRate(), file);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    updateScenarioList();
+                } else {
+                    //TODO display error of empty filename
+                }
+            }
+        });
     }
 
     public String getSelectedScenario(){

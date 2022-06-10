@@ -3,12 +3,12 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<fx:root type="javafx.scene.layout.VBox" fx:id="container" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="container" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label fx:id="chooseLabel" text="Szenario auswählen:" />
-      <ListView fx:id="scenarioListView" stylesheets="@../styles/styles.css"/>
+      <ListView fx:id="scenarioListView" stylesheets="@../styles/styles.css" />
       <Label fx:id="saveLabel" text="Szennario speichern:" />
+      <TextField fx:id="filename" />
       <Button fx:id="saveButton" mnemonicParsing="false" text="Derzeitiges Szenario Speichern" />
    </children>
 </fx:root>
