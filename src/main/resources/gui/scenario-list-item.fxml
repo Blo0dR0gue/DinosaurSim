@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
-<fx:root type="javafx.scene.layout.HBox" fx:id="container" alignment="CENTER_RIGHT"
+<fx:root type="javafx.scene.layout.HBox" fx:id="container" alignment="CENTER_LEFT"
          xmlns="http://javafx.com/javafx/11.0.2"
          xmlns:fx="http://javafx.com/fxml/1">
     <padding>

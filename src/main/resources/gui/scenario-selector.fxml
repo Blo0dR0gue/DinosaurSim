@@ -3,10 +3,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <fx:root fx:id="container" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
-   <Label fx:id="chooseLabel" text="Szenario auswählen:" />
+   <Label fx:id="chooseLabel" text="Szenario auswählen:">
+      <font>
+         <Font size="17.0"/>
+      </font>
+   </Label>
    <ListView fx:id="scenarioListView" stylesheets="@../styles/styles.css" />
-   <Label fx:id="saveLabel" text="Szenario speichern:" />
+   <Label fx:id="saveLabel" text="Derzeitiges Szenario speichern:">
+      <font>
+         <Font size="17.0"/>
+      </font>
+   </Label>
    <TextField fx:id="filename" />
-   <Button fx:id="saveButton" mnemonicParsing="false" text="Derzeitiges Szenario Speichern" />
+   <fx:define>
+      <Image fx:id="saveBtnImage" url="/controls/save.png"/>
+   </fx:define>
+   <Button fx:id="saveButton" style="-fx-background-color: transparent;" alignment="CENTER">
+      <VBox.margin>
+         <Insets top="10.0"/>
+      </VBox.margin>
+      <graphic>
+         <ImageView fitWidth="50.0" preserveRatio="true" image="$saveBtnImage"/>
+      </graphic>
+   </Button>
 </fx:root>

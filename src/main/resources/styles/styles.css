@@ -14,3 +14,16 @@
 .list-view .list-cell:selected {
     -fx-background-color: #999999;
 }
+
+#scenarioListView {
+    -fx-background-color: #808080;
+    -fx-background-insets: 0; -fx-padding: 0;
+}
+
+#scenarioListView .list-cell {
+    -fx-background-color: #808080;
+}
+
+#scenarioListView .list-cell:selected {
+    -fx-background-color: #999999;
+}

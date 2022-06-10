@@ -19,7 +19,7 @@
       <top>
          <Label fx:id="label_name" text="PLATZHALTER" BorderPane.alignment="CENTER" textFill="white">
             <font>
-               <Font size="16.0"/>
+               <Font size="17.0"/>
             </font>
          </Label>
       </top>
