@@ -158,20 +158,29 @@ public class ConfigScreen extends AnchorPane {
         mapGroup = new ToggleGroup();
         //Instantiating and initializing maps to add all of them to the list view of dinos
         MapListItem mapListItem1 = MapListItem.newInstance();
-        mapListItem1.initialize("Map A", new Image("/map/map-a.png"));
+        mapListItem1.initialize("Landschaft", new Image("/map/landscape-one.png"));
+        mapListItem1.radioButton.setId("landschaftsName");
         mapListItem1.radioButton.setToggleGroup(mapGroup);
 
         MapListItem mapListItem2 = MapListItem.newInstance();
-        mapListItem2.initialize("Map B", new Image("/map/map-b.png"));
+        mapListItem2.initialize("Map A", new Image("/map/map-a.png"));
+        mapListItem2.radioButton.setId("mapA");
         mapListItem2.radioButton.setToggleGroup(mapGroup);
 
-        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2)) {
+        MapListItem mapListItem3 = MapListItem.newInstance();
+        mapListItem3.initialize("Map B", new Image("/map/map-b.png"));
+        mapListItem3.radioButton.setId("mapB");
+        mapListItem3.radioButton.setToggleGroup(mapGroup);
+
+        //Add the map list items to the map list view
+        for (MapListItem mapListItem : Arrays.asList(mapListItem1, mapListItem2, mapListItem3)) {
             mapListView.getItems().add(mapListItem);
         }
 
-        //Set toggle for landscape from config file as selected
+        //Set toggle for landscape from config file as selected (search by text and id of radio button)
         for (Toggle toggle: mapGroup.getToggles()) {
-            if (Objects.equals(((RadioButton) toggle).getText(), landscapeName)) {
+            if (Objects.equals(((RadioButton) toggle).getText(), landscapeName)
+                    || Objects.equals(((RadioButton) toggle).getId(), landscapeName)) {
                 toggle.setSelected(true);
             }
         }
