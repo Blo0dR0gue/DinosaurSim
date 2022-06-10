@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
+import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -11,6 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -104,11 +106,15 @@ public class ConfigScreen extends AnchorPane {
         sideBar.getBody().add(scenarioSelector.container);
         ToggleGroup scenarioToggleGroup = new ToggleGroup();
         //TODO get scenario names from config
-        for (String scenarioName:
-                List.of("defaultScenarioConfig")) {
-            ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
-            scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
-            scenarioSelector.scenarioListView.getItems().add(scenarioListItem);
+        try {
+            for (String scenarioName:
+                    JsonHandler.getExistingScenarioFileNames()) {
+                ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
+                scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
+                scenarioSelector.scenarioListView.getItems().add(scenarioListItem);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
 
         initializeListeners();
