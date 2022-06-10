@@ -2,11 +2,10 @@ package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.impexp.JsonHandler;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,13 +16,15 @@ public class ScenarioSelector extends VBox {
     @FXML
     Label chooseLabel;
     @FXML
-    ListView scenarioListView;
+    ListView<ScenarioListItem> scenarioListView;
     @FXML
     Label saveLabel;
     @FXML
     Button saveButton;
     @FXML
     TextField filename;
+    @FXML
+    public Text promptText;
 
     private ToggleGroup scenarioToggleGroup;
 
@@ -34,7 +35,7 @@ public class ScenarioSelector extends VBox {
     }
 
     public static ScenarioSelector newInstance(){
-        return (ScenarioSelector) Display.makeFXMLController("ScenarioSelector.fxml", ScenarioSelector.class);
+        return (ScenarioSelector) Display.makeFXMLController("scenario-selector.fxml", ScenarioSelector.class);
     }
 
     public void initialize(ConfigScreen configScreen){
@@ -70,21 +71,20 @@ public class ScenarioSelector extends VBox {
     }
 
     private void initializeListeners(){
-        saveButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                String file = filename.getText().strip();
-                if (!file.equals("")) {
-                    try {
-                        JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
-                                configScreen.getLandscapeName(), configScreen.getPlantGrowthRate(), file);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    updateScenarioList();
-                } else {
-                    //TODO display error of empty filename
+        saveButton.setOnAction(event -> {
+            filename.setPromptText("");
+            String file = filename.getText().strip();
+            if (!file.equals("")) {
+                try {
+                    JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
+                            configScreen.getLandscapeName(), configScreen.getPlantGrowthRate(), file);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                updateScenarioList();
+            } else {
+                //TODO display error of empty filename
+                filename.setPromptText("Bitte geben Sie einen Namen an!");
             }
         });
     }

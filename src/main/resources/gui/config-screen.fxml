@@ -120,6 +120,9 @@
         </RadioButton>
     </GridPane>
     <SideBar fx:id="sideBar" prefWidth="${container.width*0.2}" prefHeight="${container.height}" AnchorPane.rightAnchor="0.0">
+        <body>
+
+        </body>
         <footer>
             <fx:define>
                 <Image fx:id="playBtnImage" url="/controls/play.png"/>

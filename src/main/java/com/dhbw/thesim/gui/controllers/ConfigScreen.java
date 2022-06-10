@@ -105,7 +105,7 @@ public class ConfigScreen extends AnchorPane {
         ScenarioSelector scenarioSelector = ScenarioSelector.newInstance();
         scenarioSelector.initialize(this);
 
-        sideBar.getBody().add(scenarioSelector.container);
+        sideBar.getBody().add(scenarioSelector);
         initializeListeners();
     }
 
@@ -195,12 +195,12 @@ public class ConfigScreen extends AnchorPane {
         return getListItemParams(plantListView);
     }
 
-    private HashMap<String, Integer> getListItemParams(ListView listView){
+    private HashMap<String, Integer> getListItemParams(ListView<ListItemWithImage> listView){
         HashMap<String, Integer> items = new HashMap<>();
 
-        for (Object listItem :
+        for (ListItemWithImage listItem :
                 listView.getItems()) {
-            items.put(((ListItemWithImage) listItem).getText(), ((ListItemWithImage) listItem).getCount());
+            items.put(listItem.getText(), listItem.getCount());
         }
 
         return items;
