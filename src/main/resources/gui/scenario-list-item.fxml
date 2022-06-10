@@ -5,7 +5,7 @@
 
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
-<fx:root type="javafx.scene.layout.HBox" prefHeight="30.0" fx:id="container" alignment="CENTER_LEFT"
+<fx:root type="javafx.scene.layout.HBox" fx:id="container" alignment="CENTER_LEFT"
          xmlns="http://javafx.com/javafx/11.0.2"
          xmlns:fx="http://javafx.com/fxml/1">
     <padding>
