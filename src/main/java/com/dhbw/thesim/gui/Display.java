@@ -1,21 +1,52 @@
 package com.dhbw.thesim.gui;
 
+import com.dhbw.thesim.gui.controllers.ConfigScreen;
+import com.dhbw.thesim.impexp.Json2Objects;
+import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.application.Application;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
+
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Main JavaFx Application
  * TODO gui stuff :D
  *
- * @author Daniel Czeschner, Eric Stefan
+ * @author Daniel Czeschner, Eric Stefan, Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class Display extends Application {
 
-    @Override
-    public void start(Stage primaryStage) {
+    public static final double SCALE_X = Screen.getPrimary().getOutputScaleX();
+    public static final double SCALE_Y = Screen.getPrimary().getOutputScaleY();
+    public static Scene configScene;
 
+    /**
+     * @param toScale Dimension Parameter to be scaled to {@code scale}
+     * @param scale   Scale to adjust {@code toScale} to
+     * @return The Dimension {@code toScale} is adjusted with the given Scale {@code scale}
+     */
+    public static double adjustScale(double toScale, double scale) {
+        return (toScale / scale);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+
+        //Init JsonData
+        JsonHandler.setDirectory();
+        JsonHandler.exportDefaultScenarioConfig();
+        JsonHandler.exportDefaultSimulationObjectsConfig();
+
+        //Setup GUI
         primaryStage.setTitle("TheSim - A Dinosaur-Simulation");
 
         //This is a fullscreen application for 1920x1080 screens
@@ -25,11 +56,8 @@ public class Display extends Application {
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
 
-        double screenOutputScaleVertical = Screen.getPrimary().getOutputScaleY();
-        double screenOutputScaleHorizontal = Screen.getPrimary().getOutputScaleX();
-
-        double scaledScreenHeight = screenHeight * screenOutputScaleVertical;
-        double scaledScreenWidth = screenWidth * screenOutputScaleHorizontal;
+        double scaledScreenHeight = screenHeight * SCALE_Y;
+        double scaledScreenWidth = screenWidth * SCALE_X;
 
         if (screenHeight > 1080.0 && screenWidth > 1920.0) {
             //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
@@ -43,8 +71,8 @@ public class Display extends Application {
 
             System.out.println("Display not possible, because your screen is too small.\n"
                     + "Resolution: " + screenHeight + "x" + screenWidth + "\n"
-                    + "Output Scale Vertical: " + screenOutputScaleVertical + "\n"
-                    + "Output Scale Horizontal: " + screenOutputScaleHorizontal + "\n"
+                    + "Output Scale Vertical: " + SCALE_Y + "\n"
+                    + "Output Scale Horizontal: " + SCALE_X + "\n"
                     + "Scaled Resolution: " + scaledScreenHeight + "x" + scaledScreenWidth
             );
 
@@ -57,14 +85,48 @@ public class Display extends Application {
         //We don't want to exit the fullscreen when keys are pressed
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
-        //TODO scene-controller?
-        SimulationOverlay simulationOverlay = new SimulationOverlay(primaryStage);
-        //TODO remove tmp loading simulation overlay (entry is config)
-        primaryStage.setScene(simulationOverlay.getSimulationScene());
+        JsonHandler.setDirectory();
+        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> defaultScenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "defaultScenarioConfig");
+
+        //TODO guiParams.get(JsonHandler.ScenarioConfigParams.PLANT);
+        //TODO guiParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE);
+
+        //Creates the Configuration Screen and sets its scene as the current one on the primary stage
+        ConfigScreen configScreen = ConfigScreen.newInstance();
+        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), ((double) defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0]), ((String) defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]));
+
+        configScene = new Scene(configScreen);
+        primaryStage.setScene(configScene);
 
         //Show the app
         primaryStage.show();
+    }
 
+    /**
+     * @param filename Name of the FXML File
+     * @param controllerClass Class of the Controller to the corresponding FXML File
+     * @return Loads the FXML File into a controller of the given class and returns that controller instance
+     */
+    public static Object makeFXMLController(String filename, Class<?> controllerClass){
+        FXMLLoader loader = new FXMLLoader();
+
+        // Try to load the fxml into a controller
+        try {
+            Object controller = controllerClass.getConstructor().newInstance();
+            loader.setRoot(controller);
+            loader.setController(controller);
+
+            loader.setLocation(controllerClass.getResource("/gui/" + filename));
+
+            loader.load();
+
+            return controller;
+
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                 IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override

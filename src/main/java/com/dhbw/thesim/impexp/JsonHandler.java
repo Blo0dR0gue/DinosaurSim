@@ -115,7 +115,7 @@ public class JsonHandler {
 
         File configFile = new File(workingDirectory + "/defaultSimulationObjectsConfig.json");
         if (!configFile.exists()) {
-            throw new FileNotFoundException("Cannot find resource file 'defaultSimulationObjectsConfig.json'");
+            throw new FileNotFoundException("Cannot find resource file 'defaultSimulationObjectsConfig.json' ("+configFile.getAbsolutePath()+")");
         }
 
         //get the local "defaultSimulationObjectsConfig" configuration file and parse it into a JsonArray

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.stage.Screen?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+
+<?import com.dhbw.thesim.gui.controllers.SideBar?>
+<fx:root type="javafx.scene.layout.AnchorPane" fx:id="container"
+         prefWidth="${screen.bounds.width}" prefHeight="${screen.bounds.height}"
+         xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
+    <fx:define>
+        <Screen fx:factory="getPrimary" fx:id="screen"/>
+    </fx:define>
+    <StackPane style="-fx-background-color: #808080;"
+               prefWidth="${container.width*0.8}" prefHeight="${container.height*0.15}"
+               AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <Label text="Simulationsende&#13;Statistiken" textFill="white" textAlignment="CENTER"
+               StackPane.alignment="CENTER_LEFT">
+            <font>
+                <Font size="20.0"/>
+            </font>
+            <StackPane.margin>
+                <Insets left="10.0"/>
+            </StackPane.margin>
+        </Label>
+    </StackPane>
+    <StackPane style="-fx-background-color: #bfbfbf;"
+               prefWidth="${container.width*0.8}" prefHeight="${container.height*0.85}"
+               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+        <LineChart title="Statistiken">
+            <xAxis>
+                <NumberAxis side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT"/>
+            </yAxis>
+        </LineChart>
+    </StackPane>
+    <SideBar fx:id="sideBar" prefWidth="${container.width*0.2}" prefHeight="${container.height}" AnchorPane.rightAnchor="0.0">
+        <footer>
+            <fx:define>
+                <Image fx:id="restartBtnImage" url="@../controls/restart.png"/>
+            </fx:define>
+            <Button fx:id="restartSimulationButton" style="-fx-background-color: transparent;">
+                <HBox.margin>
+                    <Insets bottom="30.0"/>
+                </HBox.margin>
+                <graphic>
+                    <ImageView fitWidth="75.0" fitHeight="75.0" image="$restartBtnImage"/>
+                </graphic>
+            </Button>
+        </footer>
+    </SideBar>
+</fx:root>
