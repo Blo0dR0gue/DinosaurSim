@@ -16,15 +16,17 @@ import javafx.scene.shape.Circle;
  * @see com.dhbw.thesim.core.statemachine.StateMachine
  * @see State
  */
+@SuppressWarnings("unused")
 public class Dinosaur extends SimulationObject {
-
     public enum dietType {
         carnivore,
         herbivore,
         omnivore
     }
 
-    // TODO comments pls; make final
+    /**
+     * Used to specify dinosaur properties.
+     */
     private final double nutritionFull;
     private final double hydrationFull;
     private double nutrition;
@@ -54,10 +56,16 @@ public class Dinosaur extends SimulationObject {
     private SimulationObject target;
     private boolean isChased;
 
+    /**
+     * Used to set the decrease rate for nutrition and hydration in the simulation.
+     */
     //TODO check values?
     private static final double NUTRITION_REDUCTION_RATE = 0.1;
     private static final double HYDRATION_REDUCTION_RATE = 0.25;
 
+    /**
+     * Used to set the proximity range of a dinosaur object.
+     */
     public static final double PROXIMITY_RANGE = 5;
 
     /**
@@ -347,5 +355,4 @@ public class Dinosaur extends SimulationObject {
     public boolean diedOfHunger() {
         return nutrition <= 0;
     }
-
 }
