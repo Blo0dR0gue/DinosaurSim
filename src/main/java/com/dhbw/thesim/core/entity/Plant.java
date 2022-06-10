@@ -12,6 +12,7 @@ import javafx.scene.shape.Circle;
  *
  * @author Daniel Czeschner, Kai Grübener
  */
+@SuppressWarnings("unused")
 public class Plant extends SimulationObject {
 
     //TODO do we need this?
@@ -25,11 +26,20 @@ public class Plant extends SimulationObject {
      */
     public static final double MAX_GROWTH = 100;
 
-    //TODO comments, make final
+    /**
+     * Used to specify the properties for a {@link Plant}-object.
+     */
     private Plant.plantType plantType;
     private double growth;
     private final double growthRate;
 
+    /**
+     * Constructor for a normal {@link Plant}-object.
+     * @param name The name of the plant.
+     * @param image The image for the graphical illustration.
+     * @param interactionRange The range for interactionis with other {@link SimulationObject}-objects.
+     * @param growthRate The rate for a plant to grow.
+     */
     public Plant(String name, Image image, double interactionRange, double growthRate) {
         super(name, interactionRange, image);
         this.growthRate = growthRate;
