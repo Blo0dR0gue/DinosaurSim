@@ -148,8 +148,8 @@ public class Simulation {
                 'a', 370, 32, 'M')
         );
 
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("birke.png"), 128, plantGrowthRate));
+        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("farn.png"), 16, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
@@ -210,15 +210,15 @@ public class Simulation {
 
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
-            //simulationOverlay.getChildren().add(obj.getCircle());
+            simulationOverlay.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
                 //TODO remove test objects
                 //simulationOverlay.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
-                dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange()));
-            } else {
+                dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
+            } else if(obj instanceof Plant plant) {
                 //Plants only can be spawned on tiles, which allow plant growing
-                obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, obj.getInteractionRange()));
+                obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange(), plant.getRenderOffset()));
             }
 
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
@@ -400,11 +400,11 @@ public class Simulation {
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange) {
+    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
 
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
-            return getFreePositionInMap(canSwim, canClimb, interactionRange);
+        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)) {
+            return getFreePositionInMap(canSwim, canClimb, interactionRange, renderOffset);
         }
 
         return target;
@@ -419,11 +419,11 @@ public class Simulation {
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange) {
+    public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
 
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null)) {
-            return getFreePositionInMap(swimmable, climbable, interactionRange);
+        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)) {
+            return getFreePositionInMapWhereConditionsAre(swimmable, climbable, allowPlants, interactionRange, renderOffset);
         }
 
         return target;

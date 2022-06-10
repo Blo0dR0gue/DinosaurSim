@@ -69,9 +69,9 @@
   },
   {
     "Pflanzenart":[
-      {"Name":"Farn", "Bild":"farn.png", "Interaktionsweite":[1.0,2.0]},
-      {"Name":"Ginkgoales", "Bild":"ginkgoales.png", "Interaktionsweite":[2.0,5.0]},
-      {"Name": "Birke", "Bild": "birke.png", "Interaktionsweite": [2.0,3.0]}
+      {"Name":"Farn", "Bild":"farn.png", "Interaktionsweite":[16.0,19.0]},
+      {"Name":"Ginkgoales", "Bild":"ginkgoales.png", "Interaktionsweite":[32.0,64.0]},
+      {"Name": "Birke", "Bild": "birke.png", "Interaktionsweite": [45.0,64.0]}
     ]
   }
 ]
