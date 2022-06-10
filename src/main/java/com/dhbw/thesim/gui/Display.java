@@ -41,6 +41,12 @@ public class Display extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
+        //Init JsonData
+        JsonHandler.setDirectory();
+        JsonHandler.exportDefaultScenarioConfig();
+        JsonHandler.exportDefaultSimulationObjectsConfig();
+
+        //Setup GUI
         primaryStage.setTitle("TheSim - A Dinosaur-Simulation");
 
         //This is a fullscreen application for 1920x1080 screens
@@ -80,14 +86,14 @@ public class Display extends Application {
         primaryStage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 
         JsonHandler.setDirectory();
-        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> guiParams = Json2Objects.getParamsForGUI(Json2Objects.Type.NO_SCENARIO_FILE, "");
+        HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> defaultScenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "defaultScenarioConfig");
 
         //TODO guiParams.get(JsonHandler.ScenarioConfigParams.PLANT);
         //TODO guiParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE);
 
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initialize(guiParams.get(JsonHandler.ScenarioConfigParams.DINO), guiParams.get(JsonHandler.ScenarioConfigParams.PLANT), ((double) guiParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0]), ((String) guiParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]));
+        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), ((double) defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0]), ((String) defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]));
 
         configScene = new Scene(configScreen);
         primaryStage.setScene(configScene);
