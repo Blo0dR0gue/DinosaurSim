@@ -70,7 +70,8 @@
   {
     "Pflanzenart":[
       {"Name":"Farn", "Bild":"farn.png", "Interaktionsweite":[1.0,2.0]},
-      {"Name":"Ginkgoales", "Bild":"ginkgoales.png", "Interaktionsweite":[2.0,5.0]}
+      {"Name":"Ginkgoales", "Bild":"ginkgoales.png", "Interaktionsweite":[2.0,5.0]},
+      {"Name": "Birke", "Bild": "birke.png", "Interaktionsweite": [2.0,3.0]}
     ]
   }
 ]
