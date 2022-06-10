@@ -20,13 +20,15 @@ public class Escape extends State {
      */
     private final Dinosaur dinosaur;
 
+    /**
+     * {@link Vector2D}-variables for paths
+     */
     private Vector2D target;
     private Vector2D directionOfHunter;
     private Vector2D direction;
 
     /**
      * Constructor
-     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Escape(Dinosaur simulationObject) {
@@ -36,14 +38,12 @@ public class Escape extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
         if (target == null || reachedTarget()) {
             System.out.println("check");
             if (dinosaur.getTarget() != null && dinosaur.isChased() && dinosaur.getTarget() instanceof Dinosaur hunter) {
                 directionOfHunter = hunter.getPosition().directionToTarget(dinosaur.getPosition());
                 target = simulation.getRandomMovementTargetInRangeInDirection(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(),
                         dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), directionOfHunter);
-
                 if (target == null) {
                     //If we can't get a direction away from the hunter get a random direction.
                     target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(),
@@ -53,21 +53,15 @@ public class Escape extends State {
             if (target != null)
                 dinosaur.setTest(target);
         }
-
         if (target != null) {
-
             direction = dinosaur.getPosition().directionToTarget(target);
             dinosaur.flipImage(direction);
-
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
-
         }
-
     }
 
     @Override
     public void onExit() {
-
     }
 
     @Override
@@ -90,12 +84,9 @@ public class Escape extends State {
 
         //If the dinosaur is no longer been chased.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> !dinosaur.isChased()));
-
     }
-
 
     private boolean reachedTarget() {
         return target != null && simulationObject.getPosition().isInRangeOf(target, Dinosaur.PROXIMITY_RANGE);
     }
-
 }
