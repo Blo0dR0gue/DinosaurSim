@@ -18,6 +18,7 @@ import javafx.scene.shape.Rectangle;
  *
  * @author Daniel Czeschner
  */
+@SuppressWarnings("unused")
 public abstract class SimulationObject extends StateMachine {
 
     /**
