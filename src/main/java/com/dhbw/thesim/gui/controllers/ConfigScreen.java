@@ -55,6 +55,8 @@ public class ConfigScreen extends AnchorPane {
     public SideBar sideBar;
     @FXML
     public SliderWithLabel stepSliderWithLabel;
+    @FXML
+    public Label modeRequired;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -107,10 +109,15 @@ public class ConfigScreen extends AnchorPane {
     public void initializeListeners() {
         // When the start button is clicked the current scene gets replaced by the SimulationOverlay scene
         startSimulationButton.setOnAction(event -> {
-            Stage window = (Stage) startSimulationButton.getScene().getWindow();
-            SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
-            window.setScene(simulationOverlay.getSimulationScene());
-            window.setFullScreen(true);
+            if (Objects.nonNull(modeGroup.getSelectedToggle()))  {
+                Stage window = (Stage) startSimulationButton.getScene().getWindow();
+                SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
+                window.setScene(simulationOverlay.getSimulationScene());
+                window.setFullScreen(true);
+            }
+            else {
+                modeRequired.setText("Bitte wählen Sie einen Simulationsmodus aus!");
+            }
         });
 
         // add a change listener
