@@ -12,7 +12,7 @@
 }
 
 .list-view .list-cell:selected {
-    -fx-background-color: #999999;
+    -fx-background-color: #808080;
 }
 
 #scenarioListView {
@@ -25,5 +25,5 @@
 }
 
 #scenarioListView .list-cell:selected {
-    -fx-background-color: #999999;
+    -fx-background-color: #808080;
 }

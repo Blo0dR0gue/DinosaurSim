@@ -165,13 +165,15 @@ public class ConfigScreen extends AnchorPane {
         mapGroup = new ToggleGroup();
         //Instantiating and initializing maps to add all of them to the list view of dinos
         MapListItem mapListItem1 = MapListItem.newInstance();
-        mapListItem1.initialize("Landschaft 1", new Image("/map/landscape-one.png"));
-        mapListItem1.radioButton.setId("Landschaft1");
+        String mapName1 = "Landschaft 1";
+        mapListItem1.initialize(mapName1, new Image("/map/landscape-one.png"));
+        mapListItem1.radioButton.setId(mapName1.replace(" ", ""));
         mapListItem1.radioButton.setToggleGroup(mapGroup);
 
         MapListItem mapListItem2 = MapListItem.newInstance();
-        mapListItem2.initialize("Landschaft 2", new Image("/map/landscape-two.png"));
-        mapListItem2.radioButton.setId("Landschaft2");
+        String mapName2 = "Landschaft 2";
+        mapListItem2.initialize(mapName2, new Image("/map/landscape-two.png"));
+        mapListItem2.radioButton.setId(mapName2.replace(" ", ""));
         mapListItem2.radioButton.setToggleGroup(mapGroup);
 
         //Add the map list items to the map list view
@@ -184,6 +186,7 @@ public class ConfigScreen extends AnchorPane {
             if (Objects.equals(((RadioButton) toggle).getText(), landscapeName)
                     || Objects.equals(((RadioButton) toggle).getId(), landscapeName)) {
                 toggle.setSelected(true);
+                break;
             }
         }
     }
