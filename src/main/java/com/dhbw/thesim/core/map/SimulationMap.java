@@ -407,6 +407,29 @@ public class SimulationMap {
         return tileObjects;
     }
 
+    private List<Tile> getTilesInRangeWhereConditionsMatch(Tile tile, int range, boolean swimmable, boolean climbable) {
+        List<Tile> tileObjects = new ArrayList<>();
+
+        for (int x = -range; x <= range; x++) {
+            for (int y = -range; y <= range; y++) {
+
+                if (x == 0 && y == 0)
+                    continue;
+
+                int checkX = tile.getGridX() + x;
+                int checkY = tile.getGridY() + y;
+
+                if (isInsideOfGrid(checkX, checkY)) {
+                    Tile tmpTile = getTileAtPosition(checkX, checkY);
+                    if (tileMatchedConditions(tmpTile, swimmable, climbable))
+                        tileObjects.add(tmpTile);
+                }
+            }
+        }
+
+        return tileObjects;
+    }
+
     //region getter & setter
 
     /**
@@ -498,7 +521,7 @@ public class SimulationMap {
      * @param climbable Do the tile need to be climbable (mountain tile)
      * @return A list of {@link Vector2D} with all center coordinates
      */
-    public List<Vector2D> getMidCoordinatesOfMatchingTiles(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+    public List<Vector2D> getMidCoordinatesTilesWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable) {
         List<Vector2D> matchingPosition = new ArrayList<>();
 
         Tile startTile = getTileAtPosition(origin);
@@ -510,5 +533,21 @@ public class SimulationMap {
         }
         return matchingPosition;
     }
+
+    public List<Vector2D> getMidCoordinatesTilesWhereConditionsMatch(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+        List<Vector2D> matchingPosition = new ArrayList<>();
+
+        Tile startTile = getTileAtPosition(origin);
+
+        int localRange = (int) Math.ceil(range / Tile.TILE_SIZE);
+
+        for (Tile tile : getTilesInRangeWhereConditionsMatch(startTile, localRange, swimmable, climbable)) {
+            matchingPosition.add(getCenterPositionOfTile(tile));
+        }
+
+        return matchingPosition;
+    }
+
+
     //endregion
 }

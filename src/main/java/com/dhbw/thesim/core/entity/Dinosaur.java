@@ -12,7 +12,7 @@ import javafx.scene.shape.Circle;
  * Represents a dinosaur object in our simulation.
  * Takes care to update each State and switch between them.
  *
- * @author Daniel Czeschner, Kai Grübener
+ * @author Daniel Czeschner, Kai Grübener, Lucas Schaffer
  * @see com.dhbw.thesim.core.statemachine.StateMachine
  * @see State
  */
@@ -55,6 +55,7 @@ public class Dinosaur extends SimulationObject {
 
     private SimulationObject target;
     private boolean isChased;
+    private Dinosaur partner;
 
     /**
      * Used to set the decrease rate for nutrition and hydration in the simulation.
@@ -62,6 +63,7 @@ public class Dinosaur extends SimulationObject {
     //TODO check values?
     private static final double NUTRITION_REDUCTION_RATE = 0.1;
     private static final double HYDRATION_REDUCTION_RATE = 0.25;
+    private static final double REPRODUCTION_VALUE_FULL = 100;
 
     /**
      * Used to set the proximity range of a dinosaur object.
@@ -142,6 +144,10 @@ public class Dinosaur extends SimulationObject {
         return checkValue > getStrength() && getHydration() > 0 && getNutrition() > 0;
     }
 
+    public boolean isWillingToMate() {
+        return reproductionValue>= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty();
+    }
+
     /**
      * Reduces the {@link #nutrition} and {@link #hydration} values of the dinosaur.
      *
@@ -176,6 +182,17 @@ public class Dinosaur extends SimulationObject {
      */
     public dietType getDiet() {
         return diet;
+    }
+    public char getCharDiet() {
+
+        if (diet == dietType.omnivore)
+            return 'a';
+        else if (diet == dietType.carnivore)
+            return 'f';
+        else if (this.diet == dietType.herbivore)
+            return 'p';
+        else
+            return 'x';
     }
 
     public double getNutrition() {
@@ -234,6 +251,10 @@ public class Dinosaur extends SimulationObject {
         return target;
     }
 
+    public Dinosaur getPartner() {
+        return partner;
+    }
+
     public long getTimeOfBirth() {
         return timeOfBirth;
     }
@@ -276,6 +297,10 @@ public class Dinosaur extends SimulationObject {
 
     public void setTarget(SimulationObject target) {
         this.target = target;
+    }
+
+    public void setPartner(Dinosaur partner) {
+        this.partner = partner;
     }
 
     /**
