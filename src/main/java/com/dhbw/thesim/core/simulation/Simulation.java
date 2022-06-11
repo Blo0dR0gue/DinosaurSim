@@ -160,7 +160,7 @@ public class Simulation {
                 //Plants only can be spawned on tiles, which allow plant growing
                 obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange(), plant.getRenderOffset()));
             }
-            simulationOverlay.getChildren().add(obj.getJavaFXObj());
+            simulationOverlay.centerPane.getChildren().add(obj.getJavaFXObj());
         }
     }
 
@@ -383,7 +383,7 @@ public class Simulation {
 
     public void spawnObject(SimulationObject simulationObject) {
         this.toBeSpawned.add(simulationObject);
-        Platform.runLater(() -> simulationOverlay.getChildren().add(simulationObject.getJavaFXObj()));
+        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
     }
 
     public void spawnNewObjects() {
