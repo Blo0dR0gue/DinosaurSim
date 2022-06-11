@@ -33,7 +33,7 @@
             </StackPane.margin>
         </Label>
     </StackPane>
-    <GridPane fx:id="gridPane" gridLinesVisible="true" style="-fx-background-color: #bfbfbf;"
+    <GridPane fx:id="gridPane" gridLinesVisible="false" style="-fx-background-color: #bfbfbf;"
               prefWidth="${container.width*0.8}" prefHeight="${container.height*0.85}"
               AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
         <columnConstraints>
