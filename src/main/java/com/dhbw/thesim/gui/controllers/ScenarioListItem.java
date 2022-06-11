@@ -27,7 +27,7 @@ public class ScenarioListItem extends HBox {
 
         //Remove generated filename substring from name
         int scenarioConfigIndex = name.toLowerCase().lastIndexOf("scenarioconfig");
-        name = name.toLowerCase().substring(0, scenarioConfigIndex);
+        name = name.substring(0, scenarioConfigIndex);
 
         radioButton.setText(name);
         radioButton.setToggleGroup(toggleGroup);
