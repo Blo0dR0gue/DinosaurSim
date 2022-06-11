@@ -43,7 +43,7 @@ public class Statistics {
      * @param simulationObjectList The list of all current simulationiObjects
      */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList){
-        statSimObjects.add(simulationObjectList);
+        statSimObjects.add(List.copyOf(simulationObjectList));
     }
 
     /**
