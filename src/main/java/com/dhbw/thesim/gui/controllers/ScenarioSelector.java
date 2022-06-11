@@ -124,7 +124,7 @@ public class ScenarioSelector extends VBox {
                 alert.setTitle("Konfigurationswechsel");
                 alert.setHeaderText("Die ausgewählte Szenario-Konfigurationsdatei wurde erfolgreich geladen!");
                 alert.setContentText("Die Parameter der ausgewählten Szenario-Konfiguration wurden geladen " +
-                        "und werden nun in der Konfigurationsansicht angezeigt.");
+                        "und werden nun im Konfigurationsmenü angezeigt.");
                 alert.initOwner(window);
 
                 alert.showAndWait();
