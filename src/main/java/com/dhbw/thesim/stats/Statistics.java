@@ -7,8 +7,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "unused"})
-
 /**
  * Class responsible for statistics shown in GUI (methods are called from GUI)
  * Functionality splits into singleStatistics for a single entity (Dinosaur) ans SimulationStatistics for an overall view at the simulation's end.
@@ -19,6 +17,7 @@ import java.util.List;
  * @see SimulationObject
  * @see com.dhbw.thesim.core.entity.SimulationObject
  */
+@SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "unused"})
 public class Statistics {
 
     /**
@@ -27,7 +26,7 @@ public class Statistics {
      * @see SimulationObject
      * startTime is set in Constructor to determine simulation runtime.
      */
-    private List<List<SimulationObject>> statSimObjects;
+    private final List<List<SimulationObject>> statSimObjects;
     private final long startTime;
 
     /**
@@ -49,16 +48,16 @@ public class Statistics {
     /**
      * Method responsible for generation of overall statistics
      */
-    public void getSimulationStats(){ //ToDo Rückgabe entsprechend GUI-Vorgaben implementieren & Methoden testen
+    public StatisticsStruct getSimulationStats(){ //ToDo Rückgabe entsprechend GUI-Vorgaben implementieren & Methoden testen
         long simulationTime = System.currentTimeMillis() - startTime;
         List<Integer> livingDinosaurs = new ArrayList<>();
         List<List<Integer>> livingSpecies = new ArrayList<>();
         List<Integer> livingPredators = new ArrayList<>();
         List<Integer> livingChased = new ArrayList<>();
-        List<Double> nutritionPredators = new ArrayList<>();
-        List<Double> nutritionChased = new ArrayList<>();
-        List<Double> hydrationPredators = new ArrayList<>();
-        List<Double> hydrationChased = new ArrayList<>();
+        List<Double> averageNutritionPredators = new ArrayList<>();
+        List<Double> averageNutritionChased = new ArrayList<>();
+        List<Double> averageHydrationPredators = new ArrayList<>();
+        List<Double> averageHydrationChased = new ArrayList<>();
         List<String> allDinoSpecies = getAllDinoSpecies(statSimObjects.get(0));
 
         for (List<SimulationObject> objList : statSimObjects){
@@ -90,16 +89,34 @@ public class Statistics {
                     }
                 }
             }
-
             livingDinosaurs.add(livingDinosaursCounter);
             livingSpecies.add(livingSpeciesCounter);
             livingPredators.add(livingPredatorsCounter);
             livingChased.add(livingChasedCounter);
-            nutritionPredators.add(nutritionPredatorsCounter);
-            nutritionChased.add(nutritionChasedCounter);
-            hydrationPredators.add(hydrationPredatorsCounter);
-            hydrationChased.add(hydrationChasedCounter);
+            averageNutritionPredators.add(nutritionPredatorsCounter / livingPredatorsCounter);
+            averageNutritionChased.add(nutritionChasedCounter / livingChasedCounter);
+            averageHydrationPredators.add(hydrationPredatorsCounter / livingPredatorsCounter);
+            averageHydrationChased.add(hydrationChasedCounter / livingChasedCounter);
         }
+
+        double helperNutritionPredators = 0;
+        double helperNutritionChased = 0;
+        double helperHydrationPredators = 0;
+        double helperHydrationChased = 0;
+        int helperLivingDinosaurs = 0;
+        int helperLivingPredators = 0;
+        int helperLivingChased = 0;
+        int listElementCounter = livingDinosaurs.size();
+        for (int i = 0; i < listElementCounter; i++){
+            helperNutritionPredators += averageNutritionPredators.get(i);
+            helperNutritionChased += averageNutritionChased.get(i);
+            helperHydrationPredators += averageHydrationPredators.get(i);
+            helperHydrationChased += averageHydrationChased.get(i);
+            helperLivingDinosaurs += livingDinosaurs.get(i);
+            helperLivingPredators += livingPredators.get(i);
+            helperLivingChased += livingChased.get(i);
+        }
+        return new StatisticsStruct(simulationTime, helperNutritionPredators/listElementCounter, helperNutritionChased/listElementCounter, helperHydrationPredators/listElementCounter, (helperHydrationChased/listElementCounter), helperLivingPredators/helperLivingDinosaurs, helperLivingChased/helperLivingDinosaurs, livingDinosaurs, livingSpecies, allDinoSpecies);
     }
 
     /**
