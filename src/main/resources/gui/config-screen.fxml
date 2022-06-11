@@ -87,14 +87,7 @@
         <SliderWithLabel fx:id="maxSteps" text="Maximale Schrittanzahl" visible="false"
                          min="50" max="500" major="50" minor="4"
                          GridPane.columnIndex="3" GridPane.rowIndex="7" GridPane.columnSpan="2"/>
-        <Label fx:id="modeRequired" textFill="darkred" wrapText="true" visible="false"
-               text="Bitte wählen Sie einen Simulationsmodus aus!"
-               GridPane.columnIndex="5" GridPane.rowIndex="6" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
-            <font>
-                <Font size="25.0"/>
-            </font>
-        </Label>
-        <RadioButton fx:id="auto" text="Automatischer Simulationsdurchlauf" textFill="white"
+        <RadioButton fx:id="auto" text="Automatischer Simulationsdurchlauf" textFill="white" selected="true"
                      GridPane.columnIndex="5" GridPane.rowIndex="7" GridPane.columnSpan="2"
                      GridPane.valignment="TOP">
             <GridPane.margin>
