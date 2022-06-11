@@ -45,7 +45,8 @@ public class JsonHandler {
             workingDirectory = System.getProperty("user.home");
             workingDirectory += "/.local/share/TheSim";
         } else {//macOS
-            workingDirectory = ".";
+            workingDirectory = System.getProperty("user.home");
+            workingDirectory += "/Library/Application Support/TheSim";
         }
         File file = new File(workingDirectory);
         if (!file.isDirectory()) {
