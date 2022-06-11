@@ -42,25 +42,25 @@ public class MoveToPartner extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-
         if (dinosaur.getPartner() == null) {
             dinosaur.setPartner((Dinosaur) simulation.getClosestReachableSuitablePartnerInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getGender()));
 
-            if(dinosaur.getPartner() != null)
+            if (dinosaur.getPartner() != null)
                 dinosaur.getPartner().setPartner(dinosaur);
         }
 
-        if(dinosaur.getPartner() != null){
+        if (dinosaur.getPartner() != null) {
             targetInteractionRange = dinosaur.getPartner().getInteractionRange();
             direction = dinosaur.getPosition().directionToTarget(dinosaur.getPartner().getPosition());
             dinosaur.flipImage(direction);
         }
 
         if (direction != null) {
-
-            simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
+            if (dinosaur.getGender() == 'm')
+                simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
 
         }
+
 
     }
 
@@ -89,7 +89,7 @@ public class MoveToPartner extends State {
         addTransition(new StateTransition(StateFactory.States.mate, this::reached));
 
         //If we can't reach the target anymore -> transition to wander. (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getGender() == 'm' && !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
 
     }
 
