@@ -87,7 +87,7 @@ public class ConfigScreen extends AnchorPane {
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
-        switchScenarioParams(dinos, plants, plantGrowthRate, landscapeName);
+        addScenarioParams(dinos, plants, plantGrowthRate, landscapeName);
 
         GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));
         GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
@@ -177,7 +177,7 @@ public class ConfigScreen extends AnchorPane {
      * @param plantGrowthRate The given plant growth rate in scenario config
      * @param landscapeName The given landscape name in scenario config
      */
-    public void switchScenarioParams(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
+    public void addScenarioParams(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
         mapListView.getItems().clear();
         populateMapListView(landscapeName);
 

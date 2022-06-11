@@ -20,7 +20,7 @@
    </fx:define>
    <Button fx:id="loadButton" style="-fx-background-color: transparent;">
       <VBox.margin>
-         <Insets bottom="10.0"/>
+         <Insets top="10.0" bottom="10.0"/>
       </VBox.margin>
       <tooltip>
          <Tooltip text="laden"/>
@@ -29,12 +29,20 @@
          <ImageView fitWidth="50.0" preserveRatio="true" image="$loadBtnImage"/>
       </graphic>
    </Button>
+   <Separator/>
    <Label fx:id="saveLabel" text="Derzeitiges Szenario speichern:">
+      <VBox.margin>
+         <Insets top="10.0"/>
+      </VBox.margin>
       <font>
          <Font size="17.0"/>
       </font>
    </Label>
-   <TextField fx:id="filename" promptText="Szenario Name"/>
+   <TextField fx:id="filename" promptText="Szenario Name">
+      <VBox.margin>
+         <Insets top="10.0"/>
+      </VBox.margin>
+   </TextField>
    <fx:define>
       <Image fx:id="saveBtnImage" url="/controls/save.png"/>
    </fx:define>
