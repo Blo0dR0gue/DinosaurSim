@@ -139,7 +139,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     public boolean isWillingToMate() {
-        return reproductionValue>= REPRODUCTION_VALUE_FULL;
+        return reproductionValue>= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty();
     }
 
     /**

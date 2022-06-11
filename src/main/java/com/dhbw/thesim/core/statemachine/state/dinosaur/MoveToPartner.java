@@ -30,6 +30,8 @@ public class MoveToPartner extends State {
      */
     private Vector2D direction;
 
+    private boolean reached = false;
+
     /**
      * Constructor
      *
@@ -66,7 +68,7 @@ public class MoveToPartner extends State {
 
     @Override
     public void onExit() {
-        if (dinosaur.getPartner().getPartner() != dinosaur) {
+        if (dinosaur.getPartner().getPartner() != dinosaur || !reached) {
             dinosaur.setPartner(null);
         }
     }
@@ -100,8 +102,8 @@ public class MoveToPartner extends State {
      * @return true, if we have reached the target.
      */
     private boolean reached(Simulation simulation) {
-
-        return simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), dinosaur.getPartner().getPosition(), targetInteractionRange);
+        reached = simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), dinosaur.getPartner().getPosition(), targetInteractionRange);
+        return reached;
     }
 
 }
