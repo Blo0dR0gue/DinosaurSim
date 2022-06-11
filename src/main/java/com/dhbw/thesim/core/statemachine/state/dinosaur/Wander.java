@@ -52,7 +52,6 @@ public class Wander extends State {
             if (target != null) {
                 direction = simulationObject.getPosition().directionToTarget(target);
                 System.out.println("Moving to " + target);
-                dinosaur.setTest(target);
                 dinosaur.flipImage(direction);
             }
         }
@@ -90,6 +89,11 @@ public class Wander extends State {
         //If the dinosaur is hungry and a food source is in range, transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isHungry()
                 && simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null));
+
+        addTransition(new StateTransition(StateFactory.States.moveToPartner, simulation -> (dinosaur.isWillingToMate()
+                && simulation.getClosestReachableSuitablePartnerInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getGender()) != null)
+                || dinosaur.getPartner() != null));
+
     }
 
     /**

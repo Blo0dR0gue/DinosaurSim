@@ -28,7 +28,6 @@ public class Grown extends State {
 
     @Override
     public void onExit() {
-        //TODO maybe don't hide the plant. instead add a other image for a plant.
         //Hide the plant
         plant.getJavaFXObj().setVisible(false);
     }

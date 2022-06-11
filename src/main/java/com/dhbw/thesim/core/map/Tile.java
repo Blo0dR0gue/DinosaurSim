@@ -91,19 +91,4 @@ public class Tile {
     public int getGridY() {
         return gridY;
     }
-
-    //TODO REMOVE!!!
-    public static Image tmpSprite() {
-        Canvas c = new Canvas(TILE_SIZE, TILE_SIZE);
-        GraphicsContext gc = c.getGraphicsContext2D();
-        gc.clearRect(0, 0, TILE_SIZE, TILE_SIZE);
-        gc.setStroke(Color.RED);
-        gc.strokeRect(0, 0, TILE_SIZE, TILE_SIZE);
-
-        WritableImage writableImage = new WritableImage((int) Math.rint(1 * c.getWidth()), (int) Math.rint(1 * c.getHeight()));
-        SnapshotParameters spa = new SnapshotParameters();
-        spa.setTransform(Transform.scale(1, 1));
-        spa.setFill(Color.TRANSPARENT);
-        return c.snapshot(spa, writableImage);
-    }
 }

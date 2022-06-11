@@ -145,6 +145,7 @@ public class SimulationLoop {
             obj.update(deltaTime, currentSimulation);
         }
         currentSimulation.removeDeletedObjects();
+        currentSimulation.spawnNewObjects();
     }
 
     /**
