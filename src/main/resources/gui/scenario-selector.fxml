@@ -4,10 +4,10 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.text.Font?>
-<?import javafx.geometry.Insets?>
 
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
 <fx:root fx:id="container" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1">
    <Label fx:id="chooseLabel" text="Szenario auswählen:">
       <font>
@@ -15,49 +15,46 @@
       </font>
    </Label>
    <ListView fx:id="scenarioListView" stylesheets="@../styles/styles.css" />
+   <fx:define>
+      <Image fx:id="loadBtnImage" url="/controls/load.png"/>
+   </fx:define>
+   <Button fx:id="loadButton" style="-fx-background-color: transparent;">
+      <VBox.margin>
+         <Insets top="10.0" bottom="10.0"/>
+      </VBox.margin>
+      <tooltip>
+         <Tooltip text="laden"/>
+      </tooltip>
+      <graphic>
+         <ImageView fitWidth="50.0" preserveRatio="true" image="$loadBtnImage"/>
+      </graphic>
+   </Button>
+   <Separator/>
    <Label fx:id="saveLabel" text="Derzeitiges Szenario speichern:">
+      <VBox.margin>
+         <Insets top="10.0"/>
+      </VBox.margin>
       <font>
          <Font size="17.0"/>
       </font>
    </Label>
-   <TextField fx:id="filename" promptText="Szenario Name"/>
-   <BorderPane>
+   <TextField fx:id="filename" promptText="Szenario Name">
       <VBox.margin>
          <Insets top="10.0"/>
       </VBox.margin>
-      <left>
-         <fx:define>
-            <Image fx:id="saveBtnImage" url="/controls/save.png"/>
-         </fx:define>
-         <Button fx:id="saveButton" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
-            <tooltip>
-               <Tooltip text="speichern"/>
-            </tooltip>
-            <graphic>
-               <ImageView fitWidth="50.0" preserveRatio="true" image="$saveBtnImage"/>
-            </graphic>
-         </Button>
-      </left>
-      <center>
-         <Label fx:id="enterNameError" visible="false"
-                text="Bitte geben Sie einen Namen an!" textFill="darkred" wrapText="true" textAlignment="CENTER">
-            <font>
-               <Font size="17.0"/>
-            </font>
-         </Label>
-      </center>
-      <right>
-         <fx:define>
-            <Image fx:id="loadBtnImage" url="/controls/load.png"/>
-         </fx:define>
-         <Button fx:id="loadButton" style="-fx-background-color: transparent;" HBox.hgrow="ALWAYS">
-            <tooltip>
-               <Tooltip text="laden"/>
-            </tooltip>
-            <graphic>
-               <ImageView fitWidth="50.0" preserveRatio="true" image="$loadBtnImage"/>
-            </graphic>
-         </Button>
-      </right>
-   </BorderPane>
+   </TextField>
+   <fx:define>
+      <Image fx:id="saveBtnImage" url="/controls/save.png"/>
+   </fx:define>
+   <Button fx:id="saveButton" style="-fx-background-color: transparent;">
+      <VBox.margin>
+         <Insets top="10.0"/>
+      </VBox.margin>
+      <tooltip>
+         <Tooltip text="speichern"/>
+      </tooltip>
+      <graphic>
+         <ImageView fitWidth="50.0" preserveRatio="true" image="$saveBtnImage"/>
+      </graphic>
+   </Button>
 </fx:root>
