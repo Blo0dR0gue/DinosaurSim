@@ -32,7 +32,6 @@ class SimulationTest {
 
     @BeforeEach
     void setUp() {
-        //TODO
         simulation = new Simulation(simulationMap, graphicsContext, new HashMap<>(), new HashMap<>(), 2, new Random());
     }
 

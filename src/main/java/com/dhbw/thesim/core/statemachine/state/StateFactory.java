@@ -11,8 +11,6 @@ import com.dhbw.thesim.core.statemachine.state.plant.Grown;
  * State factory, which creates {@link State}-objects. <br>
  * Using the Factory Pattern. <br>
  * We use this state factory, because we cant create a object when creating a {@link com.dhbw.thesim.core.statemachine.StateTransition}. This would end in a {@link StackOverflowError}
- * <br>
- * TODO maybe simplify this whole transition, state, etc. thing. (Maybe pass the simobject in the updates?)
  *
  * @author Daniel Czeschner
  */
@@ -26,6 +24,7 @@ public class StateFactory {
         stand,
         wander,
         moveToFoodSource,
+        moveToPartner,
         mate,
         ingestion,
         hunt,
@@ -75,6 +74,7 @@ public class StateFactory {
         return switch (state) {
             case wander -> new Wander(dinosaur);
             case moveToFoodSource -> new MoveToFoodSource(dinosaur);
+            case moveToPartner -> new MoveToPartner(dinosaur);
             case mate -> new Mate(dinosaur);
             case ingestion -> new Ingestion(dinosaur);
             case hunt -> new Hunt(dinosaur);

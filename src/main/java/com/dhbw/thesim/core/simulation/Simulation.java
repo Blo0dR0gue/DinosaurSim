@@ -14,12 +14,13 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
  * Holds all information for one Simulation and provides functions each {@link SimulationObject} needs to know which are using simulation data.
  *
- * @author Daniel Czeschner
+ * @author Daniel Czeschner, Lucas Schaffer
  * @see SimulationMap
  * @see SimulationObject
  * @see SimulationLoop
@@ -55,6 +56,11 @@ public class Simulation {
     private List<SimulationObject> toBeRemoved;
 
     /**
+     * A List with all {@link SimulationObject}s, which will be spawned at the end of a {@link SimulationLoop} update.
+     */
+    private List<SimulationObject> toBeSpawned;
+
+    /**
      * The SimulationOverlay, on which the elements get spawned.
      */
     private SimulationOverlay simulationOverlay;
@@ -64,15 +70,12 @@ public class Simulation {
      */
     private final Random random;
 
-    //TODO REMOVE!!!
-    private Line line;
-
     //endregion
 
     /**
      * Constructor used for test cases
      */
-    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate, Random random) {
+    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, Map<String, Integer> dinosaurs, Map<String, Integer> plants, int plantGrowthRate, Random random) {
         this.simulationMap = simulationMap;
         this.simulationObjects = new ArrayList<>();
         this.backgroundGraphics = backgroundGraphics;
@@ -94,75 +97,20 @@ public class Simulation {
         this.backgroundGraphics = backgroundGraphicsContext;
         this.simulationObjects = new ArrayList<>();
         this.toBeRemoved = new ArrayList<>();
+        this.toBeSpawned = new ArrayList<>();
 
-        //TODO
-        //this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
+        this.simulationOverlay = simulationOverlay;
 
-        //TODO REMOVE TEMPORARY CODE!!!
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("tes2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 80,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 12, 18, 25,
-                0.1, 100, 50, 10, false, true,
-                'f', 270, 32, 'f')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 14, 20, 45,
-                0.1, 100, 50, 10, false, true,
-                'f', 370, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "type3", SpriteLibrary.getInstance().getImage("test2.png"), 15, 14, 27, 35,
-                0.1, 100, 50, 10, false, true,
-                'a', 370, 32, 'M')
-        );
-
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("birke.png"), 64, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("farn.png"), 16, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-
-        line = new Line(0, 0, 0, 0);
-        line.setStroke(Color.BLUE);
-
+        try {
+            this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
+        } catch (IOException e) {
+            //TODO Gui error handling
+            e.printStackTrace();
+        }
 
         //Draw the map
         drawMap();
-        //TODO
-        this.simulationOverlay = simulationOverlay;
-        //TODO don't spawn plants in deserts
+        //Spawn the objects
         spawnObjects(simulationOverlay);
     }
 
@@ -205,10 +153,7 @@ public class Simulation {
     private void spawnObjects(SimulationOverlay simulationOverlay) {
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
-            simulationOverlay.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
-                //TODO remove test objects
-                //simulationOverlay.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
             } else if(obj instanceof Plant plant) {
@@ -217,7 +162,6 @@ public class Simulation {
             }
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
         }
-        simulationOverlay.getChildren().add(line);
     }
 
     /**
@@ -258,7 +202,7 @@ public class Simulation {
      * @return A {@link Vector2D} target of a water tile or null.
      */
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
-        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
+        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesTilesWhereConditionsAre(position, viewRange, true, false);
 
         sortByDistance(waterSourcesInRange, position);
 
@@ -348,6 +292,105 @@ public class Simulation {
         inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
         return inRange;
     }
+
+    public SimulationObject getClosestReachableSuitablePartnerInRange(Vector2D position, double viewRange, String type,
+                                                                      boolean canSwim, boolean canClimb, char gender) {
+        List<SimulationObject> inRange = findReachableSuitablePartnersInRange(position, viewRange, type, canSwim, canClimb, gender);
+
+        sortByDistance(position, inRange);
+        if (!inRange.isEmpty())
+            return inRange.get(0);
+        return null;
+
+    }
+
+    public List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
+                                                                       boolean canSwim, boolean canClimb, char gender) {
+        List<SimulationObject> inRange = new ArrayList<>();
+
+        for (SimulationObject simulationObject : simulationObjects) {
+
+            if (simulationObject.getPosition() != position) {
+                if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
+                    if (simulationObject instanceof Dinosaur dinosaur && dinosaur.getPartner() == null && dinosaur.getType().equalsIgnoreCase(type) && dinosaur.getGender() != gender && dinosaur.isWillingToMate()) {
+                        inRange.add(dinosaur);
+                    }
+                }
+            }
+        }
+
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
+
+        return inRange;
+    }
+
+    public void makeBaby(Dinosaur mother, Dinosaur father) {
+
+        double strength = inheritValue(mother.getStrength(), father.getStrength());
+        double speed = inheritValue(mother.getSpeed(), father.getSpeed());
+        double reproductionRate = inheritValue(mother.getReproductionRate(), father.getReproductionRate());
+        double weight = inheritValue(mother.getWeight(), father.getWeight());
+        double length = inheritValue(mother.getLength(), father.getLength());
+        double height = inheritValue(mother.getHeight(), father.getHeight());
+        double nutrition = inheritValue(mother.getNutrition(), father.getNutrition());
+        double hydration = inheritValue(mother.getHydration(), father.getHydration());
+        char gender;
+
+        if (random.nextInt() % 2 == 0)
+            gender = 'm';
+        else
+            gender = 'f';
+
+        Dinosaur baby = new Dinosaur(
+                mother.getType(), mother.getJavaFXObj().getImage(), nutrition, hydration, strength, speed,
+                reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
+
+
+        baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
+
+        spawnObject(baby);
+
+        System.out.println("Baby Dinosaur was made");
+    }
+
+    public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
+
+        List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
+
+        for (Vector2D pos : positions) {
+            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, origin)) {
+                System.out.println("Spawn position found with range " + range);
+                return pos;
+            }
+        }
+
+        return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
+    }
+
+    public double inheritValue(double a, double b) {
+        double result;
+        if (random.nextInt() % 2 == 0)
+            result = a;
+        else
+            result = b;
+
+        if (random.nextInt(1, 100) <= 20) {
+            result = random.nextDouble(result * 0.7, result * 1.3);
+        }
+
+        return result;
+    }
+
+    public void spawnObject(SimulationObject simulationObject) {
+        this.toBeSpawned.add(simulationObject);
+        Platform.runLater(() -> simulationOverlay.getChildren().add(simulationObject.getJavaFXObj()));
+    }
+
+    public void spawnNewObjects() {
+        simulationObjects.addAll(toBeSpawned);
+        toBeSpawned.clear();
+    }
+
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
@@ -691,10 +734,6 @@ public class Simulation {
         if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
-        line.setStartX(start.getX());
-        line.setStartY(start.getY());
-        line.setEndX(end.getX());
-        line.setEndY(end.getY());
 
         double minDist;
         double maxDist = Math.max(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
