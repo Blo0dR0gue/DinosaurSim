@@ -66,7 +66,9 @@ public class SimulationOverlay extends BorderPane {
         //TODO get data from config screen
         Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
-        simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
+        simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime(), this);
+
+        statistics.addSimulationObjectList(sim.getSimulationObjects());
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -145,14 +147,20 @@ public class SimulationOverlay extends BorderPane {
         Button stopButton = addControlButtonToSideBar("/controls/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
-            Stage window = (Stage) stopButton.getScene().getWindow();
-            StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
-            statisticsEndcard.initialize(statistics);
 
-            window.setScene(new Scene(statisticsEndcard));
 
-            window.setFullScreen(true);
+            showStatisticsEndcard();
         });
+    }
+
+    public void showStatisticsEndcard() {
+        Stage window = (Stage) simulationScene.getWindow();
+        StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
+        statisticsEndcard.initialize(statistics);
+
+        window.setScene(new Scene(statisticsEndcard));
+
+        window.setFullScreen(true);
     }
 
     private Button addControlButtonToSideBar(String controlImgUrl) {
@@ -182,5 +190,9 @@ public class SimulationOverlay extends BorderPane {
     }
 
     //endregion
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
 
 }
