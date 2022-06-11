@@ -16,6 +16,7 @@ import java.util.List;
  * @see com.dhbw.thesim.core.entity.Dinosaur
  * @see SimulationObject
  * @see com.dhbw.thesim.core.entity.SimulationObject
+ * @see StatisticsStruct
  */
 @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "unused"})
 public class Statistics {
