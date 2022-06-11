@@ -29,6 +29,8 @@ public class ScenarioSelector extends VBox {
     public Text promptText;
     @FXML
     public Button loadButton;
+    @FXML
+    public Label enterNameError;
 
     private ToggleGroup scenarioToggleGroup;
 
@@ -84,7 +86,7 @@ public class ScenarioSelector extends VBox {
 
     private void initializeListeners(){
         saveButton.setOnAction(event -> {
-            filename.setPromptText("");
+            enterNameError.setVisible(false);
             String file = filename.getText().strip();
             if (!file.equals("")) {
                 try {
@@ -96,7 +98,7 @@ public class ScenarioSelector extends VBox {
                 updateScenarioList(file);
             } else {
                 //TODO display error of empty filename
-                filename.setPromptText("Bitte geben Sie einen Namen an!");
+                enterNameError.setVisible(true);
             }
         });
 
