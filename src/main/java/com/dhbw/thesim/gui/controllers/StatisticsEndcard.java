@@ -43,20 +43,33 @@ public class StatisticsEndcard extends AnchorPane {
      * Method to initialize the Statistics Endcard screen, its listeners and adding custom controls dynamically
      */
     public void initialize(Statistics statistics) {
+        lineChart.setTitle("Dinosaurierpopulation");
         lineChart.getXAxis().setLabel("Messpunkte");
 
         //TODO get data from stats.???
         StatisticsStruct stats = statistics.getSimulationStats();
 
-        XYChart.Series allLivingDinosaurs = new XYChart.Series();
-        allLivingDinosaurs.setName("Alle Lebenden Dinosaurier");
-        List<Integer> allLivingDinosaursList = stats.getAllLivingDinosaurs();
-        for (int count = 0; count < allLivingDinosaursList.size(); count++) {
-            allLivingDinosaurs.getData().add(new XYChart.Data(count, allLivingDinosaursList.get(count)));
+        addChartToStatistics(stats.getAllLivingDinosaurs(), "Alle");
+
+        for (int i = 0; i < stats.getAllSpecies().size(); i++) {
+            String speciesName = stats.getAllSpecies().get(i);
+            List<Integer> speciesList = stats.getAllLivingSpecies().get(i);
+
+            addChartToStatistics(speciesList, "Alle" + speciesName);
         }
-        lineChart.getData().add(allLivingDinosaurs);
+
 
         initializeListeners();
+    }
+
+    private void addChartToStatistics(List<Integer> integerList, String chartName) {
+        XYChart.Series allLivingDinosaurs = new XYChart.Series();
+        allLivingDinosaurs.setName(chartName);
+
+        for (int count = 0; count < integerList.size(); count++) {
+            allLivingDinosaurs.getData().add(new XYChart.Data(count, integerList.get(count)));
+        }
+        lineChart.getData().add(allLivingDinosaurs);
     }
 
     /**
