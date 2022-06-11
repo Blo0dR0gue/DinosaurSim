@@ -332,6 +332,8 @@ public class Simulation {
         double weight = inheritValue(mother.getWeight(), father.getWeight());
         double length = inheritValue(mother.getLength(), father.getLength());
         double height = inheritValue(mother.getHeight(), father.getHeight());
+        double nutrition = inheritValue(mother.getNutrition(), father.getNutrition());
+        double hydration = inheritValue(mother.getHydration(), father.getHydration());
         char gender;
 
         if (random.nextInt() % 2 == 0)
@@ -340,7 +342,7 @@ public class Simulation {
             gender = 'f';
 
         Dinosaur baby = new Dinosaur(
-                mother.getType(), mother.getJavaFXObj().getImage(), 100, 100, strength, speed,
+                mother.getType(), mother.getJavaFXObj().getImage(), nutrition, hydration, strength, speed,
                 reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
 
 
