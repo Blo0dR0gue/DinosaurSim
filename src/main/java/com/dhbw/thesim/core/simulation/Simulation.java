@@ -8,6 +8,7 @@ import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
+import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
