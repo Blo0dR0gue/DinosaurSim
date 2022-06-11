@@ -105,7 +105,11 @@ public class SimulationOverlay extends BorderPane {
             }
         });
 
-        primaryStage.setOnCloseRequest(e -> simulationLoop.stopSimulationRunner());
+        primaryStage.setOnCloseRequest(e -> {
+            simulationLoop.stopSimulationRunner();
+            if (timer != null)
+                timer.cancel();
+        });
 
         if (isSimulationModeAuto)
             simulationLoop.startSimulationRunner();
