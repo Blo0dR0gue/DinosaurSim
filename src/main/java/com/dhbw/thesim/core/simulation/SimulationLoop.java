@@ -1,6 +1,8 @@
 package com.dhbw.thesim.core.simulation;
 
 import com.dhbw.thesim.core.entity.SimulationObject;
+import com.dhbw.thesim.gui.SimulationOverlay;
+import javafx.application.Platform;
 
 /**
  * Updates the simulation (Engine)
@@ -64,6 +66,16 @@ public class SimulationLoop {
      */
     private int maxRunTimeInMinutes;
 
+    /**
+     * At what percentage of the max run time the stats should be updated
+     */
+    private final double statUpdatesInPercentageOfMaxRuntime = 0.05;
+
+    /**
+     * Current SimulationOverlay instance for callbacks
+     */
+    private SimulationOverlay simulationOverlay;
+
     //endregion
 
     /**
@@ -72,8 +84,9 @@ public class SimulationLoop {
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
      * @param maxStepAmount             The max amount of steps, that can be triggered.
      * @param maxRunTimeInMinutes       The max amount of time a simulation is running (In Minutes)
+     * @param simulationOverlay
      */
-    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes) {
+    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes, SimulationOverlay simulationOverlay) {
         this.currentSimulation = simulation;
         this.simulationSpeedMultiplier = simulationSpeedMultiplier;
         this.stepRangeMultiplier = stepRangeMultiplier;
@@ -81,6 +94,8 @@ public class SimulationLoop {
         this.maxRunTimeInMinutes = maxRunTimeInMinutes;
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
+
+        this.simulationOverlay = simulationOverlay;
 
         updateGraphics();
     }
@@ -96,6 +111,8 @@ public class SimulationLoop {
         long currentTime, lastUpdate = System.currentTimeMillis();
         //The time, when the sim is finished
         long runtime = lastUpdate + (long) this.maxRunTimeInMinutes * 60 * 1000;
+        long starttime = System.currentTimeMillis();
+        double lastStatUpdateAtPercentage = 0.0;
 
         while (running) {
             //update the loop variables.
@@ -125,14 +142,29 @@ public class SimulationLoop {
             }
             //Print debug stats
             printStats();
+
+            //adding statistics update at intervals
+            double runPercentage = ((double) currentTime-starttime) / ((double) runtime-starttime);
+            if (runPercentage%statUpdatesInPercentageOfMaxRuntime==0 && runPercentage != lastStatUpdateAtPercentage){
+                updateStatistics();
+                System.out.println("stat update: " + (runPercentage));
+                lastStatUpdateAtPercentage = runPercentage;
+            }
+
             //Check if over
             if (runtime <= currentTime || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
                 //TODO callback to GUI
+                updateStatistics();
+                Platform.runLater(() -> simulationOverlay.showStatisticsEndcard());
                 System.err.println("ende");
             }
         }
     };
+
+    private void updateStatistics() {
+        simulationOverlay.getStatistics().addSimulationObjectList(getCurrentSimulation().getSimulationObjects());
+    }
 
     /**
      * Is called each update call. <br>
