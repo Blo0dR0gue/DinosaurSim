@@ -5,6 +5,7 @@ import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import com.dhbw.thesim.gui.controllers.SideBar;
 import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
+import com.dhbw.thesim.stats.Statistics;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -16,6 +17,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -35,6 +37,8 @@ public class SimulationOverlay extends BorderPane {
 
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
+
+    private Statistics statistics;
 
     public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) {
         //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
@@ -56,10 +60,15 @@ public class SimulationOverlay extends BorderPane {
         //Lay out the AnchorPane in the center position of the BorderPane
         setCenter(centerPane);
 
+        //create Statistics
+        statistics = new Statistics();
+
         //TODO get data from config screen
         Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
-        simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
+        simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime(), this);
+
+        statistics.addSimulationObjectList(sim.getSimulationObjects());
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -81,8 +90,9 @@ public class SimulationOverlay extends BorderPane {
                 simulationLoop.togglePause();
             }
             if (e.getCode() == KeyCode.SPACE) {
-                if(!isSimulationModeAuto)
-                    simulationLoop.triggerUpdates();
+                if(!isSimulationModeAuto) {
+                    nextSimulationStep();
+                }
             }
         });
 
@@ -114,9 +124,14 @@ public class SimulationOverlay extends BorderPane {
         } else {
             //Add the control buttons for manual simulation mode to the sidebar and add a click listener to each
             Button nextStepButton = addControlButtonToSideBar("/controls/next.png");
-            nextStepButton.setOnAction(e -> simulationLoop.triggerUpdates());
+            nextStepButton.setOnAction(e -> nextSimulationStep());
         }
         createStopButton();
+    }
+
+    private void nextSimulationStep() {
+        simulationLoop.triggerUpdates();
+        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects());
     }
 
     private void createToggleButton(String controlImgUrl, Boolean shouldPauseSimulation) {
@@ -132,14 +147,20 @@ public class SimulationOverlay extends BorderPane {
         Button stopButton = addControlButtonToSideBar("/controls/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
-            Stage window = (Stage) stopButton.getScene().getWindow();
-            StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
-            statisticsEndcard.initialize();
 
-            window.setScene(new Scene(statisticsEndcard));
 
-            window.setFullScreen(true);
+            showStatisticsEndcard();
         });
+    }
+
+    public void showStatisticsEndcard() {
+        Stage window = (Stage) simulationScene.getWindow();
+        StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
+        statisticsEndcard.initialize(statistics);
+
+        window.setScene(new Scene(statisticsEndcard));
+
+        window.setFullScreen(true);
     }
 
     private Button addControlButtonToSideBar(String controlImgUrl) {
@@ -169,5 +190,9 @@ public class SimulationOverlay extends BorderPane {
     }
 
     //endregion
+
+    public Statistics getStatistics() {
+        return statistics;
+    }
 
 }

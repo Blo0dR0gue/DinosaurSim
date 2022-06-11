@@ -1,11 +1,16 @@
 package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
+import com.dhbw.thesim.stats.Statistics;
+import com.dhbw.thesim.stats.StatisticsStruct;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 /**
  * The Controller Class for the End Screen FXML file
@@ -37,10 +42,34 @@ public class StatisticsEndcard extends AnchorPane {
     /**
      * Method to initialize the Statistics Endcard screen, its listeners and adding custom controls dynamically
      */
-    public void initialize() {
+    public void initialize(Statistics statistics) {
+        lineChart.setTitle("Dinosaurierpopulation");
+        lineChart.getXAxis().setLabel("Messpunkte");
+
         //TODO get data from stats.???
+        StatisticsStruct stats = statistics.getSimulationStats();
+
+        addChartToStatistics(stats.getAllLivingDinosaurs(), "Alle");
+
+        for (int i = 0; i < stats.getAllSpecies().size(); i++) {
+            String speciesName = stats.getAllSpecies().get(i);
+            List<Integer> speciesList = stats.getAllLivingSpecies().get(i);
+
+            addChartToStatistics(speciesList, "Alle" + speciesName);
+        }
+
 
         initializeListeners();
+    }
+
+    private void addChartToStatistics(List<Integer> integerList, String chartName) {
+        XYChart.Series allLivingDinosaurs = new XYChart.Series();
+        allLivingDinosaurs.setName(chartName);
+
+        for (int count = 0; count < integerList.size(); count++) {
+            allLivingDinosaurs.getData().add(new XYChart.Data(count, integerList.get(count)));
+        }
+        lineChart.getData().add(allLivingDinosaurs);
     }
 
     /**

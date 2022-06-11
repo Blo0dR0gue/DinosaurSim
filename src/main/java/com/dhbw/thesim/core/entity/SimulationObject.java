@@ -70,7 +70,8 @@ public abstract class SimulationObject extends StateMachine {
         imageObj.setPreserveRatio(true);
         imageObj.setFitHeight(interactionRange*2);
         imageObj.setFitWidth(interactionRange*2);
-        //TODO scale if screen has scaling
+        imageObj.setScaleX(Display.SCALE_X);
+        imageObj.setScaleY(Display.SCALE_Y);
 
         setSprite(image);
     }
@@ -152,9 +153,9 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void flipImage(Vector2D direction) {
         if (direction.getX() < 0)
-            imageObj.setScaleX(-1);
-        else
             imageObj.setScaleX(1);
+        else
+            imageObj.setScaleX(-1);
     }
 
     /**

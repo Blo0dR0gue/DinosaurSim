@@ -81,7 +81,7 @@
                 <Insets left="20.0"/>
             </GridPane.margin>
         </SliderWithLabel>
-        <SliderWithLabel fx:id="maxRuntime" text="Maximale Simulationslaufzeit (in Minuten)" visible="false"
+        <SliderWithLabel fx:id="maxRuntime" text="Maximale Simulationslaufzeit (in Minuten)"
                          min="1" max="30" major="3" minor="2"
                          GridPane.columnIndex="3" GridPane.rowIndex="7" GridPane.columnSpan="2"/>
         <SliderWithLabel fx:id="maxSteps" text="Maximale Schrittanzahl" visible="false"
