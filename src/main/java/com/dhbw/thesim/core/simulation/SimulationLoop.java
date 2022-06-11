@@ -4,6 +4,8 @@ import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.application.Platform;
 
+import java.time.Duration;
+
 /**
  * Updates the simulation (Engine)
  *
@@ -121,7 +123,6 @@ public class SimulationLoop {
             deltaTime += lastUpdateTimeInSeconds;
             frameAccumulator += lastUpdateTimeInSeconds;
             lastUpdate = currentTime;
-
             //Limit the update rate
             if (deltaTime >= UPDATE_RATE) {
                 while (deltaTime >= UPDATE_RATE) {
@@ -143,6 +144,7 @@ public class SimulationLoop {
             //Print debug stats
             printStats();
 
+            //TODO if pause stop this and reset the max time on restart (Timer class needed)
             //adding statistics update at intervals
             double runPercentage = ((double) currentTime-starttime) / ((double) runtime-starttime);
             if (runPercentage%statUpdatesInPercentageOfMaxRuntime==0 && runPercentage != lastStatUpdateAtPercentage){

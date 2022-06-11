@@ -10,6 +10,7 @@ import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 
 import java.io.IOException;
@@ -165,6 +166,11 @@ public class Simulation {
             if (obj instanceof Dinosaur dinosaur) {
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
+
+                dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                    simulationOverlay.dinosaurClicked(dinosaur);
+                });
+
             } else if (obj instanceof Plant plant) {
                 //Plants only can be spawned on tiles, which allow plant growing
                 obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange()+10, plant.getRenderOffset()));

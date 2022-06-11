@@ -151,7 +151,7 @@ public class Dinosaur extends SimulationObject {
     private void updateStats(double deltaTime) {
         this.hydration -= HYDRATION_REDUCTION_RATE * deltaTime;
         this.nutrition -= NUTRITION_REDUCTION_RATE * deltaTime;
-        this.reproductionValue += reproductionValue * deltaTime;
+        this.reproductionValue += reproductionRate * deltaTime;
     }
 
     /**

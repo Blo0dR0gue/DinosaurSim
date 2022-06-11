@@ -6,6 +6,7 @@ import com.dhbw.thesim.core.entity.SimulationObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class responsible for statistics shown in GUI (methods are called from GUI)
@@ -127,8 +128,8 @@ public class Statistics {
      * @return Returning Hashmap with information according to a single Dinosaur-object
      * @see Dinosaur
      */
-    public HashMap<String, Double> getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList){
-        HashMap<String, Double> singleStats = new HashMap<>();
+    public Map<String, Double> getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList){
+        Map<String, Double> singleStats = new HashMap<>();
         singleStats.put("Hunger", dino.getNutrition());
         singleStats.put("Durst", dino.getHydration());
         singleStats.put("Fortpflanzungswilligkeit", dino.getReproductionValue());
