@@ -395,7 +395,7 @@ public class SimulationMap {
      * @param swimmable Do the matching {@link Tile}s need to be swimmable
      * @param climbable Do the matching {@link Tile}s need to be climbable
      * @return A List with all matching tiles.
-     * @see #tileConditionsAre(Tile, boolean, boolean) 
+     * @see #tileConditionsAre(Tile, boolean, boolean)
      */
     private List<Tile> getTilesInRangeWhereConditionsAre(Tile tile, int range, boolean swimmable, boolean climbable) {
         List<Tile> tileObjects = new ArrayList<>();
@@ -427,7 +427,7 @@ public class SimulationMap {
      * @param swimmable Do the matching {@link Tile}s need to be swimmable
      * @param climbable Do the matching {@link Tile}s need to be climbable
      * @return A List with all matching tiles.
-     * @see #tileMatchedConditions(Tile, boolean, boolean)  
+     * @see #tileMatchedConditions(Tile, boolean, boolean)
      */
     private List<Tile> getTilesInRangeWhereConditionsMatch(Tile tile, int range, boolean swimmable, boolean climbable) {
         List<Tile> tileObjects = new ArrayList<>();
@@ -521,12 +521,80 @@ public class SimulationMap {
      * Gets a random tile, matching a {@link com.dhbw.thesim.core.entity.Dinosaur} conditions.
      *
      * @param canSwim  Can the dinosaur swim?
-     * @param canClimb Cna the dinosaur climb?
+     * @param canClimb Can the dinosaur climb?
      * @param random   A {@link Random}.
      * @return A random {@link Vector2D} word position matching the conditions.
      */
     public Vector2D getRandomTileCenterPosition(boolean canSwim, boolean canClimb, Random random) {
         return getCenterPositionOfTile(getRandomTile(canSwim, canClimb, random));
+    }
+
+    /**
+     * Checks if the neighbor tiles match conditions.
+     *
+     * @param tileWorldPosition
+     * @param swimmable
+     * @param climbable
+     * @param rangeInPixel
+     * @return true, if they match the conditions
+     * @see #tileMatchedConditions(Tile, boolean, boolean)
+     */
+    public boolean checkIfNeighborTilesMatchConditions(Vector2D tileWorldPosition, boolean swimmable, boolean climbable, double rangeInPixel) {
+        Tile tile = getTileAtPosition(tileWorldPosition);
+
+        int localRange = (int) Math.ceil(rangeInPixel / Tile.TILE_SIZE);
+
+        for (int x = -localRange; x <= localRange; x++) {
+            for (int y = -localRange; y <= localRange; y++) {
+
+                if (x == 0 && y == 0)
+                    continue;
+
+                int checkX = tile.getGridX() + x;
+                int checkY = tile.getGridY() + y;
+
+                if (isInsideOfGrid(checkX, checkY)) {
+                    Tile tmpTile = getTileAtPosition(checkX, checkY);
+                    if (!tileMatchedConditions(tmpTile, swimmable, climbable))
+                        return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     *
+     * @param tileWorldPosition
+     * @param swimmable
+     * @param climbable
+     * @param rangeInPixel
+     * @return
+     * @see #tileConditionsAre(Tile, boolean, boolean)
+     */
+    public boolean checkIfNeighborTilesHasConditions(Vector2D tileWorldPosition, boolean swimmable, boolean climbable, boolean allowPlants, double rangeInPixel) {
+        Tile tile = getTileAtPosition(tileWorldPosition);
+
+        int localRange = (int) Math.ceil(rangeInPixel / Tile.TILE_SIZE);
+
+        for (int x = -localRange; x <= localRange; x++) {
+            for (int y = -localRange; y <= localRange; y++) {
+
+                if (x == 0 && y == 0)
+                    continue;
+
+                int checkX = tile.getGridX() + x;
+                int checkY = tile.getGridY() + y;
+
+                if (isInsideOfGrid(checkX, checkY)) {
+                    Tile tmpTile = getTileAtPosition(checkX, checkY);
+                    if (!tileConditionsAre(tmpTile, swimmable, climbable) || tile.arePlantsAllowed() != allowPlants)
+                        return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
