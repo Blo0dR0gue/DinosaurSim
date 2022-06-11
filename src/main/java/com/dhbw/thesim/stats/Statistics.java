@@ -49,7 +49,7 @@ public class Statistics {
     /**
      * Method responsible for generation of overall statistics
      */
-    public StatisticsStruct getSimulationStats(){ //ToDo Rückgabe entsprechend GUI-Vorgaben implementieren & Methoden testen
+    public StatisticsStruct getSimulationStats(){
         long simulationTime = System.currentTimeMillis() - startTime;
         List<Integer> livingDinosaurs = new ArrayList<>();
         List<List<Integer>> livingSpecies = new ArrayList<>();
