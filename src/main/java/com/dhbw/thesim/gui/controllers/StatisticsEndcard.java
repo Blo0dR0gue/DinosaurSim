@@ -4,8 +4,7 @@ import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.stats.Statistics;
 import com.dhbw.thesim.stats.StatisticsStruct;
 import javafx.fxml.FXML;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -23,7 +22,8 @@ public class StatisticsEndcard extends AnchorPane {
     public Button restartSimulationButton;
     @FXML
     public LineChart lineChart;
-
+    @FXML
+    public SideBar sideBar;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -65,7 +65,37 @@ public class StatisticsEndcard extends AnchorPane {
             addChartToStatistics(speciesList, "Alle" + speciesName);
         }
 
+        createBarChart(stats);
+
         initializeListeners();
+    }
+
+    private void createBarChart(StatisticsStruct stats) {
+        CategoryAxis barChartCategoryAxis = new CategoryAxis();
+        NumberAxis numberAxis = new NumberAxis();
+
+        BarChart<String, Number> barChart = new BarChart<String, Number>(barChartCategoryAxis, numberAxis);
+        barChart.setTitle("");
+        barChartCategoryAxis.setLabel("Eigenschaften");
+        numberAxis.setLabel("Wert");
+
+        addBars(stats, barChart);
+
+        sideBar.getBody().add(barChart);
+    }
+
+    private void addBars(StatisticsStruct stats, BarChart<String, Number> barChart) {
+        createBars(barChart, "Absolute Prozentzahlen", stats.getAbsolutePercentageChased(), stats.getAbsolutePercentagePredators());
+        createBars(barChart, "Durchschnittlicher Durst", stats.getAverageHydrationChased(), stats.getAverageHydrationPredators());
+        createBars(barChart, "Durchschnittlicher Hunger", stats.getAverageNutritionChased(), stats.getAverageNutritionPredators());
+    }
+
+    private void createBars(BarChart barChart, String title, double chasedValue, double predatorValue) {
+        XYChart.Series bars = new XYChart.Series();
+        bars.setName(title);
+        bars.getData().add(new XYChart.Data("Gejagte", chasedValue));
+        bars.getData().add(new XYChart.Data("Jagende", predatorValue));
+        barChart.getData().add(bars);
     }
 
     private void addChartToStatistics(List<Integer> integerList, String chartName) {
