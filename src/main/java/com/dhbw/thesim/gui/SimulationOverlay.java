@@ -1,7 +1,6 @@
 package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
-import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
@@ -14,7 +13,6 @@ import com.dhbw.thesim.stats.Statistics;
 import com.dhbw.thesim.stats.StatisticsStruct;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,7 +22,6 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -240,8 +237,8 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void resetStatsScreen() {
-        hunger.setText(noDinoSelected);
-        thirst.setText(noDinoSelected);
+        nutrition.setText(noDinoSelected);
+        hydration.setText(noDinoSelected);
         fertility.setText(noDinoSelected);
         weight.setText(noDinoSelected);
         height.setText(noDinoSelected);
@@ -253,13 +250,13 @@ public class SimulationOverlay extends BorderPane {
 
     private final String noDinoSelected = "Kein Dino";
 
-    private final Label hunger = new Label(noDinoSelected, new Text("Hunger: "));
-    private final Label thirst = new Label(noDinoSelected, new Text("Durst: "));
-    private final Label fertility = new Label(noDinoSelected, new Text("Fortpflanzungswilligkeit: "));
+    private final Label nutrition = new Label(noDinoSelected, new Text("Nahrung: "));
+    private final Label hydration = new Label(noDinoSelected, new Text("Hydration: "));
+    private final Label fertility = new Label(noDinoSelected, new Text("Fortpflanzungswille: "));
     private final Label weight = new Label(noDinoSelected, new Text("Gewicht: "));
     private final Label height = new Label(noDinoSelected, new Text("Höhe: "));
     private final Label length = new Label(noDinoSelected, new Text("Länge: "));
-    private final Label survivalTime = new Label(noDinoSelected, new Text("Üeberlebenszeit: "));
+    private final Label survivalTime = new Label(noDinoSelected, new Text("Überlebenszeit: "));
     private final Label speciesProportion = new Label(noDinoSelected, new Text("Artenanteil: "));
 
 
@@ -296,14 +293,22 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void setSideBarStats(Map<String, Double> dinosaurStats) {
-        hunger.setText(dfZero.format(dinosaurStats.get("Hunger")));
-        thirst.setText(dfZero.format(dinosaurStats.get("Durst")));
+        nutrition.setText(dfZero.format(dinosaurStats.get("Hunger")));
+        nutrition.setTextFill(Color.WHITE);
+        hydration.setText(dfZero.format(dinosaurStats.get("Durst")));
+        hydration.setTextFill(Color.WHITE);
         fertility.setText(dfZero.format(dinosaurStats.get("Fortpflanzungswilligkeit")));
+        fertility.setTextFill(Color.WHITE);
         weight.setText(dfZero.format(dinosaurStats.get("Gewicht")));
+        weight.setTextFill(Color.WHITE);
         height.setText(dfZero.format(dinosaurStats.get("Hoehe")));
+        height.setTextFill(Color.WHITE);
         length.setText(dfZero.format(dinosaurStats.get("Laenge")));
+        length.setTextFill(Color.WHITE);
         survivalTime.setText(dfZero.format(dinosaurStats.get("Ueberlebenszeit")));
+        survivalTime.setTextFill(Color.WHITE);
         speciesProportion.setText(dfZero.format(dinosaurStats.get("Artenanteil")));
+        speciesProportion.setTextFill(Color.WHITE);
     }
 
     private void createSideDinosaurStats() {
@@ -314,8 +319,8 @@ public class SimulationOverlay extends BorderPane {
         statsTitle.setFont(new Font(17.0));
         vBox.getChildren().add(statsTitle);
 
-        vBox.getChildren().add(hunger);
-        vBox.getChildren().add(thirst);
+        vBox.getChildren().add(nutrition);
+        vBox.getChildren().add(hydration);
         vBox.getChildren().add(fertility);
         vBox.getChildren().add(weight);
         vBox.getChildren().add(height);
