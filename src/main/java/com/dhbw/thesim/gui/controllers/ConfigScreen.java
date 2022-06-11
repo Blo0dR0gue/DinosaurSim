@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
+import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
@@ -12,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -81,7 +83,7 @@ public class ConfigScreen extends AnchorPane {
      * @param landscapeName The name of the desired landscape returned by
      *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
-    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) {
+    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
         //TODO min. 2 dino-arten, min. 1 dino pro art
         //TODO min. 1 pflanzenart, min. 1 pflanze pro art
 
@@ -130,15 +132,15 @@ public class ConfigScreen extends AnchorPane {
      * @param plantGrowthRate The given plant growth rate in scenario config
      * @param landscapeName The given landscape name in scenario config
      */
-    public void switchScenarioParams(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) {
+    public void switchScenarioParams(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
         mapListView.getItems().clear();
         populateMapListView(landscapeName);
 
         dinoListView.getItems().clear();
-        populateListView(dinos, dinoListView);
+        populateListView(dinos, dinoListView, JsonHandler.SimulationObjectType.DINO);
 
         plantListView.getItems().clear();
-        populateListView(plants, plantListView);
+        populateListView(plants, plantListView, JsonHandler.SimulationObjectType.PLANT);
 
         plantGrowthSliderWithLabel.setValue(plantGrowthRate);
     }
@@ -148,14 +150,14 @@ public class ConfigScreen extends AnchorPane {
      * @param objectsList {@link ArrayList} containing all objects to populate the list {@link ListView} with
      * @param listView The {@link ListView} which should be populated
      */
-    private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItemWithImage> listView) {
+    private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItemWithImage> listView, JsonHandler.SimulationObjectType type) throws IOException {
         for (Object[] objects : objectsList) {
             String name = (String) objects[0];
             Image image = SpriteLibrary.getInstance().getImage((String) objects[1]);
             int amount = (int) objects[2];
 
             ListItemWithImage listItem = ListItemWithImage.newInstance();
-            listItem.initialize(name, image, amount, listView);
+            listItem.initialize(name, image, amount, listView, type);
 
             listView.getItems().add(listItem);
         }
