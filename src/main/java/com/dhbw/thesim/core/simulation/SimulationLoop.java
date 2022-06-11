@@ -69,7 +69,7 @@ public class SimulationLoop {
     /**
      * At what percentage of the max run time the stats should be updated
      */
-    private final double statUpdatesInPercentageOfMaxRuntime = 0.10;
+    private final double statUpdatesInPercentageOfMaxRuntime = 0.05;
 
     /**
      * Current SimulationOverlay instance for callbacks
@@ -142,14 +142,14 @@ public class SimulationLoop {
             }
             //Print debug stats
             printStats();
+
+            //adding statistics update at intervals
             double runPercentage = ((double) currentTime-starttime) / ((double) runtime-starttime);
             if (runPercentage%statUpdatesInPercentageOfMaxRuntime==0 && runPercentage != lastStatUpdateAtPercentage){
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
                 lastStatUpdateAtPercentage = runPercentage;
             }
-
-            //System.out.println(((double) currentTime-starttime) / ((double) runtime-starttime));
 
             //Check if over
             if (runtime <= currentTime || this.currentSimulation.isOver()) {
