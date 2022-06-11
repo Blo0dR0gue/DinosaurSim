@@ -101,6 +101,7 @@ public class SimulationOverlay extends BorderPane {
         Background bGround = new Background(bImg);
         setBackground(bGround);
 
+        createSideLegend();
         createSideDinosaurStats();
 
         simulationScene.setOnKeyPressed(e -> {
@@ -122,30 +123,6 @@ public class SimulationOverlay extends BorderPane {
 
         if (isSimulationModeAuto)
             simulationLoop.startSimulationRunner();
-
-        Label legendTitle = new Label("Legende:");
-        legendTitle.setTextFill(Color.WHITE);
-        legendTitle.setFont(new Font(17.0));
-        sideBar.getBody().add(legendTitle);
-
-        StatisticsStruct stats = statistics.getSimulationStats();
-        for (String speciesName : stats.getAllSpecies()) {
-            try {
-                //Retrieve sim object config and instantiating and initializing legend item to add to sidebar legend
-                HashMap<String,Object> dino = Objects.requireNonNull(
-                        JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)
-                ).get(speciesName);
-                LegendItem legendItem = LegendItem.newInstance();
-                legendItem.initialize(SpriteLibrary.getInstance().getImage((String) dino.get("Bild")), speciesName);
-                sideBar.getBody().add(legendItem);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Separator separator = new Separator();
-        sideBar.getBody().add(separator);
-        VBox.setMargin(separator, new Insets(10.0,0.0,10.0,0.0));
     }
 
     private void createCanvas() {
@@ -289,6 +266,35 @@ public class SimulationOverlay extends BorderPane {
     private Timer timer = null;
     private static final DecimalFormat dfZero = new DecimalFormat("0.0");
 
+    private void createSideLegend() {
+        VBox vBox = new VBox();
+        Label legendTitle = new Label("Legende:");
+        legendTitle.setTextFill(Color.WHITE);
+        legendTitle.setFont(new Font(17.0));
+        vBox.getChildren().add(legendTitle);
+
+        StatisticsStruct stats = statistics.getSimulationStats();
+        for (String speciesName : stats.getAllSpecies()) {
+            try {
+                //Retrieve sim object config and instantiating and initializing legend item to add to sidebar legend
+                HashMap<String,Object> dino = Objects.requireNonNull(
+                        JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)
+                ).get(speciesName);
+                LegendItem legendItem = LegendItem.newInstance();
+                legendItem.initialize(SpriteLibrary.getInstance().getImage((String) dino.get("Bild")), speciesName);
+                vBox.getChildren().add(legendItem);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Separator separator = new Separator();
+        vBox.getChildren().add(separator);
+        VBox.setMargin(separator, new Insets(10.0,0.0,10.0,0.0));
+
+        sideBar.getBody().add(vBox);
+    }
+
     private void setSideBarStats(Map<String, Double> dinosaurStats) {
         hunger.setText(dfZero.format(dinosaurStats.get("Hunger")));
         thirst.setText(dfZero.format(dinosaurStats.get("Durst")));
@@ -302,7 +308,12 @@ public class SimulationOverlay extends BorderPane {
 
     private void createSideDinosaurStats() {
         VBox vBox = new VBox();
-        vBox.setAlignment(Pos.TOP_CENTER);
+
+        Label statsTitle = new Label("Statistik / Eigenschaften:");
+        statsTitle.setTextFill(Color.WHITE);
+        statsTitle.setFont(new Font(17.0));
+        statsTitle.setWrapText(true);
+        vBox.getChildren().add(statsTitle);
 
         vBox.getChildren().add(hunger);
         vBox.getChildren().add(thirst);
