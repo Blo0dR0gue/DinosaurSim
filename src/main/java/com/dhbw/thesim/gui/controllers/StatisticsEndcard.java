@@ -2,6 +2,7 @@ package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
 import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -13,6 +14,9 @@ import javafx.stage.Stage;
 public class StatisticsEndcard extends AnchorPane {
     @FXML
     public Button restartSimulationButton;
+    @FXML
+    public LineChart lineChart;
+
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -34,6 +38,8 @@ public class StatisticsEndcard extends AnchorPane {
      * Method to initialize the Statistics Endcard screen, its listeners and adding custom controls dynamically
      */
     public void initialize() {
+        //TODO get data from stats.???
+
         initializeListeners();
     }
 

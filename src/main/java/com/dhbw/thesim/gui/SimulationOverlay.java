@@ -111,15 +111,12 @@ public class SimulationOverlay extends BorderPane {
             createToggleButton("/controls/play.png", false);
 
             createToggleButton("/controls/pause.png", true);
-
-            createStopButton();
         } else {
             //Add the control buttons for manual simulation mode to the sidebar and add a click listener to each
             Button nextStepButton = addControlButtonToSideBar("/controls/next.png");
             nextStepButton.setOnAction(e -> simulationLoop.triggerUpdates());
-
-            createStopButton();
         }
+        createStopButton();
     }
 
     private void createToggleButton(String controlImgUrl, Boolean shouldPauseSimulation) {
@@ -137,6 +134,8 @@ public class SimulationOverlay extends BorderPane {
             simulationLoop.stopSimulationRunner();
             Stage window = (Stage) stopButton.getScene().getWindow();
             StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
+            statisticsEndcard.initialize();
+
             window.setScene(new Scene(statisticsEndcard));
 
             window.setFullScreen(true);
