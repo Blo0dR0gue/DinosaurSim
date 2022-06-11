@@ -105,7 +105,7 @@ public class ScenarioSelector extends VBox {
         loadButton.setOnAction(event -> {
             String selectedScenario = getSelectedScenario();
             try {
-                HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> scenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, selectedScenario + "ScenarioConfiguration");
+                HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> scenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, selectedScenario);
                 configScreen.switchScenarioParams(scenarioParams.get(JsonHandler.ScenarioConfigParams.DINO),
                         scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT),
                         (double) scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0],
@@ -117,6 +117,6 @@ public class ScenarioSelector extends VBox {
     }
 
     public String getSelectedScenario() {
-        return ((RadioButton) scenarioToggleGroup.getSelectedToggle()).getText();
+        return ((ScenarioListItem) ((RadioButton) scenarioToggleGroup.getSelectedToggle()).getParent()).getScenarioFileName();
     }
 }

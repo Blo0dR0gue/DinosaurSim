@@ -23,7 +23,7 @@ public class ScenarioListItem extends HBox {
     }
 
     public void initialize(String name, ToggleGroup toggleGroup){
-        scenarioFileName = name;
+        scenarioFileName = name.replace(".json", "").replace(".JSON", "");
 
         //Remove generated filename substring from name
         int scenarioConfigIndex = name.toLowerCase().lastIndexOf("scenarioconfig");
