@@ -18,10 +18,11 @@ import static com.dhbw.thesim.impexp.Json2Objects.initSimObjects;
  */
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Application.launch(Display.class,args);
         JsonHandler.setDirectory();
 
+/*
         //------------------------------------------------------------------------------------------------------------------
         //Testen von JsonHandler: TODO nur zum Testen, bzw. fürs Verständnis
 
@@ -48,6 +49,7 @@ public class Main {
             System.out.println("--------------");
             Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, "testScenarioConfiguration");
         //------------------------------------------------------------------------------------------------------------------
+*/
     }
 
 }

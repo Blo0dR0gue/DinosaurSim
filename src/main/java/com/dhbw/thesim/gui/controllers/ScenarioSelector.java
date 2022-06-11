@@ -1,6 +1,7 @@
 package com.dhbw.thesim.gui.controllers;
 
 import com.dhbw.thesim.gui.Display;
+import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -9,6 +10,7 @@ import javafx.scene.text.Text;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.*;
 
 public class ScenarioSelector extends VBox {
     @FXML
@@ -25,6 +27,8 @@ public class ScenarioSelector extends VBox {
     TextField filename;
     @FXML
     public Text promptText;
+    @FXML
+    public Button loadButton;
 
     private ToggleGroup scenarioToggleGroup;
 
@@ -46,6 +50,10 @@ public class ScenarioSelector extends VBox {
                 ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
                 scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
                 scenarioListView.getItems().add(scenarioListItem);
+                RadioButton scenarioRadioButton = scenarioListItem.radioButton;
+                if (Objects.equals(scenarioRadioButton.getText(), "default")) {
+                    scenarioRadioButton.setSelected(true);
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -56,13 +64,17 @@ public class ScenarioSelector extends VBox {
         initializeListeners();
     }
 
-    private void updateScenarioList(){
+    private void updateScenarioList(String fileName){
         scenarioListView.getItems().clear();
         try {
             for (String scenarioName:
                     JsonHandler.getExistingScenarioFileNames()) {
                 ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
                 scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
+                RadioButton scenarioRadioButton = scenarioListItem.radioButton;
+                if (Objects.equals(scenarioRadioButton.getText(), fileName)) {
+                    scenarioRadioButton.setSelected(true);
+                }
                 scenarioListView.getItems().add(scenarioListItem);
             }
         } catch (FileNotFoundException e) {
@@ -81,15 +93,28 @@ public class ScenarioSelector extends VBox {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                updateScenarioList();
+                updateScenarioList(file);
             } else {
                 //TODO display error of empty filename
                 filename.setPromptText("Bitte geben Sie einen Namen an!");
             }
         });
+
+        loadButton.setOnAction(event -> {
+            String selectedScenario = getSelectedScenario();
+            try {
+                HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> scenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, selectedScenario + "ScenarioConfiguration");
+                configScreen.switchScenarioParams(scenarioParams.get(JsonHandler.ScenarioConfigParams.DINO),
+                        scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT),
+                        (double) scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0],
+                        (String) scenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    public String getSelectedScenario(){
-        return ((ScenarioListItem) scenarioToggleGroup.getSelectedToggle()).getScenarioFileName();
+    public String getSelectedScenario() {
+        return ((RadioButton) scenarioToggleGroup.getSelectedToggle()).getText();
     }
 }

@@ -21,15 +21,25 @@
       </font>
    </Label>
    <TextField fx:id="filename" />
-   <fx:define>
-      <Image fx:id="saveBtnImage" url="/controls/save.png"/>
-   </fx:define>
-   <Button fx:id="saveButton" style="-fx-background-color: transparent;" alignment="CENTER">
+   <HBox>
       <VBox.margin>
          <Insets top="10.0"/>
       </VBox.margin>
-      <graphic>
-         <ImageView fitWidth="50.0" preserveRatio="true" image="$saveBtnImage"/>
-      </graphic>
-   </Button>
+      <fx:define>
+         <Image fx:id="saveBtnImage" url="/controls/save.png"/>
+      </fx:define>
+      <Button fx:id="saveButton" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitWidth="50.0" preserveRatio="true" image="$saveBtnImage"/>
+         </graphic>
+      </Button>
+      <fx:define>
+         <Image fx:id="loadBtnImage" url="/controls/load.png"/>
+      </fx:define>
+      <Button fx:id="loadButton" style="-fx-background-color: transparent;">
+         <graphic>
+            <ImageView fitWidth="50.0" preserveRatio="true" image="$loadBtnImage"/>
+         </graphic>
+      </Button>
+   </HBox>
 </fx:root>
