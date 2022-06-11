@@ -30,15 +30,6 @@
       </center>
       <bottom>
          <HBox fx:id="hbox_inner" BorderPane.alignment="CENTER">
-            <!-- TODO Implement viewing information about the corresponding dino via the info button (Popup?) -->
-            <fx:define>
-               <Image fx:id="infoBtnImage" url="@../controls/arrow-down.png"/>
-            </fx:define>
-            <Button fx:id="button_info" style="-fx-background-color: transparent;">
-               <graphic>
-                  <ImageView fitWidth="15.0" fitHeight="15.0" image="$infoBtnImage"/>
-               </graphic>
-            </Button>
             <fx:define>
                <Image fx:id="removeBtnImage" url="@../controls/minus.png"/>
             </fx:define>

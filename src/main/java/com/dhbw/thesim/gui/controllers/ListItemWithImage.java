@@ -43,8 +43,6 @@ public class ListItemWithImage extends HBox {
     @FXML
     public HBox hbox_inner;
     @FXML
-    public Button button_info;
-    @FXML
     public Button button_remove;
     @FXML
     public Label sliderValueLabel;
@@ -78,13 +76,13 @@ public class ListItemWithImage extends HBox {
         String temp="";
 
         if (type == JsonHandler.SimulationObjectType.DINO){ //create the tooltip for dinosaurs
-            HashMap<String,Object> dino = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO).get(labelText);
+            HashMap<String,Object> dino = Objects.requireNonNull(JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)).get(labelText);
 
             temp+="Eigenschaften:\n";
-            switch (dino.get("Nahrungsart").toString()){
-                case "p": temp+="Nahrungsart: Pflanzenfresser\n"; break;
-                case "f": temp+="Nahrungsart: Fleischfresser\n"; break;
-                case "a": temp+="Nahrungsart: Allesfresser\n"; break;
+            switch (dino.get("Nahrungsart").toString()) {
+                case "p" -> temp += "Nahrungsart: Pflanzenfresser\n";
+                case "f" -> temp += "Nahrungsart: Fleischfresser\n";
+                case "a" -> temp += "Nahrungsart: Allesfresser\n";
             }
             temp+="Gewicht: "+dino.get("Gewicht")+" kg\n";
             temp+="Laenge: "+dino.get("Laenge")+" m\n";
@@ -103,7 +101,7 @@ public class ListItemWithImage extends HBox {
             temp+="Interaktionsweite: "+((double[])(dino.get("Interaktionsweite")))[0]+", "+((double[])(dino.get("Interaktionsweite")))[1];
 
         } else if (type == JsonHandler.SimulationObjectType.PLANT) { //create the tooltip for plants
-            HashMap<String,Object> plant = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT).get(labelText);
+            HashMap<String,Object> plant = Objects.requireNonNull(JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT)).get(labelText);
 
             temp+="Technische Parameter:\n";
             temp+="Interaktionsweite: "+((double[])(plant.get("Interaktionsweite")))[0]+", "+((double[])(plant.get("Interaktionsweite")))[1];
