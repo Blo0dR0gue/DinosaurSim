@@ -3,10 +3,13 @@ package com.dhbw.thesim.gui.controllers;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -84,7 +87,7 @@ public class ScenarioSelector extends VBox {
 
     private void initializeListeners(){
         saveButton.setOnAction(event -> {
-            String file = filename.getText().strip();
+            String file = filename.getText().replace(" ","");
             if (!file.equals("")) {
                 try {
                     JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
@@ -96,10 +99,12 @@ public class ScenarioSelector extends VBox {
                 filename.clear();
             } else {
                 //TODO display error of empty filename
+                Stage window = (Stage) saveButton.getScene().getWindow();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Szenarioerstellungsfehler");
                 alert.setHeaderText("Fehler während des Erstellens der Szenario-Konfiguration!");
                 alert.setContentText("Bitte geben Sie einen Namen für die Szenario-Konfigurationsdatei ein");
+                alert.initOwner(window);
 
                 alert.showAndWait();
             }
@@ -113,10 +118,43 @@ public class ScenarioSelector extends VBox {
                         scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT),
                         (double) scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0],
                         (String) scenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]);
+
+                Stage window = (Stage) loadButton.getScene().getWindow();
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Konfigurationswechsel");
+                alert.setHeaderText("Die ausgewählte Szenario-Konfigurationsdatei wurde erfolgreich geladen!");
+                alert.setContentText("Die Parameter der ausgewählten Szenario-Konfiguration wurden geladen " +
+                        "und werden nun in der Konfigurationsansicht angezeigt.");
+                alert.initOwner(window);
+
+                alert.showAndWait();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
+
+        EventHandler<KeyEvent> handler = new EventHandler<>() {
+
+            private boolean willConsume = false;
+
+            @Override
+            public void handle(KeyEvent event) {
+
+                if (willConsume) {
+                    event.consume();
+                }
+
+                if (event.getCode().isWhitespaceKey()) {
+                    if (event.getEventType() == KeyEvent.KEY_PRESSED) {
+                        willConsume = true;
+                    } else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
+                        willConsume = false;
+                    }
+                }
+            }
+        };
+
+        filename.addEventFilter(KeyEvent.ANY, handler);
     }
 
     public String getSelectedScenario() {
