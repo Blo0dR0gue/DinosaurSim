@@ -154,24 +154,6 @@ public class Simulation {
                 'p', 400, 32, 'm')
         );
 
-        this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 12, 18, 25,
-                0.1, 100, 50, 10, false, true,
-                'f', 270, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "type2", SpriteLibrary.getInstance().getImage("test2.png"), 2, 14, 20, 45,
-                0.1, 100, 50, 10, false, true,
-                'f', 370, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "type3", SpriteLibrary.getInstance().getImage("test2.png"), 15, 14, 27, 35,
-                0.1, 100, 50, 10, false, true,
-                'a', 370, 32, 'M')
-        );
-
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
         this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
@@ -397,27 +379,25 @@ public class Simulation {
     }
 
     public SimulationObject getClosestReachableSuitablePartnerInRange(Vector2D position, double viewRange, String type,
-                                                                 boolean canSwim, boolean canClimb, char gender) {
-
+                                                                      boolean canSwim, boolean canClimb, char gender) {
         List<SimulationObject> inRange = findReachableSuitablePartnersInRange(position, viewRange, type, canSwim, canClimb, gender);
 
-
         sortByDistance(position, inRange);
-        if (inRange.size() > 0)
+        if (!inRange.isEmpty())
             return inRange.get(0);
         return null;
 
     }
-    public List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
-                                                                  boolean canSwim, boolean canClimb, char gender) {
 
+    public List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
+                                                                       boolean canSwim, boolean canClimb, char gender) {
         List<SimulationObject> inRange = new ArrayList<>();
 
         for (SimulationObject simulationObject : simulationObjects) {
 
             if (simulationObject.getPosition() != position) {
                 if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
-                    if (simulationObject instanceof Dinosaur dinosaur && dinosaur.getPartner()==null && dinosaur.getType().equalsIgnoreCase(type) && dinosaur.getGender()!=gender && dinosaur.isWillingToMate()) {
+                    if (simulationObject instanceof Dinosaur dinosaur && dinosaur.getPartner() == null && dinosaur.getType().equalsIgnoreCase(type) && dinosaur.getGender() != gender && dinosaur.isWillingToMate()) {
                         inRange.add(dinosaur);
                     }
                 }
@@ -431,12 +411,12 @@ public class Simulation {
 
     public void makeBaby(Dinosaur mother, Dinosaur father) {
 
-        double strength =inheritValue(mother.getStrength(), father.getStrength());
-        double speed =inheritValue(mother.getSpeed(), father.getSpeed());
-        double reproductionRate =inheritValue(mother.getReproductionRate(), father.getReproductionRate());
-        double weight =inheritValue(mother.getWeight(), father.getWeight());
-        double length =inheritValue(mother.getLength(), father.getLength());
-        double height =inheritValue(mother.getHeight(), father.getHeight());
+        double strength = inheritValue(mother.getStrength(), father.getStrength());
+        double speed = inheritValue(mother.getSpeed(), father.getSpeed());
+        double reproductionRate = inheritValue(mother.getReproductionRate(), father.getReproductionRate());
+        double weight = inheritValue(mother.getWeight(), father.getWeight());
+        double length = inheritValue(mother.getLength(), father.getLength());
+        double height = inheritValue(mother.getHeight(), father.getHeight());
         char gender;
 
         if (random.nextInt() % 2 == 0)
@@ -449,7 +429,7 @@ public class Simulation {
                 reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
 
 
-        baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), 1, baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
+        baby.setPosition(getPositionNextToWhereConditionsAre(mother.getPosition(), mother.getInteractionRange() * 2, baby.canSwim(), baby.canClimb()));
 
         spawnObject(baby);
 
@@ -458,21 +438,43 @@ public class Simulation {
 
     public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
 
-        List<Vector2D> positions = simulationMap.getMidCoordinatesOfMatchingTiles(origin, range*Tile.TILE_SIZE, swimmable, climbable);
+        List<Vector2D> positions = simulationMap.getMidCoordinatesOfMatchingTiles(origin, range * Tile.TILE_SIZE, swimmable, climbable);
 
-        for(Vector2D pos : positions) {
-            if (doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null) == false) {
+        for (Vector2D pos : positions) {
+            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, origin)) {
                 System.out.println("Spawn position found with range " + range);
                 return pos;
             }
         }
 
-        if(range<25)
-            return getNearestPositionInMapWhereConditionsAre(origin, range+1, swimmable, climbable, interactionRange);
+        if (range < 25)
+            return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
         else {
             System.out.println("No spawn position found");
             return getFreePositionInMap(swimmable, climbable, interactionRange);
         }
+    }
+
+    //TODO
+    private Vector2D getPositionNextToWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+
+        List<Vector2D> positions = simulationMap.getMidCoordinatesOfMatchingTiles(origin, range, swimmable, climbable);
+
+        Vector2D target = null;
+
+        sortByDistance(positions, origin);
+
+        for (Vector2D pos : positions) {
+            if (!isPointInsideAnyInteractionRange(pos, null))
+                target = pos;
+        }
+        if (target == null){
+            System.out.println("no");
+            return getFreePositionInMap(swimmable, climbable, range);
+        }
+
+        else
+            return target;
     }
 
     public double inheritValue(double a, double b) {

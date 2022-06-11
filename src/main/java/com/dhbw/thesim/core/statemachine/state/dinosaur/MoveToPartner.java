@@ -45,16 +45,16 @@ public class MoveToPartner extends State {
 
         if (dinosaur.getPartner() == null) {
             dinosaur.setPartner((Dinosaur) simulation.getClosestReachableSuitablePartnerInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getGender()));
-            dinosaur.getPartner().setPartner(dinosaur);
 
-            System.out.println("Found Partner");
-        } else if (dinosaur.getPartner().getPartner()!=dinosaur) {
-            //Partner musste die Suche abbrechen
+            if(dinosaur.getPartner() != null)
+                dinosaur.getPartner().setPartner(dinosaur);
         }
 
-        targetInteractionRange = dinosaur.getPartner().getInteractionRange();
-        direction = dinosaur.getPosition().directionToTarget(dinosaur.getPartner().getPosition());
-
+        if(dinosaur.getPartner() != null){
+            targetInteractionRange = dinosaur.getPartner().getInteractionRange();
+            direction = dinosaur.getPosition().directionToTarget(dinosaur.getPartner().getPosition());
+            dinosaur.flipImage(direction);
+        }
 
         if (direction != null) {
 
@@ -66,34 +66,30 @@ public class MoveToPartner extends State {
 
     @Override
     public void onExit() {
-        if(dinosaur.getPartner()!=null) {
-            dinosaur.getPartner().setPartner(null);
+        if (dinosaur.getPartner().getPartner() != dinosaur) {
             dinosaur.setPartner(null);
         }
     }
 
     @Override
     public void initTransitions() {
-        //TODO adapt
-
         //The dinosaur died.
         addTransition(new StateTransition(StateFactory.States.dead, simulation -> dinosaur.diedOfHunger() || dinosaur.diedOfThirst()));
 
-        addTransition(new StateTransition(StateFactory.States.stand, simulation -> dinosaur.isForcedToNoOp()));
-
+        //The dinosaur got chased
         addTransition(new StateTransition(StateFactory.States.escape, simulation -> dinosaur.isChased()));
 
+        //The dinosaur lost the partner
+        addTransition(new StateTransition(StateFactory.States.stand, simulation -> dinosaur.getPartner() == null));
 
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getPartner() == null));
-
-
-
+        //If the other dinosaur found another partner
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getPartner().getPartner() != dinosaur));
 
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.mate, this::reached));
 
-        //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
+        //If we can't reach the target anymore -> transition to wander. (Maybe because another dinosaur blocked the direction.)
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
 
     }
 
