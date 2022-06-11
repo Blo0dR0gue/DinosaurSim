@@ -202,6 +202,8 @@ public class SimulationOverlay extends BorderPane {
         }
     }
 
+    private Dinosaur last;
+
     private void startStatsTimer(Dinosaur dinosaur) {
         if (timer != null)
             timer.cancel();
@@ -211,9 +213,14 @@ public class SimulationOverlay extends BorderPane {
             @Override
             public void run() {
                 Platform.runLater(() -> {
-                    if (!dinosaur.diedOfThirst() && !dinosaur.diedOfHunger())
+                    if (!dinosaur.diedOfThirst() && !dinosaur.diedOfHunger()) {
+                        if(last != null)
+                            last.setSelectionRingVisibility(false);
+                        last = dinosaur;
+                        dinosaur.setSelectionRingVisibility(true);
                         setSideBarStats(statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects())));
-                    else {
+                    } else {
+                        dinosaur.setSelectionRingVisibility(false);
                         resetStatsScreen();
                         cancel();
                     }

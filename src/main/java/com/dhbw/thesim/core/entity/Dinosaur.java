@@ -163,6 +163,11 @@ public class Dinosaur extends SimulationObject {
         //Center the image and update his position.
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
+        this.selectionRing.setTranslateX(position.getX());
+        this.selectionRing.setTranslateY(position.getY());
+        System.out.println(renderOffset);
+        System.out.println(position);
+        System.out.println(this.selectionRing.getTranslateX());
     }
 
     /**

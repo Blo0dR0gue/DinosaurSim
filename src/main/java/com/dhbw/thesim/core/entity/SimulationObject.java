@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 /**
  * Represents an object, which is handled in our simulation
@@ -52,6 +51,11 @@ public abstract class SimulationObject extends StateMachine {
     protected final double interactionRange;
 
     /**
+     * Used, when a dinosaur gets selected.
+     */
+    protected final Circle selectionRing;
+
+    /**
      * Constructor
      *
      * @param type             The type for this object.
@@ -69,6 +73,11 @@ public abstract class SimulationObject extends StateMachine {
         imageObj.setPreserveRatio(true);
         imageObj.setFitHeight(Display.adjustScale(interactionRange*2, Display.SCALE_X));
         imageObj.setFitWidth(Display.adjustScale(interactionRange*2, Display.SCALE_Y));
+
+        selectionRing = new Circle(0,0,interactionRange);
+        selectionRing.setVisible(false);
+        selectionRing.setFill(Color.TRANSPARENT);
+        selectionRing.setStroke(Color.BLUE);
 
         setSprite(image);
     }
@@ -90,6 +99,14 @@ public abstract class SimulationObject extends StateMachine {
      * Eats this object
      */
     public abstract void eat();
+
+    public void setSelectionRingVisibility(boolean visible){
+        this.selectionRing.setVisible(visible);
+    }
+
+    public Circle getSelectionRing(){
+        return this.selectionRing;
+    }
 
     /**
      * Checks, if a other object can eat this object.
