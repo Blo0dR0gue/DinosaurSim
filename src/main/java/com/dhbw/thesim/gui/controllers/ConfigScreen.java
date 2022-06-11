@@ -12,10 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * The Control CLass for the Configuration Screen FXML file
@@ -56,9 +53,6 @@ public class ConfigScreen extends AnchorPane {
     public SideBar sideBar;
     @FXML
     public SliderWithLabel stepSliderWithLabel;
-    @FXML
-    public Label modeRequired;
-
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -115,16 +109,12 @@ public class ConfigScreen extends AnchorPane {
                 window.setScene(simulationOverlay.getSimulationScene());
                 window.setFullScreen(true);
             }
-            else {
-                modeRequired.setVisible(true);
-            }
         });
 
         // add a change listener
         modeGroup.selectedToggleProperty().addListener((observableValue, previousSelection, currentSelection) -> {
             maxRuntime.setVisible(currentSelection.equals(auto));
             maxSteps.setVisible(currentSelection.equals(manual));
-            modeRequired.setVisible(false);
         });
 
         maxSteps.slider.valueProperty()
