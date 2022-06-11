@@ -20,7 +20,6 @@
          <Font size="17.0"/>
       </font>
    </Label>
-   <HBox>
    <TextField fx:id="filename" promptText="Szenario Name"/>
    <BorderPane>
       <VBox.margin>
