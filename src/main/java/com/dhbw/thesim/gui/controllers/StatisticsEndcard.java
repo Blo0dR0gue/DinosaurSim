@@ -74,7 +74,7 @@ public class StatisticsEndcard extends AnchorPane {
         CategoryAxis barChartCategoryAxis = new CategoryAxis();
         NumberAxis numberAxis = new NumberAxis();
 
-        BarChart<String, Number> barChart = new BarChart<String, Number>(barChartCategoryAxis, numberAxis);
+        BarChart<String, Number> barChart = new BarChart<>(barChartCategoryAxis, numberAxis);
         barChart.setTitle("");
         barChartCategoryAxis.setLabel("Eigenschaften");
         numberAxis.setLabel("Wert");
@@ -90,11 +90,11 @@ public class StatisticsEndcard extends AnchorPane {
         createBars(barChart, "Durchschnittlicher Hunger", stats.getAverageNutritionChased(), stats.getAverageNutritionPredators());
     }
 
-    private void createBars(BarChart barChart, String title, double chasedValue, double predatorValue) {
-        XYChart.Series bars = new XYChart.Series();
+    private void createBars(BarChart<String, Number> barChart, String title, double chasedValue, double predatorValue) {
+        XYChart.Series<String, Number> bars = new XYChart.Series<>();
         bars.setName(title);
-        bars.getData().add(new XYChart.Data("Gejagte", chasedValue));
-        bars.getData().add(new XYChart.Data("Jagende", predatorValue));
+        bars.getData().add(new XYChart.Data<>("Gejagte", chasedValue));
+        bars.getData().add(new XYChart.Data<>("Jagende", predatorValue));
         barChart.getData().add(bars);
     }
 
