@@ -98,7 +98,6 @@ public class ScenarioSelector extends VBox {
                 updateScenarioList(file);
                 filename.clear();
             } else {
-                //TODO display error of empty filename
                 Stage window = (Stage) saveButton.getScene().getWindow();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Szenarioerstellungsfehler");

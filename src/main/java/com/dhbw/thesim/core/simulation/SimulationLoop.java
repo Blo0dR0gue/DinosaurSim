@@ -86,7 +86,7 @@ public class SimulationLoop {
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
      * @param maxStepAmount             The max amount of steps, that can be triggered.
      * @param maxRunTimeInMinutes       The max amount of time a simulation is running (In Minutes)
-     * @param simulationOverlay
+     * @param simulationOverlay         The simulation overlay which is used to display the GUI for the simulation
      */
     public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes, SimulationOverlay simulationOverlay) {
         this.currentSimulation = simulation;
@@ -156,10 +156,8 @@ public class SimulationLoop {
             //Check if over
             if (runtime <= currentTime || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
-                //TODO callback to GUI
                 updateStatistics();
                 Platform.runLater(() -> simulationOverlay.showStatisticsEndcard());
-                System.err.println("ende");
             }
         }
     };
@@ -218,7 +216,6 @@ public class SimulationLoop {
         this.maxStepAmount--;
         //check if over
         if (maxStepAmount <= 0 || currentSimulation.isOver()) {
-            //TODO Callback to gui
             updateStatistics();
             simulationOverlay.showStatisticsEndcard();
         }

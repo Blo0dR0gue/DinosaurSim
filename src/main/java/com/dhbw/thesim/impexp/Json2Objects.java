@@ -7,10 +7,7 @@ import com.dhbw.thesim.core.util.SpriteLibrary;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * For creating the needed objects based on the parsed json-files gotten from the class JsonHandler.
@@ -50,7 +47,7 @@ public class Json2Objects {
             //additionally parameters like "landscape" or "plan growth" are set manually in the GUI
 
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
-            for (Object key : simulationObjects.keySet()) {
+            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
                 Object[] object = new Object[3];
                 object[0] = key.toString();
                 object[1] = simulationObjects.get(key.toString()).get("Bild");
@@ -61,7 +58,7 @@ public class Json2Objects {
 
             oneKindOfFormattedSimulationObjects = new ArrayList<>();
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
-            for (Object key : simulationObjects.keySet()) {
+            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
                 Object[] object = new Object[3];
                 object[0] = key.toString();
                 object[1] = simulationObjects.get(key.toString()).get("Bild");
@@ -95,7 +92,7 @@ public class Json2Objects {
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
             importedScenarioConfigValues = JsonHandler.importScenarioConfig(scenarioConfigFileName, JsonHandler.ScenarioConfigParams.DINO);
             oneKindOfFormattedSimulationObjects = new ArrayList<>();
-            for (Object key : simulationObjects.keySet()) {
+            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
                 Object[] object = new Object[3];
                 object[0] = key.toString();
                 object[1] = (simulationObjects.get(key.toString())).get("Bild").toString();
@@ -113,7 +110,7 @@ public class Json2Objects {
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
             importedScenarioConfigValues = JsonHandler.importScenarioConfig(scenarioConfigFileName, JsonHandler.ScenarioConfigParams.PLANT);
             oneKindOfFormattedSimulationObjects = new ArrayList<>();
-            for (Object key : simulationObjects.keySet()) {
+            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
                 Object[] object = new Object[3];
                 object[0] = key.toString();
                 object[1] = (simulationObjects.get(key.toString())).get("Bild").toString();
@@ -125,24 +122,6 @@ public class Json2Objects {
                 oneKindOfFormattedSimulationObjects.add(object);
                 allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.PLANT, oneKindOfFormattedSimulationObjects);
             }
-        }
-
-        //TODO entfernen:
-        //dieser nachfolgende Code ist fürs GUI Team zur Verständnis der Funktionsweise dieser Klasse
-        for (int i = 0; i < 4; i++) { //print out dinosaurs
-            Object[] temp = allFormattedSimulationObjects.get(JsonHandler.ScenarioConfigParams.DINO).get(i);
-            System.out.println("dinosaurs:\t" + temp[0] + "\t" + temp[1] + "\t" + temp[2]);
-        }
-        for (int i = 0; i < 2; i++) { //print out plants
-            Object[] temp = allFormattedSimulationObjects.get(JsonHandler.ScenarioConfigParams.PLANT).get(i);
-            System.out.println("plants:\t" + temp[0] + "\t" + temp[1] + "\t" + temp[2]);
-        }
-        //if a scenario configuration file was imported, this values are also printable
-        if (type == Type.WITH_SCENARIO_FILE) {
-            //get landscape name
-            System.out.println("landscape:\t" + ((Object[]) allFormattedSimulationObjects.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0))[0]);
-            //get plant growth
-            System.out.println("plant growth:\t" + ((Object[]) allFormattedSimulationObjects.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0))[0]);
         }
 
         return allFormattedSimulationObjects;

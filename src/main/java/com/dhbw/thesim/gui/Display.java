@@ -19,7 +19,6 @@ import java.util.Optional;
 
 /**
  * Main JavaFx Application
- * TODO gui stuff :D
  *
  * @author Daniel Czeschner, Eric Stefan, Tamina Mühlenberg, Robin Khatri Chetri
  */
@@ -61,10 +60,7 @@ public class Display extends Application {
 
         if (screenHeight > 1080.0 && screenWidth > 1920.0) {
             //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
-            if (screenHeight >= (1080.0 + 37.0)) {
-                //primaryStage.setMaxHeight(1080.0+37.0);
-                //primaryStage.setMaxWidth(1920.0);
-            } else {
+            if (screenHeight < (1080.0 + 37.0)) {
                 System.out.println("Display not possible, because your screen is too small in height.");
             }
         } else if (scaledScreenHeight < 1080.0 && scaledScreenWidth < 1920.0) { //If display is at minimum 1080x1920, but is scaled to some degree, check against scaled resolution
@@ -76,9 +72,8 @@ public class Display extends Application {
                     + "Scaled Resolution: " + scaledScreenHeight + "x" + scaledScreenWidth
             );
 
-            //TODO: Exit program on too small resolution
+            System.exit(1);
         } else {
-            //TODO currently works with white color around AND currently isn't centred -> this two things should be updated
             primaryStage.setFullScreen(true);
         }
 

@@ -76,7 +76,6 @@ public class SimulationOverlay extends BorderPane {
         //create Statistics
         statistics = new Statistics();
 
-        //TODO get data from config screen
         Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
 
         simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime(), this);
@@ -87,7 +86,6 @@ public class SimulationOverlay extends BorderPane {
         simulationScene = new Scene(this);
 
         //Set a background image for fullscreen mode if screen resolution is higher than 1920x1080
-        //TODO Background image or colored background?
         Image img = new Image("/background/background.jpg");
         simulationScene.setFill(new ImagePattern(img, 0, 0, 1, 1, true));
         BackgroundImage bImg = new BackgroundImage(img,

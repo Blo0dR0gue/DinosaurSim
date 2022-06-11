@@ -84,9 +84,6 @@ public class ConfigScreen extends AnchorPane {
      *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
     public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
-        //TODO min. 2 dino-arten, min. 1 dino pro art
-        //TODO min. 1 pflanzenart, min. 1 pflanze pro art
-
         addScenarioParams(dinos, plants, plantGrowthRate, landscapeName);
 
         GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));

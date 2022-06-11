@@ -107,13 +107,18 @@ public class ListItemWithImage extends HBox {
             temp+="Interaktionsweite: "+((double[])(plant.get("Interaktionsweite")))[0]+", "+((double[])(plant.get("Interaktionsweite")))[1];
         }
 
-        ListItemWithImage listItemWithImage = this;
-
         Tooltip tooltip = new Tooltip(temp);
         Tooltip.install(container,tooltip);
 
+        initializeListeners();
+    }
+
+    /**
+     * Adds all specified event handlers to the specified {@link javafx.scene.Node}
+     */
+    public void initializeListeners() {
         button_remove.setOnAction(event -> {
-//            listView.getItems().remove(listItemWithImage);
+            ListItemWithImage listItemWithImage = this;
             //TODO remove dino/plant from hashmap that is passed to simulation
             listItemWithImage.setCount(0);
         });
