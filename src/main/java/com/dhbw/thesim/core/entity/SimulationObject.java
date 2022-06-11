@@ -51,10 +51,6 @@ public abstract class SimulationObject extends StateMachine {
      */
     protected final double interactionRange;
 
-    //TODO remove test objects
-    protected Rectangle test = new Rectangle(0, 0, 10, 10);
-    protected Circle circle;
-
     /**
      * Constructor
      *
@@ -69,9 +65,6 @@ public abstract class SimulationObject extends StateMachine {
 
         this.position = new Vector2D(0, 0);
         this.renderOffset = new Vector2D(0, 0);
-
-        test.setFill(Color.BLUE);
-
 
         //TODO check if possible with our images
         imageObj.setPreserveRatio(true);
@@ -119,7 +112,6 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void setSprite(Image image) {
         imageObj.setImage(image);
-        //TODO dont center image. center it to the feet, because it can look like a dinosaur is walking through water. (Simulation calculations need to be changed)
 
         double aspectRatio = image.getWidth() / image.getHeight();
         double realWidth = Math.min(imageObj.getFitWidth(), imageObj.getFitHeight() * aspectRatio);
@@ -193,14 +185,6 @@ public abstract class SimulationObject extends StateMachine {
      */
     public ImageView getJavaFXObj() {
         return imageObj;
-    }
-
-    public Rectangle getTest() {
-        return test;
-    }
-
-    public Circle getCircle() {
-        return circle;
     }
 
     /**

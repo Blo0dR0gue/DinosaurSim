@@ -1,15 +1,16 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
-import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 
+import java.util.Random;
+
 /**
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
- * In this {@link State} the handled {@link Dinosaur} is waiting {@link #waitTimeInSeconds} seconds.
+ * In this {@link State} the handled {@link Dinosaur} is waiting {@link #WAIT_TIME_IN_SECONDS} seconds.
  *
  * @author Daniel Czeschner
  */
@@ -26,12 +27,18 @@ public class Stand extends State {
     private double timeSinceStart;
 
     /**
+     * A {@link Random} object used to define the {@link #WAIT_TIME_IN_SECONDS}.
+     */
+    private static final Random RANDOM =  new Random();
+
+    /**
      * Max time, we stay in this state.
      */
-    private static final double waitTimeInSeconds = 5;
+    private static final double WAIT_TIME_IN_SECONDS = RANDOM.nextDouble(1,5);
 
     /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Stand(Dinosaur simulationObject) {
@@ -41,7 +48,7 @@ public class Stand extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        if (timeSinceStart <= waitTimeInSeconds)
+        if (timeSinceStart <= WAIT_TIME_IN_SECONDS)
             timeSinceStart += deltaTime;
     }
 
@@ -76,6 +83,6 @@ public class Stand extends State {
                 || dinosaur.getPartner() != null));
 
         //Go to wander, if the time is up.
-        addTransition(new StateTransition(StateFactory.States.wander, (simulation) -> timeSinceStart >= waitTimeInSeconds));
+        addTransition(new StateTransition(StateFactory.States.wander, (simulation) -> timeSinceStart >= WAIT_TIME_IN_SECONDS));
     }
 }

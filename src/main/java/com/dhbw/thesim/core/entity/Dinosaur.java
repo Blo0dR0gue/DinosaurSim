@@ -31,12 +31,12 @@ public class Dinosaur extends SimulationObject {
     private final double hydrationFull;
     private double nutrition;
     private double hydration;
-    private double strength;
-    private double speed;
+    private final double strength;
+    private final double speed;
     private final double reproductionRate;
-    private double weight;
-    private double length;
-    private double height;
+    private final double weight;
+    private final double length;
+    private final double height;
     private final boolean canSwim;
     private final boolean canClimb;
     private final dietType diet;
@@ -60,7 +60,6 @@ public class Dinosaur extends SimulationObject {
     /**
      * Used to set the decrease rate for nutrition and hydration in the simulation.
      */
-    //TODO check values?
     private static final double NUTRITION_REDUCTION_RATE = 0.1;
     private static final double HYDRATION_REDUCTION_RATE = 0.25;
     private static final double REPRODUCTION_VALUE_FULL = 100;
@@ -103,9 +102,6 @@ public class Dinosaur extends SimulationObject {
         this.nutritionFull = this.nutrition;
         this.hydrationFull = this.hydration;
 
-        //TODO remove test objects
-        this.circle = new Circle(0, 0, interactionRange, this.diet == dietType.herbivore ? Color.GREEN : this.diet == dietType.omnivore ? Color.BLUE : Color.RED);
-
         //Initial reproduction value as specified in the software design. This value increases over time.
         this.reproductionValue = 0;
 
@@ -125,7 +121,6 @@ public class Dinosaur extends SimulationObject {
     public void update(double deltaTime, Simulation currentSimulationData) {
         //Check all transitions for the current state and switch to next state is one met.
         stateMachineTick(currentSimulationData);
-        //TODO move to stateMachineTick?
         currentState.update(deltaTime, currentSimulationData);
 
         updateStats(deltaTime);
@@ -168,13 +163,6 @@ public class Dinosaur extends SimulationObject {
         //Center the image and update his position.
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
-        circle.setTranslateX(position.getX());
-        circle.setTranslateY(position.getY());
-    }
-
-    public void setTest(Vector2D target) {
-        test.setTranslateX(target.getX());
-        test.setTranslateY(target.getY());
     }
 
     /**
@@ -269,26 +257,6 @@ public class Dinosaur extends SimulationObject {
 
     public void setHydration(double hydration) {
         this.hydration = hydration;
-    }
-
-    public void setStrength(int strength) { //TODO final?
-        this.strength = strength;
-    }
-
-    public void setSpeed(int speed) { //TODO final?
-        this.speed = speed;
-    }
-
-    public void setWeight(double weight) { //TODO final?
-        this.weight = weight;
-    }
-
-    public void setLength(double length) { //TODO final?
-        this.length = length;
-    }
-
-    public void setHeight(double height) { //TODO final?
-        this.height = height;
     }
 
     public void setReproductionValue(double reproductionValue) {

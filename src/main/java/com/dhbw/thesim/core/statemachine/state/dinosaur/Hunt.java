@@ -37,13 +37,11 @@ public class Hunt extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        //TODO what happens if multiple hunters hunt one target.
         //Init
         if (target == null && dinosaur.isHungry()) {
             dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
                     dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()));
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
-                //TODO let hunted dino run away when the target dino can see this dino
                 targetDino.setIsChased(true);
                 targetDino.setTarget(dinosaur);
                 target = targetDino.getPosition();

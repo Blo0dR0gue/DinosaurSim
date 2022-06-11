@@ -13,6 +13,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -68,9 +69,6 @@ public class Simulation {
      */
     private final Random random;
 
-    //TODO REMOVE!!!
-    private Line line;
-
     //endregion
 
     /**
@@ -100,74 +98,18 @@ public class Simulation {
         this.toBeRemoved = new ArrayList<>();
         this.toBeSpawned = new ArrayList<>();
 
-        //TODO
-        //this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
+        this.simulationOverlay = simulationOverlay;
 
-        //TODO REMOVE TEMPORARY CODE!!!
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'f')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'f')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'f')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'f')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 80,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Dinosaur(
-                "Test", SpriteLibrary.getInstance().getImage("test2.png"), 20, 12, 5, 40,
-                0.1, 100, 50, 10, false, true,
-                'p', 400, 32, 'm')
-        );
-
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("birke.png"), 64, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("farn.png"), 16, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-        this.simulationObjects.add(new Plant("te", SpriteLibrary.getInstance().getImage("plantTest.png"), 32, plantGrowthRate));
-
-        line = new Line(0, 0, 0, 0);
-        line.setStroke(Color.BLUE);
-
+        try {
+            this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
+        } catch (IOException e) {
+            //TODO Gui error handling
+            e.printStackTrace();
+        }
 
         //Draw the map
         drawMap();
-        //TODO
-        this.simulationOverlay = simulationOverlay;
-        //TODO don't spawn plants in deserts
+        //Spawn the objects
         spawnObjects(simulationOverlay);
     }
 
@@ -210,10 +152,7 @@ public class Simulation {
     private void spawnObjects(SimulationOverlay simulationOverlay) {
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
-            simulationOverlay.getChildren().add(obj.getCircle());
             if (obj instanceof Dinosaur dinosaur) {
-                //TODO remove test objects
-                //simulationOverlay.getChildren().add(obj.getTest());
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
             } else if(obj instanceof Plant plant) {
@@ -222,7 +161,6 @@ public class Simulation {
             }
             simulationOverlay.getChildren().add(obj.getJavaFXObj());
         }
-        simulationOverlay.getChildren().add(line);
     }
 
     /**
@@ -793,10 +731,6 @@ public class Simulation {
         if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
-        line.setStartX(start.getX());
-        line.setStartY(start.getY());
-        line.setEndX(end.getX());
-        line.setEndY(end.getY());
 
         double minDist;
         double maxDist = Math.max(Vector2D.distance(circleOrigin, start), Vector2D.distance(circleOrigin, end));
