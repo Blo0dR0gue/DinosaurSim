@@ -75,7 +75,7 @@ public class Simulation {
     /**
      * Constructor used for test cases
      */
-    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, HashMap<String, Integer> dinosaurs, HashMap<String, Integer> plants, int plantGrowthRate, Random random) {
+    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, Map<String, Integer> dinosaurs, Map<String, Integer> plants, int plantGrowthRate, Random random) {
         this.simulationMap = simulationMap;
         this.simulationObjects = new ArrayList<>();
         this.backgroundGraphics = backgroundGraphics;
