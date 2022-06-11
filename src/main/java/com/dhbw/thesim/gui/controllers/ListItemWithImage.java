@@ -64,8 +64,9 @@ public class ListItemWithImage extends HBox {
 
         ListItemWithImage listItemWithImage = this;
         button_remove.setOnAction(event -> {
-            listView.getItems().remove(listItemWithImage);
+//            listView.getItems().remove(listItemWithImage);
             //TODO remove dino/plant from hashmap that is passed to simulation
+            listItemWithImage.setCount(0);
         });
 
         slider.valueProperty()
