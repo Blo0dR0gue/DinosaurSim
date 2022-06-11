@@ -79,7 +79,7 @@ public class StatisticsEndcard extends AnchorPane {
         restartSimulationButton.setOnAction(event -> {
             Stage window = (Stage) restartSimulationButton.getScene().getWindow();
             window.setScene(Display.configScene);
-            window.setFullScreen(true);
+            window.setMaximized(true);
         });
     }
 }

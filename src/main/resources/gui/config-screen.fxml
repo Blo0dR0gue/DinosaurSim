@@ -71,7 +71,7 @@
                 <ImageView fitWidth="15.0" fitHeight="15.0" image="$addBtnImage"/>
             </graphic>
         </Button>-->
-        <SliderWithLabel fx:id="plantGrowthSliderWithLabel" text="Pflanzenwachstumrate"
+        <SliderWithLabel fx:id="plantGrowthSliderWithLabel" text="Pflanzenwachstumsrate"
                          min="1.0" max="10.0" major="3" minor="2"
                          GridPane.columnIndex="3" GridPane.rowIndex="0" GridPane.columnSpan="2"/>
         <SliderWithLabel fx:id="stepSliderWithLabel" text="Simulationsschrittweite"
