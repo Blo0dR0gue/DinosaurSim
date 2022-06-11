@@ -20,6 +20,7 @@ public class SimulationMap {
     private final String landscapeName;
     /**
      * The background grid-field
+     *
      * @see Tile
      */
     private final Tile[][] tiles;
@@ -38,6 +39,7 @@ public class SimulationMap {
 
     /**
      * The constructor for a new simulation map
+     *
      * @param landscapeName The name for this landscape
      */
     public SimulationMap(String landscapeName) {
@@ -47,7 +49,7 @@ public class SimulationMap {
         //Select a defined landscape based on the name.
         if (landscapeName.equalsIgnoreCase(LANDSCAPE_ONE_NAME))
             landscapeOne();
-        else if(landscapeName.equalsIgnoreCase(LANDSCAPE_TWO_NAME))
+        else if (landscapeName.equalsIgnoreCase(LANDSCAPE_TWO_NAME))
             landscapeTwo();
         else
             landscapeOne();
@@ -278,6 +280,7 @@ public class SimulationMap {
 
     /**
      * Checks, if grid coordination are inside the grid.
+     *
      * @param gridX The x grid position.
      * @param gridY The y grid position.
      * @return true, if the gird position is inside the grid.
@@ -288,6 +291,7 @@ public class SimulationMap {
 
     /**
      * Checks, if a {@link Vector2D} point is inside the grid.
+     *
      * @param point The {@link Vector2D}, which should be checked.
      * @return true, if the point is inside the grid.
      */
@@ -304,6 +308,7 @@ public class SimulationMap {
 
     /**
      * Gets the Tile at a specific grid position.
+     *
      * @param gridX The x grid position.
      * @param gridY The y grid position.
      * @return {@link Tile} at this position or null
@@ -317,6 +322,7 @@ public class SimulationMap {
 
     /**
      * Gets the grid position of a {@link Vector2D}. It is not checked, if this position is inside the grid.
+     *
      * @param worldPosition The {@link Vector2D}, which should be checked.
      * @return An {@link Vector2D} with the x,y position.
      */
@@ -328,6 +334,7 @@ public class SimulationMap {
 
     /**
      * Gets a {@link Tile} at a specific {@link Vector2D}.
+     *
      * @param worldPosition The position {@link Vector2D}.
      * @return {@link Tile} at this position or null.
      */
@@ -339,6 +346,7 @@ public class SimulationMap {
 
     /**
      * Checks, if a tile at a specific grid coordination matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
+     *
      * @param gridX    The x grid position.
      * @param gridY    The y grid position.
      * @param canSwim  true, if the dinosaur can swim
@@ -352,6 +360,7 @@ public class SimulationMap {
 
     /**
      * Checks, if a tile at a specific {@link Vector2D} position matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
+     *
      * @param worldPosition The {@link Vector2D} position, on which the tile should be checked.
      * @param canSwim       true, if the dinosaur can swim
      * @param canClimb      true, if the dinosaur can climb.
@@ -364,6 +373,7 @@ public class SimulationMap {
 
     /**
      * Checks if a tile matched the conditions for swimmable and climbable for a {@link com.dhbw.thesim.core.entity.Dinosaur}
+     *
      * @param tile     The {@link Tile} we want to check.
      * @param canSwim  true, if the dinosaur can swim
      * @param canClimb true, if the dinosaur can climb.
@@ -378,12 +388,14 @@ public class SimulationMap {
     }
 
     /**
-     * Get all {@link Tile} in range, which met the condisions.
+     * Get all {@link Tile} in range, which met the conditions exactly.
+     *
      * @param tile      The tile, from where we want to check
      * @param range     The range of tiles.
      * @param swimmable Do the matching {@link Tile}s need to be swimmable
      * @param climbable Do the matching {@link Tile}s need to be climbable
      * @return A List with all matching tiles.
+     * @see #tileConditionsAre(Tile, boolean, boolean) 
      */
     private List<Tile> getTilesInRangeWhereConditionsAre(Tile tile, int range, boolean swimmable, boolean climbable) {
         List<Tile> tileObjects = new ArrayList<>();
@@ -407,10 +419,44 @@ public class SimulationMap {
         return tileObjects;
     }
 
+    /**
+     * Get all {@link Tile} in range, which met the conditions.
+     *
+     * @param tile      The tile, from where we want to check
+     * @param range     The range of tiles.
+     * @param swimmable Do the matching {@link Tile}s need to be swimmable
+     * @param climbable Do the matching {@link Tile}s need to be climbable
+     * @return A List with all matching tiles.
+     * @see #tileMatchedConditions(Tile, boolean, boolean)  
+     */
+    private List<Tile> getTilesInRangeWhereConditionsMatch(Tile tile, int range, boolean swimmable, boolean climbable) {
+        List<Tile> tileObjects = new ArrayList<>();
+
+        for (int x = -range; x <= range; x++) {
+            for (int y = -range; y <= range; y++) {
+
+                if (x == 0 && y == 0)
+                    continue;
+
+                int checkX = tile.getGridX() + x;
+                int checkY = tile.getGridY() + y;
+
+                if (isInsideOfGrid(checkX, checkY)) {
+                    Tile tmpTile = getTileAtPosition(checkX, checkY);
+                    if (tileMatchedConditions(tmpTile, swimmable, climbable))
+                        tileObjects.add(tmpTile);
+                }
+            }
+        }
+
+        return tileObjects;
+    }
+
     //region getter & setter
 
     /**
      * Gets the name of the landscape.
+     *
      * @return The name of this map.
      */
     public String getLandscapeName() {
@@ -419,6 +465,7 @@ public class SimulationMap {
 
     /**
      * Gets all Tiles as an 2-dimensional array.
+     *
      * @return The 2-Dimensional array with all Tiles. Which represents the current map.
      */
     public Tile[][] getTiles() {
@@ -427,6 +474,7 @@ public class SimulationMap {
 
     /**
      * Gets a random tile on the map, matching the conditions.
+     *
      * @param canSwim  Does the object can swim.
      * @param canClimb Does the object can climb.
      * @param random   A {@link Random} object.
@@ -443,6 +491,7 @@ public class SimulationMap {
 
     /**
      * Gets a random tile on the map, where the conditions are.
+     *
      * @param canSwim     Does the object can swim.
      * @param canClimb    Does the object can climb.
      * @param allowPlants Does the tile need to allow plants.
@@ -460,6 +509,7 @@ public class SimulationMap {
 
     /**
      * Gets the center {@link Vector2D} world position of a tile.
+     *
      * @param tile The {@link Tile}
      * @return The center position of the tile.
      */
@@ -469,6 +519,7 @@ public class SimulationMap {
 
     /**
      * Gets a random tile, matching a {@link com.dhbw.thesim.core.entity.Dinosaur} conditions.
+     *
      * @param canSwim  Can the dinosaur swim?
      * @param canClimb Cna the dinosaur climb?
      * @param random   A {@link Random}.
@@ -480,6 +531,7 @@ public class SimulationMap {
 
     /**
      * Gets a random {@link Vector2D} of a tile, where conditions are...
+     *
      * @param swimmable   Does the tile need to be swimmable?
      * @param climbable   Does the tile need to be climbable?
      * @param allowPlants Does the tile need to allow plants?
@@ -492,13 +544,15 @@ public class SimulationMap {
 
     /**
      * Gets all center coordinates of tiles that satisfy the requirements.
+     *
      * @param origin    The world position from which we want to check
      * @param range     The radial range (e.g. view range)
      * @param swimmable Do the tile need to be swimmable (water tile)
      * @param climbable Do the tile need to be climbable (mountain tile)
      * @return A list of {@link Vector2D} with all center coordinates
+     * @see #getTilesInRangeWhereConditionsAre(Tile, int, boolean, boolean)
      */
-    public List<Vector2D> getMidCoordinatesOfMatchingTiles(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+    public List<Vector2D> getMidCoordinatesTilesWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable) {
         List<Vector2D> matchingPosition = new ArrayList<>();
 
         Tile startTile = getTileAtPosition(origin);
@@ -510,5 +564,31 @@ public class SimulationMap {
         }
         return matchingPosition;
     }
+
+    /**
+     * Gets all center coordinates of tiles that satisfy the requirements.
+     *
+     * @param origin    The world position from which we want to check
+     * @param range     The radial range (e.g. view range)
+     * @param swimmable Do the tile need to be swimmable (water tile)
+     * @param climbable Do the tile need to be climbable (mountain tile)
+     * @return A list of {@link Vector2D} with all center coordinates
+     * @see #getTilesInRangeWhereConditionsMatch(Tile, int, boolean, boolean)
+     */
+    public List<Vector2D> getMidCoordinatesTilesWhereConditionsMatch(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+        List<Vector2D> matchingPosition = new ArrayList<>();
+
+        Tile startTile = getTileAtPosition(origin);
+
+        int localRange = (int) Math.ceil(range / Tile.TILE_SIZE);
+
+        for (Tile tile : getTilesInRangeWhereConditionsMatch(startTile, localRange, swimmable, climbable)) {
+            matchingPosition.add(getCenterPositionOfTile(tile));
+        }
+
+        return matchingPosition;
+    }
+
+
     //endregion
 }
