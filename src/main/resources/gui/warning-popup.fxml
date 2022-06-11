@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+
+<fx:root fx:id="container" type="javafx.scene.control.DialogPane" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <header>
+      <Label text="ACHTUNG!" />
+   </header>
+   <content>
+      <TextArea fx:id="textArea" editable="false" text="Dies ist eine Warnung.&#10;Bitte Beachten Sie diese Warnung" wrapText="true" />
+   </content>
+</fx:root>
