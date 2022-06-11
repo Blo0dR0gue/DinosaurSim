@@ -79,7 +79,7 @@ public class Display extends Application {
             //TODO: Exit program on too small resolution
         } else {
             //TODO currently works with white color around AND currently isn't centred -> this two things should be updated
-            primaryStage.setMaximized(true);
+            primaryStage.setFullScreen(true);
         }
 
         //We don't want to exit the fullscreen when keys are pressed

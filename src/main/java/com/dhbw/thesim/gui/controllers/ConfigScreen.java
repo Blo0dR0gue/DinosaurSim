@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -122,10 +123,15 @@ public class ConfigScreen extends AnchorPane {
                 ));
     }
 
+    /**
+     * Checks if enough dinos as well as enough plants have been configured, otherwide erro alert is shown
+     */
     private void checkRequiredSimObjects() {
         boolean minDinosSelected = true;
         boolean minPlantsSelected = true;
+        Stage window = (Stage) startSimulationButton.getScene().getWindow();
 
+        //Iterate over both list views and over each item in them to check if required amount is satisfied
         for (ListView<ListItemWithImage> listView : Arrays.asList(dinoListView, plantListView)) {
             ArrayList<ListItemWithImage> items = new ArrayList<>();
             for (ListItemWithImage listItem : listView.getItems()) {
@@ -141,7 +147,6 @@ public class ConfigScreen extends AnchorPane {
             }
         }
         if (minDinosSelected && minPlantsSelected) {
-            Stage window = (Stage) startSimulationButton.getScene().getWindow();
             SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
             window.setScene(simulationOverlay.getSimulationScene());
             window.setFullScreen(true);
@@ -153,7 +158,8 @@ public class ConfigScreen extends AnchorPane {
             alert.setContentText("""
                     Sie haben nicht die erforderliche Mindestanzahl von Dinos festgelegt.
 
-                    Zum Starten der Simulation werden mindestens 2 verschiedene Arten von Dinosauriern benötigt.""");
+                    Zum Starten der Simulation werden mindestens zwei verschiedene Arten von Dinosauriern benötigt.""");
+            alert.initOwner(window);
 
             alert.showAndWait();
         }
@@ -164,7 +170,8 @@ public class ConfigScreen extends AnchorPane {
             alert.setContentText("""
                     Sie haben nicht die erforderliche Mindestanzahl von Pflanzen festgelegt.
 
-                    Zum Starten der Simulation wird mindestens eine Art Pflanzenart benötigt.""");
+                    Zum Starten der Simulation wird mindestens eine Art von Pflanzen benötigt.""");
+            alert.initOwner(window);
 
             alert.showAndWait();
         }

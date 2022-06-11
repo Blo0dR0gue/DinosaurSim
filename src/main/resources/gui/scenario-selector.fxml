@@ -23,7 +23,7 @@
          <Insets top="10.0" bottom="10.0"/>
       </VBox.margin>
       <tooltip>
-         <Tooltip text="laden"/>
+         <Tooltip text="Laden"/>
       </tooltip>
       <graphic>
          <ImageView fitWidth="50.0" preserveRatio="true" image="$loadBtnImage"/>
@@ -51,7 +51,7 @@
          <Insets top="10.0"/>
       </VBox.margin>
       <tooltip>
-         <Tooltip text="speichern"/>
+         <Tooltip text="Speichern"/>
       </tooltip>
       <graphic>
          <ImageView fitWidth="50.0" preserveRatio="true" image="$saveBtnImage"/>

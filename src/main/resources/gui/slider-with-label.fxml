@@ -7,7 +7,7 @@
 <?import javafx.scene.text.Font?>
 <fx:root fx:id="gridPane" type="javafx.scene.layout.GridPane" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml">
-    <Label fx:id="label" textFill="white" GridPane.valignment="TOP">
+    <Label fx:id="label" GridPane.valignment="TOP">
         <font>
             <Font size="17.0" />
         </font>
@@ -19,7 +19,7 @@
             <Insets top="40.0" right="20.0"/>
         </GridPane.margin>
     </Slider>
-    <Label fx:id="sliderValueLabel" text="0" textFill="white" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+    <Label fx:id="sliderValueLabel" text="0" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
         <font>
             <Font size="17.0" />
         </font>
