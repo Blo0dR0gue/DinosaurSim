@@ -8,6 +8,7 @@ import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import com.dhbw.thesim.gui.controllers.SideBar;
 import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
 import com.dhbw.thesim.stats.Statistics;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -193,9 +194,21 @@ public class SimulationOverlay extends BorderPane {
      */
     public void dinosaurClicked(Dinosaur dinosaur) {
         if (simulationLoop.getSimulationPaused()) {
-            Map<String, Double> dinoStats = statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects()));
-            setSideBarStats(dinoStats);
+            startStatsTimer(dinosaur);
         }
+    }
+
+    private void startStatsTimer(Dinosaur dinosaur) {
+        if (timer != null)
+            timer.cancel();
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> setSideBarStats(statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects()))));
+            }
+        }, 0, 4000);
     }
 
 

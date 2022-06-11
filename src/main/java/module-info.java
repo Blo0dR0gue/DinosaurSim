@@ -5,6 +5,7 @@ module com.dhbw.thesim {
 
 
     exports com.dhbw.thesim;
+    exports com.dhbw.thesim.core.entity;
     exports com.dhbw.thesim.gui;
     exports com.dhbw.thesim.gui.controllers;
     exports com.dhbw.thesim.stats;
