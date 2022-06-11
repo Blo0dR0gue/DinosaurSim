@@ -61,8 +61,6 @@ public class SimulationOverlay extends BorderPane {
 
         simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime());
 
-        simulationIsRunning = true;
-
         //Create the Scene
         simulationScene = new Scene(this);
 
@@ -124,12 +122,11 @@ public class SimulationOverlay extends BorderPane {
         }
     }
 
-    private void createToggleButton(String controlImgUrl, Boolean toggleOnRunningSimulation) {
+    private void createToggleButton(String controlImgUrl, Boolean shouldPauseSimulation) {
         Button toggleButton = addControlButtonToSideBar(controlImgUrl);
         toggleButton.setOnAction(e -> {
-            if (simulationIsRunning == toggleOnRunningSimulation) {
+            if (simulationLoop.getSimulationPaused() != shouldPauseSimulation) {
                 simulationLoop.togglePause();
-                simulationIsRunning = !simulationIsRunning;
             }
         });
     }

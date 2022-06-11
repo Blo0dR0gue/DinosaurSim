@@ -219,4 +219,12 @@ public class SimulationLoop {
     public Simulation getCurrentSimulation() {
         return this.currentSimulation;
     }
+
+    /**
+     * Gets the boolean if simulation is currently paused
+     * @return A {@link Boolean} telling if simulation is paused
+     */
+    public boolean getSimulationPaused() {
+        return this.paused;
+    }
 }
