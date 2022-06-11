@@ -206,9 +206,27 @@ public class SimulationOverlay extends BorderPane {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(() -> setSideBarStats(statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects()))));
+                Platform.runLater(() -> {
+                    if (!dinosaur.diedOfThirst() && !dinosaur.diedOfHunger())
+                        setSideBarStats(statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects())));
+                    else {
+                        resetStatsScreen();
+                        cancel();
+                    }
+                });
             }
-        }, 0, 4000);
+        }, 0, 2000);
+    }
+
+    private void resetStatsScreen() {
+        hunger.setText(noDinoSelected);
+        thirst.setText(noDinoSelected);
+        fertility.setText(noDinoSelected);
+        weight.setText(noDinoSelected);
+        height.setText(noDinoSelected);
+        length.setText(noDinoSelected);
+        survivalTime.setText(noDinoSelected);
+        speciesProportion.setText(noDinoSelected);
     }
 
 
