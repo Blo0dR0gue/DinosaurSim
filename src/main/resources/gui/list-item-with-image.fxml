@@ -7,7 +7,7 @@
 
 <fx:root type="javafx.scene.layout.HBox" fx:id="container"
          xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
-   <StackPane>
+   <StackPane prefWidth="100.0" prefHeight="100.0">
       <ImageView fx:id="imageView" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
       <Label fx:id="sliderValueLabel" text="0" StackPane.alignment="BOTTOM_LEFT">
          <font>
@@ -17,7 +17,7 @@
    </StackPane>
    <BorderPane fx:id="borderPane" prefHeight="100.0" HBox.hgrow="ALWAYS">
       <top>
-         <Label fx:id="label_name" text="PLATZHALTER" BorderPane.alignment="CENTER" textFill="white">
+         <Label fx:id="label_name" text="PLATZHALTER" BorderPane.alignment="CENTER">
             <font>
                <Font size="17.0"/>
             </font>

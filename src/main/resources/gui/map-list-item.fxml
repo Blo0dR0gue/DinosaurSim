@@ -12,7 +12,7 @@
    <padding>
       <Insets top="20.0" right="20.0" bottom="20.0"/>
    </padding>
-   <RadioButton fx:id="radioButton" text="MapName" textFill="white">
+   <RadioButton fx:id="radioButton" text="MapName">
       <HBox.margin>
          <Insets right="10.0"/>
       </HBox.margin>
