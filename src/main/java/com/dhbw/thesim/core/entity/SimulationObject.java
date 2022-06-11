@@ -77,7 +77,7 @@ public abstract class SimulationObject extends StateMachine {
         selectionRing = new Circle(0,0,interactionRange);
         selectionRing.setVisible(false);
         selectionRing.setFill(Color.TRANSPARENT);
-        selectionRing.setStroke(Color.BLUE);
+        selectionRing.setStroke(Color.YELLOW);
 
         setSprite(image);
     }
