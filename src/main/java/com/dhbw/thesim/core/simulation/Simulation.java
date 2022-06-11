@@ -31,6 +31,7 @@ public class Simulation {
     //region variables
     /**
      * The used {@link SimulationMap}
+     *
      * @see SimulationMap
      */
     private final SimulationMap simulationMap;
@@ -46,6 +47,7 @@ public class Simulation {
     private final GraphicsContext backgroundGraphics;
     /**
      * The List, with all handed {@link SimulationObject}s used in a Simulation.
+     *
      * @see SimulationObject
      */
     private final List<SimulationObject> simulationObjects;
@@ -84,6 +86,7 @@ public class Simulation {
 
     /**
      * Constructor
+     *
      * @param landscapeName             The name of the used landscape.
      * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
      * @param simulationOverlay         The {@link SimulationOverlay} object on which {@link SimulationObject}s are spawned.
@@ -116,6 +119,7 @@ public class Simulation {
 
     /**
      * Gets the used {@link SimulationMap}.
+     *
      * @return The currently used {@link SimulationMap}
      */
     public SimulationMap getSimulationMap() {
@@ -124,6 +128,7 @@ public class Simulation {
 
     /**
      * Gets all handled {@link SimulationObject}s.
+     *
      * @return The list {@link Simulation#simulationObjects}.
      */
     public List<SimulationObject> getSimulationObjects() {
@@ -132,10 +137,15 @@ public class Simulation {
 
     /**
      * Checks if a simulation is finished.
+     *
      * @return true when all dinosaurs are extinct.
      */
     public boolean isOver() {
-        return simulationObjects.isEmpty();
+        for (SimulationObject simulationObject : simulationObjects) {
+            if (simulationObject instanceof Dinosaur)
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -148,6 +158,7 @@ public class Simulation {
 
     /**
      * Method, that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects}.
+     *
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
     private void spawnObjects(SimulationOverlay simulationOverlay) {
@@ -156,7 +167,7 @@ public class Simulation {
             if (obj instanceof Dinosaur dinosaur) {
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
-            } else if(obj instanceof Plant plant) {
+            } else if (obj instanceof Plant plant) {
                 //Plants only can be spawned on tiles, which allow plant growing
                 obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange(), plant.getRenderOffset()));
             }
@@ -167,6 +178,7 @@ public class Simulation {
     /**
      * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects} to the {@link #toBeRemoved} list.
      * The object is also been removed from the visuals.
+     *
      * @param simulationObject The {@link SimulationObject} which should be removed.
      */
     public void deleteObject(SimulationObject simulationObject) {
@@ -195,6 +207,7 @@ public class Simulation {
 
     /**
      * Gets the closest reachable Water source or null.
+     *
      * @param position  The {@link Vector2D} position, where we check from.
      * @param viewRange The radial range, we want to check (as radius)
      * @param canSwim   Does the object, who wants to move to a water tile, can swim?
@@ -218,6 +231,7 @@ public class Simulation {
 
     /**
      * Gets the closest {@link SimulationObject} which can be eaten by the searcher {@link Dinosaur}
+     *
      * @param position  The {@link Vector2D} position of the seeker.
      * @param viewRange The view range (as radius) of the seeker.
      * @param dietType  The {@link Dinosaur.dietType} of the seeker.
@@ -259,6 +273,7 @@ public class Simulation {
     /**
      * Gets all {@link SimulationObject}s which can be eaten by the searcher {@link Dinosaur} <br>
      * It is also been checked, if the food source can be eaten by the searcher.
+     *
      * @param position  The {@link Vector2D} position of the seeker.
      * @param viewRange The view range (as radius) of the seeker.
      * @param dietType  The {@link Dinosaur.dietType} of the seeker.
@@ -394,6 +409,7 @@ public class Simulation {
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
+     *
      * @param position The {@link Vector2D} we want sort to.
      * @param list     The list with the {@link SimulationObject}, which should be sorted.
      */
@@ -403,6 +419,7 @@ public class Simulation {
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
+     *
      * @param position The {@link Vector2D} we want sort to.
      * @param list     The list with the {@link Vector2D}, which should be sorted.
      */
@@ -412,6 +429,7 @@ public class Simulation {
 
     /**
      * Gets a random free position on the grid map.
+     *
      * @param canSwim          Can the {@link Dinosaur} swim.
      * @param canClimb         Can the {@link Dinosaur} climb.
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
@@ -427,6 +445,7 @@ public class Simulation {
 
     /**
      * Gets a random free position on the grid map matching the conditions.
+     *
      * @param climbable        Does the tile need to be climbable.
      * @param swimmable        Does the tile need to be swimmable.
      * @param allowPlants      Does the tile need to allow plants?
@@ -443,6 +462,7 @@ public class Simulation {
 
     /**
      * Checks, if a point with a range (a circle) intersect any interaction range.
+     *
      * @param target           The target {@link Vector2D} point
      * @param interactionRange The range of the point (circle), which should be checked.
      * @param ignore           This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
@@ -463,6 +483,7 @@ public class Simulation {
 
     /**
      * Checks if a {@link SimulationObject} can move to a position.
+     *
      * @param start                  The {@link Vector2D} position of the {@link SimulationObject}.
      * @param target                 The {@link Vector2D} target, where he wants to move.
      * @param interactionRange       The interaction range of the {@link SimulationObject}.
@@ -513,6 +534,7 @@ public class Simulation {
 
     /**
      * Gets a random target vector inside a view range of a dinosaur.
+     *
      * @param position         The position of the {@link SimulationObject} which wants to move.
      * @param viewRange        The view range as a radius.
      * @param interactionRange The interaction as a radius.
@@ -538,6 +560,7 @@ public class Simulation {
 
     /**
      * Get a random target facing in a direction with an offset of +-PI/3. <br>
+     *
      * @param position         The position of the {@link SimulationObject} which wants to move.
      * @param viewRange        The view range as a radius.
      * @param interactionRange The interaction as a radius.
@@ -564,6 +587,7 @@ public class Simulation {
 
     /**
      * Get a random point inside a circle.
+     *
      * @param center The center {@link Vector2D} of the circle.
      * @param radius The radius of this circle.
      * @return A {@link Vector2D} point.
@@ -586,6 +610,7 @@ public class Simulation {
 
     /**
      * Get a random position facing in a direction with an offset of +-PI/3. <br>
+     *
      * @param center The circle {@link Vector2D} position from which we check.
      * @param radius The radial range of the circle.
      * @param dir    A direction {@link Vector2D}
@@ -620,6 +645,7 @@ public class Simulation {
 
     /**
      * Checks, if a point is inside a circle
+     *
      * @param circleCenter The center of the circle.
      * @param radius       The radius of this circle.
      * @param point        The {@link Vector2D} point, which should be checked.
@@ -634,6 +660,7 @@ public class Simulation {
 
     /**
      * Check, if a point is inside any interaction range (collision circle) of any simulationobject.
+     *
      * @param point  The point, which should be checked.
      * @param ignore This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
      * @return true, if the point is inside any collision circle.
@@ -650,6 +677,7 @@ public class Simulation {
     /**
      * Calculates, if all tiles between the start tile and the target tile can be reached. <br>
      * Uses the bresenham-algorithm. See <a href="https://de.wikipedia.org/wiki/Bresenham-Algorithmus">Wikipedia</a>
+     *
      * @param start            The start {@link Vector2D} position in the simulation world.
      * @param target           The target {@link Vector2D} position in the simulation world.
      * @param canSwim          Can the {@link Dinosaur} swim?
@@ -722,6 +750,7 @@ public class Simulation {
 
     /**
      * Checks, if a line segment collide with a view range circle.
+     *
      * @param circleOrigin     The origin {@link Vector2D} of the range circle.
      * @param radius           The radius of the range circle.
      * @param start            The start {@link Vector2D} of the line segment.
@@ -757,6 +786,7 @@ public class Simulation {
 
     /**
      * Checks, if two circles intersect.
+     *
      * @param circleOrigin1 The {@link Vector2D} center point of the first circle.
      * @param radius1       The radius of the first circle.
      * @param circleOrigin2 The {@link Vector2D} center point of the second circle.
