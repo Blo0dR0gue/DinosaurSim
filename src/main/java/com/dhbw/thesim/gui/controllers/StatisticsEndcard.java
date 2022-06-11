@@ -22,7 +22,7 @@ public class StatisticsEndcard extends AnchorPane {
     @FXML
     public Button restartSimulationButton;
     @FXML
-    public LineChart lineChart;
+    public LineChart<Number,Number> lineChart;
 
 
     /**
@@ -62,18 +62,18 @@ public class StatisticsEndcard extends AnchorPane {
                 speciesList.add(update.get(i));
             }
 
-            addChartToStatistics(speciesList, "Alle" + speciesName);
+            addChartToStatistics(speciesList, speciesName);
         }
 
         initializeListeners();
     }
 
     private void addChartToStatistics(List<Integer> integerList, String chartName) {
-        XYChart.Series allLivingDinosaurs = new XYChart.Series();
+        XYChart.Series<Number,Number> allLivingDinosaurs = new XYChart.Series<>();
         allLivingDinosaurs.setName(chartName);
 
         for (int count = 0; count < integerList.size(); count++) {
-            allLivingDinosaurs.getData().add(new XYChart.Data(count, integerList.get(count)));
+            allLivingDinosaurs.getData().add(new XYChart.Data<>(count, integerList.get(count)));
         }
         lineChart.getData().add(allLivingDinosaurs);
     }
@@ -85,7 +85,7 @@ public class StatisticsEndcard extends AnchorPane {
         restartSimulationButton.setOnAction(event -> {
             Stage window = (Stage) restartSimulationButton.getScene().getWindow();
             window.setScene(Display.configScene);
-            window.setMaximized(true);
+            window.setFullScreen(true);
         });
     }
 }
