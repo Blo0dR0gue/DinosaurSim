@@ -8,7 +8,6 @@ import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
-import com.dhbw.thesim.impexp.Json2Objects;
 import javafx.application.Platform;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -274,7 +273,7 @@ public class Simulation {
      * @return A {@link Vector2D} target of a water tile or null.
      */
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
-        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfMatchingTiles(position, viewRange, true, false);
+        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesTilesWhereConditionsAre(position, viewRange, true, false);
 
         sortByDistance(waterSourcesInRange, position);
 
@@ -429,7 +428,7 @@ public class Simulation {
                 reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
 
 
-        baby.setPosition(getPositionNextToWhereConditionsAre(mother.getPosition(), mother.getInteractionRange() * 2, baby.canSwim(), baby.canClimb()));
+        baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
 
         spawnObject(baby);
 
@@ -438,7 +437,7 @@ public class Simulation {
 
     public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
 
-        List<Vector2D> positions = simulationMap.getMidCoordinatesOfMatchingTiles(origin, range * Tile.TILE_SIZE, swimmable, climbable);
+        List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
 
         for (Vector2D pos : positions) {
             if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, origin)) {
@@ -447,34 +446,7 @@ public class Simulation {
             }
         }
 
-        if (range < 25)
-            return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
-        else {
-            System.out.println("No spawn position found");
-            return getFreePositionInMap(swimmable, climbable, interactionRange);
-        }
-    }
-
-    //TODO
-    private Vector2D getPositionNextToWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable) {
-
-        List<Vector2D> positions = simulationMap.getMidCoordinatesOfMatchingTiles(origin, range, swimmable, climbable);
-
-        Vector2D target = null;
-
-        sortByDistance(positions, origin);
-
-        for (Vector2D pos : positions) {
-            if (!isPointInsideAnyInteractionRange(pos, null))
-                target = pos;
-        }
-        if (target == null){
-            System.out.println("no");
-            return getFreePositionInMap(swimmable, climbable, range);
-        }
-
-        else
-            return target;
+        return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
     }
 
     public double inheritValue(double a, double b) {
