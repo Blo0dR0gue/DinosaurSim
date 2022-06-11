@@ -217,6 +217,8 @@ public class SimulationLoop {
         //check if over
         if (maxStepAmount <= 0 || currentSimulation.isOver()) {
             //TODO Callback to gui
+            updateStatistics();
+            simulationOverlay.showStatisticsEndcard();
         }
     }
 

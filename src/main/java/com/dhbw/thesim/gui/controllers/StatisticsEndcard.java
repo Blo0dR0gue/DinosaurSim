@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -53,11 +55,15 @@ public class StatisticsEndcard extends AnchorPane {
 
         for (int i = 0; i < stats.getAllSpecies().size(); i++) {
             String speciesName = stats.getAllSpecies().get(i);
-            List<Integer> speciesList = stats.getAllLivingSpecies().get(i);
+
+            ArrayList<Integer> speciesList = new ArrayList<>();
+            for (List<Integer> update:
+                 stats.getAllLivingSpecies()) {
+                speciesList.add(update.get(i));
+            }
 
             addChartToStatistics(speciesList, "Alle" + speciesName);
         }
-
 
         initializeListeners();
     }

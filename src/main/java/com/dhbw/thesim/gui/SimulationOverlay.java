@@ -147,13 +147,13 @@ public class SimulationOverlay extends BorderPane {
         Button stopButton = addControlButtonToSideBar("/controls/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
-
-
             showStatisticsEndcard();
         });
     }
 
     public void showStatisticsEndcard() {
+        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects());
+
         Stage window = (Stage) simulationScene.getWindow();
         StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
         statisticsEndcard.initialize(statistics);
