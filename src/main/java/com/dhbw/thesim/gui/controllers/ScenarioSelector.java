@@ -29,8 +29,6 @@ public class ScenarioSelector extends VBox {
     public Text promptText;
     @FXML
     public Button loadButton;
-    @FXML
-    public Label enterNameError;
 
     private ToggleGroup scenarioToggleGroup;
 
@@ -86,7 +84,6 @@ public class ScenarioSelector extends VBox {
 
     private void initializeListeners(){
         saveButton.setOnAction(event -> {
-            enterNameError.setVisible(false);
             String file = filename.getText().strip();
             if (!file.equals("")) {
                 try {
@@ -112,7 +109,7 @@ public class ScenarioSelector extends VBox {
             String selectedScenario = getSelectedScenario();
             try {
                 HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> scenarioParams = Json2Objects.getParamsForGUI(Json2Objects.Type.WITH_SCENARIO_FILE, selectedScenario);
-                configScreen.switchScenarioParams(scenarioParams.get(JsonHandler.ScenarioConfigParams.DINO),
+                configScreen.addScenarioParams(scenarioParams.get(JsonHandler.ScenarioConfigParams.DINO),
                         scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT),
                         (double) scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0],
                         (String) scenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]);

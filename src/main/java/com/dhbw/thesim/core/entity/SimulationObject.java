@@ -67,10 +67,8 @@ public abstract class SimulationObject extends StateMachine {
         this.renderOffset = new Vector2D(0, 0);
 
         imageObj.setPreserveRatio(true);
-        imageObj.setFitHeight(interactionRange*2);
-        imageObj.setFitWidth(interactionRange*2);
-        imageObj.setScaleX(Display.SCALE_X);
-        imageObj.setScaleY(Display.SCALE_Y);
+        imageObj.setFitHeight(Display.adjustScale(interactionRange*2, Display.SCALE_X));
+        imageObj.setFitWidth(Display.adjustScale(interactionRange*2, Display.SCALE_Y));
 
         setSprite(image);
     }
