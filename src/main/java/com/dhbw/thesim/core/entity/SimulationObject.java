@@ -66,7 +66,6 @@ public abstract class SimulationObject extends StateMachine {
         this.position = new Vector2D(0, 0);
         this.renderOffset = new Vector2D(0, 0);
 
-        //TODO check if possible with our images
         imageObj.setPreserveRatio(true);
         imageObj.setFitHeight(interactionRange*2);
         imageObj.setFitWidth(interactionRange*2);
@@ -142,7 +141,7 @@ public abstract class SimulationObject extends StateMachine {
      * @return The collision range.
      */
     public double getInteractionRange() {
-        return interactionRange;
+        return interactionRange-10;
     }
 
     /**
@@ -153,9 +152,9 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void flipImage(Vector2D direction) {
         if (direction.getX() < 0)
-            imageObj.setScaleX(1);
+            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX()*-1 : imageObj.getScaleX());
         else
-            imageObj.setScaleX(-1);
+            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX() : imageObj.getScaleX()*-1);
     }
 
     /**
