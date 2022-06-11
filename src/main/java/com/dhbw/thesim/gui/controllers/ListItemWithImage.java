@@ -112,7 +112,7 @@ public class ListItemWithImage extends HBox {
         ListItemWithImage listItemWithImage = this;
 
         Tooltip tooltip = new Tooltip(temp);
-        button_info.setTooltip(tooltip);
+        Tooltip.install(container,tooltip);
 
         button_remove.setOnAction(event -> {
 //            listView.getItems().remove(listItemWithImage);
