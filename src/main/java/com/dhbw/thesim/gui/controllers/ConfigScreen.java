@@ -103,11 +103,34 @@ public class ConfigScreen extends AnchorPane {
     public void initializeListeners() {
         // When the start button is clicked the current scene gets replaced by the SimulationOverlay scene
         startSimulationButton.setOnAction(event -> {
-            if (Objects.nonNull(modeGroup.getSelectedToggle()))  {
+            boolean minDinosSelected = true;
+            boolean minPlantsSelected = true;
+
+            for (ListView<ListItemWithImage> listView : Arrays.asList(dinoListView, plantListView)) {
+                ArrayList<ListItemWithImage> items = new ArrayList<>();
+                for (ListItemWithImage listItem : listView.getItems()) {
+                    if (listItem.getCount() > 0) {
+                        items.add(listItem);
+                    }
+                }
+                if (items.size() < 2 && listView.equals(dinoListView)) {
+                    minDinosSelected = false;
+                }
+                else if (items.size() < 1 && listView.equals(plantListView)) {
+                    minPlantsSelected = false;
+                }
+            }
+            if (minDinosSelected && minPlantsSelected) {
                 Stage window = (Stage) startSimulationButton.getScene().getWindow();
                 SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
                 window.setScene(simulationOverlay.getSimulationScene());
                 window.setFullScreen(true);
+            }
+            if (!minDinosSelected) {
+                //TODO Show 'not enough dinos' error popup
+            }
+            if (!minPlantsSelected) {
+                //TODO Show 'no plant' error popup
             }
         });
 
