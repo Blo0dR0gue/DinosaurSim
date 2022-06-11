@@ -312,7 +312,6 @@ public class SimulationOverlay extends BorderPane {
         Label statsTitle = new Label("Statistik / Eigenschaften:");
         statsTitle.setTextFill(Color.WHITE);
         statsTitle.setFont(new Font(17.0));
-        statsTitle.setWrapText(true);
         vBox.getChildren().add(statsTitle);
 
         vBox.getChildren().add(hunger);
