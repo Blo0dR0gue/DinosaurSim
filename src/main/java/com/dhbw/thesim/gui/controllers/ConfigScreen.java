@@ -97,6 +97,9 @@ public class ConfigScreen extends AnchorPane {
 
         sideBar.getBody().add(scenarioSelector);
         initializeListeners();
+
+        Tooltip.install(stepSliderWithLabel,new Tooltip("Dieser Wert spezifiziert, um welchen Faktor die Simulationsgeschwindigkeit erhöht wird."));
+        Tooltip.install(plantGrowthSliderWithLabel,new Tooltip("Dieser Wert wird auf alle existierenden Pflanzen angewandt\nund spezifiziert, wie schnell diese wachsen."));
     }
 
     /**
