@@ -133,7 +133,8 @@ public class Statistics {
         singleStats.put("Durst", dino.getHydration());
         singleStats.put("Fortpflanzungswilligkeit", dino.getReproductionValue());
         singleStats.put("Gewicht", dino.getWeight());
-        singleStats.put("Groeße", dino.getHeight()*dino.getLength());
+        singleStats.put("Hoehe", dino.getHeight());
+        singleStats.put("Laenge", dino.getLength());
         singleStats.put("Ueberlebenszeit", (double)(System.currentTimeMillis() - dino.getTimeOfBirth()));
         singleStats.put("Artenanteil", calculateSpeciesPercentage(simulationObjectList, dino.getType()));
         return singleStats;
