@@ -94,6 +94,7 @@ public class ConfigScreen extends AnchorPane {
         scenarioSelector.initialize(this);
 
         sideBar.getBody().add(scenarioSelector);
+
         initializeListeners();
     }
 
@@ -138,13 +139,29 @@ public class ConfigScreen extends AnchorPane {
             Stage window = (Stage) startSimulationButton.getScene().getWindow();
             SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
             window.setScene(simulationOverlay.getSimulationScene());
-//            window.setFullScreen(true);
+            window.setFullScreen(true);
         }
         if (!minDinosSelected) {
-            //TODO Show 'not enough dinos' error popup
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Konfigurationsfehler");
+            alert.setHeaderText("Fehler während des Konfigurierens der Simulationsparameter!");
+            alert.setContentText("""
+                    Sie haben nicht die erforderliche Mindestanzahl von Dinos festgelegt.
+
+                    Zum Starten der Simulation werden mindestens 2 verschiedene Arten von Dinosauriern benötigt.""");
+
+            alert.showAndWait();
         }
         if (!minPlantsSelected) {
-            //TODO Show 'no plant' error popup
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Konfigurationsfehler");
+            alert.setHeaderText("Fehler während des Konfigurierens der Simulationsparameter!");
+            alert.setContentText("""
+                    Sie haben nicht die erforderliche Mindestanzahl von Pflanzen festgelegt.
+
+                    Zum Starten der Simulation wird mindestens eine Art Pflanzenart benötigt.""");
+
+            alert.showAndWait();
         }
     }
 

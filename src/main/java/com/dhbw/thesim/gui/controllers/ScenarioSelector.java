@@ -96,9 +96,15 @@ public class ScenarioSelector extends VBox {
                     e.printStackTrace();
                 }
                 updateScenarioList(file);
+                filename.clear();
             } else {
                 //TODO display error of empty filename
-                enterNameError.setVisible(true);
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Szenarioerstellungsfehler");
+                alert.setHeaderText("Fehler während des Erstellens der Szenario-Konfiguration!");
+                alert.setContentText("Bitte geben Sie einen Namen für die Szenario-Konfigurationsdatei ein");
+
+                alert.showAndWait();
             }
         });
 
