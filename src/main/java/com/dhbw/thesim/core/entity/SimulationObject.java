@@ -152,9 +152,9 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void flipImage(Vector2D direction) {
         if (direction.getX() < 0)
-            imageObj.setScaleX(-1);
-        else
             imageObj.setScaleX(1);
+        else
+            imageObj.setScaleX(-1);
     }
 
     /**
