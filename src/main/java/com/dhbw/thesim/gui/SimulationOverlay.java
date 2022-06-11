@@ -1,13 +1,20 @@
 package com.dhbw.thesim.gui;
 
+import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
-import com.dhbw.thesim.gui.controllers.*;
+import com.dhbw.thesim.gui.controllers.ConfigScreen;
+import com.dhbw.thesim.gui.controllers.LegendItem;
+import com.dhbw.thesim.gui.controllers.SideBar;
+import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
 import com.dhbw.thesim.impexp.JsonHandler;
 import com.dhbw.thesim.stats.Statistics;
 import com.dhbw.thesim.stats.StatisticsStruct;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,15 +24,17 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Objects;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
@@ -39,6 +48,7 @@ public class SimulationOverlay extends BorderPane {
     private GraphicsContext canvasGraphics;
     private SimulationLoop simulationLoop;
     public AnchorPane centerPane;
+    private Boolean simulationIsRunning;
     private SideBar sideBar;
 
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
@@ -87,24 +97,30 @@ public class SimulationOverlay extends BorderPane {
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.DEFAULT,
-                new BackgroundSize(1.0,1.0,true,true,false,false));
+                new BackgroundSize(1.0, 1.0, true, true, false, false));
         Background bGround = new Background(bImg);
         setBackground(bGround);
+
+        createSideDinosaurStats();
 
         simulationScene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ESCAPE) {
                 simulationLoop.togglePause();
             }
             if (e.getCode() == KeyCode.SPACE) {
-                if(!isSimulationModeAuto) {
+                if (!isSimulationModeAuto) {
                     nextSimulationStep();
                 }
             }
         });
 
-        primaryStage.setOnCloseRequest(e -> simulationLoop.stopSimulationRunner());
+        primaryStage.setOnCloseRequest(e -> {
+            simulationLoop.stopSimulationRunner();
+            if (timer != null)
+                timer.cancel();
+        });
 
-        if(isSimulationModeAuto)
+        if (isSimulationModeAuto)
             simulationLoop.startSimulationRunner();
 
         Label legendTitle = new Label("Legende:");
@@ -205,6 +221,105 @@ public class SimulationOverlay extends BorderPane {
 
         return controlButton;
     }
+
+    //region dinosaur stats
+
+    /**
+     * Is called, when a dinosaur gets clicked with the mouse.
+     *
+     * @param dinosaur The {@link Dinosaur} object.
+     */
+    public void dinosaurClicked(Dinosaur dinosaur) {
+        if (simulationLoop.getSimulationPaused()) {
+            startStatsTimer(dinosaur);
+        }
+    }
+
+    private Dinosaur last;
+
+    private void startStatsTimer(Dinosaur dinosaur) {
+        if (timer != null)
+            timer.cancel();
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> {
+                    if (!dinosaur.diedOfThirst() && !dinosaur.diedOfHunger()) {
+                        if(last != null)
+                            last.setSelectionRingVisibility(false);
+                        last = dinosaur;
+                        dinosaur.setSelectionRingVisibility(true);
+                        setSideBarStats(statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects())));
+                    } else {
+                        dinosaur.setSelectionRingVisibility(false);
+                        resetStatsScreen();
+                        cancel();
+                    }
+                });
+            }
+        }, 0, 2000);
+    }
+
+    private void resetStatsScreen() {
+        hunger.setText(noDinoSelected);
+        thirst.setText(noDinoSelected);
+        fertility.setText(noDinoSelected);
+        weight.setText(noDinoSelected);
+        height.setText(noDinoSelected);
+        length.setText(noDinoSelected);
+        survivalTime.setText(noDinoSelected);
+        speciesProportion.setText(noDinoSelected);
+    }
+
+
+    private final String noDinoSelected = "Kein Dino";
+
+    private final Label hunger = new Label(noDinoSelected, new Text("Hunger: "));
+    private final Label thirst = new Label(noDinoSelected, new Text("Durst: "));
+    private final Label fertility = new Label(noDinoSelected, new Text("Fortpflanzungswilligkeit: "));
+    private final Label weight = new Label(noDinoSelected, new Text("Gewicht: "));
+    private final Label height = new Label(noDinoSelected, new Text("Höhe: "));
+    private final Label length = new Label(noDinoSelected, new Text("Länge: "));
+    private final Label survivalTime = new Label(noDinoSelected, new Text("Üeberlebenszeit: "));
+    private final Label speciesProportion = new Label(noDinoSelected, new Text("Artenanteil: "));
+
+
+    private Timer timer = null;
+    private static final DecimalFormat dfZero = new DecimalFormat("0.0");
+
+    private void setSideBarStats(Map<String, Double> dinosaurStats) {
+        hunger.setText(dfZero.format(dinosaurStats.get("Hunger")));
+        thirst.setText(dfZero.format(dinosaurStats.get("Durst")));
+        fertility.setText(dfZero.format(dinosaurStats.get("Fortpflanzungswilligkeit")));
+        weight.setText(dfZero.format(dinosaurStats.get("Gewicht")));
+        height.setText(dfZero.format(dinosaurStats.get("Hoehe")));
+        length.setText(dfZero.format(dinosaurStats.get("Laenge")));
+        survivalTime.setText(dfZero.format(dinosaurStats.get("Ueberlebenszeit")));
+        speciesProportion.setText(dfZero.format(dinosaurStats.get("Artenanteil")));
+    }
+
+    private void createSideDinosaurStats() {
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_CENTER);
+
+        vBox.getChildren().add(hunger);
+        vBox.getChildren().add(thirst);
+        vBox.getChildren().add(fertility);
+        vBox.getChildren().add(weight);
+        vBox.getChildren().add(height);
+        vBox.getChildren().add(length);
+        vBox.getChildren().add(survivalTime);
+        vBox.getChildren().add(speciesProportion);
+
+        sideBar.getBody().add(vBox);
+    }
+
+
+    //endregion
+
+
     //region getter & setter
 
     public Scene getSimulationScene() {
