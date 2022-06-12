@@ -73,7 +73,7 @@ public class Simulation {
     private final Random random;
 
     /**
-     *
+     * Keeps track of the current passed time of the simulation.
      */
     private final SimulationTime simulationTime;
 
@@ -326,6 +326,20 @@ public class Simulation {
         return inRange;
     }
 
+    /**
+     * Gets the closest suitable dinosaur partner for reproduction. <br>
+     * The partner needs to be {@link Dinosaur#isWillingToMate()} need to have a other gender.
+     * The partner also needs to have the same type and to be readable from the position of the dinosaur.
+     *
+     * @param position  The position of the {@link Dinosaur} who is looking for a mate.
+     * @param viewRange The view range of the {@link Dinosaur} who is looking for a mate.
+     * @param type      The type of the {@link Dinosaur} who is looking for a mate.
+     * @param canSwim   Does the {@link Dinosaur}, who is looking for a mate, can swim?
+     * @param canClimb  Does the {@link Dinosaur}, who is looking for a mate, can climb?
+     * @param gender    The gender of the {@link Dinosaur} who is looking for a mate.
+     * @return A possible partner or null.
+     * @see #findReachableSuitablePartnersInRange(Vector2D, double, String, boolean, boolean, char)
+     */
     public SimulationObject getClosestReachableSuitablePartnerInRange(Vector2D position, double viewRange, String type,
                                                                       boolean canSwim, boolean canClimb, char gender) {
         List<SimulationObject> inRange = findReachableSuitablePartnersInRange(position, viewRange, type, canSwim, canClimb, gender);
@@ -337,8 +351,19 @@ public class Simulation {
 
     }
 
-    public List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
-                                                                       boolean canSwim, boolean canClimb, char gender) {
+    /**
+     * @param position  The position of the {@link Dinosaur} who is looking for a mate.
+     * @param viewRange The view range of the {@link Dinosaur} who is looking for a mate.
+     * @param type      The type of the {@link Dinosaur} who is looking for a mate.
+     * @param canSwim   Does the {@link Dinosaur}, who is looking for a mate, can swim?
+     * @param canClimb  Does the {@link Dinosaur}, who is looking for a mate, can climb?
+     * @param gender    The gender of the {@link Dinosaur} who is looking for a mate.
+     * @return A list with all reachable partners in range.
+     * @see #doTheCirclesIntersect(Vector2D, double, Vector2D, double)
+     * @see #canMoveTo(Vector2D, Vector2D, double, boolean, boolean, Vector2D, boolean, boolean)
+     */
+    private List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
+                                                                        boolean canSwim, boolean canClimb, char gender) {
         List<SimulationObject> inRange = new ArrayList<>();
 
         for (SimulationObject simulationObject : simulationObjects) {
@@ -357,6 +382,16 @@ public class Simulation {
         return inRange;
     }
 
+    /**
+     * Creates a new dinosaur. <br>
+     * The new dinosaur has a 50% chance of inheriting individual property values from its father and 50% from its mother.
+     *
+     * @param mother The mother {@link Dinosaur}.
+     * @param father The father {@link Dinosaur}.
+     * @see #inheritValue(double, double)
+     * @see #getNearestPositionInMapWhereConditionsAre(Vector2D, double, boolean, boolean, double)
+     * @see #spawnObject(SimulationObject)
+     */
     public void makeBaby(Dinosaur mother, Dinosaur father) {
 
         double strength = inheritValue(mother.getStrength(), father.getStrength());
@@ -386,6 +421,16 @@ public class Simulation {
         System.out.println("Baby Dinosaur was made");
     }
 
+    /**
+     * Gets a possible position near a point.
+     *
+     * @param origin           The {@link Vector2D} origin point.
+     * @param range            The range, in which a point should be found.
+     * @param swimmable        true, if the tile where the target is found, can also be a water/swimmable tile.
+     * @param climbable        true, if the tile where the target is found, can also be a mountain/climbable tile.
+     * @param interactionRange The interaction range of the target, who wants to get this point.
+     * @return A possible {@link Vector2D} point.
+     */
     public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
 
         List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
@@ -400,7 +445,15 @@ public class Simulation {
         return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
     }
 
-    public double inheritValue(double a, double b) {
+    /**
+     * There is a 50% chance of returning value a and a 50% chance of returning value b. <br>
+     * In addition, the value can be 20% to 30% higher or lower. (Mutation)
+     *
+     * @param a The first value.
+     * @param b The second value.
+     * @return Either the value a or b with a possible mutation as specified.
+     */
+    private double inheritValue(double a, double b) {
         double result;
         if (random.nextInt() % 2 == 0)
             result = a;
@@ -414,13 +467,22 @@ public class Simulation {
         return result;
     }
 
-    public void spawnObject(SimulationObject simulationObject) {
+    /**
+     * Spawns a new {@link SimulationObject} to the {@link SimulationMap}.
+     *
+     * @param simulationObject The {@link SimulationObject}.
+     */
+    private void spawnObject(SimulationObject simulationObject) {
         if (simulationObject instanceof Dinosaur dinosaur)
             dinosaur.setTimeOfBirth(simulationTime.getTime());
         this.toBeSpawned.add(simulationObject);
         Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
     }
 
+    /**
+     * Adds all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
+     * @see #toBeSpawned
+     */
     public void spawnNewObjects() {
         simulationObjects.addAll(toBeSpawned);
         toBeSpawned.clear();

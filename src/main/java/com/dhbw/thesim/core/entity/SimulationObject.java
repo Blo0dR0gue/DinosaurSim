@@ -71,10 +71,10 @@ public abstract class SimulationObject extends StateMachine {
         this.renderOffset = new Vector2D(0, 0);
 
         imageObj.setPreserveRatio(true);
-        imageObj.setFitHeight(Display.adjustScale(interactionRange*2, Display.SCALE_X));
-        imageObj.setFitWidth(Display.adjustScale(interactionRange*2, Display.SCALE_Y));
+        imageObj.setFitHeight(Display.adjustScale(interactionRange * 2, Display.SCALE_X));
+        imageObj.setFitWidth(Display.adjustScale(interactionRange * 2, Display.SCALE_Y));
 
-        selectionRing = new Circle(0,0,interactionRange);
+        selectionRing = new Circle(0, 0, interactionRange);
         selectionRing.setVisible(false);
         selectionRing.setFill(Color.TRANSPARENT);
         selectionRing.setStroke(Color.YELLOW);
@@ -100,11 +100,21 @@ public abstract class SimulationObject extends StateMachine {
      */
     public abstract void eat();
 
-    public void setSelectionRingVisibility(boolean visible){
+    /**
+     * Sets the visibility for the selection ring of this object.
+     *
+     * @param visible true, if the rind should be visible.
+     */
+    public void setSelectionRingVisibility(boolean visible) {
         this.selectionRing.setVisible(visible);
     }
 
-    public Circle getSelectionRing(){
+    /**
+     * Gets the {@link #selectionRing} object
+     *
+     * @return The {@link #selectionRing} object.
+     */
+    public Circle getSelectionRing() {
         return this.selectionRing;
     }
 
@@ -156,7 +166,7 @@ public abstract class SimulationObject extends StateMachine {
      * @return The collision range.
      */
     public double getInteractionRange() {
-        return interactionRange-10;
+        return interactionRange - 10;
     }
 
     /**
@@ -167,9 +177,9 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void flipImage(Vector2D direction) {
         if (direction.getX() < 0)
-            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX()*-1 : imageObj.getScaleX());
+            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX() * -1 : imageObj.getScaleX());
         else
-            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX() : imageObj.getScaleX()*-1);
+            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX() : imageObj.getScaleX() * -1);
     }
 
     /**
