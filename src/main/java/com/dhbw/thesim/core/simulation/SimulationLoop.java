@@ -158,7 +158,6 @@ public class SimulationLoop {
             //Check if over
             if (runtime.getTime() <= currentSimulation.getCurrentSimulationTime().getTime() || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
-                updateStatistics();
                 Platform.runLater(() -> simulationOverlay.showStatisticsEndcard());
             }
         }
