@@ -140,7 +140,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     public boolean isWillingToMate() {
-        return reproductionValue>= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty() && !isChased();
+        return reproductionValue >= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty() && !isChased();
     }
 
     /**
@@ -151,7 +151,8 @@ public class Dinosaur extends SimulationObject {
     private void updateStats(double deltaTime) {
         this.hydration -= HYDRATION_REDUCTION_RATE * deltaTime;
         this.nutrition -= NUTRITION_REDUCTION_RATE * deltaTime;
-        this.reproductionValue += reproductionRate * deltaTime;
+        if (this.reproductionValue < REPRODUCTION_VALUE_FULL)
+            this.reproductionValue += reproductionRate * deltaTime;
     }
 
     /**
@@ -176,6 +177,7 @@ public class Dinosaur extends SimulationObject {
     public dietType getDiet() {
         return diet;
     }
+
     public char getCharDiet() {
 
         if (diet == dietType.omnivore)

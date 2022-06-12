@@ -47,6 +47,7 @@ public class SimulationOverlay extends BorderPane {
     public AnchorPane centerPane;
     private Boolean simulationIsRunning;
     private SideBar sideBar;
+    private final boolean isSimulationModeAuto;
 
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
@@ -61,10 +62,10 @@ public class SimulationOverlay extends BorderPane {
         centerPane.setMinWidth(Display.adjustScale(1920, Display.SCALE_X));
         centerPane.setMinHeight(Display.adjustScale(1080, Display.SCALE_Y));
 
-        Boolean isSimulationModeAuto = Objects.equals(configScreen.getMode().getId(), "auto");
+        isSimulationModeAuto = Objects.equals(configScreen.getMode().getId(), "auto");
 
         createCanvas();
-        createSideBar(isSimulationModeAuto);
+        createSideBar();
 
         //Add the Canvas and the Sidebar to the AnchorPane
         centerPane.getChildren().add(backgroundCanvas);
@@ -125,7 +126,7 @@ public class SimulationOverlay extends BorderPane {
         canvasGraphics = backgroundCanvas.getGraphicsContext2D();
     }
 
-    private void createSideBar(Boolean isSimModeAuto) {
+    private void createSideBar() {
         sideBar = SideBar.newInstance();
 
         sideBar.setPrefWidth(Display.adjustScale(300, Display.SCALE_X));
@@ -134,7 +135,7 @@ public class SimulationOverlay extends BorderPane {
         AnchorPane.setRightAnchor(sideBar, 0.0);
 
         //Check if automatic simulation mode was selected from the config screen, then add needed controls to sidebar
-        if (isSimModeAuto) {
+        if (isSimulationModeAuto) {
             //Add the control buttons for automatic simulation mode to the sidebar and add a click listener to each
             createToggleButton("/controls/play.png", false);
 
@@ -150,6 +151,7 @@ public class SimulationOverlay extends BorderPane {
     private void nextSimulationStep() {
         simulationLoop.triggerUpdates();
         statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects());
+        triggerDinosaurSingleStatsUpdate();
     }
 
     private void createToggleButton(String controlImgUrl, Boolean shouldPauseSimulation) {
@@ -202,12 +204,18 @@ public class SimulationOverlay extends BorderPane {
      * @param dinosaur The {@link Dinosaur} object.
      */
     public void dinosaurClicked(Dinosaur dinosaur) {
-        if (simulationLoop.getSimulationPaused()) {
+        if (simulationLoop.getSimulationPaused() && isSimulationModeAuto) {
             startStatsTimer(dinosaur);
+        } else if (!isSimulationModeAuto) {
+            if (lastSelectedDinosaur != null)
+                lastSelectedDinosaur.setSelectionRingVisibility(false);
+            lastSelectedDinosaur = dinosaur;
+            dinosaur.setSelectionRingVisibility(true);
+            triggerDinosaurSingleStatsUpdate();
         }
     }
 
-    private Dinosaur last;
+    private Dinosaur lastSelectedDinosaur;
 
     private void startStatsTimer(Dinosaur dinosaur) {
         if (timer != null)
@@ -219,12 +227,14 @@ public class SimulationOverlay extends BorderPane {
             public void run() {
                 Platform.runLater(() -> {
                     if (!dinosaur.diedOfThirst() && !dinosaur.diedOfHunger()) {
-                        if(last != null)
-                            last.setSelectionRingVisibility(false);
-                        last = dinosaur;
+                        if (lastSelectedDinosaur != null)
+                            lastSelectedDinosaur.setSelectionRingVisibility(false);
+                        lastSelectedDinosaur = dinosaur;
                         dinosaur.setSelectionRingVisibility(true);
-                        setSideBarStats(statistics.getSingleStats(dinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects())));
+                        triggerDinosaurSingleStatsUpdate();
                     } else {
+                        //The dinosaur died
+                        lastSelectedDinosaur = null;
                         dinosaur.setSelectionRingVisibility(false);
                         resetStatsScreen();
                         cancel();
@@ -232,6 +242,13 @@ public class SimulationOverlay extends BorderPane {
                 });
             }
         }, 0, 2000);
+    }
+
+    private void triggerDinosaurSingleStatsUpdate() {
+        if (lastSelectedDinosaur != null && !lastSelectedDinosaur.diedOfHunger() && !lastSelectedDinosaur.diedOfThirst())
+            setSideBarStats(statistics.getSingleStats(lastSelectedDinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects())));
+        else
+            resetStatsScreen();
     }
 
     private void resetStatsScreen() {
@@ -272,7 +289,7 @@ public class SimulationOverlay extends BorderPane {
         for (String speciesName : stats.getAllSpecies()) {
             try {
                 //Retrieve sim object config and instantiating and initializing legend item to add to sidebar legend
-                HashMap<String,Object> dino = Objects.requireNonNull(
+                HashMap<String, Object> dino = Objects.requireNonNull(
                         JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)
                 ).get(speciesName);
                 LegendItem legendItem = LegendItem.newInstance();
@@ -285,7 +302,7 @@ public class SimulationOverlay extends BorderPane {
 
         Separator separator = new Separator();
         vBox.getChildren().add(separator);
-        VBox.setMargin(separator, new Insets(10.0,0.0,10.0,0.0));
+        VBox.setMargin(separator, new Insets(10.0, 0.0, 10.0, 0.0));
 
         sideBar.getBody().add(vBox);
     }
