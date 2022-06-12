@@ -138,11 +138,15 @@ public class Statistics {
     public Map<String, Double> getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList, SimulationTime currentSimulationTime) {
         Map<String, Double> singleStats = new HashMap<>();
         singleStats.put("Hunger", dino.getNutrition());
+        singleStats.put("MaxHunger", dino.getMaxNutrition());
         singleStats.put("Durst", dino.getHydration());
+        singleStats.put("MaxDurst", dino.getMaxHydration());
         singleStats.put("Fortpflanzungswilligkeit", dino.getReproductionValue());
         singleStats.put("Gewicht", dino.getWeight());
         singleStats.put("Hoehe", dino.getHeight());
         singleStats.put("Laenge", dino.getLength());
+        singleStats.put("KannSchwimmen", dino.canSwim()?1d:0d);
+        singleStats.put("KannKlettern", dino.canClimb()?1d:0d);
         singleStats.put("Ueberlebenszeit", (dino.getTimeOfBirth().timeSince(currentSimulationTime)));
         singleStats.put("Artenanteil", calculateSpeciesPercentage(simulationObjectList, dino.getType()));
         return singleStats;

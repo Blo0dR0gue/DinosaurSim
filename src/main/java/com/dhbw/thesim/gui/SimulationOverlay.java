@@ -271,6 +271,8 @@ public class SimulationOverlay extends BorderPane {
     private final Label weight = new Label(noDinoSelected, new Text("Gewicht: "));
     private final Label height = new Label(noDinoSelected, new Text("Höhe: "));
     private final Label length = new Label(noDinoSelected, new Text("Länge: "));
+    private final Label canSwim = new Label(noDinoSelected, new Text("Kann schwimmen: "));
+    private final Label canClimb = new Label(noDinoSelected, new Text("Kann klettern: "));
     private final Label survivalTime = new Label(noDinoSelected, new Text("Überlebenszeit: "));
     private final Label speciesProportion = new Label(noDinoSelected, new Text("Artenanteil: "));
 
@@ -308,22 +310,24 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void setSideBarStats(Map<String, Double> dinosaurStats) {
-        nutrition.setText(dfZero.format(dinosaurStats.get("Hunger"))  + " / " + lastSelectedDinosaur.getMaxHydration());
-        nutrition.setTextFill(Color.WHITE);
-        hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + lastSelectedDinosaur.getMaxHydration());
-        hydration.setTextFill(Color.WHITE);
+        nutrition.setText(dfZero.format(dinosaurStats.get("Hunger")) + " / " + dfZero.format(dinosaurStats.get("MaxHunger")));
+
+        hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + dfZero.format(dinosaurStats.get("MaxDurst")));
+
         fertility.setText(dfZero.format(dinosaurStats.get("Fortpflanzungswilligkeit")) + " %");
-        fertility.setTextFill(Color.WHITE);
+
         weight.setText(dfZero.format(dinosaurStats.get("Gewicht")) + " Kilogramm");
-        weight.setTextFill(Color.WHITE);
-        height.setText(dfZero.format(dinosaurStats.get("Hoehe"))+ " Meter");
-        height.setTextFill(Color.WHITE);
-        length.setText(dfZero.format(dinosaurStats.get("Laenge"))+ " Meter");
-        length.setTextFill(Color.WHITE);
+
+        height.setText(dfZero.format(dinosaurStats.get("Hoehe")) + " Meter");
+
+        length.setText(dfZero.format(dinosaurStats.get("Laenge")) + " Meter");
+
+        canSwim.setText(dinosaurStats.get("KannSchwimmen") > 0 ? "Ja" : "Nein");
+        canClimb.setText(dinosaurStats.get("KannKlettern") > 0 ? "Ja" : "Nein");
+
         survivalTime.setText(dfZero.format(dinosaurStats.get("Ueberlebenszeit")) + " Tage");
-        survivalTime.setTextFill(Color.WHITE);
-        speciesProportion.setText(dfZero.format(dinosaurStats.get("Artenanteil")*100) + " %");
-        speciesProportion.setTextFill(Color.WHITE);
+
+        speciesProportion.setText(dfZero.format(dinosaurStats.get("Artenanteil") * 100) + " %");
     }
 
     private void createSideDinosaurStats() {
@@ -334,12 +338,25 @@ public class SimulationOverlay extends BorderPane {
         statsTitle.setFont(new Font(17.0));
         vBox.getChildren().add(statsTitle);
 
+        nutrition.setTextFill(Color.WHITE);
+        hydration.setTextFill(Color.WHITE);
+        fertility.setTextFill(Color.WHITE);
+        weight.setTextFill(Color.WHITE);
+        height.setTextFill(Color.WHITE);
+        length.setTextFill(Color.WHITE);
+        canSwim.setTextFill(Color.WHITE);
+        canClimb.setTextFill(Color.WHITE);
+        survivalTime.setTextFill(Color.WHITE);
+        speciesProportion.setTextFill(Color.WHITE);
+
         vBox.getChildren().add(nutrition);
         vBox.getChildren().add(hydration);
         vBox.getChildren().add(fertility);
         vBox.getChildren().add(weight);
         vBox.getChildren().add(height);
         vBox.getChildren().add(length);
+        vBox.getChildren().add(canSwim);
+        vBox.getChildren().add(canClimb);
         vBox.getChildren().add(survivalTime);
         vBox.getChildren().add(speciesProportion);
 
