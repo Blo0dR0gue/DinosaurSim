@@ -563,17 +563,17 @@ public class Simulation {
      * @param canClimb         Can the object, which should be tested, climb?
      * @param renderOffset     The offset for the image of the object.
      * @return A {@link Vector2D} target position.
-     * @see #getRandomPointInCircle(Vector2D, double)
+     * @see #getRandomPointInCircle(Vector2D, double, double)
      */
     public Vector2D getRandomMovementTargetInRange(Vector2D position, double viewRange, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset) {
-        Vector2D target = getRandomPointInCircle(position, viewRange);
+        Vector2D target = getRandomPointInCircle(position, viewRange, 0.5);
         //try it max. 500 times to get a target
         int maximumAttempts = 500;
         while (maximumAttempts > 0) {
             if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
                 return target;
             }
-            target = getRandomPointInCircle(position, viewRange);
+            target = getRandomPointInCircle(position, viewRange, 0.5);
             maximumAttempts--;
         }
         return null;
@@ -609,18 +609,22 @@ public class Simulation {
     /**
      * Get a random point inside a circle.
      *
-     * @param center The center {@link Vector2D} of the circle.
-     * @param radius The radius of this circle.
+     * @param center      The center {@link Vector2D} of the circle.
+     * @param radius      The radius of this circle.
+     * @param lowerBounds The lower limit the point needs to be away from the center. Needs to be smaller than 1.
      * @return A {@link Vector2D} point.
      */
-    private Vector2D getRandomPointInCircle(Vector2D center, double radius) {
+    private Vector2D getRandomPointInCircle(Vector2D center, double radius, double lowerBounds) {
         //We use polar notation to calculate a random point.
         //The polar angle will be in the range [0, 2 * pi] and the hypotenuse will be in the range [0, radius].
+
+        if (lowerBounds >= 1)
+            lowerBounds = 0.25;
 
         //Calculate a random angle.
         double angle = random.nextDouble(0, 1) * 2 * Math.PI;
         //Calculate the hypotenuse, which should at least have a length in the upper 75% of the view range.
-        double hypotenuse = Math.sqrt(random.nextDouble(0.25, 1)) * radius;
+        double hypotenuse = Math.sqrt(random.nextDouble(lowerBounds, 1)) * radius;
 
         //Calculate the sites
         double adjacent = Math.cos(angle) * hypotenuse;
