@@ -61,8 +61,8 @@ public class Dinosaur extends SimulationObject {
     /**
      * Used to set the decrease rate for nutrition and hydration in the simulation.
      */
-    private static final double NUTRITION_REDUCTION_RATE = 0.1;
-    private static final double HYDRATION_REDUCTION_RATE = 0.25;
+    private static final double NUTRITION_REDUCTION_RATE = 0.3;
+    private static final double HYDRATION_REDUCTION_RATE = 0.45;
     private static final double REPRODUCTION_VALUE_FULL = 100;
 
     /**
