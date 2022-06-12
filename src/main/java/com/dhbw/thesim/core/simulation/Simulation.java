@@ -5,6 +5,7 @@ import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
+import com.dhbw.thesim.core.util.SimulationTime;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
@@ -71,6 +72,11 @@ public class Simulation {
      */
     private final Random random;
 
+    /**
+     *
+     */
+    private final SimulationTime simulationTime;
+
     //endregion
 
     /**
@@ -80,6 +86,7 @@ public class Simulation {
         this.simulationMap = simulationMap;
         this.simulationObjects = new ArrayList<>();
         this.backgroundGraphics = backgroundGraphics;
+        this.simulationTime = new SimulationTime();
         this.random = random;
     }
 
@@ -100,6 +107,8 @@ public class Simulation {
         this.simulationObjects = new ArrayList<>();
         this.toBeRemoved = new ArrayList<>();
         this.toBeSpawned = new ArrayList<>();
+
+        this.simulationTime = new SimulationTime();
 
         this.simulationOverlay = simulationOverlay;
 
@@ -166,6 +175,7 @@ public class Simulation {
             if (obj instanceof Dinosaur dinosaur) {
                 //If we are a dinosaur get a free position, where the dinosaur can walk on.
                 dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
+                dinosaur.setTimeOfBirth(simulationTime.getTime());
 
                 dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
                     simulationOverlay.dinosaurClicked(dinosaur);
@@ -173,7 +183,7 @@ public class Simulation {
 
             } else if (obj instanceof Plant plant) {
                 //Plants only can be spawned on tiles, which allow plant growing
-                obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange()+10, plant.getRenderOffset()));
+                obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange() + 10, plant.getRenderOffset()));
             }
             simulationOverlay.centerPane.getChildren().add(obj.getSelectionRing());
             simulationOverlay.centerPane.getChildren().add(obj.getJavaFXObj());
@@ -405,6 +415,8 @@ public class Simulation {
     }
 
     public void spawnObject(SimulationObject simulationObject) {
+        if (simulationObject instanceof Dinosaur dinosaur)
+            dinosaur.setTimeOfBirth(simulationTime.getTime());
         this.toBeSpawned.add(simulationObject);
         Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
     }
@@ -413,7 +425,6 @@ public class Simulation {
         simulationObjects.addAll(toBeSpawned);
         toBeSpawned.clear();
     }
-
 
     /**
      * Sorts a passed list of simulation objects based on the distance to a {@link Vector2D}
@@ -446,7 +457,7 @@ public class Simulation {
     public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
-        || !simulationMap.checkIfNeighborTilesMatchConditions(target, canSwim, canClimb, interactionRange)) {
+                || !simulationMap.checkIfNeighborTilesMatchConditions(target, canSwim, canClimb, interactionRange)) {
             return getFreePositionInMap(canSwim, canClimb, interactionRange, renderOffset);
         }
         return target;
@@ -464,7 +475,7 @@ public class Simulation {
     public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
-        || !simulationMap.checkIfNeighborTilesHasConditions(target, swimmable, climbable, allowPlants, interactionRange)) {
+                || !simulationMap.checkIfNeighborTilesHasConditions(target, swimmable, climbable, allowPlants, interactionRange)) {
             return getFreePositionInMapWhereConditionsAre(swimmable, climbable, allowPlants, interactionRange, renderOffset);
         }
         return target;
@@ -808,4 +819,14 @@ public class Simulation {
         double radSumSq = Math.pow(radius1 + radius2, 2);
         return distSq < radSumSq;
     }
+
+    /**
+     * Gets the current time of the simulation
+     *
+     * @return A {@link SimulationTime} object.
+     */
+    public SimulationTime getCurrentSimulationTime() {
+        return simulationTime;
+    }
+
 }

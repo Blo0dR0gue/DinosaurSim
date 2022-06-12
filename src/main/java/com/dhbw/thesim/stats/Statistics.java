@@ -2,6 +2,7 @@ package com.dhbw.thesim.stats;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.SimulationObject;
+import com.dhbw.thesim.core.util.SimulationTime;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class Statistics {
     /**
      * Variables:
      * A list of lists of SimulationObjects -> Evaluating statistics out of multiple SimulationObject-lists to generate an informational graph out of the data
+     *
      * @see SimulationObject
      * startTime is set in Constructor to determine simulation runtime.
      */
@@ -34,23 +36,24 @@ public class Statistics {
     /**
      * Constructor for class Statistics ->  Called from GUI to generate a statistics-object
      */
-    public Statistics(){
+    public Statistics() {
         statSimObjects = new ArrayList<>();
         startTime = System.currentTimeMillis();
     }
 
     /**
      * Method appends list of SimulationObjects to statSimObjects
+     *
      * @param simulationObjectList The list of all current simulationiObjects
      */
-    public void addSimulationObjectList(List<SimulationObject> simulationObjectList){
+    public void addSimulationObjectList(List<SimulationObject> simulationObjectList) {
         statSimObjects.add(List.copyOf(simulationObjectList));
     }
 
     /**
      * Method responsible for generation of overall statistics
      */
-    public StatisticsStruct getSimulationStats(){
+    public StatisticsStruct getSimulationStats() {
         long simulationTime = System.currentTimeMillis() - startTime;
         List<Integer> livingDinosaurs = new ArrayList<>();
         List<List<Integer>> livingSpecies = new ArrayList<>();
@@ -62,10 +65,12 @@ public class Statistics {
         List<Double> averageHydrationChased = new ArrayList<>();
         List<String> allDinoSpecies = getAllDinoSpecies(statSimObjects.get(0));
 
-        for (List<SimulationObject> objList : statSimObjects){
+        for (List<SimulationObject> objList : statSimObjects) {
             int livingDinosaursCounter = 0;
             List<Integer> livingSpeciesCounter = new ArrayList<>();
-            for (int i=0; i<allDinoSpecies.size(); i++){livingSpeciesCounter.add(0);}
+            for (int i = 0; i < allDinoSpecies.size(); i++) {
+                livingSpeciesCounter.add(0);
+            }
             int livingPredatorsCounter = 0;
             int livingChasedCounter = 0;
             double nutritionPredatorsCounter = 0.0;
@@ -73,18 +78,19 @@ public class Statistics {
             double hydrationPredatorsCounter = 0.0;
             double hydrationChasedCounter = 0.0;
 
-            for (SimulationObject obj : objList){
-                if (obj instanceof Dinosaur){
+            for (SimulationObject obj : objList) {
+                if (obj instanceof Dinosaur) {
                     livingDinosaursCounter++;
-                    for (int i=0; i<allDinoSpecies.size(); i++){
-                        if (obj.getType().equals(allDinoSpecies.get(i))){ livingSpeciesCounter.set(i, livingSpeciesCounter.get(i)+1); }
+                    for (int i = 0; i < allDinoSpecies.size(); i++) {
+                        if (obj.getType().equals(allDinoSpecies.get(i))) {
+                            livingSpeciesCounter.set(i, livingSpeciesCounter.get(i) + 1);
+                        }
                     }
-                    if (((Dinosaur) obj).getDiet().equals(Dinosaur.dietType.herbivore)){
+                    if (((Dinosaur) obj).getDiet().equals(Dinosaur.dietType.herbivore)) {
                         livingChasedCounter++;
                         nutritionChasedCounter += ((Dinosaur) obj).getNutrition();
                         hydrationChasedCounter += ((Dinosaur) obj).getHydration();
-                    }
-                    else{
+                    } else {
                         livingPredatorsCounter++;
                         nutritionPredatorsCounter += ((Dinosaur) obj).getNutrition();
                         hydrationPredatorsCounter += ((Dinosaur) obj).getHydration();
@@ -109,7 +115,7 @@ public class Statistics {
         int helperLivingPredators = 0;
         int helperLivingChased = 0;
         int listElementCounter = livingDinosaurs.size();
-        for (int i = 0; i < listElementCounter; i++){
+        for (int i = 0; i < listElementCounter; i++) {
             helperNutritionPredators += averageNutritionPredators.get(i);
             helperNutritionChased += averageNutritionChased.get(i);
             helperHydrationPredators += averageHydrationPredators.get(i);
@@ -118,17 +124,18 @@ public class Statistics {
             helperLivingPredators += livingPredators.get(i);
             helperLivingChased += livingChased.get(i);
         }
-        return new StatisticsStruct(simulationTime, helperNutritionPredators/listElementCounter, helperNutritionChased/listElementCounter, helperHydrationPredators/listElementCounter, (helperHydrationChased/listElementCounter), helperLivingPredators/helperLivingDinosaurs, helperLivingChased/helperLivingDinosaurs, livingDinosaurs, livingSpecies, allDinoSpecies);
+        return new StatisticsStruct(simulationTime, helperNutritionPredators / listElementCounter, helperNutritionChased / listElementCounter, helperHydrationPredators / listElementCounter, (helperHydrationChased / listElementCounter), helperLivingPredators / helperLivingDinosaurs, helperLivingChased / helperLivingDinosaurs, livingDinosaurs, livingSpecies, allDinoSpecies);
     }
 
     /**
      * Method responsible for singleStats for a single Dinosaur
-     * @param dino The dinosaur objects to get its stat-values
+     *
+     * @param dino                 The dinosaur objects to get its stat-values
      * @param simulationObjectList The list of all current simulationObjects to calculate species percentage
      * @return Returning Hashmap with information according to a single Dinosaur-object
      * @see Dinosaur
      */
-    public Map<String, Double> getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList){
+    public Map<String, Double> getSingleStats(Dinosaur dino, List<SimulationObject> simulationObjectList, SimulationTime currentSimulationTime) {
         Map<String, Double> singleStats = new HashMap<>();
         singleStats.put("Hunger", dino.getNutrition());
         singleStats.put("Durst", dino.getHydration());
@@ -136,41 +143,45 @@ public class Statistics {
         singleStats.put("Gewicht", dino.getWeight());
         singleStats.put("Hoehe", dino.getHeight());
         singleStats.put("Laenge", dino.getLength());
-        singleStats.put("Ueberlebenszeit", (double)(System.currentTimeMillis() - dino.getTimeOfBirth()));
+        singleStats.put("Ueberlebenszeit", (dino.getTimeOfBirth().timeSince(currentSimulationTime)));
         singleStats.put("Artenanteil", calculateSpeciesPercentage(simulationObjectList, dino.getType()));
         return singleStats;
     }
 
     /**
      * Private method called from getSingleStats() to calculate share of a specified species compared to overall population
+     *
      * @param simulationObjectList The list of all current simulationObjects
-     * @param dinoType The type of the given dino to split it from other types in calculation
+     * @param dinoType             The type of the given dino to split it from other types in calculation
      * @return Share of species
      * @see Dinosaur
      */
-    private double calculateSpeciesPercentage(List<SimulationObject> simulationObjectList, String dinoType){
+    private double calculateSpeciesPercentage(List<SimulationObject> simulationObjectList, String dinoType) {
         int dinoCounter = 0;
         int typeCounter = 0;
-        for (SimulationObject obj : simulationObjectList){
-            if (obj instanceof Dinosaur){
+        for (SimulationObject obj : simulationObjectList) {
+            if (obj instanceof Dinosaur) {
                 dinoCounter++;
-                if (obj.getType().equals(dinoType)){ typeCounter++; }
+                if (obj.getType().equals(dinoType)) {
+                    typeCounter++;
+                }
             }
         }
-        return (double)typeCounter/dinoCounter;
+        return (double) typeCounter / dinoCounter;
     }
 
     /**
      * Private method called from getSimulationStats() to get all dinosaur species appearing in simulation
+     *
      * @param simulationObjectList The list of all current simulationObjects
      * @return List of all appearing species of Dinosaurs
      * @see Dinosaur
      */
-    private List<String> getAllDinoSpecies(List<SimulationObject> simulationObjectList){
+    private List<String> getAllDinoSpecies(List<SimulationObject> simulationObjectList) {
         List<String> allDinoSpecies = new ArrayList<>();
-        for (SimulationObject obj : simulationObjectList){
-            if (obj instanceof Dinosaur){
-                if (!allDinoSpecies.contains(obj.getType())){
+        for (SimulationObject obj : simulationObjectList) {
+            if (obj instanceof Dinosaur) {
+                if (!allDinoSpecies.contains(obj.getType())) {
                     allDinoSpecies.add(obj.getType());
                 }
             }

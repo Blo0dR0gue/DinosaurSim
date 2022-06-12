@@ -246,7 +246,7 @@ public class SimulationOverlay extends BorderPane {
 
     private void triggerDinosaurSingleStatsUpdate() {
         if (lastSelectedDinosaur != null && !lastSelectedDinosaur.diedOfHunger() && !lastSelectedDinosaur.diedOfThirst())
-            setSideBarStats(statistics.getSingleStats(lastSelectedDinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects())));
+            setSideBarStats(statistics.getSingleStats(lastSelectedDinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects()), simulationLoop.getCurrentSimulation().getCurrentSimulationTime()));
         else
             resetStatsScreen();
     }
