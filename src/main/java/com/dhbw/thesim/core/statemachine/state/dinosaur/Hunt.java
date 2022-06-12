@@ -89,7 +89,7 @@ public class Hunt extends State {
         //The other dinosaur escaped
         addTransition(new StateTransition(
                 StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null &&
-                !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
+                !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange() + Dinosaur.PROXIMITY_RANGE, dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
 
         //If we reached the target
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
