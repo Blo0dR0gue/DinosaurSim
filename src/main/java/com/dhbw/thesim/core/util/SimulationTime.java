@@ -11,6 +11,10 @@ public class SimulationTime {
         timeInSimulation = 0;
     }
 
+    public SimulationTime(double timeInSimulation){
+        this.timeInSimulation = timeInSimulation;
+    }
+
     public void addDeltaTime(double deltaTime){
         timeInSimulation += deltaTime;
     }
@@ -31,5 +35,10 @@ public class SimulationTime {
         return simulationTime.getTime() - this.getTime();
     }
 
-
+    @Override
+    public String toString() {
+        return "SimulationTime{" +
+                "timeInSimulation=" + timeInSimulation +
+                '}';
+    }
 }

@@ -81,7 +81,7 @@ public class SimulationOverlay extends BorderPane {
 
         simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime(), this);
 
-        statistics.addSimulationObjectList(sim.getSimulationObjects());
+        statistics.addSimulationObjectList(sim.getSimulationObjects(), simulationLoop.getCurrentSimulation().getCurrentSimulationTime());
 
         //Create the Scene
         simulationScene = new Scene(this);
@@ -150,7 +150,7 @@ public class SimulationOverlay extends BorderPane {
 
     private void nextSimulationStep() {
         simulationLoop.triggerUpdates();
-        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects());
+        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects(), simulationLoop.getCurrentSimulation().getCurrentSimulationTime());
         triggerDinosaurSingleStatsUpdate();
     }
 
@@ -172,11 +172,11 @@ public class SimulationOverlay extends BorderPane {
     }
 
     public void showStatisticsEndcard() {
-        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects());
+        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects(), simulationLoop.getCurrentSimulation().getCurrentSimulationTime());
 
         Stage window = (Stage) simulationScene.getWindow();
         StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
-        statisticsEndcard.initialize(statistics);
+        statisticsEndcard.initialize(statistics, isSimulationModeAuto);
 
         window.setScene(new Scene(statisticsEndcard));
 
