@@ -1,0 +1,12 @@
+
+# Ignore all files and subfolders
+*
+**/*
+
+# Except the following files
+!.gitignore
+!.name
+!gradle.xml
+!misc.xml
+!vcs.xml
+!compiler.xml
