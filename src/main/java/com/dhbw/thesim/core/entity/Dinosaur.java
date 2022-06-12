@@ -4,10 +4,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.util.SimulationTime;
-import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  * Represents a dinosaur object in our simulation.
@@ -17,12 +14,11 @@ import javafx.scene.shape.Circle;
  * @see com.dhbw.thesim.core.statemachine.StateMachine
  * @see State
  */
-@SuppressWarnings("unused")
 public class Dinosaur extends SimulationObject {
     public enum dietType {
-        carnivore,
-        herbivore,
-        omnivore
+        CARNIVORE,
+        HERBIVORE,
+        OMNIVORE
     }
 
     /**
@@ -80,11 +76,11 @@ public class Dinosaur extends SimulationObject {
         super(name, interactionRange, image);
 
         if (diet == 'a')
-            this.diet = dietType.omnivore;
+            this.diet = dietType.OMNIVORE;
         else if (diet == 'f')
-            this.diet = dietType.carnivore;
+            this.diet = dietType.CARNIVORE;
         else
-            this.diet = dietType.herbivore;
+            this.diet = dietType.HERBIVORE;
 
         this.nutrition = nutrition;
         this.hydration = hydration;
@@ -178,11 +174,11 @@ public class Dinosaur extends SimulationObject {
 
     public char getCharDiet() {
 
-        if (diet == dietType.omnivore)
+        if (diet == dietType.OMNIVORE)
             return 'a';
-        else if (diet == dietType.carnivore)
+        else if (diet == dietType.CARNIVORE)
             return 'f';
-        else if (this.diet == dietType.herbivore)
+        else if (this.diet == dietType.HERBIVORE)
             return 'p';
         else
             return 'x';

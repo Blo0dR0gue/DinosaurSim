@@ -86,7 +86,7 @@ public class Statistics {
                             livingSpeciesCounter.set(i, livingSpeciesCounter.get(i) + 1);
                         }
                     }
-                    if (((Dinosaur) obj).getDiet().equals(Dinosaur.dietType.herbivore)) {
+                    if (((Dinosaur) obj).getDiet().equals(Dinosaur.dietType.HERBIVORE)) {
                         livingChasedCounter++;
                         nutritionChasedCounter += ((Dinosaur) obj).getNutrition();
                         hydrationChasedCounter += ((Dinosaur) obj).getHydration();

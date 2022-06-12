@@ -18,7 +18,6 @@ import javafx.scene.shape.Circle;
  *
  * @author Daniel Czeschner
  */
-@SuppressWarnings("unused")
 public abstract class SimulationObject extends StateMachine {
 
     /**
@@ -210,17 +209,6 @@ public abstract class SimulationObject extends StateMachine {
      */
     public ImageView getJavaFXObj() {
         return imageObj;
-    }
-
-    /**
-     * Check, if the dinosaur is rendered outside the view range.
-     *
-     * @return true, if the {@link SimulationObject} gets rendered outside the view panel.
-     */
-    public boolean isRenderedOutside() {
-        return (position.getX() - renderOffset.getX()) < 0 || (position.getY() - renderOffset.getY()) < 0 ||
-                position.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
-                position.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
 
     public static boolean willBeRenderedOutside(Vector2D targetPosition, Vector2D renderOffset) {

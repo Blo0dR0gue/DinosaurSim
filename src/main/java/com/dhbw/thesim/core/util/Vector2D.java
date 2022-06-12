@@ -7,7 +7,6 @@ import java.util.Objects;
  *
  * @author Daniel Czeschner
  */
-@SuppressWarnings("unused")
 public class Vector2D {
 
     /**

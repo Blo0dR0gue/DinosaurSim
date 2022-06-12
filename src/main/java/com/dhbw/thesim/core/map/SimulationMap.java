@@ -12,7 +12,6 @@ import java.util.Random;
  *
  * @author Daniel Czeschner, Eric Stefan
  */
-@SuppressWarnings("unused")
 public class SimulationMap {
     /**
      * The name if the current landscape

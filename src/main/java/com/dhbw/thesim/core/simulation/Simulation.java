@@ -25,7 +25,6 @@ import java.util.*;
  * @see SimulationObject
  * @see SimulationLoop
  */
-@SuppressWarnings("unused")
 public class Simulation {
 
     //region variables
@@ -262,7 +261,7 @@ public class Simulation {
 
         List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb, strength);
 
-        if (dietType != Dinosaur.dietType.omnivore) {
+        if (dietType != Dinosaur.dietType.OMNIVORE) {
             sortByDistance(position, inRange);
             if (!inRange.isEmpty())
                 return inRange.get(0);
@@ -306,15 +305,15 @@ public class Simulation {
         for (SimulationObject simulationObject : simulationObjects) {
             if (simulationObject.getPosition() != position) {
                 if (doTheCirclesIntersect(position, viewRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
-                    if (dietType == Dinosaur.dietType.herbivore && simulationObject instanceof Plant plant) {
+                    if (dietType == Dinosaur.dietType.HERBIVORE && simulationObject instanceof Plant plant) {
                         if (plant.canBeEaten(strength))
                             inRange.add(plant);
-                    } else if (dietType == Dinosaur.dietType.carnivore && simulationObject instanceof Dinosaur dinosaur) {
+                    } else if (dietType == Dinosaur.dietType.CARNIVORE && simulationObject instanceof Dinosaur dinosaur) {
                         //We don't want to hunt a dinosaur who is the same type as the searcher.
                         if (!dinosaur.getType().equalsIgnoreCase(type) && dinosaur.canBeEaten(strength)) {
                             inRange.add(dinosaur);
                         }
-                    } else if (dietType == Dinosaur.dietType.omnivore) {
+                    } else if (dietType == Dinosaur.dietType.OMNIVORE) {
                         //It's an omnivore
                         if ((simulationObject instanceof Plant || simulationObject instanceof Dinosaur) && simulationObject.canBeEaten(strength))
                             inRange.add(simulationObject);

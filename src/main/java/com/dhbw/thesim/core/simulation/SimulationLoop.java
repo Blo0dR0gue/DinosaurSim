@@ -11,7 +11,6 @@ import javafx.application.Platform;
  * @author Daniel Czeschner
  * @see Simulation
  */
-@SuppressWarnings("unused")
 public class SimulationLoop {
 
     //region variables
