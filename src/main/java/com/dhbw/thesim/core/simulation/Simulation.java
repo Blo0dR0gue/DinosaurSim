@@ -169,6 +169,30 @@ public class Simulation {
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
     private void spawnObjects(SimulationOverlay simulationOverlay) {
+        //First spawn all plants
+        simulationObjects.stream().filter(Plant.class::isInstance).forEach(simulationObject -> {
+            Plant plant = (Plant) simulationObject;
+            //Plants only can be spawned on tiles, which allow plant growing
+            plant.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange() + 10, plant.getRenderOffset()));
+            simulationOverlay.centerPane.getChildren().add(plant.getSelectionRing());
+            simulationOverlay.centerPane.getChildren().add(plant.getJavaFXObj());
+        });
+
+        //Then spawn all dinosaurs
+        simulationObjects.stream().filter(Dinosaur.class::isInstance).forEach(simulationObject -> {
+            Dinosaur dinosaur = (Dinosaur) simulationObject;
+            //If we are a dinosaur get a free position, where the dinosaur can walk on.
+            dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
+            dinosaur.setTimeOfBirth(simulationTime.getTime());
+
+            //Add the click listener
+            dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> simulationOverlay.dinosaurClicked(dinosaur));
+
+            simulationOverlay.centerPane.getChildren().add(dinosaur.getSelectionRing());
+            simulationOverlay.centerPane.getChildren().add(dinosaur.getJavaFXObj());
+        });
+
+        /* old version TODO remove
         for (SimulationObject obj : simulationObjects) {
             //Set the object start position
             if (obj instanceof Dinosaur dinosaur) {
@@ -186,7 +210,7 @@ public class Simulation {
             }
             simulationOverlay.centerPane.getChildren().add(obj.getSelectionRing());
             simulationOverlay.centerPane.getChildren().add(obj.getJavaFXObj());
-        }
+        }*/
     }
 
     /**
@@ -480,6 +504,7 @@ public class Simulation {
 
     /**
      * Adds all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
+     *
      * @see #toBeSpawned
      */
     public void spawnNewObjects() {
