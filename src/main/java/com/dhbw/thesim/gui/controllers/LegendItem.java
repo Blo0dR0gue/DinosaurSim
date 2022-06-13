@@ -46,6 +46,7 @@ public class LegendItem extends HBox {
         setText(legendLabelText);
     }
 
+    //region getter & setter
     public Image getImage( ) {
         return imageProperty().getValue();
     }
@@ -69,4 +70,5 @@ public class LegendItem extends HBox {
     public StringProperty textProperty() {
         return legendLabel.textProperty();
     }
+    //endregion
 }

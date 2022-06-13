@@ -47,24 +47,11 @@ public class Json2Objects {
             //additionally parameters like "landscape" or "plan growth" are set manually in the GUI
 
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
-            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
-                Object[] object = new Object[3];
-                object[0] = key.toString();
-                object[1] = simulationObjects.get(key.toString()).get("Bild");
-                object[2] = 0;
-                oneKindOfFormattedSimulationObjects.add(object);
-            }
+            oneKindOfFormattedSimulationObjects = addSimulationObjectsNoScenarioFile(simulationObjects);
             allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.DINO, oneKindOfFormattedSimulationObjects);
 
-            oneKindOfFormattedSimulationObjects = new ArrayList<>();
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
-            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
-                Object[] object = new Object[3];
-                object[0] = key.toString();
-                object[1] = simulationObjects.get(key.toString()).get("Bild");
-                object[2] = 0;
-                oneKindOfFormattedSimulationObjects.add(object);
-            }
+            oneKindOfFormattedSimulationObjects = addSimulationObjectsNoScenarioFile(simulationObjects);
             allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.PLANT, oneKindOfFormattedSimulationObjects);
 
         } else if (type == Type.WITH_SCENARIO_FILE) { /*get all dinosaurs and plants that are mentioned in the "defaultSimulationObjectsConfig.json" file
@@ -91,40 +78,47 @@ public class Json2Objects {
             //get the dinosaurs and their amount:
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
             importedScenarioConfigValues = JsonHandler.importScenarioConfig(scenarioConfigFileName, JsonHandler.ScenarioConfigParams.DINO);
-            oneKindOfFormattedSimulationObjects = new ArrayList<>();
-            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
-                Object[] object = new Object[3];
-                object[0] = key.toString();
-                object[1] = (simulationObjects.get(key.toString())).get("Bild").toString();
-                if (importedScenarioConfigValues.get(key.toString()) == null) {
-                    object[2] = 0;
-                } else {
-                    object[2] = importedScenarioConfigValues.get(key.toString());
-                }
-                oneKindOfFormattedSimulationObjects.add(object);
-                allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.DINO, oneKindOfFormattedSimulationObjects);
-
-            }
+            oneKindOfFormattedSimulationObjects = addSimulationObjectsWithScenarioFile(simulationObjects, importedScenarioConfigValues);
+            allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.DINO, oneKindOfFormattedSimulationObjects);
 
             //get the plants and their amount:
             simulationObjects = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
             importedScenarioConfigValues = JsonHandler.importScenarioConfig(scenarioConfigFileName, JsonHandler.ScenarioConfigParams.PLANT);
-            oneKindOfFormattedSimulationObjects = new ArrayList<>();
-            for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
-                Object[] object = new Object[3];
-                object[0] = key.toString();
-                object[1] = (simulationObjects.get(key.toString())).get("Bild").toString();
-                if (importedScenarioConfigValues.get(key.toString()) == null) {
-                    object[2] = 0;
-                } else {
-                    object[2] = importedScenarioConfigValues.get(key.toString());
-                }
-                oneKindOfFormattedSimulationObjects.add(object);
-                allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.PLANT, oneKindOfFormattedSimulationObjects);
-            }
+            oneKindOfFormattedSimulationObjects = addSimulationObjectsWithScenarioFile(simulationObjects, importedScenarioConfigValues);
+            allFormattedSimulationObjects.put(JsonHandler.ScenarioConfigParams.PLANT, oneKindOfFormattedSimulationObjects);
         }
 
         return allFormattedSimulationObjects;
+    }
+
+    private static ArrayList<Object[]> addSimulationObjectsWithScenarioFile(HashMap<String, HashMap<String, Object>> simulationObjects, HashMap<String, Object> importedScenarioConfigValues) {
+        ArrayList<Object[]> oneKindOfFormattedSimulationObjects;
+        oneKindOfFormattedSimulationObjects = new ArrayList<>();
+        for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
+            Object[] object = new Object[3];
+            object[0] = key.toString();
+            object[1] = (simulationObjects.get(key.toString())).get("Bild");
+            if (importedScenarioConfigValues.get(key.toString()) == null) {
+                object[2] = 0;
+            } else {
+                object[2] = importedScenarioConfigValues.get(key.toString());
+            }
+            oneKindOfFormattedSimulationObjects.add(object);
+        }
+        return oneKindOfFormattedSimulationObjects;
+    }
+
+    private static ArrayList<Object[]> addSimulationObjectsNoScenarioFile(HashMap<String, HashMap<String, Object>> simulationObjects) {
+        ArrayList<Object[]> oneKindOfFormattedSimulationObjects;
+        oneKindOfFormattedSimulationObjects = new ArrayList<>();
+        for (Object key : Objects.requireNonNull(simulationObjects).keySet()) {
+            Object[] object = new Object[3];
+            object[0] = key.toString();
+            object[1] = simulationObjects.get(key.toString()).get("Bild");
+            object[2] = 0;
+            oneKindOfFormattedSimulationObjects.add(object);
+        }
+        return oneKindOfFormattedSimulationObjects;
     }
 
     /**

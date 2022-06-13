@@ -4,6 +4,7 @@ import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCombination;
@@ -58,21 +59,17 @@ public class Display extends Application {
         double scaledScreenHeight = screenHeight * SCALE_Y;
         double scaledScreenWidth = screenWidth * SCALE_X;
 
-        if (screenHeight > 1080.0 && screenWidth > 1920.0) {
-            //TODO THIS PART IS ONLY FOR DEBUGGING REASONS and should be removed on release
-            if (screenHeight < (1080.0 + 37.0)) {
-                System.out.println("Display not possible, because your screen is too small in height.");
-            }
-        } else if (scaledScreenHeight < 1080.0 && scaledScreenWidth < 1920.0) { //If display is at minimum 1080x1920, but is scaled to some degree, check against scaled resolution
+        if (scaledScreenHeight < 1080.0 && scaledScreenWidth < 1920.0) { //If display is at minimum 1080x1920, but is scaled to some degree, check against scaled resolution
 
-            System.out.println("Display not possible, because your screen is too small.\n"
-                    + "Resolution: " + screenHeight + "x" + screenWidth + "\n"
-                    + "Output Scale Vertical: " + SCALE_Y + "\n"
-                    + "Output Scale Horizontal: " + SCALE_X + "\n"
-                    + "Scaled Resolution: " + scaledScreenHeight + "x" + scaledScreenWidth
+            System.err.println("Display not possible, because your screen is too small.\n"
+                    + "Resolution: " + scaledScreenWidth + "x" + screenHeight + "\n"
+                    + "Output Scale Horizontal: " + SCALE_X + "x\n"
+                    + "Output Scale Vertical: " + SCALE_Y + "x\n"
+                    + "Scaled Resolution: " + scaledScreenWidth + "x" + scaledScreenHeight
             );
 
-            System.exit(1);
+            Platform.exit();
+            return;
         } else {
             primaryStage.setFullScreen(true);
         }
@@ -125,13 +122,13 @@ public class Display extends Application {
         return null;
     }
 
-    private ArrayList<Object[]> getDefaultIfNull(ArrayList<Object[]> list, Object defaultValue){
+    /**
+     * Returns the {@link ArrayList} if it is not null otherwise the default value will be returned inside a list
+     * @param list The passed {@link ArrayList} which will be returned when it is not null
+     * @param defaultValue The default value to return in a list if the passed list equals null
+     * @return The {@code defaultValue} or the {@code list} depending on whether the list is null
+     */
+    private ArrayList<Object[]> getDefaultIfNull(ArrayList<Object[]> list, Object defaultValue) {
         return Optional.ofNullable(list).orElse(new ArrayList<>(Collections.singleton(new Object[]{defaultValue})));
-    }
-
-    @Override
-    public void stop() throws Exception {
-        //TODO
-        super.stop();
     }
 }
