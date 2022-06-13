@@ -52,7 +52,6 @@ public class Display extends Application {
         //This is a fullscreen application for 1920x1080 screens
         //but as a workaround for not appropriate screen sizes the window size is set to round about 1920x1080 pixels
         //remember that this is not claimed in the functional specification document, which is why we are not liable for this
-        //TODO noch auf Windows testen, ob es mit der screenHeight bei zu großem Bildschirm funktioniert (auf Linux mit Gnome funktionierts)
         double screenHeight = Screen.getPrimary().getBounds().getHeight();
         double screenWidth = Screen.getPrimary().getBounds().getWidth();
 

@@ -30,7 +30,6 @@ public class Json2Objects {
      * @return a HashMap containing all simulation objects (that exist in the locally stored "defaultSimulationObjectsConfig.json"
      * @throws IOException if the scenarioConfigFileName file is not found
      */
-    //TODO fertig schreiben
     public static HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> getParamsForGUI(Type type, String scenarioConfigFileName) throws IOException {
         //structure of the returning HashMap<ScenarioConfigParams, Object["name", "bild", amount]>
         HashMap<JsonHandler.ScenarioConfigParams, ArrayList<Object[]>> allFormattedSimulationObjects = new HashMap<>();
