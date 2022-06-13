@@ -136,8 +136,6 @@ public class Json2Objects {
         allSimulationObjects.addAll(initDinos(dinosaursAmount));
         allSimulationObjects.addAll(initPlants(plantsAmount, plantGrowth));
 
-        System.out.println("allSimulationObjects: " + allSimulationObjects);
-        System.out.println(allSimulationObjects.get(3).getInteractionRange());
         return allSimulationObjects;
     }
 
