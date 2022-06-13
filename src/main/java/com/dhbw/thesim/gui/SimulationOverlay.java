@@ -1,6 +1,7 @@
 package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
+import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
@@ -263,7 +264,6 @@ public class SimulationOverlay extends BorderPane {
         speciesProportion.setText(NO_DINO_SELECTED);
     }
 
-
     private static final String NO_DINO_SELECTED = "Kein Dino";
 
     private final Label dinoType = new Label(NO_DINO_SELECTED, new Text("Dinosaurierart: "));
@@ -291,10 +291,17 @@ public class SimulationOverlay extends BorderPane {
         legendTitle.setFont(new Font(17.0));
         vBox.getChildren().add(legendTitle);
         ListView<LegendListItem> legendListView = new ListView<>();
+        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.5);
         legendListView.setId("legendListView");
         legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
 
         StatisticsStruct stats = statistics.getSimulationStats();
+        for (SimulationMap.TILES tile : SimulationMap.TILES.values()) {
+            LegendListItem legendListItem = LegendListItem.newInstance();
+            String tileName = tile.name().charAt(0) + tile.name().substring(1).toLowerCase();
+            legendListItem.initialize(SpriteLibrary.getInstance().getImage(tile.imgName), tileName);
+            legendListView.getItems().add(legendListItem);
+        }
         for (String speciesName : stats.getAllSpecies()) {
             try {
                 //Retrieve sim object config and instantiating and initializing legend item to add to sidebar legend

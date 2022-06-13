@@ -58,7 +58,7 @@ public class SimulationMap {
      * Available tiles. <br>
      * Enum contains all information for each tile type.
      */
-    private enum TILES {
+    public enum TILES {
         GRASS("grass.png", false, false, true),
         SAND("sand.png", false, false, false),
         WATER("water.png", true, false, false),
