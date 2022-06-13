@@ -7,7 +7,9 @@ import com.dhbw.thesim.stats.StatisticsStruct;
 import javafx.fxml.FXML;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -75,7 +77,14 @@ public class StatisticsEndcard extends AnchorPane {
 
         createBarChart(stats);
 
+        addPercentage(stats.getAbsolutePercentageChased(), CHASED);
+        addPercentage(stats.getAbsolutePercentagePredators(), PREDATORS);
+
         initializeListeners();
+    }
+
+    private void addPercentage(double percentage, String betrachtungsgegenstand) {
+        sideBar.getBody().add(new Label(String.format("%.2f",percentage*100)+"%", new Text("Prozentzahl "+betrachtungsgegenstand+": ")));
     }
 
     /**
@@ -102,7 +111,6 @@ public class StatisticsEndcard extends AnchorPane {
      * @param barChart The {@link BarChart} in which the bars should be added to
      */
     private void addBars(StatisticsStruct stats, BarChart<String, Number> barChart) {
-        createBars(barChart, "Prozentzahlen", stats.getAbsolutePercentageChased(), stats.getAbsolutePercentagePredators());
         createBars(barChart, "Durchschnittlicher Durst", stats.getAverageHydrationChased(), stats.getAverageHydrationPredators());
         createBars(barChart, "Durchschnittlicher Hunger", stats.getAverageNutritionChased(), stats.getAverageNutritionPredators());
     }

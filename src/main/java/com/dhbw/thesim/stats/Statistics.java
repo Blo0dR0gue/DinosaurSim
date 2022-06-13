@@ -132,9 +132,10 @@ public class Statistics {
                 helperNutritionChased / listElementCounter,
                 helperHydrationPredators / listElementCounter,
                 (helperHydrationChased / listElementCounter),
-                helperLivingPredators / helperLivingDinosaurs,
-                helperLivingChased / helperLivingDinosaurs, livingDinosaurs, livingSpecies,
-                allDinoSpecies, livingPredators, livingChased, this.simulationTimeList);
+                ((double) helperLivingPredators) / ((double) helperLivingDinosaurs),
+                ((double) helperLivingChased) / ((double) helperLivingDinosaurs),
+                livingDinosaurs, livingSpecies, allDinoSpecies, livingPredators, livingChased,
+                this.simulationTimeList);
     }
 
     /**
