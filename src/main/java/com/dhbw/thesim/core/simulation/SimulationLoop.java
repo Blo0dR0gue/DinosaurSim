@@ -5,6 +5,9 @@ import com.dhbw.thesim.core.util.SimulationTime;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import javafx.application.Platform;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Updates the simulation (Engine)
  *
@@ -148,8 +151,8 @@ public class SimulationLoop {
             printStats();
 
             //adding statistics update at intervals
-            double runPercentage = (currentSimulation.getCurrentSimulationTime().getTime()) / (runtime.getTime());
-            if (runPercentage% STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME ==0 && runPercentage != lastStatUpdateAtPercentage){
+            double runPercentage = round((currentSimulation.getCurrentSimulationTime().getTime()) / (runtime.getTime()), 2);
+            if (runPercentage % STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME ==0 && runPercentage != lastStatUpdateAtPercentage){
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
                 lastStatUpdateAtPercentage = runPercentage;
@@ -163,6 +166,14 @@ public class SimulationLoop {
             }
         }
     };
+
+    private double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
 
     private void updateStatistics() {
         simulationOverlay.getStatistics().addSimulationObjectList(getCurrentSimulation().getSimulationObjects());
