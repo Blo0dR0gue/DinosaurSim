@@ -31,6 +31,7 @@ public class Statistics {
      * startTime is set in Constructor to determine simulation runtime.
      */
     private final List<List<SimulationObject>> statSimObjects;
+    private final List<SimulationTime> simulationTimeList;
     private final long startTime;
 
     /**
@@ -38,6 +39,7 @@ public class Statistics {
      */
     public Statistics() {
         statSimObjects = new ArrayList<>();
+        simulationTimeList = new ArrayList<>();
         startTime = System.currentTimeMillis();
     }
 
@@ -45,9 +47,11 @@ public class Statistics {
      * Method appends list of SimulationObjects to statSimObjects
      *
      * @param simulationObjectList The list of all current simulationiObjects
+     * @param simulationTime
      */
-    public void addSimulationObjectList(List<SimulationObject> simulationObjectList) {
+    public void addSimulationObjectList(List<SimulationObject> simulationObjectList, SimulationTime simulationTime) {
         statSimObjects.add(List.copyOf(simulationObjectList));
+        simulationTimeList.add(new SimulationTime(simulationTime.getTime()));
     }
 
     /**
@@ -124,7 +128,13 @@ public class Statistics {
             helperLivingPredators += livingPredators.get(i);
             helperLivingChased += livingChased.get(i);
         }
-        return new StatisticsStruct(simulationTime, helperNutritionPredators / listElementCounter, helperNutritionChased / listElementCounter, helperHydrationPredators / listElementCounter, (helperHydrationChased / listElementCounter), helperLivingPredators / helperLivingDinosaurs, helperLivingChased / helperLivingDinosaurs, livingDinosaurs, livingSpecies, allDinoSpecies);
+        return new StatisticsStruct(simulationTime, helperNutritionPredators / listElementCounter,
+                helperNutritionChased / listElementCounter,
+                helperHydrationPredators / listElementCounter,
+                (helperHydrationChased / listElementCounter),
+                helperLivingPredators / helperLivingDinosaurs,
+                helperLivingChased / helperLivingDinosaurs, livingDinosaurs, livingSpecies,
+                allDinoSpecies, this.simulationTimeList);
     }
 
     /**

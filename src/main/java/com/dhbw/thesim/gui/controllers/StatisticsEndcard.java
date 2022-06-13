@@ -1,5 +1,6 @@
 package com.dhbw.thesim.gui.controllers;
 
+import com.dhbw.thesim.core.util.SimulationTime;
 import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.stats.Statistics;
 import com.dhbw.thesim.stats.StatisticsStruct;
@@ -10,7 +11,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -44,14 +44,17 @@ public class StatisticsEndcard extends AnchorPane {
     /**
      * Method to initialize the Statistics Endcard screen, its listeners and adding custom controls dynamically
      */
-    public void initialize(Statistics statistics) {
+    public void initialize(Statistics statistics, boolean isSimulationModeAuto) {
         lineChart.setTitle("Dinosaurierpopulation");
-        lineChart.getXAxis().setLabel("Messpunkte");
+
+        lineChart.getXAxis().setLabel(isSimulationModeAuto ? "Simulationszeit (in s)" : "Schritte");
+        lineChart.getYAxis().setLabel("Anzahl");
 
         //TODO get data from stats.???
         StatisticsStruct stats = statistics.getSimulationStats();
+        System.out.println("simulation times: " + stats.getSimulationTimeList());
 
-        addChartToStatistics(stats.getAllLivingDinosaurs(), "Alle");
+        addChartToStatistics(stats.getAllLivingDinosaurs(), "Alle", stats.getSimulationTimeList(), isSimulationModeAuto);
 
         for (int i = 0; i < stats.getAllSpecies().size(); i++) {
             String speciesName = stats.getAllSpecies().get(i);
@@ -62,7 +65,7 @@ public class StatisticsEndcard extends AnchorPane {
                 speciesList.add(update.get(i));
             }
 
-            addChartToStatistics(speciesList, speciesName);
+            addChartToStatistics(speciesList, speciesName, stats.getSimulationTimeList(), isSimulationModeAuto);
         }
 
         createBarChart(stats);
@@ -98,12 +101,14 @@ public class StatisticsEndcard extends AnchorPane {
         barChart.getData().add(bars);
     }
 
-    private void addChartToStatistics(List<Integer> integerList, String chartName) {
+    private void addChartToStatistics(List<Integer> integerList, String chartName, List<SimulationTime> simulationTimeList, boolean isSimulationModeAuto) {
         XYChart.Series<Number,Number> allLivingDinosaurs = new XYChart.Series<>();
         allLivingDinosaurs.setName(chartName);
 
         for (int count = 0; count < integerList.size(); count++) {
-            allLivingDinosaurs.getData().add(new XYChart.Data<>(count, integerList.get(count)));
+            double x = isSimulationModeAuto ? simulationTimeList.get(count).getTime() : count;
+
+            allLivingDinosaurs.getData().add(new XYChart.Data<>(x, integerList.get(count)));
         }
         lineChart.getData().add(allLivingDinosaurs);
     }
