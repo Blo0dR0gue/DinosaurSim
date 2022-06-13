@@ -133,7 +133,6 @@ public class SimulationLoop {
                     //If we are not paused, trigger an update.
                     if (!paused){
                         update(deltaTime * simulationSpeedMultiplier);
-                        currentSimulation.getCurrentSimulationTime().addDeltaTime(deltaTime * simulationSpeedMultiplier);
                     }
                     deltaTime -= UPDATE_RATE;
                 }
@@ -188,6 +187,7 @@ public class SimulationLoop {
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
             obj.update(deltaTime, currentSimulation);
         }
+        currentSimulation.getCurrentSimulationTime().addDeltaTime(deltaTime * simulationSpeedMultiplier);
         currentSimulation.removeDeletedObjects();
         currentSimulation.spawnNewObjects();
     }
