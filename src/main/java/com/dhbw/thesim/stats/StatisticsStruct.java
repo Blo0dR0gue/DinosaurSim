@@ -93,5 +93,7 @@ public class StatisticsStruct {
     public long getSimulationTime() {
         return simulationTime;
     }
-    public List<SimulationTime> getSimulationTimeList(){return simulationTimeList;}
+    public List<SimulationTime> getSimulationTimeList(){ return simulationTimeList; }
+    public List<Integer> getAllLivingPredators() { return allLivingPredators; }
+    public List<Integer> getAllLivingChased() { return allLivingChased; }
 }
