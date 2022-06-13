@@ -75,7 +75,7 @@ public class Wander extends State {
 
         //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.wander,
-                simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false)
+                simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false, null)
         ));
 
         //If the dinosaur is hungry and thirsty and a water tile or a food source is in range, transition to moveToFoodSource.

@@ -9,6 +9,9 @@ import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.util.Vector2D;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
  * In this {@link State} the handled {@link Dinosaur} tries to move to partner.
@@ -91,7 +94,7 @@ public class MoveToPartner extends State {
         addTransition(new StateTransition(StateFactory.States.mate, this::reached));
 
         //If we can't reach the target anymore -> transition to wander. (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getGender() == 'm' && !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
+        addTransition(new StateTransition(StateFactory.States.wander, simulation -> dinosaur.getGender() == 'm' && !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getPartner().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true, List.of(dinosaur.getPartner()))));
 
     }
 

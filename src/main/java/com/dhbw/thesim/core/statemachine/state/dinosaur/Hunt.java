@@ -7,6 +7,8 @@ import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.util.Vector2D;
 
+import java.util.List;
+
 /**
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
  * In this {@link State} the handled {@link Dinosaur} tries to hunt another {@link Dinosaur}.
@@ -28,6 +30,7 @@ public class Hunt extends State {
 
     /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Hunt(Dinosaur simulationObject) {
@@ -98,7 +101,7 @@ public class Hunt extends State {
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), simulationObject.getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true)));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), simulationObject.getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, false, dinosaur.getTarget() != null ? List.of(dinosaur.getTarget()) : null)));
     }
 
     private boolean reached(Simulation simulation) {

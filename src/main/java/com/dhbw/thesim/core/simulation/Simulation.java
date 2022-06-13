@@ -242,7 +242,7 @@ public class Simulation {
 
         if (!waterSourcesInRange.isEmpty()) {
             for (Vector2D vector : waterSourcesInRange) {
-                if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true)) {
+                if (isPointInsideCircle(position, viewRange, vector) && canMoveTo(position, vector, 0, canSwim, canClimb, null, true, true, null)) {
                     return vector;
                 }
             }
@@ -325,7 +325,7 @@ public class Simulation {
                 }
             }
         }
-        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, false, inRange));
         return inRange;
     }
 
@@ -363,7 +363,7 @@ public class Simulation {
      * @param gender    The gender of the {@link Dinosaur} who is looking for a mate.
      * @return A list with all reachable partners in range.
      * @see #doTheCirclesIntersect(Vector2D, double, Vector2D, double)
-     * @see #canMoveTo(Vector2D, Vector2D, double, boolean, boolean, Vector2D, boolean, boolean)
+     * @see #canMoveTo(Vector2D, Vector2D, double, boolean, boolean, Vector2D, boolean, boolean, List)
      */
     private List<SimulationObject> findReachableSuitablePartnersInRange(Vector2D position, double viewRange, String type,
                                                                         boolean canSwim, boolean canClimb, char gender) {
@@ -380,7 +380,7 @@ public class Simulation {
             }
         }
 
-        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true));
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, true, inRange));
 
         return inRange;
     }
@@ -439,7 +439,7 @@ public class Simulation {
         List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
 
         for (Vector2D pos : positions) {
-            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, origin)) {
+            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, Arrays.asList(origin))) {
                 System.out.println("Spawn position found with range " + range);
                 return pos;
             }
@@ -555,12 +555,12 @@ public class Simulation {
      * @param ignore           This {@link Vector2D} will be ignored by the checks. Set it to null, if no {@link SimulationObject} should be ignored.
      * @return true, if the check circle intersect with any interaction range.
      */
-    private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, Vector2D ignore) {
+    private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, List<Vector2D> ignore) {
         if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
         for (SimulationObject simulationObject : simulationObjects) {
-            if (simulationObject.getPosition() != ignore)
+            if (ignore == null || !ignore.contains(simulationObject.getPosition()))
                 if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     return true;
                 }
@@ -571,22 +571,22 @@ public class Simulation {
     /**
      * Checks if a {@link SimulationObject} can move to a position.
      *
-     * @param start                  The {@link Vector2D} position of the {@link SimulationObject}.
-     * @param target                 The {@link Vector2D} target, where he wants to move.
-     * @param interactionRange       The interaction range of the {@link SimulationObject}.
-     * @param canSwim                Can the {@link SimulationObject} swim?
-     * @param canClimb               Can the {@link SimulationObject} climb?
-     * @param renderOffset           The render offset of the {@link SimulationObject}.
-     * @param ignoreRenderConditions true, if the render conditions (e.g. rendered outside and tile conditions) should be ignored
-     * @param ignoreTargetTile       true, if we don't want to check the target tile. (See the linked functions for a better understanding)
+     * @param start                      The {@link Vector2D} position of the {@link SimulationObject}.
+     * @param target                     The {@link Vector2D} target, where he wants to move.
+     * @param interactionRange           The interaction range of the {@link SimulationObject}.
+     * @param canSwim                    Can the {@link SimulationObject} swim?
+     * @param canClimb                   Can the {@link SimulationObject} climb?
+     * @param renderOffset               The render offset of the {@link SimulationObject}.
+     * @param ignoreRenderConditions     true, if the render conditions (e.g. rendered outside and tile conditions) should be ignored
+     * @param ignoreTargetTileConditions true, if we don't want to check the target tile. (See the linked functions for a better understanding)
      * @return true, if the {@link SimulationObject} can move to the target
      * @see SimulationMap#tileMatchedConditions(Vector2D, boolean, boolean)
      * @see SimulationObject#willBeRenderedOutside(Vector2D, Vector2D)
      * @see #targetTileCanBeReached(Vector2D, Vector2D, boolean, boolean, boolean)
-     * @see #doesPointWithRangeIntersectAnyInteractionRange(Vector2D, double, Vector2D)
+     * @see #doesPointWithRangeIntersectAnyInteractionRange(Vector2D, double, List)
      * @see #doesLineSegmentCollideWithCircleRange(Vector2D, double, Vector2D, Vector2D, boolean)
      */
-    public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderConditions, boolean ignoreTargetTile) {
+    public boolean canMoveTo(Vector2D start, Vector2D target, double interactionRange, boolean canSwim, boolean canClimb, Vector2D renderOffset, boolean ignoreRenderConditions, boolean ignoreTargetTileConditions, List<SimulationObject> ignoredObjects) {
 
         //Is this point inside the grid?
         if (!simulationMap.isInsideOfGrid(target)) {
@@ -595,24 +595,33 @@ public class Simulation {
 
         //Check, if the dinosaur can move on this tile, if this point is inside any collision area of any simulation object and if the dinosaur will be rendered outside.
         //If so get another point.
-        if (!ignoreRenderConditions && SimulationObject.willBeRenderedOutside(target, renderOffset) || !ignoreTargetTile && !simulationMap.tileMatchedConditions(target, canSwim, canClimb)) {
+        if (!ignoreRenderConditions && SimulationObject.willBeRenderedOutside(target, renderOffset) || !ignoreTargetTileConditions && !simulationMap.tileMatchedConditions(target, canSwim, canClimb)) {
             return false;
         }
 
         //Check if the tile can be reached. So whether the object can/may move over each tile to the target point. If not, find another target.
-        if (!targetTileCanBeReached(start, target, canSwim, canClimb, ignoreTargetTile)) {
+        if (!targetTileCanBeReached(start, target, canSwim, canClimb, ignoreTargetTileConditions)) {
             return false;
         }
 
         //If we don't ignore the target tile and
         //does the point with the interaction range of the moving object intersect with any other interaction range, then find another point.
-        if (!ignoreTargetTile && doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, start)) {
+        List<Vector2D> ignoredPoints = new ArrayList<>();
+        ignoredPoints.add(start);
+
+        if (ignoredObjects != null)
+            for (SimulationObject simulationObject : ignoredObjects) {
+                ignoredPoints.add(simulationObject.getPosition());
+            }
+
+        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, ignoredPoints)) {
+
             return false;
         }
 
         //Check, if this target direction is in any interaction range. If so, find another target.
         for (SimulationObject simulationObject : simulationObjects) {
-            if (simulationObject.getPosition() != start && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTile)) {
+            if (!ignoredPoints.contains(simulationObject.getPosition()) && doesLineSegmentCollideWithCircleRange(simulationObject.getPosition(), simulationObject.getInteractionRange(), start, target, ignoreTargetTileConditions)) {
                 return false;
             }
         }
@@ -636,7 +645,7 @@ public class Simulation {
         //try it max. 500 times to get a target
         int maximumAttempts = 500;
         while (maximumAttempts > 0) {
-            if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
+            if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false, null)) {
                 return target;
             }
             target = getRandomPointInCircle(position, viewRange, 0.5);
@@ -663,7 +672,7 @@ public class Simulation {
         //try it max. 500 times to get a target
         int maximumAttempts = 500;
         while (maximumAttempts > 0) {
-            if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false)) {
+            if (canMoveTo(position, target, interactionRange, canSwim, canClimb, renderOffset, false, false, null)) {
                 return target;
             }
             target = getRandomPositionInsideCircleRangeInDirection(position, viewRange, direction);
@@ -757,9 +766,9 @@ public class Simulation {
      * @return true, if the point is inside any collision circle.
      * @see #simulationObjects
      */
-    private boolean isPointInsideAnyInteractionRange(Vector2D point, Vector2D ignore) {
+    private boolean isPointInsideAnyInteractionRange(Vector2D point, List<Vector2D> ignore) {
         return simulationObjects.stream().anyMatch(simulationObject -> {
-            if (simulationObject.getPosition() != ignore)
+            if (ignore == null || !ignore.contains(simulationObject.getPosition()))
                 return isPointInsideCircle(simulationObject.getPosition(), simulationObject.getInteractionRange(), point);
             return false;
         });
@@ -842,16 +851,15 @@ public class Simulation {
     /**
      * Checks, if a line segment collide with a view range circle.
      *
-     * @param circleOrigin     The origin {@link Vector2D} of the range circle.
-     * @param radius           The radius of the range circle.
-     * @param start            The start {@link Vector2D} of the line segment.
-     * @param end              The end {@link Vector2D} of the line segment.
-     * @param ignoreTargetTile if true, then the end point of the line segment is not checked, if it is inside the circle.
+     * @param circleOrigin The origin {@link Vector2D} of the range circle.
+     * @param radius       The radius of the range circle.
+     * @param start        The start {@link Vector2D} of the line segment.
+     * @param end          The end {@link Vector2D} of the line segment.
      * @return true, if the line collide with the circle.
      */
-    private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end, boolean ignoreTargetTile) {
+    private boolean doesLineSegmentCollideWithCircleRange(Vector2D circleOrigin, double radius, Vector2D start, Vector2D end, boolean ignoreTarget) {
 
-        if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTargetTile && isPointInsideCircle(circleOrigin, radius, end)) {
+        if (isPointInsideCircle(circleOrigin, radius, start) || !ignoreTarget && isPointInsideCircle(circleOrigin, radius, end)) {
             return true;
         }
 
@@ -869,7 +877,7 @@ public class Simulation {
         }
 
         //If we ignore the end position and the origin and the end position are the same, we return false. (Happens for example, if we move to a food source (food source is target))
-        if (ignoreTargetTile && Vector2D.distance(circleOrigin, end) == 0)
+        if (ignoreTarget && Vector2D.distance(circleOrigin, end) == 0)
             return false;
 
         return minDist <= radius && maxDist >= radius;

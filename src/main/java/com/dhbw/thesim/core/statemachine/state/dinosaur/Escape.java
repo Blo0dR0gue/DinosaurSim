@@ -75,7 +75,7 @@ public class Escape extends State {
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> target == null));
 
         //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.escape, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false)
+        addTransition(new StateTransition(StateFactory.States.escape, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false, null)
         ));
 
         //If the dinosaur is no longer been chased.

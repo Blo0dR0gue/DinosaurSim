@@ -156,7 +156,7 @@ public class SimulationLoop {
             printStats();
 
             //adding statistics update at intervals
-            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()),3 );
+            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()),3);
             if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds){
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
