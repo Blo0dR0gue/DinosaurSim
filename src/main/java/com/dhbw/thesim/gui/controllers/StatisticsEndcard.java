@@ -97,7 +97,7 @@ public class StatisticsEndcard extends AnchorPane {
 
         BarChart<String, Number> barChart = new BarChart<>(barChartCategoryAxis, numberAxis);
         barChart.setTitle("");
-        barChartCategoryAxis.setLabel("Eigenschaften");
+        barChartCategoryAxis.setLabel("Nahrungsart");
         numberAxis.setLabel("Wert");
 
         addBars(stats, barChart);
