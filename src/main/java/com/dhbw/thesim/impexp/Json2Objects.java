@@ -165,7 +165,7 @@ public class Json2Objects {
      * @return the char 'm' or 'f'
      */
     private static char returnRandomGender() {
-        if (Math.random() % 2 < 0.5) {
+        if (Math.random() < 0.5) {
             return 'm';
         } else {
             return 'f';
