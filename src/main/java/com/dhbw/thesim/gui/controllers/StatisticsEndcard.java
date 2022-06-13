@@ -25,6 +25,9 @@ public class StatisticsEndcard extends AnchorPane {
     @FXML
     public SideBar sideBar;
 
+    private final String PREDATORS = "Fleischfresser";
+    private final String CHASED = "Pflanzenfresser";
+
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
      * is getting to create the specified controller
@@ -55,8 +58,8 @@ public class StatisticsEndcard extends AnchorPane {
 
         addStatisticsToChart(stats.getAllLivingDinosaurs(), "Alle", stats.getSimulationTimeList(), isSimulationModeAuto);
 
-        addStatisticsToChart(stats.getAllLivingPredators(), "Jagende", stats.getSimulationTimeList(), isSimulationModeAuto);
-        addStatisticsToChart(stats.getAllLivingChased(), "Gejagte", stats.getSimulationTimeList(), isSimulationModeAuto);
+        addStatisticsToChart(stats.getAllLivingPredators(), PREDATORS, stats.getSimulationTimeList(), isSimulationModeAuto);
+        addStatisticsToChart(stats.getAllLivingChased(), CHASED, stats.getSimulationTimeList(), isSimulationModeAuto);
 
         for (int i = 0; i < stats.getAllSpecies().size(); i++) {
             String speciesName = stats.getAllSpecies().get(i);
@@ -114,8 +117,8 @@ public class StatisticsEndcard extends AnchorPane {
     private void createBars(BarChart<String, Number> barChart, String title, double chasedValue, double predatorValue) {
         XYChart.Series<String, Number> bars = new XYChart.Series<>();
         bars.setName(title);
-        bars.getData().add(new XYChart.Data<>("Gejagte", chasedValue));
-        bars.getData().add(new XYChart.Data<>("Jagende", predatorValue));
+        bars.getData().add(new XYChart.Data<>(CHASED, chasedValue));
+        bars.getData().add(new XYChart.Data<>(PREDATORS, predatorValue));
         barChart.getData().add(bars);
     }
 
