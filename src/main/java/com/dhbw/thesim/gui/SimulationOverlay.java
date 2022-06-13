@@ -5,7 +5,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.controllers.ConfigScreen;
-import com.dhbw.thesim.gui.controllers.LegendItem;
+import com.dhbw.thesim.gui.controllers.LegendListItem;
 import com.dhbw.thesim.gui.controllers.SideBar;
 import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
 import com.dhbw.thesim.impexp.JsonHandler;
@@ -18,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -289,6 +290,9 @@ public class SimulationOverlay extends BorderPane {
         legendTitle.setTextFill(Color.WHITE);
         legendTitle.setFont(new Font(17.0));
         vBox.getChildren().add(legendTitle);
+        ListView<LegendListItem> legendListView = new ListView<>();
+        legendListView.setId("legendListView");
+        legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
 
         StatisticsStruct stats = statistics.getSimulationStats();
         for (String speciesName : stats.getAllSpecies()) {
@@ -297,13 +301,15 @@ public class SimulationOverlay extends BorderPane {
                 HashMap<String, Object> dino = Objects.requireNonNull(
                         JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)
                 ).get(speciesName);
-                LegendItem legendItem = LegendItem.newInstance();
-                legendItem.initialize(SpriteLibrary.getInstance().getImage((String) dino.get("Bild")), speciesName);
-                vBox.getChildren().add(legendItem);
+                LegendListItem legendListItem = LegendListItem.newInstance();
+                legendListItem.initialize(SpriteLibrary.getInstance().getImage((String) dino.get("Bild")), speciesName);
+                legendListView.getItems().add(legendListItem);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+
+        vBox.getChildren().add(legendListView);
 
         Separator separator = new Separator();
         vBox.getChildren().add(separator);

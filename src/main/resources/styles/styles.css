@@ -27,3 +27,16 @@
 #scenarioListView .list-cell:selected {
     -fx-background-color: #808080;
 }
+
+#legendListView {
+    -fx-background-color: #808080;
+    -fx-background-insets: 0; -fx-padding: 0;
+}
+
+#legendListView .list-cell {
+    -fx-background-color: #808080;
+}
+
+#legendListView .list-cell:selected {
+    -fx-background-color: #808080;
+}
