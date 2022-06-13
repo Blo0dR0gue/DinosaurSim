@@ -476,8 +476,11 @@ public class Simulation {
      * @param simulationObject The {@link SimulationObject}.
      */
     private void spawnObject(SimulationObject simulationObject) {
-        if (simulationObject instanceof Dinosaur dinosaur)
+        if (simulationObject instanceof Dinosaur dinosaur){
             dinosaur.setTimeOfBirth(simulationTime.getTime());
+            dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> simulationOverlay.dinosaurClicked(dinosaur));
+        }
+
         this.toBeSpawned.add(simulationObject);
         Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
     }
