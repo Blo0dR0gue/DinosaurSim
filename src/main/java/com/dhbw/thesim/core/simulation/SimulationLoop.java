@@ -57,6 +57,8 @@ public class SimulationLoop {
      */
     private Thread simulationLoopThread;
 
+    private SimulationTime loopTime;
+
     /**
      * Max amount of steps.
      */
@@ -97,6 +99,8 @@ public class SimulationLoop {
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
 
+        this.loopTime = new SimulationTime();
+
         this.simulationOverlay = simulationOverlay;
 
         updateGraphics();
@@ -133,6 +137,7 @@ public class SimulationLoop {
                     //If we are not paused, trigger an update.
                     if (!paused){
                         update(deltaTime * simulationSpeedMultiplier);
+                        loopTime.addDeltaTime(deltaTime);
                     }
                     deltaTime -= UPDATE_RATE;
                 }
@@ -150,7 +155,7 @@ public class SimulationLoop {
             printStats();
 
             //adding statistics update at intervals
-            double runPercentage = round((currentSimulation.getCurrentSimulationTime().getTime()) / (runtime.getTime()),3 );
+            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()),3 );
             if (runPercentage % STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME <= 0.001 && runPercentage != lastStatUpdateAtPercentage){
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
@@ -158,7 +163,7 @@ public class SimulationLoop {
             }
 
             //Check if over
-            if (runtime.getTime() <= currentSimulation.getCurrentSimulationTime().getTime() || this.currentSimulation.isOver()) {
+            if (runtime.getTime() <= loopTime.getTime() || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
                 Platform.runLater(() -> simulationOverlay.showStatisticsEndcard());
             }
@@ -174,7 +179,7 @@ public class SimulationLoop {
     }
 
     private void updateStatistics() {
-        simulationOverlay.getStatistics().addSimulationObjectList(getCurrentSimulation().getSimulationObjects(), currentSimulation.getCurrentSimulationTime());
+        simulationOverlay.getStatistics().addSimulationObjectList(getCurrentSimulation().getSimulationObjects(), loopTime);
     }
 
     /**
@@ -187,7 +192,7 @@ public class SimulationLoop {
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
             obj.update(deltaTime, currentSimulation);
         }
-        currentSimulation.getCurrentSimulationTime().addDeltaTime(deltaTime * simulationSpeedMultiplier);
+        currentSimulation.getCurrentSimulationTime().addDeltaTime(deltaTime);
         currentSimulation.removeDeletedObjects();
         currentSimulation.spawnNewObjects();
     }

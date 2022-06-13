@@ -252,32 +252,32 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void resetStatsScreen() {
-        nutrition.setText(noDinoSelected);
-        hydration.setText(noDinoSelected);
-        fertility.setText(noDinoSelected);
-        weight.setText(noDinoSelected);
-        height.setText(noDinoSelected);
-        length.setText(noDinoSelected);
-        survivalTime.setText(noDinoSelected);
-        speciesProportion.setText(noDinoSelected);
+        nutrition.setText(NO_DINO_SELECTED);
+        hydration.setText(NO_DINO_SELECTED);
+        fertility.setText(NO_DINO_SELECTED);
+        weight.setText(NO_DINO_SELECTED);
+        height.setText(NO_DINO_SELECTED);
+        length.setText(NO_DINO_SELECTED);
+        survivalTime.setText(NO_DINO_SELECTED);
+        speciesProportion.setText(NO_DINO_SELECTED);
     }
 
 
-    private static final String noDinoSelected = "Kein Dino";
+    private static final String NO_DINO_SELECTED = "Kein Dino";
 
-    private final Label dinoType = new Label(noDinoSelected, new Text("Dinosaurierart: "));
-    private final Label dietType = new Label(noDinoSelected, new Text("Nahrungart: "));
-    private final Label gender = new Label(noDinoSelected, new Text("Geschlecht: "));
-    private final Label nutrition = new Label(noDinoSelected, new Text("Nahrung: "));
-    private final Label hydration = new Label(noDinoSelected, new Text("Hydration: "));
-    private final Label fertility = new Label(noDinoSelected, new Text("Fortpflanzungswille: "));
-    private final Label weight = new Label(noDinoSelected, new Text("Gewicht: "));
-    private final Label height = new Label(noDinoSelected, new Text("Höhe: "));
-    private final Label length = new Label(noDinoSelected, new Text("Länge: "));
-    private final Label canSwim = new Label(noDinoSelected, new Text("Kann schwimmen: "));
-    private final Label canClimb = new Label(noDinoSelected, new Text("Kann klettern: "));
-    private final Label survivalTime = new Label(noDinoSelected, new Text("Überlebenszeit: "));
-    private final Label speciesProportion = new Label(noDinoSelected, new Text("Artenanteil: "));
+    private final Label dinoType = new Label(NO_DINO_SELECTED, new Text("Dinosaurierart: "));
+    private final Label dietType = new Label(NO_DINO_SELECTED, new Text("Nahrungart: "));
+    private final Label gender = new Label(NO_DINO_SELECTED, new Text("Geschlecht: "));
+    private final Label nutrition = new Label(NO_DINO_SELECTED, new Text("Nahrung: "));
+    private final Label hydration = new Label(NO_DINO_SELECTED, new Text("Hydration: "));
+    private final Label fertility = new Label(NO_DINO_SELECTED, new Text("Fortpflanzungswille: "));
+    private final Label weight = new Label(NO_DINO_SELECTED, new Text("Gewicht: "));
+    private final Label height = new Label(NO_DINO_SELECTED, new Text("Höhe: "));
+    private final Label length = new Label(NO_DINO_SELECTED, new Text("Länge: "));
+    private final Label canSwim = new Label(NO_DINO_SELECTED, new Text("Kann schwimmen: "));
+    private final Label canClimb = new Label(NO_DINO_SELECTED, new Text("Kann klettern: "));
+    private final Label survivalTime = new Label(NO_DINO_SELECTED, new Text("Überlebenszeit: "));
+    private final Label speciesProportion = new Label(NO_DINO_SELECTED, new Text("Artenanteil: "));
 
 
     private Timer timer = null;
