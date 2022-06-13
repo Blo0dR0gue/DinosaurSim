@@ -59,19 +59,21 @@ public class SimulationMap {
      * Enum contains all information for each tile type.
      */
     public enum TILES {
-        GRASS("grass.png", false, false, true),
-        SAND("sand.png", false, false, false),
-        WATER("water.png", true, false, false),
-        MOUNTAIN("mountain.png", false, true, false),
-        FOREST("forest.png", false, true, true);
+        GRASS("grass.png", "Gras", false, false, true),
+        SAND("sand.png", "Sand", false, false, false),
+        WATER("water.png", "Wasser", true, false, false),
+        MOUNTAIN("mountain.png", "Gebirge", false, true, false),
+        FOREST("forest.png", "Wald", false, true, true);
 
         public final String imgName;
+        public final String deName;
         public final boolean swimmable;
         public final boolean climbable;
         public final boolean canContainPlants;
 
-        TILES(String imgName, boolean swimmable, boolean climbable, boolean canContainPlants) {
+        TILES(String imgName, String deName, boolean swimmable, boolean climbable, boolean canContainPlants) {
             this.imgName = imgName;
+            this.deName = deName;
             this.swimmable = swimmable;
             this.climbable = climbable;
             this.canContainPlants = canContainPlants;

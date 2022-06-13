@@ -298,8 +298,7 @@ public class SimulationOverlay extends BorderPane {
         StatisticsStruct stats = statistics.getSimulationStats();
         for (SimulationMap.TILES tile : SimulationMap.TILES.values()) {
             LegendListItem legendListItem = LegendListItem.newInstance();
-            String tileName = tile.name().charAt(0) + tile.name().substring(1).toLowerCase();
-            legendListItem.initialize(SpriteLibrary.getInstance().getImage(tile.imgName), tileName);
+            legendListItem.initialize(SpriteLibrary.getInstance().getImage(tile.imgName), tile.deName);
             legendListView.getItems().add(legendListItem);
         }
         for (String speciesName : stats.getAllSpecies()) {
