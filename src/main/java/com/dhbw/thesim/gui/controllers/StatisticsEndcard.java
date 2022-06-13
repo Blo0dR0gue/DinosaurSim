@@ -55,6 +55,9 @@ public class StatisticsEndcard extends AnchorPane {
 
         addStatisticsToChart(stats.getAllLivingDinosaurs(), "Alle", stats.getSimulationTimeList(), isSimulationModeAuto);
 
+        addStatisticsToChart(stats.getAllLivingPredators(), "Jagende", stats.getSimulationTimeList(), isSimulationModeAuto);
+        addStatisticsToChart(stats.getAllLivingChased(), "Gejagte", stats.getSimulationTimeList(), isSimulationModeAuto);
+
         for (int i = 0; i < stats.getAllSpecies().size(); i++) {
             String speciesName = stats.getAllSpecies().get(i);
 
