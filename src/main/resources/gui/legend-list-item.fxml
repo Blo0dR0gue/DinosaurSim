@@ -9,9 +9,7 @@
 <fx:root type="javafx.scene.layout.HBox" fx:id="root"
          xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
    <StackPane prefWidth="50.0" prefHeight="50.0">
-      <ImageView fx:id="imageView" fitHeight="50.0" fitWidth="50.0" preserveRatio="true">
-         <Image url="@../dinosaur/test.png"/>
-      </ImageView>
+      <ImageView fx:id="imageView" fitHeight="50.0" fitWidth="50.0" preserveRatio="true" />
    </StackPane>
    <BorderPane>
       <HBox.margin>

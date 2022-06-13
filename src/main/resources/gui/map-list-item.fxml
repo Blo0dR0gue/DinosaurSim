@@ -21,6 +21,6 @@
       </font>
    </RadioButton>
    <ImageView fx:id="imageView" fitHeight="75.0" fitWidth="75.0" preserveRatio="true">
-      <Image url="@../dinosaur/test.png"/>
+      <Image url="@../helper/undefined.png"/>
    </ImageView>
 </fx:root>
