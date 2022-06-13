@@ -102,7 +102,7 @@ public class StatisticsEndcard extends AnchorPane {
      * @param barChart The {@link BarChart} in which the bars should be added to
      */
     private void addBars(StatisticsStruct stats, BarChart<String, Number> barChart) {
-        createBars(barChart, "Absolute Prozentzahlen", stats.getAbsolutePercentageChased(), stats.getAbsolutePercentagePredators());
+        createBars(barChart, "Prozentzahlen", stats.getAbsolutePercentageChased(), stats.getAbsolutePercentagePredators());
         createBars(barChart, "Durchschnittlicher Durst", stats.getAverageHydrationChased(), stats.getAverageHydrationPredators());
         createBars(barChart, "Durchschnittlicher Hunger", stats.getAverageNutritionChased(), stats.getAverageNutritionPredators());
     }
