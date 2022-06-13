@@ -14,7 +14,7 @@ import javafx.scene.layout.HBox;
  * The Custom Control Class provides a legend item for the legend of all dinosaur species
  * @author Robin Khatri Chetri
  */
-public class LegendItem extends HBox {
+public class LegendListItem extends HBox {
     @FXML
     public HBox root;
         @FXML
@@ -26,16 +26,16 @@ public class LegendItem extends HBox {
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
      * is getting to create the specified controller
      */
-    public LegendItem() {
+    public LegendListItem() {
 
     }
 
     /**
-     * This method creates and initializes a new instance of from the FXML {@link LegendItem}
-     * @return The newly created and initialized {@link LegendItem}
+     * This method creates and initializes a new instance of from the FXML {@link LegendListItem}
+     * @return The newly created and initialized {@link LegendListItem}
      */
-    public static LegendItem newInstance() {
-        return (LegendItem) Display.makeFXMLController("legend-item.fxml", LegendItem.class);
+    public static LegendListItem newInstance() {
+        return (LegendListItem) Display.makeFXMLController("legend-list-item.fxml", LegendListItem.class);
     }
 
     /**
