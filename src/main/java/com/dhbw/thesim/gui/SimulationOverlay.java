@@ -265,6 +265,8 @@ public class SimulationOverlay extends BorderPane {
 
     private final String noDinoSelected = "Kein Dino";
 
+    private final Label dinoType = new Label(noDinoSelected, new Text("Dinosaurierart: "));
+    private final Label dietType = new Label(noDinoSelected, new Text("Nahrungart: "));
     private final Label nutrition = new Label(noDinoSelected, new Text("Nahrung: "));
     private final Label hydration = new Label(noDinoSelected, new Text("Hydration: "));
     private final Label fertility = new Label(noDinoSelected, new Text("Fortpflanzungswille: "));
@@ -310,6 +312,11 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void setSideBarStats(Map<String, Double> dinosaurStats) {
+
+        dinoType.setText(lastSelectedDinosaur.getType());
+
+        dietType.setText(lastSelectedDinosaur.getDiet().translatedText);
+
         nutrition.setText(dfZero.format(dinosaurStats.get("Hunger")) + " / " + dfZero.format(dinosaurStats.get("MaxHunger")));
 
         hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + dfZero.format(dinosaurStats.get("MaxDurst")));
@@ -323,6 +330,7 @@ public class SimulationOverlay extends BorderPane {
         length.setText(dfZero.format(dinosaurStats.get("Laenge")) + " Meter");
 
         canSwim.setText(dinosaurStats.get("KannSchwimmen") > 0 ? "Ja" : "Nein");
+
         canClimb.setText(dinosaurStats.get("KannKlettern") > 0 ? "Ja" : "Nein");
 
         survivalTime.setText(dfZero.format(dinosaurStats.get("Ueberlebenszeit")) + " Tage");
@@ -338,6 +346,8 @@ public class SimulationOverlay extends BorderPane {
         statsTitle.setFont(new Font(17.0));
         vBox.getChildren().add(statsTitle);
 
+        dinoType.setTextFill(Color.WHITE);
+        dietType.setTextFill(Color.WHITE);
         nutrition.setTextFill(Color.WHITE);
         hydration.setTextFill(Color.WHITE);
         fertility.setTextFill(Color.WHITE);
@@ -349,6 +359,9 @@ public class SimulationOverlay extends BorderPane {
         survivalTime.setTextFill(Color.WHITE);
         speciesProportion.setTextFill(Color.WHITE);
 
+
+        vBox.getChildren().add(dinoType);
+        vBox.getChildren().add(dietType);
         vBox.getChildren().add(nutrition);
         vBox.getChildren().add(hydration);
         vBox.getChildren().add(fertility);

@@ -16,9 +16,16 @@ import javafx.scene.image.Image;
  */
 public class Dinosaur extends SimulationObject {
     public enum dietType {
-        CARNIVORE,
-        HERBIVORE,
-        OMNIVORE
+        CARNIVORE("Fleischfresser"),
+        HERBIVORE("Pflanzenfresser"),
+        OMNIVORE("Allesfresser");
+
+        public final String translatedText;
+
+        dietType(String translatedText) {
+            this.translatedText = translatedText;
+        }
+
     }
 
     /**
@@ -244,7 +251,7 @@ public class Dinosaur extends SimulationObject {
         return partner;
     }
 
-    public void setTimeOfBirth(double time){
+    public void setTimeOfBirth(double time) {
         timeOfBirth.setTime(time);
     }
 
