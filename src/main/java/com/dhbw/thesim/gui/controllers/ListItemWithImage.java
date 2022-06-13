@@ -119,7 +119,6 @@ public class ListItemWithImage extends HBox {
     public void initializeListeners() {
         button_remove.setOnAction(event -> {
             ListItemWithImage listItemWithImage = this;
-            //TODO remove dino/plant from hashmap that is passed to simulation
             listItemWithImage.setCount(0);
         });
 
@@ -129,6 +128,7 @@ public class ListItemWithImage extends HBox {
                 ));
     }
 
+    //region getter & setter
     public String getText() {
         return textProperty().get();
     }
@@ -165,4 +165,5 @@ public class ListItemWithImage extends HBox {
     public DoubleProperty countProperty() {
         return slider.valueProperty();
     }
+    //endregion
 }

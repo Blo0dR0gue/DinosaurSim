@@ -63,6 +63,7 @@ public class SideBar extends BorderPane {
 
     }
 
+    //region getter & setter
     public ObservableList<Node> getBody() {
         return centerContainer.getChildren();
     }
@@ -70,4 +71,5 @@ public class SideBar extends BorderPane {
     public ObservableList<Node> getFooter() {
         return bottomContainer.getChildren();
     }
+    //endregion
 }

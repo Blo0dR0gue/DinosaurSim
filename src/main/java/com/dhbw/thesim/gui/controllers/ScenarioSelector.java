@@ -15,6 +15,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.*;
 
+/**
+ * The Custom Control Class provides a scenario selector area including the scenario list and save and load button
+ * @author Tamina Mühlenberg, Robin Khatri Chetri
+ */
 public class ScenarioSelector extends VBox {
     @FXML
     VBox container;
@@ -37,14 +41,26 @@ public class ScenarioSelector extends VBox {
 
     private ConfigScreen configScreen;
 
+    /**
+     * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
+     * is getting to create the specified controller
+     */
     public ScenarioSelector(){
 
     }
 
+    /**
+     * This method creates and initializes a new instance of from the FXML {@link ScenarioSelector}
+     * @return The newly created and initialized {@link ScenarioSelector}
+     */
     public static ScenarioSelector newInstance(){
         return (ScenarioSelector) Display.makeFXMLController("scenario-selector.fxml", ScenarioSelector.class);
     }
 
+    /**
+     * Method to initialize the scenario selector, its listeners and initializing the list of scenario configs
+     * Also a tooltip is set for additional information to dinosaur and/ or plant species.
+     */
     public void initialize(ConfigScreen configScreen){
         this.scenarioToggleGroup = new ToggleGroup();
         try {
@@ -67,6 +83,10 @@ public class ScenarioSelector extends VBox {
         initializeListeners();
     }
 
+    /**
+     * Updates the scenario list with all exisiting scenario configs
+     * @param fileName The file name which is display as the text for the radio button
+     */
     private void updateScenarioList(String fileName){
         scenarioListView.getItems().clear();
         try {
@@ -85,6 +105,9 @@ public class ScenarioSelector extends VBox {
         }
     }
 
+    /**
+     * Adds all specified event handlers to the specified {@link javafx.scene.Node}
+     */
     private void initializeListeners(){
         saveButton.setOnAction(event -> {
             String file = filename.getText().replace(" ","");
@@ -133,7 +156,6 @@ public class ScenarioSelector extends VBox {
         });
 
         EventHandler<KeyEvent> handler = new EventHandler<>() {
-
             private boolean willConsume = false;
 
             @Override
@@ -156,7 +178,13 @@ public class ScenarioSelector extends VBox {
         filename.addEventFilter(KeyEvent.ANY, handler);
     }
 
+    //region getter & setter
+    /**
+     * Retrieves the file name of the currently selected scenario config
+     * @return The {@link String} containing the file name of the selected scenario
+     */
     public String getSelectedScenario() {
         return ((ScenarioListItem) ((RadioButton) scenarioToggleGroup.getSelectedToggle()).getParent()).getScenarioFileName();
     }
+    //endregion
 }

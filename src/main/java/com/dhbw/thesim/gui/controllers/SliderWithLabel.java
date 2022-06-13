@@ -81,6 +81,7 @@ public class SliderWithLabel extends GridPane {
                 ));
     }
 
+    //region getter & setter
     public String getText() {
         return textProperty().get();
     }
@@ -152,4 +153,5 @@ public class SliderWithLabel extends GridPane {
     public DoubleProperty majorTickUnitProperty() {
         return slider.majorTickUnitProperty();
     }
+    //endregion
 }

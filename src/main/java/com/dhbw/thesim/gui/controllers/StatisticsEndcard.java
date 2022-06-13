@@ -50,11 +50,10 @@ public class StatisticsEndcard extends AnchorPane {
         lineChart.getXAxis().setLabel(isSimulationModeAuto ? "Simulationszeit (in s)" : "Schritte");
         lineChart.getYAxis().setLabel("Anzahl");
 
-        //TODO get data from stats.???
         StatisticsStruct stats = statistics.getSimulationStats();
         System.out.println("simulation times: " + stats.getSimulationTimeList());
 
-        addChartToStatistics(stats.getAllLivingDinosaurs(), "Alle", stats.getSimulationTimeList(), isSimulationModeAuto);
+        addStatisticsToChart(stats.getAllLivingDinosaurs(), "Alle", stats.getSimulationTimeList(), isSimulationModeAuto);
 
         for (int i = 0; i < stats.getAllSpecies().size(); i++) {
             String speciesName = stats.getAllSpecies().get(i);
@@ -65,7 +64,7 @@ public class StatisticsEndcard extends AnchorPane {
                 speciesList.add(update.get(i));
             }
 
-            addChartToStatistics(speciesList, speciesName, stats.getSimulationTimeList(), isSimulationModeAuto);
+            addStatisticsToChart(speciesList, speciesName, stats.getSimulationTimeList(), isSimulationModeAuto);
         }
 
         createBarChart(stats);
@@ -73,6 +72,10 @@ public class StatisticsEndcard extends AnchorPane {
         initializeListeners();
     }
 
+    /**
+     * Creates a {@link BarChart} displaying statistics from the previous simulation
+     * @param stats The {@link StatisticsStruct} containing the required statistics for display
+     */
     private void createBarChart(StatisticsStruct stats) {
         CategoryAxis barChartCategoryAxis = new CategoryAxis();
         NumberAxis numberAxis = new NumberAxis();
@@ -87,12 +90,24 @@ public class StatisticsEndcard extends AnchorPane {
         sideBar.getBody().add(barChart);
     }
 
+    /**
+     * Adding bars to the {@link BarChart}
+     * @param stats The {@link StatisticsStruct} containing the required statistics for display
+     * @param barChart The {@link BarChart} in which the bars should be added to
+     */
     private void addBars(StatisticsStruct stats, BarChart<String, Number> barChart) {
         createBars(barChart, "Absolute Prozentzahlen", stats.getAbsolutePercentageChased(), stats.getAbsolutePercentagePredators());
         createBars(barChart, "Durchschnittlicher Durst", stats.getAverageHydrationChased(), stats.getAverageHydrationPredators());
         createBars(barChart, "Durchschnittlicher Hunger", stats.getAverageNutritionChased(), stats.getAverageNutritionPredators());
     }
 
+    /**
+     * Method for creating and adding a bar to the {@link BarChart}
+     * @param barChart The {@link BarChart} in which the bars should be added to
+     * @param title The title for the bar
+     * @param chasedValue The value for a prey
+     * @param predatorValue The value for a predator
+     */
     private void createBars(BarChart<String, Number> barChart, String title, double chasedValue, double predatorValue) {
         XYChart.Series<String, Number> bars = new XYChart.Series<>();
         bars.setName(title);
@@ -101,7 +116,14 @@ public class StatisticsEndcard extends AnchorPane {
         barChart.getData().add(bars);
     }
 
-    private void addChartToStatistics(List<Integer> integerList, String chartName, List<SimulationTime> simulationTimeList, boolean isSimulationModeAuto) {
+    /**
+     * Method to add the statistics to the {@link LineChart}
+     * @param integerList The {@link List} containg data values as {@link Integer} for displaying the chart
+     * @param chartName The title to the {@link LineChart}
+     * @param simulationTimeList The {@link List} of {@link SimulationTime}
+     * @param isSimulationModeAuto Tells whether the previous simulation has been running in automatic or manual mode
+     */
+    private void addStatisticsToChart(List<Integer> integerList, String chartName, List<SimulationTime> simulationTimeList, boolean isSimulationModeAuto) {
         XYChart.Series<Number,Number> allLivingDinosaurs = new XYChart.Series<>();
         allLivingDinosaurs.setName(chartName);
 

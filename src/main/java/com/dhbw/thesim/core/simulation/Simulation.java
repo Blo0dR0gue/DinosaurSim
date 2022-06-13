@@ -191,26 +191,6 @@ public class Simulation {
             simulationOverlay.centerPane.getChildren().add(dinosaur.getSelectionRing());
             simulationOverlay.centerPane.getChildren().add(dinosaur.getJavaFXObj());
         });
-
-        /* old version TODO remove
-        for (SimulationObject obj : simulationObjects) {
-            //Set the object start position
-            if (obj instanceof Dinosaur dinosaur) {
-                //If we are a dinosaur get a free position, where the dinosaur can walk on.
-                dinosaur.setPosition(getFreePositionInMap(dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getInteractionRange(), dinosaur.getRenderOffset()));
-                dinosaur.setTimeOfBirth(simulationTime.getTime());
-
-                dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                    simulationOverlay.dinosaurClicked(dinosaur);
-                });
-
-            } else if (obj instanceof Plant plant) {
-                //Plants only can be spawned on tiles, which allow plant growing
-                obj.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange() + 10, plant.getRenderOffset()));
-            }
-            simulationOverlay.centerPane.getChildren().add(obj.getSelectionRing());
-            simulationOverlay.centerPane.getChildren().add(obj.getJavaFXObj());
-        }*/
     }
 
     /**

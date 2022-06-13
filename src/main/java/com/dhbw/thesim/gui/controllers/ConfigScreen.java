@@ -244,6 +244,7 @@ public class ConfigScreen extends AnchorPane {
             }
         }
     }
+
     //region getter & setter
     public HashMap<String, Integer> getDinoParams(){
         return getListItemParams(dinoListView);
@@ -291,6 +292,5 @@ public class ConfigScreen extends AnchorPane {
     public String getLandscapeName() {
         return getMap().getText();
     }
-
     //endregion
 }

@@ -45,6 +45,7 @@ public class MapListItem extends HBox {
         setImage(image);
     }
 
+    //region getter & setter
     public String getText() {
         return textProperty().get();
     }
@@ -68,4 +69,5 @@ public class MapListItem extends HBox {
     public ObjectProperty<Image> imageProperty() {
         return imageView.imageProperty();
     }
+    //endregion
 }
