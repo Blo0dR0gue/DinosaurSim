@@ -263,10 +263,11 @@ public class SimulationOverlay extends BorderPane {
     }
 
 
-    private final String noDinoSelected = "Kein Dino";
+    private static final String noDinoSelected = "Kein Dino";
 
     private final Label dinoType = new Label(noDinoSelected, new Text("Dinosaurierart: "));
     private final Label dietType = new Label(noDinoSelected, new Text("Nahrungart: "));
+    private final Label gender = new Label(noDinoSelected, new Text("Geschlecht: "));
     private final Label nutrition = new Label(noDinoSelected, new Text("Nahrung: "));
     private final Label hydration = new Label(noDinoSelected, new Text("Hydration: "));
     private final Label fertility = new Label(noDinoSelected, new Text("Fortpflanzungswille: "));
@@ -317,6 +318,8 @@ public class SimulationOverlay extends BorderPane {
 
         dietType.setText(lastSelectedDinosaur.getDiet().translatedText);
 
+        gender.setText(lastSelectedDinosaur.getGender() == 'm' ? "Männlich" : "Weiblich");
+
         nutrition.setText(dfZero.format(dinosaurStats.get("Hunger")) + " / " + dfZero.format(dinosaurStats.get("MaxHunger")));
 
         hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + dfZero.format(dinosaurStats.get("MaxDurst")));
@@ -348,6 +351,7 @@ public class SimulationOverlay extends BorderPane {
 
         dinoType.setTextFill(Color.WHITE);
         dietType.setTextFill(Color.WHITE);
+        gender.setTextFill(Color.WHITE);
         nutrition.setTextFill(Color.WHITE);
         hydration.setTextFill(Color.WHITE);
         fertility.setTextFill(Color.WHITE);
@@ -362,6 +366,7 @@ public class SimulationOverlay extends BorderPane {
 
         vBox.getChildren().add(dinoType);
         vBox.getChildren().add(dietType);
+        vBox.getChildren().add(gender);
         vBox.getChildren().add(nutrition);
         vBox.getChildren().add(hydration);
         vBox.getChildren().add(fertility);
