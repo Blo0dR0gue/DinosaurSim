@@ -152,12 +152,15 @@ public class Statistics {
         singleStats.put("MaxHunger", dino.getMaxNutrition());
         singleStats.put("Durst", dino.getHydration());
         singleStats.put("MaxDurst", dino.getMaxHydration());
+        singleStats.put("Stärke", dino.getStrength());
+        singleStats.put("Geschwindigkeit", dino.getSpeed());
         singleStats.put("Fortpflanzungswilligkeit", dino.getReproductionValue());
         singleStats.put("Gewicht", dino.getWeight());
         singleStats.put("Hoehe", dino.getHeight());
         singleStats.put("Laenge", dino.getLength());
         singleStats.put("KannSchwimmen", dino.canSwim()?1d:0d);
         singleStats.put("KannKlettern", dino.canClimb()?1d:0d);
+        singleStats.put("WirdGejagt", dino.isChased()?1d:0d);
         singleStats.put("Ueberlebenszeit", (dino.getTimeOfBirth().timeSince(currentSimulationTime)));
         singleStats.put("Artenanteil", calculateSpeciesPercentage(simulationObjectList, dino.getType()));
         return singleStats;
