@@ -122,7 +122,8 @@ public class SimulationLoop {
         SimulationTime runtime = new SimulationTime();
         runtime.addMinutesTime(maxRunTimeInMinutes);
 
-        double lastStatUpdateAtPercentage = 0.0;
+        SimulationTime lastStatisticsUpdateTime = new SimulationTime();
+        int intervalUntilStatisticsUpdateInSeconds = (int) (runtime.getTime()*STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME);
 
         while (running) {
             //update the loop variables.
@@ -156,10 +157,10 @@ public class SimulationLoop {
 
             //adding statistics update at intervals
             double runPercentage = round((loopTime.getTime()) / (runtime.getTime()),3 );
-            if (runPercentage % STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME <= 0.001 && runPercentage != lastStatUpdateAtPercentage){
+            if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds){
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
-                lastStatUpdateAtPercentage = runPercentage;
+                lastStatisticsUpdateTime = new SimulationTime(loopTime.getTime());
             }
 
             //Check if over
