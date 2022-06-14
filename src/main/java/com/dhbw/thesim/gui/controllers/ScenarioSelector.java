@@ -5,6 +5,7 @@ import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -110,13 +111,14 @@ public class ScenarioSelector extends VBox {
      */
     private void initializeListeners(){
         saveButton.setOnAction(event -> {
+            Node node = (Node) event.getSource();
+            Stage window = (Stage) node.getScene().getWindow();
             String file = filename.getText().replace(" ","");
             if (!file.equals("")) {
                 try {
                     JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
                             configScreen.getLandscapeName(), configScreen.getPlantGrowthRate(), file);
 
-                    Stage window = (Stage) loadButton.getScene().getWindow();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Szenarioerstellung");
                     alert.setHeaderText(String.format("Die Szenario-Konfigurationsdatei %s.json wurde erfolgreich gespeichert!", file));
@@ -130,7 +132,6 @@ public class ScenarioSelector extends VBox {
                 updateScenarioList(file);
                 filename.clear();
             } else {
-                Stage window = (Stage) saveButton.getScene().getWindow();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Szenarioerstellungsfehler");
                 alert.setHeaderText("Fehler während des Erstellens der Szenario-Konfiguration!");
@@ -150,7 +151,8 @@ public class ScenarioSelector extends VBox {
                         (double) scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0],
                         (String) scenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]);
 
-                Stage window = (Stage) loadButton.getScene().getWindow();
+                Node node = (Node) event.getSource();
+                Stage window = (Stage) node.getScene().getWindow();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Konfigurationswechsel");
                 alert.setHeaderText("Die ausgewählte Szenario-Konfigurationsdatei wurde erfolgreich geladen!");
