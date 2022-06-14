@@ -115,6 +115,15 @@ public class ScenarioSelector extends VBox {
                 try {
                     JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
                             configScreen.getLandscapeName(), configScreen.getPlantGrowthRate(), file);
+
+                    Stage window = (Stage) loadButton.getScene().getWindow();
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Szenarioerstellung");
+                    alert.setHeaderText(String.format("Die Szenario-Konfigurationsdatei %s.json wurde erfolgreich gespeichert!", file));
+                    alert.setContentText(String.format("Die Parameter der aktuellen Konfiguration wurden gespeichert unter: %s/%s.json", JsonHandler.getWorkingDirectory(), file));
+                    alert.initOwner(window);
+
+                    alert.showAndWait();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
