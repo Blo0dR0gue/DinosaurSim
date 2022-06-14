@@ -47,7 +47,7 @@ public class Statistics {
      * Method appends list of SimulationObjects to statSimObjects
      *
      * @param simulationObjectList The list of all current simulationiObjects
-     * @param simulationTime The simulation time
+     * @param simulationTime       The simulation time
      */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList, SimulationTime simulationTime) {
         statSimObjects.add(List.copyOf(simulationObjectList));
@@ -105,10 +105,10 @@ public class Statistics {
             livingSpecies.add(livingSpeciesCounter);
             livingPredators.add(livingPredatorsCounter);
             livingChased.add(livingChasedCounter);
-            averageNutritionPredators.add(nutritionPredatorsCounter / livingPredatorsCounter);
-            averageNutritionChased.add(nutritionChasedCounter / livingChasedCounter);
-            averageHydrationPredators.add(hydrationPredatorsCounter / livingPredatorsCounter);
-            averageHydrationChased.add(hydrationChasedCounter / livingChasedCounter);
+            averageNutritionPredators.add(nutritionPredatorsCounter / ((double) livingPredatorsCounter));
+            averageNutritionChased.add(nutritionChasedCounter / ((double) livingChasedCounter));
+            averageHydrationPredators.add(hydrationPredatorsCounter / ((double) livingPredatorsCounter));
+            averageHydrationChased.add(hydrationChasedCounter / ((double) livingChasedCounter));
         }
 
         double helperNutritionPredators = 0;
@@ -168,9 +168,9 @@ public class Statistics {
         singleStats.put("Gewicht", dino.getWeight());
         singleStats.put("Hoehe", dino.getHeight());
         singleStats.put("Laenge", dino.getLength());
-        singleStats.put("KannSchwimmen", dino.canSwim()?1d:0d);
-        singleStats.put("KannKlettern", dino.canClimb()?1d:0d);
-        singleStats.put("WirdGejagt", dino.isChased()?1d:0d);
+        singleStats.put("KannSchwimmen", dino.canSwim() ? 1d : 0d);
+        singleStats.put("KannKlettern", dino.canClimb() ? 1d : 0d);
+        singleStats.put("WirdGejagt", dino.isChased() ? 1d : 0d);
         singleStats.put("Ueberlebenszeit", (dino.getTimeOfBirth().timeSince(currentSimulationTime)));
         singleStats.put("Artenanteil", calculateSpeciesPercentage(simulationObjectList, dino.getType()));
         return singleStats;

@@ -133,8 +133,8 @@ public class Dinosaur extends SimulationObject {
 
     @Override
     public void eat() {
-        setNutrition(-100);
-        setHydration(-100);
+        setNutrition(0);
+        setHydration(0);
     }
 
     @Override
