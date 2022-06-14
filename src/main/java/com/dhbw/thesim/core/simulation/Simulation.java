@@ -557,6 +557,8 @@ public class Simulation {
      * @return true, if the check circle intersect with any interaction range.
      */
     private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, List<Vector2D> ignore) {
+        if (ignore != null)
+            ignore.add(target);
         if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
@@ -616,7 +618,6 @@ public class Simulation {
             }
 
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, ignoredPoints)) {
-
             return false;
         }
 

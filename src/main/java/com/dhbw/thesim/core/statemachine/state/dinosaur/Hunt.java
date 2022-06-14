@@ -101,7 +101,7 @@ public class Hunt extends State {
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getTarget().getPosition(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, false, List.of(dinosaur.getTarget()))));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getTarget().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, false, List.of(dinosaur.getTarget()))));
     }
 
     private boolean reached(Simulation simulation) {
