@@ -129,7 +129,7 @@ public class SimulationLoop {
             //update the loop variables.
             currentTime = System.currentTimeMillis();
             double lastUpdateTimeInSeconds = (currentTime - lastUpdate) / 1000d;
-            deltaTime += lastUpdateTimeInSeconds;
+            deltaTime += lastUpdateTimeInSeconds*simulationSpeedMultiplier;
             frameAccumulator += lastUpdateTimeInSeconds;
             lastUpdate = currentTime;
             //Limit the update rate
@@ -137,8 +137,8 @@ public class SimulationLoop {
                 while (deltaTime >= UPDATE_RATE) {
                     //If we are not paused, trigger an update.
                     if (!paused){
-                        update(deltaTime * simulationSpeedMultiplier);
-                        loopTime.addDeltaTime(deltaTime);
+                        update(deltaTime);
+                        loopTime.addDeltaTime(deltaTime/simulationSpeedMultiplier);
                     }
                     deltaTime -= UPDATE_RATE;
                 }
