@@ -120,14 +120,16 @@ public class Statistics {
         int helperLivingChased = 0;
         int listElementCounter = livingDinosaurs.size();
         for (int i = 0; i < listElementCounter; i++) {
-            helperNutritionPredators += averageNutritionPredators.get(i);
-            helperNutritionChased += averageNutritionChased.get(i);
-            helperHydrationPredators += averageHydrationPredators.get(i);
-            helperHydrationChased += averageHydrationChased.get(i);
             helperLivingDinosaurs += livingDinosaurs.get(i);
             helperLivingPredators += livingPredators.get(i);
             helperLivingChased += livingChased.get(i);
         }
+        helperNutritionPredators = getHelperValue(averageNutritionPredators, helperNutritionPredators);
+        helperNutritionChased = getHelperValue(averageNutritionChased, helperNutritionChased);
+        helperHydrationPredators = getHelperValue(averageHydrationPredators, helperHydrationPredators);
+        helperHydrationChased = getHelperValue(averageHydrationChased, helperHydrationChased);
+
+
         return new StatisticsStruct(simulationTime, helperNutritionPredators / listElementCounter,
                 helperNutritionChased / listElementCounter,
                 helperHydrationPredators / listElementCounter,
@@ -136,6 +138,14 @@ public class Statistics {
                 ((double) helperLivingChased) / ((double) helperLivingDinosaurs),
                 livingDinosaurs, livingSpecies, allDinoSpecies, livingPredators, livingChased,
                 this.simulationTimeList);
+    }
+
+    private double getHelperValue(List<Double> averageList, double helper) {
+        for (double avg:
+                averageList) {
+            helper += avg;
+        }
+        return helper;
     }
 
     /**
