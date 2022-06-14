@@ -567,7 +567,7 @@ public class Simulation {
             return true;
         }
         for (SimulationObject simulationObject : simulationObjects) {
-            if (ignore == null || !ignore.contains(simulationObject.getPosition()))
+            if (ignore == null || !ignore.contains(simulationObject.getPosition()) || target != simulationObject.getPosition())
                 if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     return true;
                 }
@@ -622,7 +622,6 @@ public class Simulation {
             }
 
         if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, ignoredPoints)) {
-
             return false;
         }
 
