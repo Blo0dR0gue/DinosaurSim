@@ -5,10 +5,7 @@ import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
-import com.dhbw.thesim.gui.controllers.ConfigScreen;
-import com.dhbw.thesim.gui.controllers.LegendListItem;
-import com.dhbw.thesim.gui.controllers.SideBar;
-import com.dhbw.thesim.gui.controllers.StatisticsEndcard;
+import com.dhbw.thesim.gui.controllers.*;
 import com.dhbw.thesim.impexp.JsonHandler;
 import com.dhbw.thesim.stats.Statistics;
 import com.dhbw.thesim.stats.StatisticsStruct;
@@ -274,23 +271,39 @@ public class SimulationOverlay extends BorderPane {
 
     private static final String NO_DINO_SELECTED = "Kein Dino";
 
-    private final Label dinoType = new Label(NO_DINO_SELECTED, new Text("Dinosaurierart: "));
-    private final Label diet = new Label(NO_DINO_SELECTED, new Text("Nahrungart: "));
-    private final Label gender = new Label(NO_DINO_SELECTED, new Text("Geschlecht: "));
-    private final Label nutrition = new Label(NO_DINO_SELECTED, new Text("Nahrung: "));
-    private final Label hydration = new Label(NO_DINO_SELECTED, new Text("Hydration: "));
-    private final Label strength = new Label(NO_DINO_SELECTED, new Text("Stärke: "));
-    private final Label speed = new Label(NO_DINO_SELECTED, new Text("Höchstgeschwindigkeit: "));
-    private final Label fertility = new Label(NO_DINO_SELECTED, new Text("Fortpflanzungswille: "));
-    private final Label weight = new Label(NO_DINO_SELECTED, new Text("Gewicht: "));
-    private final Label length = new Label(NO_DINO_SELECTED, new Text("Länge: "));
-    private final Label height = new Label(NO_DINO_SELECTED, new Text("Höhe: "));
-    private final Label canSwim = new Label(NO_DINO_SELECTED, new Text("Kann schwimmen: "));
-    private final Label canClimb = new Label(NO_DINO_SELECTED, new Text("Kann klettern: "));
-    private final Label isChased = new Label(NO_DINO_SELECTED, new Text("Wird gejagt: "));
-    private final Label survivalTime = new Label(NO_DINO_SELECTED, new Text("Überlebenszeit: "));
-    private final Label speciesProportion = new Label(NO_DINO_SELECTED, new Text("Artenanteil: "));
+    private final Text dinoTypeText = new Text("Dinosaurierart: ");
+    private final Text dietText = new Text("Nahrungart: ");
+    private final Text genderText = new Text("Geschlecht: ");
+    private final Text nutritionText = new Text("Nahrung: ");
+    private final Text hydrationText = new Text("Hydration: ");
+    private final Text strengthText = new Text("Stärke: ");
+    private final Text speedText = new Text("Höchstgeschwindigkeit: ");
+    private final Text fertilityText = new Text("Fortpflanzungswille: ");
+    private final Text weightText = new Text("Gewicht: ");
+    private final Text lengthText = new Text("Länge: ");
+    private final Text heightText = new Text("Höhe: ");
+    private final Text canSwimText = new Text("Kann schwimmen: ");
+    private final Text canClimbText = new Text("Kann klettern: ");
+    private final Text isChasedText = new Text("Wird gejagt: ");
+    private final Text survivalTimeText = new Text("Überlebenszeit: ");
+    private final Text speciesProportionText = new Text("Artenanteil: ");
 
+    private final Label dinoType = new Label(NO_DINO_SELECTED);
+    private final Label diet = new Label(NO_DINO_SELECTED);
+    private final Label gender = new Label(NO_DINO_SELECTED);
+    private final Label nutrition = new Label(NO_DINO_SELECTED);
+    private final Label hydration = new Label(NO_DINO_SELECTED);
+    private final Label strength = new Label(NO_DINO_SELECTED);
+    private final Label speed = new Label(NO_DINO_SELECTED);
+    private final Label fertility = new Label(NO_DINO_SELECTED);
+    private final Label weight = new Label(NO_DINO_SELECTED);
+    private final Label length = new Label(NO_DINO_SELECTED);
+    private final Label height = new Label(NO_DINO_SELECTED);
+    private final Label canSwim = new Label(NO_DINO_SELECTED);
+    private final Label canClimb = new Label(NO_DINO_SELECTED);
+    private final Label isChased = new Label(NO_DINO_SELECTED);
+    private final Label survivalTime = new Label(NO_DINO_SELECTED);
+    private final Label speciesProportion = new Label(NO_DINO_SELECTED);
 
     private Timer timer = null;
     private static final DecimalFormat dfZero = new DecimalFormat("0.0");
@@ -302,7 +315,7 @@ public class SimulationOverlay extends BorderPane {
         legendTitle.setFont(new Font(17.0));
         vBox.getChildren().add(legendTitle);
         ListView<LegendListItem> legendListView = new ListView<>();
-        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.5);
+        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.45);
         legendListView.setId("legendListView");
         legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
 
@@ -343,13 +356,15 @@ public class SimulationOverlay extends BorderPane {
 
         gender.setText(lastSelectedDinosaur.getGender() == 'm' ? "Männlich" : "Weiblich");
 
-        nutrition.setText(dfZero.format(dinosaurStats.get("Hunger")) + " / " + dfZero.format(dinosaurStats.get("MaxHunger")));
+        nutrition.setText(dfZero.format(dinosaurStats.get("Hunger")) + " / " + dfZero.format(dinosaurStats.get("MaxHunger"))
+                + " (" + dfZero.format(dinosaurStats.get("Hunger") / dinosaurStats.get("MaxHunger") * 100) + "%)");
 
-        hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + dfZero.format(dinosaurStats.get("MaxDurst")));
+        hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + dfZero.format(dinosaurStats.get("MaxDurst"))
+                + " (" + dfZero.format(dinosaurStats.get("Durst") / dinosaurStats.get("MaxDurst") * 100) + "%)");
 
-        strength.setText(dfZero.format(dinosaurStats.get("Stärke")));
+        strength.setText(dfZero.format(dinosaurStats.get("Stärke")) + " Kilonewton");
 
-        speed.setText(dfZero.format(dinosaurStats.get("Geschwindigkeit")) + " km/h");
+        speed.setText(dfZero.format(dinosaurStats.get("Geschwindigkeit")) + " Kilometer pro Stunde");
 
         fertility.setText(dfZero.format(dinosaurStats.get("Fortpflanzungswilligkeit")) + " %");
 
@@ -371,49 +386,29 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void createSideDinosaurStats() {
-        VBox vBox = new VBox();
-
         Label statsTitle = new Label("Statistik / Eigenschaften:");
         statsTitle.setTextFill(Color.WHITE);
         statsTitle.setFont(new Font(17.0));
-        vBox.getChildren().add(statsTitle);
+        sideBar.getBody().add(statsTitle);
 
-        dinoType.setTextFill(Color.WHITE);
-        diet.setTextFill(Color.WHITE);
-        gender.setTextFill(Color.WHITE);
-        nutrition.setTextFill(Color.WHITE);
-        hydration.setTextFill(Color.WHITE);
-        strength.setTextFill(Color.WHITE);
-        speed.setTextFill(Color.WHITE);
-        fertility.setTextFill(Color.WHITE);
-        weight.setTextFill(Color.WHITE);
-        length.setTextFill(Color.WHITE);
-        height.setTextFill(Color.WHITE);
-        canSwim.setTextFill(Color.WHITE);
-        canClimb.setTextFill(Color.WHITE);
-        isChased.setTextFill(Color.WHITE);
-        survivalTime.setTextFill(Color.WHITE);
-        speciesProportion.setTextFill(Color.WHITE);
+        GridPane gridPane = new GridPane();
+        gridPane.setHgap(5);
 
+        List<Text> textList = Arrays.asList(dinoTypeText, dietText, genderText, nutritionText, hydrationText,
+                strengthText, speedText, fertilityText, weightText, lengthText, heightText, canSwimText,
+                canClimbText, isChasedText, survivalTimeText, speciesProportionText);
+        for (int i = 0; i < textList.size(); i++)  {
+            gridPane.add(textList.get(i), 0, i);
+        }
 
-        vBox.getChildren().add(dinoType);
-        vBox.getChildren().add(diet);
-        vBox.getChildren().add(gender);
-        vBox.getChildren().add(nutrition);
-        vBox.getChildren().add(hydration);
-        vBox.getChildren().add(strength);
-        vBox.getChildren().add(speed);
-        vBox.getChildren().add(fertility);
-        vBox.getChildren().add(weight);
-        vBox.getChildren().add(length);
-        vBox.getChildren().add(height);
-        vBox.getChildren().add(canSwim);
-        vBox.getChildren().add(canClimb);
-        vBox.getChildren().add(isChased);
-        vBox.getChildren().add(survivalTime);
-        vBox.getChildren().add(speciesProportion);
+        List<Label> labelList = Arrays.asList(dinoType, diet, gender, nutrition, hydration, strength, speed, fertility,
+                weight, length, height, canSwim, canClimb, isChased, survivalTime, speciesProportion);
+        for (int i = 0; i < labelList.size(); i++)  {
+            gridPane.add(labelList.get(i), 1, i);
+            labelList.get(i).setTextFill(Color.WHITE);
+        }
 
-        sideBar.getBody().add(vBox);
+        sideBar.getBody().add(gridPane);
     }
 
 
