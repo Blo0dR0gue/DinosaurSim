@@ -436,7 +436,7 @@ public class Simulation {
         List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
 
         for (Vector2D pos : positions) {
-            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, Arrays.asList(origin))) {
+            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null)) {
                 System.out.println("Spawn position found with range " + range);
                 return pos;
             }
@@ -557,8 +557,6 @@ public class Simulation {
      * @return true, if the check circle intersect with any interaction range.
      */
     private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, List<Vector2D> ignore) {
-        if (ignore != null)
-            ignore.add(target);
         if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
@@ -790,6 +788,10 @@ public class Simulation {
     private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, boolean ignoreTargetTile) {
         Tile startTile = simulationMap.getTileAtPosition(start);
         Tile targetTile = simulationMap.getTileAtPosition(target);
+
+        if(startTile == null || targetTile == null)
+            return false;
+
         //Distance between the tiles. (In x and y direction)
         int dx = targetTile.getGridX() - startTile.getGridX();
         int dy = targetTile.getGridY() - startTile.getGridY();
