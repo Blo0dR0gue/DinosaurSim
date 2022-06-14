@@ -262,6 +262,7 @@ public class SimulationLoop {
      */
     public void togglePause() {
         paused = !paused;
+        updateGraphics();
     }
 
     /**
