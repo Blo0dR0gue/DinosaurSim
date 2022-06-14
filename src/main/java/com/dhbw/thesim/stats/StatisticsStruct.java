@@ -1,5 +1,7 @@
 package com.dhbw.thesim.stats;
 
+import com.dhbw.thesim.core.util.SimulationTime;
+
 import java.util.List;
 
 /**
@@ -24,6 +26,9 @@ public class StatisticsStruct {
     private final List<Integer> allLivingDinosaurs;
     private final List<List<Integer>> allLivingSpecies;
     private final List<String> allSpecies;
+    private final List<Integer> allLivingPredators;
+    private final List<Integer> allLivingChased;
+    private final List<SimulationTime> simulationTimeList;
 
     /**
      * Constructor for {@link StatisticsStruct}-object
@@ -37,8 +42,9 @@ public class StatisticsStruct {
      * @param allLivingDinosaurs The timestamped count of dinosaurs.
      * @param allLivingSpecies The timestamped count of dinosaurs divides by species.
      * @param allSpecies The overall types of dinosaurs in the previous simulation.
+     * @param simulationTimeList The list of simulation times
      */
-    public StatisticsStruct(long simulationTime, double averageNutritionPredators, double averageNutritionChased, double averageHydrationPredators, double averageHydrationChased, double absolutePercentagePredators, double absolutePercentageChased, List<Integer> allLivingDinosaurs, List<List<Integer>> allLivingSpecies, List<String> allSpecies){
+    public StatisticsStruct(long simulationTime, double averageNutritionPredators, double averageNutritionChased, double averageHydrationPredators, double averageHydrationChased, double absolutePercentagePredators, double absolutePercentageChased, List<Integer> allLivingDinosaurs, List<List<Integer>> allLivingSpecies, List<String> allSpecies, List<Integer> allLivingPredators, List<Integer> allLivingChased,List<SimulationTime> simulationTimeList){
         this.simulationTime = simulationTime;
         this.averageNutritionPredators = averageNutritionPredators;
         this.averageNutritionChased = averageNutritionChased;
@@ -49,6 +55,9 @@ public class StatisticsStruct {
         this.allLivingDinosaurs = allLivingDinosaurs;
         this.allLivingSpecies = allLivingSpecies;
         this.allSpecies = allSpecies;
+        this.allLivingPredators = allLivingPredators;
+        this.allLivingChased = allLivingChased;
+        this.simulationTimeList = simulationTimeList;
     }
 
     /**
@@ -84,4 +93,7 @@ public class StatisticsStruct {
     public long getSimulationTime() {
         return simulationTime;
     }
+    public List<SimulationTime> getSimulationTimeList(){ return simulationTimeList; }
+    public List<Integer> getAllLivingPredators() { return allLivingPredators; }
+    public List<Integer> getAllLivingChased() { return allLivingChased; }
 }

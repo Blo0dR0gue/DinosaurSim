@@ -1,0 +1,42 @@
+.slider .axis .axis-tick-mark, .slider .axis .axis-minor-tick-mark {
+    -fx-stroke: black;
+}
+
+.list-view {
+    -fx-background-color: #bfbfbf;
+    -fx-background-insets: 0; -fx-padding: 0;
+}
+
+.list-view .list-cell {
+    -fx-background-color: #bfbfbf;
+}
+
+.list-view .list-cell:selected {
+    -fx-background-color: #808080;
+}
+
+#scenarioListView {
+    -fx-background-color: #808080;
+    -fx-background-insets: 0; -fx-padding: 0;
+}
+
+#scenarioListView .list-cell {
+    -fx-background-color: #808080;
+}
+
+#scenarioListView .list-cell:selected {
+    -fx-background-color: #808080;
+}
+
+#legendListView {
+    -fx-background-color: #808080;
+    -fx-background-insets: 0; -fx-padding: 0;
+}
+
+#legendListView .list-cell {
+    -fx-background-color: #808080;
+}
+
+#legendListView .list-cell:selected {
+    -fx-background-color: #808080;
+}

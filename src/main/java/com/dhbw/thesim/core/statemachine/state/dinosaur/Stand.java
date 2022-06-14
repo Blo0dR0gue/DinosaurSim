@@ -10,7 +10,7 @@ import java.util.Random;
 
 /**
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
- * In this {@link State} the handled {@link Dinosaur} is waiting {@link #WAIT_TIME_IN_SECONDS} seconds.
+ * In this {@link State} the handled {@link Dinosaur} is waiting {@link #waitTimeInSeconds} seconds.
  *
  * @author Daniel Czeschner
  */
@@ -27,14 +27,14 @@ public class Stand extends State {
     private double timeSinceStart;
 
     /**
-     * A {@link Random} object used to define the {@link #WAIT_TIME_IN_SECONDS}.
+     * A {@link Random} object used to define the {@link #waitTimeInSeconds}.
      */
-    private static final Random RANDOM =  new Random();
+    private static final Random RANDOM = new Random();
 
     /**
      * Max time, we stay in this state.
      */
-    private static final double WAIT_TIME_IN_SECONDS = RANDOM.nextDouble(1,5);
+    private final double waitTimeInSeconds = RANDOM.nextDouble(1,5);
 
     /**
      * Constructor
@@ -48,7 +48,7 @@ public class Stand extends State {
 
     @Override
     public void update(double deltaTime, Simulation simulation) {
-        if (timeSinceStart <= WAIT_TIME_IN_SECONDS)
+        if (timeSinceStart <= waitTimeInSeconds)
             timeSinceStart += deltaTime;
     }
 
@@ -67,7 +67,7 @@ public class Stand extends State {
 
         //If the dinosaur is hungry and thirsty and a water tile or a food source is in range, transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isThirsty() && dinosaur.isHungry()
-                && (simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null || simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null)));
+                && (simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null || simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb()) != null)));
 
         //If the dinosaur is thirsty and a water tile is in range, transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isThirsty()
@@ -75,7 +75,7 @@ public class Stand extends State {
 
         //If the dinosaur is hungry and a food source is in range, transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isHungry()
-                && simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null));
+                && simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null));
 
         //Move to a partner, if a suitable partner is in range.
         addTransition(new StateTransition(StateFactory.States.moveToPartner, simulation -> (dinosaur.isWillingToMate()
@@ -83,6 +83,6 @@ public class Stand extends State {
                 || dinosaur.getPartner() != null));
 
         //Go to wander, if the time is up.
-        addTransition(new StateTransition(StateFactory.States.wander, (simulation) -> timeSinceStart >= WAIT_TIME_IN_SECONDS));
+        addTransition(new StateTransition(StateFactory.States.wander, (simulation) -> timeSinceStart >= waitTimeInSeconds));
     }
 }

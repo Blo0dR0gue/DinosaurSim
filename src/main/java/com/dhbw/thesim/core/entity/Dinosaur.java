@@ -3,10 +3,9 @@ package com.dhbw.thesim.core.entity;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
-import com.dhbw.thesim.core.util.Vector2D;
+import com.dhbw.thesim.core.util.SimulationTime;
+import com.dhbw.thesim.gui.Display;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  * Represents a dinosaur object in our simulation.
@@ -16,12 +15,18 @@ import javafx.scene.shape.Circle;
  * @see com.dhbw.thesim.core.statemachine.StateMachine
  * @see State
  */
-@SuppressWarnings("unused")
 public class Dinosaur extends SimulationObject {
     public enum dietType {
-        carnivore,
-        herbivore,
-        omnivore
+        CARNIVORE("Fleischfresser"),
+        HERBIVORE("Pflanzenfresser"),
+        OMNIVORE("Allesfresser");
+
+        public final String translatedText;
+
+        dietType(String translatedText) {
+            this.translatedText = translatedText;
+        }
+
     }
 
     /**
@@ -41,7 +46,7 @@ public class Dinosaur extends SimulationObject {
     private final boolean canClimb;
     private final dietType diet;
     private final double viewRange;
-    private final long timeOfBirth;
+    private final SimulationTime timeOfBirth;
 
     private final char gender;
     private double reproductionValue;
@@ -60,8 +65,8 @@ public class Dinosaur extends SimulationObject {
     /**
      * Used to set the decrease rate for nutrition and hydration in the simulation.
      */
-    private static final double NUTRITION_REDUCTION_RATE = 0.1;
-    private static final double HYDRATION_REDUCTION_RATE = 0.25;
+    private static final double NUTRITION_REDUCTION_RATE = 0.3;
+    private static final double HYDRATION_REDUCTION_RATE = 0.45;
     private static final double REPRODUCTION_VALUE_FULL = 100;
 
     /**
@@ -79,11 +84,11 @@ public class Dinosaur extends SimulationObject {
         super(name, interactionRange, image);
 
         if (diet == 'a')
-            this.diet = dietType.omnivore;
+            this.diet = dietType.OMNIVORE;
         else if (diet == 'f')
-            this.diet = dietType.carnivore;
+            this.diet = dietType.CARNIVORE;
         else
-            this.diet = dietType.herbivore;
+            this.diet = dietType.HERBIVORE;
 
         this.nutrition = nutrition;
         this.hydration = hydration;
@@ -96,8 +101,8 @@ public class Dinosaur extends SimulationObject {
         this.canSwim = canSwim;
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
-        this.viewRange = viewRange;
-        this.timeOfBirth = System.currentTimeMillis();
+        this.viewRange = Display.adjustScale(viewRange, Display.SCALE_X);
+        this.timeOfBirth = new SimulationTime();
 
         this.nutritionFull = this.nutrition;
         this.hydrationFull = this.hydration;
@@ -140,7 +145,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     public boolean isWillingToMate() {
-        return reproductionValue>= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty() && !isChased();
+        return reproductionValue >= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty() && !isChased();
     }
 
     /**
@@ -151,7 +156,8 @@ public class Dinosaur extends SimulationObject {
     private void updateStats(double deltaTime) {
         this.hydration -= HYDRATION_REDUCTION_RATE * deltaTime;
         this.nutrition -= NUTRITION_REDUCTION_RATE * deltaTime;
-        this.reproductionValue += reproductionValue * deltaTime;
+        if (this.reproductionValue < REPRODUCTION_VALUE_FULL)
+            this.reproductionValue += reproductionRate * deltaTime;
     }
 
     /**
@@ -163,6 +169,8 @@ public class Dinosaur extends SimulationObject {
         //Center the image and update his position.
         imageObj.setTranslateX(position.getX() - renderOffset.getX());
         imageObj.setTranslateY(position.getY() - renderOffset.getY());
+        this.selectionRing.setTranslateX(position.getX());
+        this.selectionRing.setTranslateY(position.getY());
     }
 
     /**
@@ -171,13 +179,14 @@ public class Dinosaur extends SimulationObject {
     public dietType getDiet() {
         return diet;
     }
+
     public char getCharDiet() {
 
-        if (diet == dietType.omnivore)
+        if (diet == dietType.OMNIVORE)
             return 'a';
-        else if (diet == dietType.carnivore)
+        else if (diet == dietType.CARNIVORE)
             return 'f';
-        else if (this.diet == dietType.herbivore)
+        else if (this.diet == dietType.HERBIVORE)
             return 'p';
         else
             return 'x';
@@ -243,7 +252,11 @@ public class Dinosaur extends SimulationObject {
         return partner;
     }
 
-    public long getTimeOfBirth() {
+    public void setTimeOfBirth(double time) {
+        timeOfBirth.setTime(time);
+    }
+
+    public SimulationTime getTimeOfBirth() {
         return timeOfBirth;
     }
 

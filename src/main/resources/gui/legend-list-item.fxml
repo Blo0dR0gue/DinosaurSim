@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.geometry.Insets?>
+<fx:root type="javafx.scene.layout.HBox" fx:id="root"
+         xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+   <StackPane prefWidth="50.0" prefHeight="50.0">
+      <ImageView fx:id="imageView" fitHeight="50.0" fitWidth="50.0" preserveRatio="true" />
+   </StackPane>
+   <BorderPane>
+      <HBox.margin>
+         <Insets left="5.0"/>
+      </HBox.margin>
+      <center>
+         <Label fx:id="legendLabel" text="= DinoName" textFill="white">
+            <font>
+               <Font size="17.0"/>
+            </font>
+         </Label>
+      </center>
+   </BorderPane>
+</fx:root>

@@ -10,6 +10,8 @@ import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.util.Vector2D;
 
+import java.util.List;
+
 /**
  * Represents a {@link State} a {@link Dinosaur} can be in. <br>
  * In this {@link State} the handled {@link Dinosaur} tries to move to a food or water source.
@@ -40,6 +42,7 @@ public class MoveToFoodSource extends State {
 
     /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public MoveToFoodSource(Dinosaur simulationObject) {
@@ -53,7 +56,7 @@ public class MoveToFoodSource extends State {
             //reset the target before selecting a new one.
             dinosaur.setTarget(null);
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
-                SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+                SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(),
                         dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength());
                 Vector2D target2 = simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb());
                 if (target1 == null && target2 != null) {
@@ -83,7 +86,7 @@ public class MoveToFoodSource extends State {
                     direction = dinosaur.getPosition().directionToTarget(target);
                 }
             } else if (dinosaur.isHungry()) {
-                dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+                dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(),
                         dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()));
                 if (dinosaur.getTarget() != null) {
                     System.out.println("Found food source");
@@ -134,11 +137,12 @@ public class MoveToFoodSource extends State {
         addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, true)));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true, dinosaur.getTarget() != null ? List.of(dinosaur.getTarget()) : null)));
     }
 
     /**
      * Do we have reached the target?
+     *
      * @param simulation The current {@link Simulation} data.
      * @return true, if we have reached the target.
      */

@@ -12,14 +12,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 /**
  * Represents an object, which is handled in our simulation
  *
  * @author Daniel Czeschner
  */
-@SuppressWarnings("unused")
 public abstract class SimulationObject extends StateMachine {
 
     /**
@@ -52,6 +50,11 @@ public abstract class SimulationObject extends StateMachine {
     protected final double interactionRange;
 
     /**
+     * Used, when a dinosaur gets selected.
+     */
+    protected final Circle selectionRing;
+
+    /**
      * Constructor
      *
      * @param type             The type for this object.
@@ -60,17 +63,20 @@ public abstract class SimulationObject extends StateMachine {
      */
     protected SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
-        this.interactionRange = interactionRange;
+        this.interactionRange = Display.adjustScale(interactionRange, Display.SCALE_X);
         this.imageObj = new ImageView();
 
         this.position = new Vector2D(0, 0);
         this.renderOffset = new Vector2D(0, 0);
 
-        //TODO check if possible with our images
         imageObj.setPreserveRatio(true);
-        imageObj.setFitHeight(interactionRange*2);
-        imageObj.setFitWidth(interactionRange*2);
-        //TODO scale if screen has scaling
+        imageObj.setFitHeight(Display.adjustScale(interactionRange * 2, Display.SCALE_X));
+        imageObj.setFitWidth(Display.adjustScale(interactionRange * 2, Display.SCALE_Y));
+
+        selectionRing = new Circle(0, 0, interactionRange);
+        selectionRing.setVisible(false);
+        selectionRing.setFill(Color.TRANSPARENT);
+        selectionRing.setStroke(Color.YELLOW);
 
         setSprite(image);
     }
@@ -92,6 +98,24 @@ public abstract class SimulationObject extends StateMachine {
      * Eats this object
      */
     public abstract void eat();
+
+    /**
+     * Sets the visibility for the selection ring of this object.
+     *
+     * @param visible true, if the rind should be visible.
+     */
+    public void setSelectionRingVisibility(boolean visible) {
+        this.selectionRing.setVisible(visible);
+    }
+
+    /**
+     * Gets the {@link #selectionRing} object
+     *
+     * @return The {@link #selectionRing} object.
+     */
+    public Circle getSelectionRing() {
+        return this.selectionRing;
+    }
 
     /**
      * Checks, if a other object can eat this object.
@@ -141,7 +165,7 @@ public abstract class SimulationObject extends StateMachine {
      * @return The collision range.
      */
     public double getInteractionRange() {
-        return interactionRange;
+        return interactionRange - 10;
     }
 
     /**
@@ -152,9 +176,9 @@ public abstract class SimulationObject extends StateMachine {
      */
     public void flipImage(Vector2D direction) {
         if (direction.getX() < 0)
-            imageObj.setScaleX(-1);
+            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX() * -1 : imageObj.getScaleX());
         else
-            imageObj.setScaleX(1);
+            imageObj.setScaleX(imageObj.getScaleX() < 0 ? imageObj.getScaleX() : imageObj.getScaleX() * -1);
     }
 
     /**
@@ -185,17 +209,6 @@ public abstract class SimulationObject extends StateMachine {
      */
     public ImageView getJavaFXObj() {
         return imageObj;
-    }
-
-    /**
-     * Check, if the dinosaur is rendered outside the view range.
-     *
-     * @return true, if the {@link SimulationObject} gets rendered outside the view panel.
-     */
-    public boolean isRenderedOutside() {
-        return (position.getX() - renderOffset.getX()) < 0 || (position.getY() - renderOffset.getY()) < 0 ||
-                position.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
-                position.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
 
     public static boolean willBeRenderedOutside(Vector2D targetPosition, Vector2D renderOffset) {

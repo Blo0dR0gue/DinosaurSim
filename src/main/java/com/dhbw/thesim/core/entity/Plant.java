@@ -2,9 +2,8 @@ package com.dhbw.thesim.core.entity;
 
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.plant.Growing;
+import com.dhbw.thesim.core.statemachine.state.plant.Grown;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 /**
  * It's a plant-object in our simulation, which can be eaten.
@@ -12,7 +11,6 @@ import javafx.scene.shape.Circle;
  *
  * @author Daniel Czeschner, Kai Grübener
  */
-@SuppressWarnings("unused")
 public class Plant extends SimulationObject {
 
     /**
@@ -30,13 +28,23 @@ public class Plant extends SimulationObject {
      * Constructor for a normal {@link Plant}-object.
      * @param name The name of the plant.
      * @param image The image for the graphical illustration.
-     * @param interactionRange The range for interactionis with other {@link SimulationObject}-objects.
+     * @param interactionRange The range for interactions with other {@link SimulationObject}-objects.
      * @param growthRate The rate for a plant to grow.
      */
     public Plant(String name, Image image, double interactionRange, double growthRate) {
         super(name, interactionRange, image);
         this.growthRate = growthRate;
-        this.setState(new Growing(this));
+
+        //75% chance, that a plant is already grown at the start.
+        if(Math.random() > 0.25 ){
+            this.growth = MAX_GROWTH;
+            this.setState(new Grown(this));
+        }else {
+            this.growth = 0;
+            this.setState(new Growing(this));
+            this.getJavaFXObj().setVisible(false);
+        }
+
     }
 
     /**

@@ -1,6 +1,12 @@
 package com.dhbw.thesim.core.simulation;
 
 import com.dhbw.thesim.core.entity.SimulationObject;
+import com.dhbw.thesim.core.util.SimulationTime;
+import com.dhbw.thesim.gui.SimulationOverlay;
+import javafx.application.Platform;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Updates the simulation (Engine)
@@ -8,7 +14,6 @@ import com.dhbw.thesim.core.entity.SimulationObject;
  * @author Daniel Czeschner
  * @see Simulation
  */
-@SuppressWarnings("unused")
 public class SimulationLoop {
 
     //region variables
@@ -19,8 +24,8 @@ public class SimulationLoop {
     private static final int UPDATES_PER_SECOND = 60;
     private static final int FRAMES_PER_SECOND = 30;
     private static final int UPDATES_PER_STEP = 30;
-    private final double UPDATE_RATE = 1.0d / UPDATES_PER_SECOND;
-    private final double FRAME_RATE = 1.0d / FRAMES_PER_SECOND;
+    private static final double UPDATE_RATE = 1.0d / UPDATES_PER_SECOND;
+    private static final double FRAME_RATE = 1.0d / FRAMES_PER_SECOND;
 
     /**
      * Is multiplied on the update rate. <1 means more updates per second
@@ -34,13 +39,11 @@ public class SimulationLoop {
     //region runner variables
     private boolean running;
     private boolean paused;
-    private double deltaTime = 0;
-    private double deltaTimeFPS = 0;
-    private long currentTime, lastUpdate = System.currentTimeMillis();
 
     //region Status variables (Debug)
     private long nextDebugStatsTime;
-    private int fps, ups;
+    private int fps;
+    private int ups;
     //endregion
     //endregion
 
@@ -52,7 +55,9 @@ public class SimulationLoop {
     /**
      * The simulation loop thread handler
      */
-    private Thread simulationLoop;
+    private Thread simulationLoopThread;
+
+    private SimulationTime loopTime;
 
     /**
      * Max amount of steps.
@@ -64,6 +69,16 @@ public class SimulationLoop {
      */
     private int maxRunTimeInMinutes;
 
+    /**
+     * At what percentage of the max run time the stats should be updated
+     */
+    private static final double STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME = 0.05;
+
+    /**
+     * Current SimulationOverlay instance for callbacks
+     */
+    private SimulationOverlay simulationOverlay;
+
     //endregion
 
     /**
@@ -72,28 +87,43 @@ public class SimulationLoop {
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
      * @param maxStepAmount             The max amount of steps, that can be triggered.
      * @param maxRunTimeInMinutes       The max amount of time a simulation is running (In Minutes)
+     * @param simulationOverlay         The simulation overlay which is used to display the GUI for the simulation
      */
-    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes) {
+    public SimulationLoop(int simulationSpeedMultiplier, int stepRangeMultiplier, Simulation simulation, int maxStepAmount, int maxRunTimeInMinutes, SimulationOverlay simulationOverlay) {
         this.currentSimulation = simulation;
         this.simulationSpeedMultiplier = simulationSpeedMultiplier;
         this.stepRangeMultiplier = stepRangeMultiplier;
         this.maxStepAmount = maxStepAmount;
         this.maxRunTimeInMinutes = maxRunTimeInMinutes;
+
         //Set the time, for the first debug message.
         nextDebugStatsTime = System.currentTimeMillis() + 1000;
+
+        this.loopTime = new SimulationTime();
+
+        this.simulationOverlay = simulationOverlay;
+
+        updateGraphics();
     }
 
     /**
-     * The Runnable for the {@link #simulationLoop}-thread.  <br>
+     * The Runnable for the {@link #simulationLoopThread}-thread.  <br>
      * In this Thread/Runnable the automatic updates for a the {@link SimulationObject}s of ann {@link Simulation} are handled.
      */
     private final Runnable simLoopRunnable = () -> {
         running = true;
         double deltaTime = 0;
         double frameAccumulator = 0;
-        long currentTime, lastUpdate = System.currentTimeMillis();
+
+        long lastUpdate = System.currentTimeMillis();
+        long currentTime;
+
         //The time, when the sim is finished
-        long runtime = lastUpdate + (long) this.maxRunTimeInMinutes * 60 * 1000;
+        SimulationTime runtime = new SimulationTime();
+        runtime.addMinutesTime(maxRunTimeInMinutes);
+
+        SimulationTime lastStatisticsUpdateTime = new SimulationTime();
+        int intervalUntilStatisticsUpdateInSeconds = (int) (runtime.getTime()*STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME);
 
         while (running) {
             //update the loop variables.
@@ -102,13 +132,14 @@ public class SimulationLoop {
             deltaTime += lastUpdateTimeInSeconds;
             frameAccumulator += lastUpdateTimeInSeconds;
             lastUpdate = currentTime;
-
             //Limit the update rate
             if (deltaTime >= UPDATE_RATE) {
                 while (deltaTime >= UPDATE_RATE) {
                     //If we are not paused, trigger an update.
-                    if (!paused)
+                    if (!paused){
                         update(deltaTime * simulationSpeedMultiplier);
+                        loopTime.addDeltaTime(deltaTime);
+                    }
                     deltaTime -= UPDATE_RATE;
                 }
             }
@@ -123,14 +154,34 @@ public class SimulationLoop {
             }
             //Print debug stats
             printStats();
+
+            //adding statistics update at intervals
+            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()),3);
+            if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds){
+                updateStatistics();
+                System.out.println("stat update: " + (runPercentage));
+                lastStatisticsUpdateTime = new SimulationTime(loopTime.getTime());
+            }
+
             //Check if over
-            if (runtime <= currentTime || this.currentSimulation.isOver()) {
+            if (runtime.getTime() <= loopTime.getTime() || this.currentSimulation.isOver()) {
                 this.stopSimulationRunner();
-                //TODO callback to GUI
-                System.err.println("ende");
+                Platform.runLater(() -> simulationOverlay.showStatisticsEndcard());
             }
         }
     };
+
+    private double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    private void updateStatistics() {
+        simulationOverlay.getStatistics().addSimulationObjectList(getCurrentSimulation().getSimulationObjects(), loopTime);
+    }
 
     /**
      * Is called each update call. <br>
@@ -142,6 +193,7 @@ public class SimulationLoop {
         for (SimulationObject obj : currentSimulation.getSimulationObjects()) {
             obj.update(deltaTime, currentSimulation);
         }
+        currentSimulation.getCurrentSimulationTime().addDeltaTime(deltaTime);
         currentSimulation.removeDeletedObjects();
         currentSimulation.spawnNewObjects();
     }
@@ -182,21 +234,22 @@ public class SimulationLoop {
         this.maxStepAmount--;
         //check if over
         if (maxStepAmount <= 0 || currentSimulation.isOver()) {
-            //TODO Callback to gui
+            updateStatistics();
+            simulationOverlay.showStatisticsEndcard();
         }
     }
 
     /**
      * Stats the automatic simulation runner.
-     * @see #simulationLoop
+     * @see #simulationLoopThread
      */
     public void startSimulationRunner() {
-        simulationLoop = new Thread(simLoopRunnable);
-        simulationLoop.start();
+        simulationLoopThread = new Thread(simLoopRunnable);
+        simulationLoopThread.start();
     }
 
     /**
-     * Stops the {@link #simulationLoop}.
+     * Stops the {@link #simulationLoopThread}.
      */
     public void stopSimulationRunner() {
         running = false;
@@ -205,7 +258,7 @@ public class SimulationLoop {
     /**
      * Pause/Unpause the automatic simulation runner.
      * @see #simLoopRunnable
-     * @see #simulationLoop
+     * @see #simulationLoopThread
      */
     public void togglePause() {
         paused = !paused;
@@ -218,4 +271,17 @@ public class SimulationLoop {
     public Simulation getCurrentSimulation() {
         return this.currentSimulation;
     }
+
+    /**
+     * Gets the boolean if simulation is currently paused
+     * @return A {@link Boolean} telling if simulation is paused
+     */
+    public boolean getSimulationPaused() {
+        return this.paused;
+    }
+
+    public SimulationTime getLoopTime(){
+        return loopTime;
+    }
+
 }

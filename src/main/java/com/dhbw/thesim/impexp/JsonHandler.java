@@ -98,18 +98,18 @@ public class JsonHandler {
     /**
      * For exporting the default Scenario Configuration File (which is included in the jar-file) into the "working Directory"
      *
-     * @throws IOException when the "defaultScenarioConfig.json" cannot be found in the jar-file
+     * @throws IOException when the "defaultScenarioConfiguration.json" cannot be found in the jar-file
      */
     public static void exportDefaultScenarioConfig() throws IOException {
         //get the default "Scenario" configuration file
-        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration-files/defaultScenarioConfig.json");
+        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration-files/defaultScenarioConfiguration.json");
         if (inputStreamDefaultConfigFile == null) {
-            throw new FileNotFoundException("Cannot find resource file 'defaultScenarioConfig.json'");
+            throw new FileNotFoundException("Cannot find resource file 'defaultScenarioConfiguration.json'");
         }
-        //if there is no locally stored "defaultScenarioConfig" configuration file, load the default file in the working directory
-        File configFile = new File(workingDirectory + "/defaultScenarioConfig.json");
+        //if there is no locally stored "defaultScenarioConfiguration" configuration file, load the default file in the working directory
+        File configFile = new File(workingDirectory + "/defaultScenarioConfiguration.json");
         if (!configFile.exists()) {
-            Files.copy(inputStreamDefaultConfigFile, Path.of(workingDirectory + "/defaultScenarioConfig.json"));
+            Files.copy(inputStreamDefaultConfigFile, Path.of(workingDirectory + "/defaultScenarioConfiguration.json"));
         }
     }
 
