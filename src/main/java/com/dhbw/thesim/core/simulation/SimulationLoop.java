@@ -280,4 +280,8 @@ public class SimulationLoop {
         return this.paused;
     }
 
+    public SimulationTime getLoopTime(){
+        return loopTime;
+    }
+
 }

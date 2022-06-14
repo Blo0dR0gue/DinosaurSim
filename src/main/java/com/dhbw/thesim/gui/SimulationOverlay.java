@@ -172,7 +172,7 @@ public class SimulationOverlay extends BorderPane {
     }
 
     public void showStatisticsEndcard() {
-        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects(), simulationLoop.getCurrentSimulation().getCurrentSimulationTime());
+        statistics.addSimulationObjectList(simulationLoop.getCurrentSimulation().getSimulationObjects(), simulationLoop.getLoopTime());
 
         Stage window = (Stage) simulationScene.getWindow();
         StatisticsEndcard statisticsEndcard = StatisticsEndcard.newInstance();
