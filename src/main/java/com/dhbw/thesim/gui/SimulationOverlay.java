@@ -21,6 +21,7 @@ import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -99,11 +100,11 @@ public class SimulationOverlay extends BorderPane {
         createSideLegend();
         createSideDinosaurStats();
 
-        simulationScene.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ESCAPE) {
+        simulationScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.ESCAPE) {
                 simulationLoop.togglePause();
             }
-            if (e.getCode() == KeyCode.SPACE) {
+            if (event.getCode() == KeyCode.SPACE) {
                 if (!isSimulationModeAuto) {
                     nextSimulationStep();
                 }
