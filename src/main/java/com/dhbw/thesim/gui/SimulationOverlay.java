@@ -316,7 +316,7 @@ public class SimulationOverlay extends BorderPane {
         legendTitle.setFont(new Font(17.0));
         vBox.getChildren().add(legendTitle);
         ListView<LegendListItem> legendListView = new ListView<>();
-        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.45);
+        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.47);
         legendListView.setId("legendListView");
         legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
 
