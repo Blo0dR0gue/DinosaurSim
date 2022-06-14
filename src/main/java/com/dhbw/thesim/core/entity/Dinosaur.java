@@ -4,6 +4,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
 import com.dhbw.thesim.core.util.SimulationTime;
+import com.dhbw.thesim.gui.Display;
 import javafx.scene.image.Image;
 
 /**
@@ -100,7 +101,7 @@ public class Dinosaur extends SimulationObject {
         this.canSwim = canSwim;
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
-        this.viewRange = viewRange;
+        this.viewRange = Display.adjustScale(viewRange, Display.SCALE_X);
         this.timeOfBirth = new SimulationTime();
 
         this.nutritionFull = this.nutrition;

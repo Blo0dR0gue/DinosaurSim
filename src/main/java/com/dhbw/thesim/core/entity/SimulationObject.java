@@ -63,7 +63,7 @@ public abstract class SimulationObject extends StateMachine {
      */
     protected SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
-        this.interactionRange = interactionRange;
+        this.interactionRange = Display.adjustScale(interactionRange, Display.SCALE_X);
         this.imageObj = new ImageView();
 
         this.position = new Vector2D(0, 0);
