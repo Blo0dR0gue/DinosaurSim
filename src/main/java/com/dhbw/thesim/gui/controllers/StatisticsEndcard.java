@@ -5,6 +5,7 @@ import com.dhbw.thesim.gui.Display;
 import com.dhbw.thesim.stats.Statistics;
 import com.dhbw.thesim.stats.StatisticsStruct;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -154,7 +155,8 @@ public class StatisticsEndcard extends AnchorPane {
      */
     private void initializeListeners() {
         restartSimulationButton.setOnAction(event -> {
-            Stage window = (Stage) restartSimulationButton.getScene().getWindow();
+            Node node = (Node) event.getSource();
+            Stage window = (Stage) node.getScene().getWindow();
             window.setScene(Display.configScene);
             window.setFullScreen(true);
         });

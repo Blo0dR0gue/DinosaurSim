@@ -7,6 +7,7 @@ import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -108,8 +109,10 @@ public class ConfigScreen extends AnchorPane {
      */
     public void initializeListeners() {
         // When the start button is clicked the current scene gets replaced by the SimulationOverlay scene
-        startSimulationButton.setOnAction(event -> checkRequiredSimObjects());
-
+        startSimulationButton.setOnAction(event -> {
+            Node node = (Node) event.getSource();
+            checkRequiredSimObjects(node);
+        });
         // add a change listener
         modeGroup.selectedToggleProperty().addListener((observableValue, previousSelection, currentSelection) -> {
             maxRuntime.setVisible(currentSelection.equals(auto));
@@ -125,10 +128,10 @@ public class ConfigScreen extends AnchorPane {
     /**
      * Checks if enough dinos as well as enough plants have been configured, otherwide erro alert is shown
      */
-    private void checkRequiredSimObjects() {
+    private void checkRequiredSimObjects(Node node) {
         boolean minDinosSelected = true;
         boolean minPlantsSelected = true;
-        Stage window = (Stage) startSimulationButton.getScene().getWindow();
+        Stage window = (Stage) node.getScene().getWindow();
 
         //Iterate over both list views and over each item in them to check if required amount is satisfied
         for (ListView<ListItemWithImage> listView : Arrays.asList(dinoListView, plantListView)) {
@@ -154,7 +157,7 @@ public class ConfigScreen extends AnchorPane {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Fehlermeldung");
                 alert.setHeaderText("Fehler beim Starten der Simulation!");
-                alert.setContentText("Während des Starten der Simulation trat ein unbekannter Fehler auf.");
+                alert.setContentText("Während des Startens der Simulation trat ein unbekannter Fehler auf.");
 
                 // Create expandable Exception.
                 StringWriter sw = new StringWriter();
