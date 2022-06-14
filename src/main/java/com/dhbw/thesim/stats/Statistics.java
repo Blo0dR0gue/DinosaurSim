@@ -152,7 +152,7 @@ public class Statistics {
         singleStats.put("MaxHunger", dino.getMaxNutrition());
         singleStats.put("Durst", dino.getHydration());
         singleStats.put("MaxDurst", dino.getMaxHydration());
-        singleStats.put("Stärke", dino.getStrength());
+        singleStats.put("Staerke", dino.getStrength());
         singleStats.put("Geschwindigkeit", dino.getSpeed());
         singleStats.put("Fortpflanzungswilligkeit", dino.getReproductionValue());
         singleStats.put("Gewicht", dino.getWeight());

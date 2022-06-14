@@ -364,7 +364,7 @@ public class SimulationOverlay extends BorderPane {
         hydration.setText(dfZero.format(dinosaurStats.get("Durst")) + " / " + dfZero.format(dinosaurStats.get("MaxDurst"))
                 + " (" + dfZero.format(dinosaurStats.get("Durst") / dinosaurStats.get("MaxDurst") * 100) + "%)");
 
-        strength.setText(dfZero.format(dinosaurStats.get("Stärke")) + " Kilonewton");
+        strength.setText(dfZero.format(dinosaurStats.get("Staerke")) + " Kilonewton");
 
         speed.setText(dfZero.format(dinosaurStats.get("Geschwindigkeit")) + " Kilometer pro Stunde");
 
