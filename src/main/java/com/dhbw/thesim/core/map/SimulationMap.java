@@ -400,23 +400,23 @@ public class SimulationMap {
      */
     private List<Tile> getTilesInRangeWhereConditionsAre(Tile tile, int range, boolean swimmable, boolean climbable) {
         List<Tile> tileObjects = new ArrayList<>();
+        if (tile != null)
+            for (int x = -range; x <= range; x++) {
+                for (int y = -range; y <= range; y++) {
 
-        for (int x = -range; x <= range; x++) {
-            for (int y = -range; y <= range; y++) {
+                    if (x == 0 && y == 0)
+                        continue;
 
-                if (x == 0 && y == 0)
-                    continue;
+                    int checkX = tile.getGridX() + x;
+                    int checkY = tile.getGridY() + y;
 
-                int checkX = tile.getGridX() + x;
-                int checkY = tile.getGridY() + y;
-
-                if (isInsideOfGrid(checkX, checkY)) {
-                    Tile tmpTile = getTileAtPosition(checkX, checkY);
-                    if (tileConditionsAre(tmpTile, swimmable, climbable))
-                        tileObjects.add(tmpTile);
+                    if (isInsideOfGrid(checkX, checkY)) {
+                        Tile tmpTile = getTileAtPosition(checkX, checkY);
+                        if (tileConditionsAre(tmpTile, swimmable, climbable))
+                            tileObjects.add(tmpTile);
+                    }
                 }
             }
-        }
         return tileObjects;
     }
 
@@ -565,8 +565,6 @@ public class SimulationMap {
     }
 
     /**
-     *
-     *
      * @param tileWorldPosition
      * @param swimmable
      * @param climbable
@@ -631,6 +629,7 @@ public class SimulationMap {
         for (Tile tile : getTilesInRangeWhereConditionsAre(startTile, localRange, swimmable, climbable)) {
             matchingPosition.add(getCenterPositionOfTile(tile));
         }
+
         return matchingPosition;
     }
 
