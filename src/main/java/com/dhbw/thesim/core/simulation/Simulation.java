@@ -557,11 +557,13 @@ public class Simulation {
      * @return true, if the check circle intersect with any interaction range.
      */
     private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, List<Vector2D> ignore) {
+        if (ignore != null)
+            ignore.add(target);
         if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
         for (SimulationObject simulationObject : simulationObjects) {
-            if (ignore == null || !ignore.contains(simulationObject.getPosition()) || target != simulationObject.getPosition())
+            if (ignore == null || !ignore.contains(simulationObject.getPosition()))
                 if (doTheCirclesIntersect(target, interactionRange, simulationObject.getPosition(), simulationObject.getInteractionRange())) {
                     return true;
                 }
