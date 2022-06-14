@@ -99,7 +99,7 @@ public class Simulation {
      * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
      * @param plantGrowthRate           The growth rate for each plant.
      */
-    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate) {
+    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate) throws IOException {
         this.random = new Random();
         this.simulationMap = new SimulationMap(landscapeName);
         this.backgroundGraphics = backgroundGraphicsContext;
@@ -110,13 +110,7 @@ public class Simulation {
         this.simulationTime = new SimulationTime();
 
         this.simulationOverlay = simulationOverlay;
-
-        try {
-            this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
-        } catch (IOException e) {
-            //TODO Gui error handling
-            e.printStackTrace();
-        }
+        this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
 
         //Draw the map
         drawMap();

@@ -11,9 +11,12 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /**
@@ -143,9 +146,44 @@ public class ConfigScreen extends AnchorPane {
             }
         }
         if (minDinosSelected && minPlantsSelected) {
-            SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
-            window.setScene(simulationOverlay.getSimulationScene());
-            window.setFullScreen(true);
+            try {
+                SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
+                window.setScene(simulationOverlay.getSimulationScene());
+                window.setFullScreen(true);
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Fehlermeldung");
+                alert.setHeaderText("Fehler beim Starten der Simulation!");
+                alert.setContentText("Während des Starten der Simulation trat ein unbekannter Fehler auf.");
+
+                // Create expandable Exception.
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                String exceptionText = sw.toString();
+
+                Label label = new Label("Stacktrace der Ausnahme:");
+
+                TextArea textArea = new TextArea(exceptionText);
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
+
+                textArea.setMaxWidth(Double.MAX_VALUE);
+                textArea.setMaxHeight(Double.MAX_VALUE);
+                GridPane.setVgrow(textArea, Priority.ALWAYS);
+                GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+                GridPane expContent = new GridPane();
+                expContent.setMaxWidth(Double.MAX_VALUE);
+                expContent.add(label, 0, 0);
+                expContent.add(textArea, 0, 1);
+
+                // Set expandable Exception into the dialog pane.
+                alert.getDialogPane().setExpandableContent(expContent);
+                alert.initOwner(window);
+
+                alert.showAndWait();
+            }
         }
         if (!minDinosSelected) {
             Alert alert = new Alert(Alert.AlertType.ERROR);

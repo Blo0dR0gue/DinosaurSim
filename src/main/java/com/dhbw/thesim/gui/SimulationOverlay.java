@@ -54,7 +54,7 @@ public class SimulationOverlay extends BorderPane {
 
     private Statistics statistics;
 
-    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) {
+    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) throws IOException {
         //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
         centerPane = new AnchorPane();
         centerPane.setMaxWidth(Display.adjustScale(1920, Display.SCALE_X));
