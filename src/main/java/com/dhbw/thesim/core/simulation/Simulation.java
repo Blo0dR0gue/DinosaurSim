@@ -247,17 +247,18 @@ public class Simulation {
     /**
      * Gets the closest {@link SimulationObject} which can be eaten by the searcher {@link Dinosaur}
      *
-     * @param position  The {@link Vector2D} position of the seeker.
-     * @param viewRange The view range (as radius) of the seeker.
-     * @param dietType  The {@link Dinosaur.dietType} of the seeker.
-     * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
-     * @param strength  The strength of the seeker.
+     * @param position         The {@link Vector2D} position of the seeker.
+     * @param viewRange        The view range (as radius) of the seeker.
+     * @param interactionRange The interaction range of the seeker.
+     * @param dietType         The {@link Dinosaur.dietType} of the seeker.
+     * @param type             The type of the seeker. (e.g. Tyrannosaurus Rex)
+     * @param strength         The strength of the seeker.
      * @return The closest {@link SimulationObject}s in range.
      */
-    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
+    public SimulationObject getClosestReachableFoodSourceInRange(Vector2D position, double viewRange, double interactionRange, Dinosaur.dietType dietType, String type,
                                                                  boolean canSwim, boolean canClimb, double strength) {
 
-        List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, dietType, type, canSwim, canClimb, strength);
+        List<SimulationObject> inRange = findReachableFoodSourcesInRange(position, viewRange, interactionRange, dietType, type, canSwim, canClimb, strength);
 
         if (dietType != Dinosaur.dietType.OMNIVORE) {
             sortByDistance(position, inRange);
@@ -289,13 +290,14 @@ public class Simulation {
      * Gets all {@link SimulationObject}s which can be eaten by the searcher {@link Dinosaur} <br>
      * It is also been checked, if the food source can be eaten by the searcher.
      *
-     * @param position  The {@link Vector2D} position of the seeker.
-     * @param viewRange The view range (as radius) of the seeker.
-     * @param dietType  The {@link Dinosaur.dietType} of the seeker.
-     * @param type      The type of the seeker. (e.g. Tyrannosaurus Rex)
+     * @param position         The {@link Vector2D} position of the seeker.
+     * @param viewRange        The view range (as radius) of the seeker.
+     * @param interactionRange The interaction range of the {@link Dinosaur}
+     * @param dietType         The {@link Dinosaur.dietType} of the seeker.
+     * @param type             The type of the seeker. (e.g. Tyrannosaurus Rex)
      * @return A list with all eatable {@link SimulationObject}s in range.
      */
-    public List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, Dinosaur.dietType dietType, String type,
+    public List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, double interactionRange, Dinosaur.dietType dietType, String type,
                                                                   boolean canSwim, boolean canClimb, double strength) {
 
         List<SimulationObject> inRange = new ArrayList<>();
@@ -313,13 +315,14 @@ public class Simulation {
                         }
                     } else if (dietType == Dinosaur.dietType.OMNIVORE) {
                         //It's an omnivore
-                        if ((simulationObject instanceof Plant || simulationObject instanceof Dinosaur) && simulationObject.canBeEaten(strength))
+                        if ((simulationObject instanceof Plant plant) && plant.canBeEaten(strength) ||
+                                (simulationObject instanceof Dinosaur dinosaur) && dinosaur.canBeEaten(strength) && !dinosaur.getType().equalsIgnoreCase(type))
                             inRange.add(simulationObject);
                     }
                 }
             }
         }
-        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), 0, canSwim, canClimb, null, true, false, inRange));
+        inRange.removeIf(simulationObject -> !canMoveTo(position, simulationObject.getPosition(), interactionRange, canSwim, canClimb, null, true, false, inRange));
         return inRange;
     }
 
@@ -470,7 +473,7 @@ public class Simulation {
      * @param simulationObject The {@link SimulationObject}.
      */
     private void spawnObject(SimulationObject simulationObject) {
-        if (simulationObject instanceof Dinosaur dinosaur){
+        if (simulationObject instanceof Dinosaur dinosaur) {
             dinosaur.setTimeOfBirth(simulationTime.getTime());
             dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> simulationOverlay.dinosaurClicked(dinosaur));
         }

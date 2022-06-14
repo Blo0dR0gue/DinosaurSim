@@ -42,7 +42,7 @@ public class Hunt extends State {
     public void update(double deltaTime, Simulation simulation) {
         //Init
         if (target == null && dinosaur.isHungry()) {
-            dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+            dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(),
                     dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()));
             if (dinosaur.getTarget() != null && dinosaur.getTarget() instanceof Dinosaur targetDino) {
                 targetDino.setIsChased(true);
@@ -101,7 +101,7 @@ public class Hunt extends State {
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), simulationObject.getPosition(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, false, dinosaur.getTarget() != null ? List.of(dinosaur.getTarget()) : null)));
+        addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getTarget().getPosition(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, false, List.of(dinosaur.getTarget()))));
     }
 
     private boolean reached(Simulation simulation) {
