@@ -101,7 +101,7 @@ public class Dinosaur extends SimulationObject {
         this.canSwim = canSwim;
         this.canClimb = canClimb;
         this.reproductionRate = reproductionRate;
-        this.viewRange = Display.adjustScale(viewRange, Display.SCALE_X);
+        this.viewRange = viewRange;
         this.timeOfBirth = new SimulationTime();
 
         this.nutritionFull = this.nutrition;
@@ -241,6 +241,10 @@ public class Dinosaur extends SimulationObject {
     }
 
     public double getViewRange() {
+        return Display.adjustScale(viewRange, Display.SCALE_X);
+    }
+
+    public double getRealViewRange(){
         return viewRange;
     }
 

@@ -411,7 +411,7 @@ public class Simulation {
 
         Dinosaur baby = new Dinosaur(
                 mother.getType(), mother.getJavaFXObj().getImage(), nutrition, hydration, strength, speed,
-                reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
+                reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getRealViewRange(), mother.getRealInteractionRange(), gender);
 
 
         baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
