@@ -482,6 +482,7 @@ public class Simulation {
         }
 
         this.toBeSpawned.add(simulationObject);
+        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getSelectionRing()));
         Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
     }
 
