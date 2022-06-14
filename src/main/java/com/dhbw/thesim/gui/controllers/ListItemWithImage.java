@@ -85,16 +85,16 @@ public class ListItemWithImage extends HBox {
                 case "a" -> temp += "Nahrungsart: Allesfresser\n";
             }
             temp+="Gewicht: "+dino.get("Gewicht")+" kg\n";
-            temp+="Laenge: "+dino.get("Laenge")+" m\n";
-            temp+="Hoehe: "+dino.get("Hoehe")+" m\n";
-            temp+="Kann Schwimmen: "+(dino.get("KannSchwimmen")=="true"?"ja":"nein")+"\n";
+            temp+="Länge: "+dino.get("Laenge")+" m\n";
+            temp+="Höhe: "+dino.get("Hoehe")+" m\n";
+            temp+="Kann schwimmen: "+(dino.get("KannSchwimmen")=="true"?"ja":"nein")+"\n";
             temp+="Kann Klettern: "+(dino.get("KannKlettern")=="true"?"ja":"nein")+"\n";
             temp+="\n";
 
             temp+="Technische Parameter:\n";
             temp+="Nahrung: "+((double[])(dino.get("Nahrung")))[0]+", "+((double[])(dino.get("Nahrung")))[1]+"\n";
             temp+="Hydration: "+((double[])(dino.get("Hydration")))[0]+", "+((double[])(dino.get("Hydration")))[1]+"\n";
-            temp+="Staerke: "+((double[])(dino.get("Staerke")))[0]+", "+((double[])(dino.get("Staerke")))[1]+"\n";
+            temp+="Stärke: "+((double[])(dino.get("Staerke")))[0]+", "+((double[])(dino.get("Staerke")))[1]+"\n";
             temp+="Geschwindigkeit: "+((double[])(dino.get("Geschwindigkeit")))[0]+", "+((double[])(dino.get("Geschwindigkeit")))[1]+"\n";
             temp+="Fortpflanzungswilligkeit: "+((double[])(dino.get("Fortpflanzungswilligkeit")))[0]+", "+((double[])(dino.get("Fortpflanzungswilligkeit")))[1]+"\n";
             temp+="Sichtweite: "+((double[])(dino.get("Sichtweite")))[0]+", "+((double[])(dino.get("Sichtweite")))[1]+"\n";
