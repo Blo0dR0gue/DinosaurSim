@@ -252,6 +252,7 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void resetStatsScreen() {
+        lastSelectedDinosaur = null;
         dinoType.setText(NO_DINO_SELECTED);
         diet.setText(NO_DINO_SELECTED);
         gender.setText(NO_DINO_SELECTED);
