@@ -56,7 +56,7 @@ public class MoveToFoodSource extends State {
             //reset the target before selecting a new one.
             dinosaur.setTarget(null);
             if (dinosaur.isHungry() && dinosaur.isThirsty()) {
-                SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+                SimulationObject target1 = simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(),
                         dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength());
                 Vector2D target2 = simulation.getClosestReachableWaterSource(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.canSwim(), dinosaur.canClimb());
                 if (target1 == null && target2 != null) {
@@ -86,7 +86,7 @@ public class MoveToFoodSource extends State {
                     direction = dinosaur.getPosition().directionToTarget(target);
                 }
             } else if (dinosaur.isHungry()) {
-                dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getDiet(), dinosaur.getType(),
+                dinosaur.setTarget(simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(),
                         dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()));
                 if (dinosaur.getTarget() != null) {
                     System.out.println("Found food source");
