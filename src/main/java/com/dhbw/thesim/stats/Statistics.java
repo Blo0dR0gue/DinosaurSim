@@ -50,7 +50,16 @@ public class Statistics {
      * @param simulationTime       The simulation time
      */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList, SimulationTime simulationTime) {
-        statSimObjects.add(List.copyOf(simulationObjectList));
+
+        List<SimulationObject> tmp = new ArrayList<>();
+
+        for (SimulationObject simulationObject : simulationObjectList){
+            if(simulationObject instanceof Dinosaur dinosaur){
+                tmp.add(dinosaur.copyOf());
+            }
+        }
+
+        statSimObjects.add(tmp);
         simulationTimeList.add(new SimulationTime(simulationTime.getTime()));
     }
 
@@ -69,6 +78,9 @@ public class Statistics {
         List<Double> averageHydrationChased = new ArrayList<>();
         List<String> allDinoSpecies = getAllDinoSpecies(statSimObjects.get(0));
 
+        double allTimeLivingDinosaurs = 0d;
+        List<Dinosaur> helper = new ArrayList<>();
+
         for (List<SimulationObject> objList : statSimObjects) {
             int livingDinosaursCounter = 0;
             List<Integer> livingSpeciesCounter = new ArrayList<>();
@@ -83,21 +95,27 @@ public class Statistics {
             double hydrationChasedCounter = 0.0;
 
             for (SimulationObject obj : objList) {
-                if (obj instanceof Dinosaur) {
+                if (obj instanceof Dinosaur dinosaur) {
+
+                    if (!helper.contains(dinosaur)) {
+                        allTimeLivingDinosaurs++;
+                        helper.add(dinosaur);
+                    }
+
                     livingDinosaursCounter++;
                     for (int i = 0; i < allDinoSpecies.size(); i++) {
                         if (obj.getType().equals(allDinoSpecies.get(i))) {
                             livingSpeciesCounter.set(i, livingSpeciesCounter.get(i) + 1);
                         }
                     }
-                    if (((Dinosaur) obj).getDiet().equals(Dinosaur.dietType.HERBIVORE)) {
+                    if (dinosaur.getDiet().equals(Dinosaur.dietType.HERBIVORE)) {
                         livingChasedCounter++;
-                        nutritionChasedCounter += ((Dinosaur) obj).getNutrition();
-                        hydrationChasedCounter += ((Dinosaur) obj).getHydration();
+                        nutritionChasedCounter += dinosaur.getNutrition();
+                        hydrationChasedCounter += dinosaur.getHydration();
                     } else {
                         livingPredatorsCounter++;
-                        nutritionPredatorsCounter += ((Dinosaur) obj).getNutrition();
-                        hydrationPredatorsCounter += ((Dinosaur) obj).getHydration();
+                        nutritionPredatorsCounter += dinosaur.getNutrition();
+                        hydrationPredatorsCounter += dinosaur.getHydration();
                     }
                 }
             }
@@ -105,16 +123,16 @@ public class Statistics {
             livingSpecies.add(livingSpeciesCounter);
             livingPredators.add(livingPredatorsCounter);
             livingChased.add(livingChasedCounter);
-            averageNutritionPredators.add(nutritionPredatorsCounter / ((double) livingPredatorsCounter));
-            averageNutritionChased.add(nutritionChasedCounter / ((double) livingChasedCounter));
-            averageHydrationPredators.add(hydrationPredatorsCounter / ((double) livingPredatorsCounter));
-            averageHydrationChased.add(hydrationChasedCounter / ((double) livingChasedCounter));
+            if (livingPredatorsCounter > 0)
+                averageNutritionPredators.add(nutritionPredatorsCounter / ((double) livingPredatorsCounter));
+            if (livingChasedCounter > 0)
+                averageNutritionChased.add(nutritionChasedCounter / ((double) livingChasedCounter));
+            if (livingPredatorsCounter > 0)
+                averageHydrationPredators.add(hydrationPredatorsCounter / ((double) livingPredatorsCounter));
+            if (livingChasedCounter > 0)
+                averageHydrationChased.add(hydrationChasedCounter / ((double) livingChasedCounter));
         }
 
-        double helperNutritionPredators = 0;
-        double helperNutritionChased = 0;
-        double helperHydrationPredators = 0;
-        double helperHydrationChased = 0;
         int helperLivingDinosaurs = 0;
         int helperLivingPredators = 0;
         int helperLivingChased = 0;
@@ -124,24 +142,24 @@ public class Statistics {
             helperLivingPredators += livingPredators.get(i);
             helperLivingChased += livingChased.get(i);
         }
-        helperNutritionPredators = getHelperValue(averageNutritionPredators, helperNutritionPredators);
-        helperNutritionChased = getHelperValue(averageNutritionChased, helperNutritionChased);
-        helperHydrationPredators = getHelperValue(averageHydrationPredators, helperHydrationPredators);
-        helperHydrationChased = getHelperValue(averageHydrationChased, helperHydrationChased);
+        double helperNutritionPredators = getHelperValue(averageNutritionPredators);
+        double helperNutritionChased = getHelperValue(averageNutritionChased);
+        double helperHydrationPredators = getHelperValue(averageHydrationPredators);
+        double helperHydrationChased = getHelperValue(averageHydrationChased);
 
-
-        return new StatisticsStruct(simulationTime, helperNutritionPredators / listElementCounter,
-                helperNutritionChased / listElementCounter,
-                helperHydrationPredators / listElementCounter,
-                (helperHydrationChased / listElementCounter),
+        return new StatisticsStruct(simulationTime, helperNutritionPredators / ((double) listElementCounter),
+                helperNutritionChased / ((double) listElementCounter),
+                helperHydrationPredators / ((double) listElementCounter),
+                (helperHydrationChased / ((double) listElementCounter)),
                 ((double) helperLivingPredators) / ((double) helperLivingDinosaurs),
                 ((double) helperLivingChased) / ((double) helperLivingDinosaurs),
                 livingDinosaurs, livingSpecies, allDinoSpecies, livingPredators, livingChased,
                 this.simulationTimeList);
     }
 
-    private double getHelperValue(List<Double> averageList, double helper) {
-        for (double avg:
+    private double getHelperValue(List<Double> averageList) {
+        double helper = 0;
+        for (double avg :
                 averageList) {
             helper += avg;
         }

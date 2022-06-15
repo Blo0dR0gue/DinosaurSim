@@ -116,6 +116,13 @@ public class Dinosaur extends SimulationObject {
         setState(new Stand(this));
     }
 
+    public Dinosaur copyOf(){
+        return new Dinosaur(this.getType(), this.getJavaFXObj().getImage(), this.nutrition, this.hydration,
+       this.strength, this.speed, this.reproductionRate, this.weight, this.length, this.height,
+        this.canSwim, this.canClimb, this.getCharDiet(), this.viewRange,
+       this.interactionRange, this.gender);
+    }
+
     /**
      * Handles the updates for each {@link State} of a {@link Dinosaur}-object.
      *
