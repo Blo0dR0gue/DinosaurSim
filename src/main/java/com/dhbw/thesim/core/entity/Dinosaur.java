@@ -116,11 +116,55 @@ public class Dinosaur extends SimulationObject {
         setState(new Stand(this));
     }
 
+    public Dinosaur(String name, Image image, double nutrition, double hydration,
+                    double strength, double speed, double reproductionRate, double weight, double length, double height,
+                    boolean canSwim, boolean canClimb, char diet, double viewRange,
+                    double interactionRange, char gender, double maxNutrition, double maxHydration, double reproductionValue, SimulationObject target, boolean isChased, State state) {
+        super(name, interactionRange, image);
+
+        if (diet == 'a')
+            this.diet = dietType.OMNIVORE;
+        else if (diet == 'f')
+            this.diet = dietType.CARNIVORE;
+        else
+            this.diet = dietType.HERBIVORE;
+
+        this.nutrition = nutrition;
+        this.hydration = hydration;
+        this.strength = strength;
+        this.speed = speed;
+        this.weight = weight;
+        this.length = length;
+        this.height = height;
+        this.gender = gender;
+        this.canSwim = canSwim;
+        this.canClimb = canClimb;
+        this.reproductionRate = reproductionRate;
+        this.viewRange = viewRange;
+        this.timeOfBirth = new SimulationTime();
+
+        this.nutritionFull = maxNutrition;
+        this.hydrationFull = maxHydration;
+
+        //Initial reproduction value as specified in the software design. This value increases over time.
+        this.reproductionValue = reproductionValue;
+
+        this.target = target;
+        this.isChased = isChased;
+
+        setState(state);
+    }
+
     public Dinosaur copyOf(){
-        return new Dinosaur(this.getType(), this.getJavaFXObj().getImage(), this.nutrition, this.hydration,
-       this.strength, this.speed, this.reproductionRate, this.weight, this.length, this.height,
-        this.canSwim, this.canClimb, this.getCharDiet(), this.viewRange,
-       this.interactionRange, this.gender);
+        Dinosaur copy = new Dinosaur(this.getType(), this.getJavaFXObj().getImage(), this.nutrition, this.hydration,
+                this.strength, this.speed, this.reproductionRate, this.weight, this.length, this.height,
+                this.canSwim, this.canClimb, this.getCharDiet(), this.viewRange,
+                this.interactionRange, this.gender, this.nutritionFull, this.nutritionFull,
+                this.reproductionValue, this.target, this.isChased, this.currentState);
+
+
+
+        return copy;
     }
 
     /**
