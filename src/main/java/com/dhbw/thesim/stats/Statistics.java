@@ -77,6 +77,7 @@ public class Statistics {
      * Method responsible for generation of overall statistics
      */
     public StatisticsStruct getSimulationStats() {
+        //preparing variables
         long simulationTime = System.currentTimeMillis() - startTime;
         List<Integer> livingDinosaursIterations = new ArrayList<>();
         List<List<Integer>> livingSpeciesIterations = new ArrayList<>();
@@ -94,6 +95,7 @@ public class Statistics {
         double allTimeLivingDinosaursCounter = 0d;
         List<Dinosaur> allDinosaursEverAliveList = new ArrayList<>();
 
+        //iterating over every statSimObjects update
         for (List<SimulationObject> currentObjects : statSimObjects) {  //iterate over every list of objects per statSimObjects update
 
             int iterationLivingDinosaursCounter = 0;
@@ -144,6 +146,8 @@ public class Statistics {
 
             livingChasedIterations.add(iterationLivingChasedCounter);
         }
+
+        //calculating with totals
 
         double sumOfLivingDinosaursAcrossAllIterations = 0.0;
         double sumOfLivingPredatorsAcrossAllIterations = 0.0;
