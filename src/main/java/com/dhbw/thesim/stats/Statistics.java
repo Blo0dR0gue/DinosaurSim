@@ -34,6 +34,16 @@ public class Statistics {
     private final List<SimulationTime> simulationTimeList;
     private final long startTime;
 
+    private enum dinosaurType{
+        CHASED,
+        PREDATOR
+    }
+
+    private enum nutritionType{
+        HYDRATION,
+        NUTRITION
+    }
+
     /**
      * Constructor for class Statistics ->  Called from GUI to generate a statistics-object
      */
@@ -51,15 +61,15 @@ public class Statistics {
      */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList, SimulationTime simulationTime) {
 
-        List<SimulationObject> tmp = new ArrayList<>();
+        List<SimulationObject> iteration = new ArrayList<>();
 
         for (SimulationObject simulationObject : simulationObjectList){
             if(simulationObject instanceof Dinosaur dinosaur){
-                tmp.add(dinosaur.copyOf());
+                iteration.add(dinosaur.copyOf());
             }
         }
 
-        statSimObjects.add(tmp);
+        statSimObjects.add(iteration);
         simulationTimeList.add(new SimulationTime(simulationTime.getTime()));
     }
 
@@ -90,11 +100,13 @@ public class Statistics {
             int iterationLivingPredatorsCounter = 0;
             int iterationLivingChasedCounter = 0;
 
-            double iterationNutritionPredatorsCounter = 0.0;
-            double iterationNutritionChasedCounter = 0.0;
 
-            double iterationHydrationPredatorsCounter = 0.0;
-            double iterationHydrationChasedCounter = 0.0;
+
+            HashMap<dinosaurType, List<Double>> iterationNutritionPercentages = new HashMap<>();
+            initPercentagesHashMap(iterationNutritionPercentages);
+
+            HashMap<dinosaurType, List<Double>> iterationHydrationPercentages = new HashMap<>();
+            initPercentagesHashMap(iterationHydrationPercentages);
 
             for (SimulationObject obj : currentObjects) {   //iterate over every object in the list of current objects
                 if (obj instanceof Dinosaur dinosaur) {
@@ -111,15 +123,25 @@ public class Statistics {
 
                     if (dinosaur.getDiet().equals(Dinosaur.dietType.HERBIVORE)) {   //adding stats for chased vs predators to counters
                         iterationLivingChasedCounter++;
-                        iterationNutritionChasedCounter += dinosaur.getNutrition();
-                        iterationHydrationChasedCounter += dinosaur.getHydration();
+                        getDietPercentages(dinosaurType.CHASED, iterationNutritionPercentages, iterationHydrationPercentages, dinosaur);
                     } else {
                         iterationLivingPredatorsCounter++;
-                        iterationNutritionPredatorsCounter += dinosaur.getNutrition();
-                        iterationHydrationPredatorsCounter += dinosaur.getHydration();
+                        getDietPercentages(dinosaurType.PREDATOR, iterationNutritionPercentages, iterationHydrationPercentages, dinosaur);
                     }
                 }
             }
+
+            double iterationNutritionPredatorsPercentage = calculateTotalAverage(iterationNutritionPercentages.get(dinosaurType.PREDATOR));
+            double iterationNutritionChasedPercentage = calculateTotalAverage(iterationNutritionPercentages.get(dinosaurType.CHASED));
+
+            double iterationHydrationPredatorsPercentage = calculateTotalAverage(iterationHydrationPercentages.get(dinosaurType.PREDATOR));
+            double iterationHydrationChasedPercentage = calculateTotalAverage(iterationHydrationPercentages.get(dinosaurType.CHASED));
+
+            averageNutritionPredatorsIterations.add(iterationNutritionPredatorsPercentage);
+            averageNutritionChasedIterations.add(iterationNutritionPredatorsPercentage);
+
+            averageHydrationPredatorsIterations.add(iterationHydrationPredatorsPercentage);
+            averageHydrationChasedIterations.add(iterationHydrationChasedPercentage);
 
             livingDinosaursIterations.add(iterationLivingDinosaursCounter);
 
@@ -128,16 +150,6 @@ public class Statistics {
             livingPredatorsIterations.add(iterationLivingPredatorsCounter);
 
             livingChasedIterations.add(iterationLivingChasedCounter);
-
-            //adding counters from current iteration to list if the divisor is greater than 0 (to avoid divide by 0 errors)
-            if (iterationLivingPredatorsCounter > 0) {
-                averageNutritionPredatorsIterations.add(iterationNutritionPredatorsCounter / ((double) iterationLivingPredatorsCounter));
-                averageHydrationPredatorsIterations.add(iterationHydrationPredatorsCounter / ((double) iterationLivingPredatorsCounter));
-            }
-            if (iterationLivingChasedCounter > 0) {
-                averageNutritionChasedIterations.add(iterationNutritionChasedCounter / ((double) iterationLivingChasedCounter));
-                averageHydrationChasedIterations.add(iterationHydrationChasedCounter / ((double) iterationLivingChasedCounter));
-            }
         }
 
         double sumOfLivingDinosaursAcrossAllIterations = 0.0;
@@ -151,16 +163,11 @@ public class Statistics {
             sumOfLivingChasedAcrossAllIterations += livingChasedIterations.get(i);
         }
 
-        double sumOfNutritionPredatorsAcrossAllIterations = getTotalOfAllAverages(averageNutritionPredatorsIterations);
-        double sumOfNutritionChasedAcrossAllIterations = getTotalOfAllAverages(averageNutritionChasedIterations);
-        double sumOfHydrationPredatorsAcrossAllIterations = getTotalOfAllAverages(averageHydrationPredatorsIterations);
-        double sumOfHydrationChasedAcrossAllIterations = getTotalOfAllAverages(averageHydrationChasedIterations);
+        double averageNutritionPredatorsAcrossAllIterations = calculateTotalAverage(averageNutritionPredatorsIterations);
+        double averageNutritionChasedAcrossAllIterations = calculateTotalAverage(averageNutritionChasedIterations);
 
-        double averageNutritionPredatorsAcrossAllIterations = sumOfNutritionPredatorsAcrossAllIterations / sumOfLivingPredatorsAcrossAllIterations;
-        double averageNutritionChasedAcrossAllIterations = sumOfNutritionChasedAcrossAllIterations / sumOfLivingChasedAcrossAllIterations;
-
-        double averageHydrationPredatorsAcrossAllIterations = sumOfHydrationPredatorsAcrossAllIterations / sumOfLivingPredatorsAcrossAllIterations;
-        double averageHydrationChasedAcrossAllIterations = sumOfHydrationChasedAcrossAllIterations / sumOfLivingChasedAcrossAllIterations;
+        double averageHydrationPredatorsAcrossAllIterations = calculateTotalAverage(averageHydrationPredatorsIterations);
+        double averageHydrationChasedAcrossAllIterations = calculateTotalAverage(averageHydrationChasedIterations);
 
         double percentagePredatorsAcrossAllIterations = sumOfLivingPredatorsAcrossAllIterations / sumOfLivingDinosaursAcrossAllIterations;
         double percentageChasedAcrossAllIterations = sumOfLivingChasedAcrossAllIterations / sumOfLivingDinosaursAcrossAllIterations;
@@ -174,6 +181,30 @@ public class Statistics {
                 percentageChasedAcrossAllIterations,
                 livingDinosaursIterations, livingSpeciesIterations, allDinoSpecies, livingPredatorsIterations, livingChasedIterations,
                 this.simulationTimeList);
+    }
+
+    private double calculateTotalAverage(List<Double> averages) {
+        return averages.size() != 0 ? getTotalOfAllAverages(averages) / averages.size() : 0;
+    }
+
+    private void getDietPercentages(dinosaurType type, HashMap<dinosaurType, List<Double>> iterationNutritionPercentages, HashMap<dinosaurType, List<Double>> iterationHydrationPercentages, Dinosaur dinosaur) {
+        iterationNutritionPercentages.get(type).add(getDinosaurNutritionPercentage(dinosaur));
+        iterationHydrationPercentages.get(type).add(getDinosaurHydrationPercentage(dinosaur));
+    }
+
+    private void initPercentagesHashMap(HashMap<dinosaurType, List<Double>> iterationNutritionPercentages) {
+        iterationNutritionPercentages.put(dinosaurType.PREDATOR, new ArrayList<>());
+        iterationNutritionPercentages.put(dinosaurType.CHASED, new ArrayList<>());
+    }
+
+    private double getDinosaurHydrationPercentage(Dinosaur dinosaur) {
+        //getting the percentage of current hydration
+        return dinosaur.getHydration() / dinosaur.getMaxHydration();
+    }
+
+    private double getDinosaurNutritionPercentage(Dinosaur dinosaur) {
+        //getting the percentage of current nutrition
+        return dinosaur.getNutrition() / dinosaur.getMaxNutrition();
     }
 
     private void increaseLivingSpeciesCount(List<String> allDinoSpecies, List<Integer> iterationLivingSpeciesCounter, SimulationObject obj) {
