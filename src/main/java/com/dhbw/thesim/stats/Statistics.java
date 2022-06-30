@@ -68,96 +68,132 @@ public class Statistics {
      */
     public StatisticsStruct getSimulationStats() {
         long simulationTime = System.currentTimeMillis() - startTime;
-        List<Integer> livingDinosaurs = new ArrayList<>();
-        List<List<Integer>> livingSpecies = new ArrayList<>();
-        List<Integer> livingPredators = new ArrayList<>();
-        List<Integer> livingChased = new ArrayList<>();
-        List<Double> averageNutritionPredators = new ArrayList<>();
-        List<Double> averageNutritionChased = new ArrayList<>();
-        List<Double> averageHydrationPredators = new ArrayList<>();
-        List<Double> averageHydrationChased = new ArrayList<>();
+        List<Integer> livingDinosaursIterations = new ArrayList<>();
+        List<List<Integer>> livingSpeciesIterations = new ArrayList<>();
+        List<Integer> livingPredatorsIterations = new ArrayList<>();
+        List<Integer> livingChasedIterations = new ArrayList<>();
+        List<Double> averageNutritionPredatorsIterations = new ArrayList<>();
+        List<Double> averageNutritionChasedIterations = new ArrayList<>();
+        List<Double> averageHydrationPredatorsIterations = new ArrayList<>();
+        List<Double> averageHydrationChasedIterations = new ArrayList<>();
         List<String> allDinoSpecies = getAllDinoSpecies(statSimObjects.get(0));
 
-        double allTimeLivingDinosaurs = 0d;
-        List<Dinosaur> helper = new ArrayList<>();
+        double allTimeLivingDinosaursCounter = 0d;
+        List<Dinosaur> allDinosaursEverAliveList = new ArrayList<>();
 
-        for (List<SimulationObject> objList : statSimObjects) {
-            int livingDinosaursCounter = 0;
-            List<Integer> livingSpeciesCounter = new ArrayList<>();
-            for (int i = 0; i < allDinoSpecies.size(); i++) {
-                livingSpeciesCounter.add(0);
-            }
-            int livingPredatorsCounter = 0;
-            int livingChasedCounter = 0;
-            double nutritionPredatorsCounter = 0.0;
-            double nutritionChasedCounter = 0.0;
-            double hydrationPredatorsCounter = 0.0;
-            double hydrationChasedCounter = 0.0;
+        for (List<SimulationObject> currentObjects : statSimObjects) {  //iterate over every list of objects per statSimObjects update
 
-            for (SimulationObject obj : objList) {
+            int iterationLivingDinosaursCounter = 0;
+
+            List<Integer> iterationLivingSpeciesCounter = initiateListOfLivingSpeciesCounters(allDinoSpecies);
+
+            int iterationLivingPredatorsCounter = 0;
+            int iterationLivingChasedCounter = 0;
+
+            double iterationNutritionPredatorsCounter = 0.0;
+            double iterationNutritionChasedCounter = 0.0;
+
+            double iterationHydrationPredatorsCounter = 0.0;
+            double iterationHydrationChasedCounter = 0.0;
+
+            for (SimulationObject obj : currentObjects) {   //iterate over every object in the list of current objects
                 if (obj instanceof Dinosaur dinosaur) {
 
-                    if (!helper.contains(dinosaur)) {
-                        allTimeLivingDinosaurs++;
-                        helper.add(dinosaur);
+                    iterationLivingDinosaursCounter++;
+
+                    if (!allDinosaursEverAliveList.contains(dinosaur)) {    //Checking if the current dinosaur has already been counted toward the list of all time living dinosaurs and adding it if not
+                        allTimeLivingDinosaursCounter++;
+                        allDinosaursEverAliveList.add(dinosaur);
                     }
 
-                    livingDinosaursCounter++;
-                    for (int i = 0; i < allDinoSpecies.size(); i++) {
-                        if (obj.getType().equals(allDinoSpecies.get(i))) {
-                            livingSpeciesCounter.set(i, livingSpeciesCounter.get(i) + 1);
-                        }
-                    }
-                    if (dinosaur.getDiet().equals(Dinosaur.dietType.HERBIVORE)) {
-                        livingChasedCounter++;
-                        nutritionChasedCounter += dinosaur.getNutrition();
-                        hydrationChasedCounter += dinosaur.getHydration();
+
+                    increaseLivingSpeciesCount(allDinoSpecies, iterationLivingSpeciesCounter, obj);
+
+                    if (dinosaur.getDiet().equals(Dinosaur.dietType.HERBIVORE)) {   //adding stats for chased vs predators to counters
+                        iterationLivingChasedCounter++;
+                        iterationNutritionChasedCounter += dinosaur.getNutrition();
+                        iterationHydrationChasedCounter += dinosaur.getHydration();
                     } else {
-                        livingPredatorsCounter++;
-                        nutritionPredatorsCounter += dinosaur.getNutrition();
-                        hydrationPredatorsCounter += dinosaur.getHydration();
+                        iterationLivingPredatorsCounter++;
+                        iterationNutritionPredatorsCounter += dinosaur.getNutrition();
+                        iterationHydrationPredatorsCounter += dinosaur.getHydration();
                     }
                 }
             }
-            livingDinosaurs.add(livingDinosaursCounter);
-            livingSpecies.add(livingSpeciesCounter);
-            livingPredators.add(livingPredatorsCounter);
-            livingChased.add(livingChasedCounter);
-            if (livingPredatorsCounter > 0)
-                averageNutritionPredators.add(nutritionPredatorsCounter / ((double) livingPredatorsCounter));
-            if (livingChasedCounter > 0)
-                averageNutritionChased.add(nutritionChasedCounter / ((double) livingChasedCounter));
-            if (livingPredatorsCounter > 0)
-                averageHydrationPredators.add(hydrationPredatorsCounter / ((double) livingPredatorsCounter));
-            if (livingChasedCounter > 0)
-                averageHydrationChased.add(hydrationChasedCounter / ((double) livingChasedCounter));
+
+            livingDinosaursIterations.add(iterationLivingDinosaursCounter);
+
+            livingSpeciesIterations.add(iterationLivingSpeciesCounter);
+
+            livingPredatorsIterations.add(iterationLivingPredatorsCounter);
+
+            livingChasedIterations.add(iterationLivingChasedCounter);
+
+            //adding counters from current iteration to list if the divisor is greater than 0 (to avoid divide by 0 errors)
+            if (iterationLivingPredatorsCounter > 0) {
+                averageNutritionPredatorsIterations.add(iterationNutritionPredatorsCounter / ((double) iterationLivingPredatorsCounter));
+                averageHydrationPredatorsIterations.add(iterationHydrationPredatorsCounter / ((double) iterationLivingPredatorsCounter));
+            }
+            if (iterationLivingChasedCounter > 0) {
+                averageNutritionChasedIterations.add(iterationNutritionChasedCounter / ((double) iterationLivingChasedCounter));
+                averageHydrationChasedIterations.add(iterationHydrationChasedCounter / ((double) iterationLivingChasedCounter));
+            }
         }
 
-        int helperLivingDinosaurs = 0;
-        int helperLivingPredators = 0;
-        int helperLivingChased = 0;
-        int listElementCounter = livingDinosaurs.size();
-        for (int i = 0; i < listElementCounter; i++) {
-            helperLivingDinosaurs += livingDinosaurs.get(i);
-            helperLivingPredators += livingPredators.get(i);
-            helperLivingChased += livingChased.get(i);
-        }
-        double helperNutritionPredators = getHelperValue(averageNutritionPredators);
-        double helperNutritionChased = getHelperValue(averageNutritionChased);
-        double helperHydrationPredators = getHelperValue(averageHydrationPredators);
-        double helperHydrationChased = getHelperValue(averageHydrationChased);
+        double sumOfLivingDinosaursAcrossAllIterations = 0.0;
+        double sumOfLivingPredatorsAcrossAllIterations = 0.0;
+        double sumOfLivingChasedAcrossAllIterations = 0.0;
+        int countOfIterations = livingDinosaursIterations.size();
 
-        return new StatisticsStruct(simulationTime, helperNutritionPredators / ((double) listElementCounter),
-                helperNutritionChased / ((double) listElementCounter),
-                helperHydrationPredators / ((double) listElementCounter),
-                (helperHydrationChased / ((double) listElementCounter)),
-                ((double) helperLivingPredators) / ((double) helperLivingDinosaurs),
-                ((double) helperLivingChased) / ((double) helperLivingDinosaurs),
-                livingDinosaurs, livingSpecies, allDinoSpecies, livingPredators, livingChased,
+        for (int i = 0; i < countOfIterations; i++) {
+            sumOfLivingDinosaursAcrossAllIterations += livingDinosaursIterations.get(i);
+            sumOfLivingPredatorsAcrossAllIterations += livingPredatorsIterations.get(i);
+            sumOfLivingChasedAcrossAllIterations += livingChasedIterations.get(i);
+        }
+
+        double sumOfNutritionPredatorsAcrossAllIterations = getTotalOfAllAverages(averageNutritionPredatorsIterations);
+        double sumOfNutritionChasedAcrossAllIterations = getTotalOfAllAverages(averageNutritionChasedIterations);
+        double sumOfHydrationPredatorsAcrossAllIterations = getTotalOfAllAverages(averageHydrationPredatorsIterations);
+        double sumOfHydrationChasedAcrossAllIterations = getTotalOfAllAverages(averageHydrationChasedIterations);
+
+        double averageNutritionPredatorsAcrossAllIterations = sumOfNutritionPredatorsAcrossAllIterations / sumOfLivingPredatorsAcrossAllIterations;
+        double averageNutritionChasedAcrossAllIterations = sumOfNutritionChasedAcrossAllIterations / sumOfLivingChasedAcrossAllIterations;
+
+        double averageHydrationPredatorsAcrossAllIterations = sumOfHydrationPredatorsAcrossAllIterations / sumOfLivingPredatorsAcrossAllIterations;
+        double averageHydrationChasedAcrossAllIterations = sumOfHydrationChasedAcrossAllIterations / sumOfLivingChasedAcrossAllIterations;
+
+        double percentagePredatorsAcrossAllIterations = sumOfLivingPredatorsAcrossAllIterations / sumOfLivingDinosaursAcrossAllIterations;
+        double percentageChasedAcrossAllIterations = sumOfLivingChasedAcrossAllIterations / sumOfLivingDinosaursAcrossAllIterations;
+
+
+        return new StatisticsStruct(simulationTime, averageNutritionPredatorsAcrossAllIterations,
+                averageNutritionChasedAcrossAllIterations,
+                averageHydrationPredatorsAcrossAllIterations,
+                averageHydrationChasedAcrossAllIterations,
+                percentagePredatorsAcrossAllIterations,
+                percentageChasedAcrossAllIterations,
+                livingDinosaursIterations, livingSpeciesIterations, allDinoSpecies, livingPredatorsIterations, livingChasedIterations,
                 this.simulationTimeList);
     }
 
-    private double getHelperValue(List<Double> averageList) {
+    private void increaseLivingSpeciesCount(List<String> allDinoSpecies, List<Integer> iterationLivingSpeciesCounter, SimulationObject obj) {
+        for (int i = 0; i < allDinoSpecies.size(); i++) { //adding the current dinosaur to the corresponding species count
+            if (obj.getType().equals(allDinoSpecies.get(i))) {
+                iterationLivingSpeciesCounter.set(i, iterationLivingSpeciesCounter.get(i) + 1);
+            }
+        }
+    }
+
+    private List<Integer> initiateListOfLivingSpeciesCounters(List<String> allDinoSpecies) {
+        //initiate list of living species
+        List<Integer> iterationLivingSpeciesCounter = new ArrayList<>();
+        for (int i = 0; i < allDinoSpecies.size(); i++) {
+            iterationLivingSpeciesCounter.add(0);
+        }
+        return iterationLivingSpeciesCounter;
+    }
+
+    private double getTotalOfAllAverages(List<Double> averageList) {
         double helper = 0;
         for (double avg :
                 averageList) {
