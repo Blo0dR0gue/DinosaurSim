@@ -218,7 +218,7 @@ public class Statistics {
         return dinosaur.getNutrition() / dinosaur.getMaxNutrition();
     }
 
-    private void increaseLivingSpeciesCount(List<String> allDinoSpecies, List<Integer> iterationLivingSpeciesCounter, SimulationObject obj) {
+    private void increaseLivingSpeciesCount(List<String> allDinoSpecies, List<Integer> iterationLivingSpeciesCounter, SimulationObject obj) {   //TODO change living species to hashmap
         for (int i = 0; i < allDinoSpecies.size(); i++) { //adding the current dinosaur to the corresponding species count
             if (obj.getType().equals(allDinoSpecies.get(i))) {
                 iterationLivingSpeciesCounter.set(i, iterationLivingSpeciesCounter.get(i) + 1);
@@ -226,7 +226,7 @@ public class Statistics {
         }
     }
 
-    private List<Integer> initiateListOfLivingSpeciesCounters(List<String> allDinoSpecies) {
+    private List<Integer> initiateListOfLivingSpeciesCounters(List<String> allDinoSpecies) {    //TODO change living species to hashmap
         //initiate list of living species
         List<Integer> iterationLivingSpeciesCounter = new ArrayList<>();
         for (int i = 0; i < allDinoSpecies.size(); i++) {
