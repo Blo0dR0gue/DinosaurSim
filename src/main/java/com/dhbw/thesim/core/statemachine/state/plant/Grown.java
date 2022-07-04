@@ -6,6 +6,7 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
+import javafx.application.Platform;
 
 /**
  * Represents a {@link State} an {@link Plant} can be in. <br>
@@ -29,7 +30,9 @@ public class Grown extends State {
     @Override
     public void onExit() {
         //Hide the plant
-        plant.getJavaFXObj().setVisible(false);
+        Platform.runLater(() -> {
+            plant.getJavaFXObj().setVisible(false);
+        });
     }
 
     @Override
