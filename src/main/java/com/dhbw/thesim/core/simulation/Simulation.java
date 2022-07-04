@@ -422,8 +422,12 @@ public class Simulation {
                 mother.getType(), mother.getJavaFXObj().getImage(), nutrition, hydration, strength, speed,
                 reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getRealViewRange(), mother.getRealInteractionRange(), gender);
 
+        Vector2D spawnPoint = getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange());
 
-        baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
+        //Cancel if no point was found
+        if (spawnPoint == null) return;
+
+        baby.setPosition(spawnPoint);
 
         spawnObject(baby);
 
@@ -442,16 +446,27 @@ public class Simulation {
      */
     public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
 
-        List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
+        double internRange = range + Tile.TILE_SIZE;
 
-        for (Vector2D pos : positions) {
-            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null)) {
-                System.out.println("Spawn position found with range " + range);
-                return pos;
+        List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
+
+        int maximumAttempts = 500;
+
+        while (maximumAttempts > 0) {
+
+            for (Vector2D pos : positions) {
+                if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null)) {
+                    System.out.println("Spawn position found with range " + range);
+                    return pos;
+                }
             }
-        }
 
-        return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
+            maximumAttempts--;
+            internRange += 1;
+
+            positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
+        }
+        return null;
     }
 
     /**
@@ -531,10 +546,11 @@ public class Simulation {
      * @return A random {@link Vector2D} position.
      */
     public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
+        //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
+        while (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
                 || !simulationMap.checkIfNeighborTilesMatchConditions(target, canSwim, canClimb, interactionRange)) {
-            return getFreePositionInMap(canSwim, canClimb, interactionRange, renderOffset);
+            target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
         }
         return target;
     }
@@ -549,10 +565,11 @@ public class Simulation {
      * @return A random {@link Vector2D} position.
      */
     public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
+        //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
+        while (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
                 || !simulationMap.checkIfNeighborTilesHasConditions(target, swimmable, climbable, allowPlants, interactionRange)) {
-            return getFreePositionInMapWhereConditionsAre(swimmable, climbable, allowPlants, interactionRange, renderOffset);
+            target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
         }
         return target;
     }
