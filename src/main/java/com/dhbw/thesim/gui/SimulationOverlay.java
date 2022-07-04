@@ -32,6 +32,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
@@ -45,7 +46,6 @@ public class SimulationOverlay extends BorderPane {
     private GraphicsContext canvasGraphics;
     private SimulationLoop simulationLoop;
     public AnchorPane centerPane;
-    private Boolean simulationIsRunning;
     private SideBar sideBar;
     private final boolean isSimulationModeAuto;
 
@@ -137,9 +137,7 @@ public class SimulationOverlay extends BorderPane {
         //Check if automatic simulation mode was selected from the config screen, then add needed controls to sidebar
         if (isSimulationModeAuto) {
             //Add the control buttons for automatic simulation mode to the sidebar and add a click listener to each
-            createToggleButton("/controls/play.png", false);
-
-            createToggleButton("/controls/pause.png", true);
+            createToggleButton();
         } else {
             //Add the control buttons for manual simulation mode to the sidebar and add a click listener to each
             Button nextStepButton = addControlButtonToSideBar("/controls/next.png");
@@ -154,12 +152,15 @@ public class SimulationOverlay extends BorderPane {
         triggerDinosaurSingleStatsUpdate();
     }
 
-    private void createToggleButton(String controlImgUrl, Boolean shouldPauseSimulation) {
-        Button toggleButton = addControlButtonToSideBar(controlImgUrl);
+    private void createToggleButton() {
+        AtomicBoolean pause = new AtomicBoolean(false);
+        Button toggleButton = addControlButtonToSideBar("/controls/pause.png");
         toggleButton.setOnAction(e -> {
-            if (simulationLoop.getSimulationPaused() != shouldPauseSimulation) {
-                simulationLoop.togglePause();
-            }
+            simulationLoop.togglePause();
+            String controlImgUrl = pause.get() ? "controls/pause.png" : "controls/play.png";
+            ImageView graphic = (ImageView) toggleButton.getGraphic();
+            graphic.setImage(new Image(controlImgUrl));
+            pause.set(!pause.get());
         });
     }
 
