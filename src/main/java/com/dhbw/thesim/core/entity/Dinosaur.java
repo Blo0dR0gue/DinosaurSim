@@ -369,10 +369,19 @@ public class Dinosaur extends SimulationObject {
     }
 
     //region getter & setter
+
+    /**
+     * Gets the diet type of the dinosaur.
+     * @return The {@link dietType}.
+     */
     public dietType getDiet() {
         return diet;
     }
 
+    /**
+     * Gets the diet type as char.
+     * @return 'a' for OMNIVORE, 'f' for CARNIVORE and 'p' for HERBIVORE. Default is p.
+     */
     public char getCharDiet() {
 
         if (diet == dietType.OMNIVORE)
@@ -382,110 +391,214 @@ public class Dinosaur extends SimulationObject {
         else if (this.diet == dietType.HERBIVORE)
             return 'p';
         else
-            return 'x';
+            return 'p';
     }
 
+    /**
+     * Gets the current nutrition level of the dinosaur.
+     * @return The {@link #nutrition}.
+     */
     public double getNutrition() {
         return nutrition;
     }
 
+    /**
+     * Gets the current hydration level of the dinosaur.
+     * @return The {@link #hydration}.
+     */
     public double getHydration() {
         return hydration;
     }
 
+    /**
+     * Gets the strength of the dinosaur.
+     * @return The {@link #strength}
+     */
     public double getStrength() {
         return strength;
     }
 
+    /**
+     * Gets the movement speed of the dinosaur.
+     * @return The {@link #speed}.
+     */
     public double getSpeed() {
         return speed;
     }
 
+    /**
+     * Gets the weight of the dinosaur.
+     * @return The {@link #weight}.
+     */
     public double getWeight() {
         return weight;
     }
 
+    /**
+     * Gets the length of the dinosaur.
+     * @return The {@link #length}.
+     */
     public double getLength() {
         return length;
     }
 
+    /**
+     * Gets the height of the dinosaur.
+     * @return The {@link #height}.
+     */
     public double getHeight() {
         return height;
     }
 
+    /**
+     * Gets the gender of the dinosaur.
+     * @return The gender as a char.
+     */
     public char getGender() {
         return gender;
     }
 
+    /**
+     * Does the dinosaur can swim?
+     * @return true, if the dinosaur can swim.
+     */
     public boolean canSwim() {
         return canSwim;
     }
 
+    /**
+     * Does the dinosaur can climb?
+     * @return true, if the dinosaur can climb.
+     */
     public boolean canClimb() {
         return canClimb;
     }
 
+    /**
+     * Gets rate the reproduction will is increasing.
+     * @return The {@link #reproductionRate}
+     */
     public double getReproductionRate() {
         return reproductionRate;
     }
 
+    /**
+     * Gets current reproduction will value.
+     * @return The {@link #reproductionValue}
+     */
     public double getReproductionValue() {
         return reproductionValue;
     }
 
+    /**
+     * Gets the scaled range in pixels a dinosaur can see.
+     * @return The {@link #viewRange} adjusted by the cale
+     * @see Display#adjustScale(double, double)
+     */
     public double getViewRange() {
         return Display.adjustScale(viewRange, Display.SCALE_X);
     }
 
+    /**
+     * Gets the range in pixels a dinosaur can see.
+     * @return The {@link #viewRange}
+     */
     public double getRealViewRange() {
         return viewRange;
     }
 
+    /**
+     * Gets the current {@link SimulationObject} target.
+     * @return The {@link #target}
+     */
     public SimulationObject getTarget() {
         return target;
     }
 
+    /**
+     * Gets the selected mating partner.
+     * @return The {@link #partner}
+     */
     public Dinosaur getPartner() {
         return partner;
     }
 
+    /**
+     * Sets the time the dinosaur got created.
+     * @param time The simulation time the dinosaur got created.
+     */
     public void setTimeOfBirth(double time) {
         timeOfBirth.setTime(time);
     }
 
+    /**
+     * Gets the {@link SimulationTime} which holds the time the dinosaur got created.
+     * @return The {@link #timeOfBirth}
+     */
     public SimulationTime getTimeOfBirth() {
         return timeOfBirth;
     }
 
+    /**
+     * Is the dinosaur chased?
+     * @return true, if another {@link Dinosaur} is chasing this dinosaur.
+     */
     public boolean isChased() {
         return isChased;
     }
 
+    /**
+     * Sets the nutrition value.
+     * @param nutrition The new {@link #nutrition}.
+     */
     public void setNutrition(double nutrition) {
         this.nutrition = nutrition;
     }
 
+    /**
+     * Sets the hydration value.
+     * @param hydration The new {@link #hydration}.
+     */
     public void setHydration(double hydration) {
         this.hydration = hydration;
     }
 
-
+    /**
+     * Sets the maximum value for the hydration.
+     * @param hydrationFull The new {@link #hydrationFull}
+     */
     private void setMaxHydration(double hydrationFull) {
         this.hydrationFull = hydrationFull;
     }
 
+    /**
+     * Sets the maximum value for the nutrition.
+     * @param nutritionFull The new {@link #nutritionFull}
+     */
     private void setMaxNutrition(double nutritionFull) {
         this.nutritionFull = nutritionFull;
     }
 
+    /**
+     * Sets the current reproduction will.
+     * @param reproductionValue The new {@link #reproductionValue}
+     */
     public void setReproductionValue(double reproductionValue) {
         this.reproductionValue = reproductionValue;
     }
 
+    /**
+     * Sets the new target. For example a {@link Plant} the dinosaur wants to eat.
+     * @param target The new {@link #target} {@link SimulationObject}
+     */
     public void setTarget(SimulationObject target) {
         this.target = target;
     }
 
+    /**
+     * Sets the new mating partner.
+     * @param partner The new {@link #partner} {@link Dinosaur}
+     */
     public void setPartner(Dinosaur partner) {
         this.partner = partner;
     }
@@ -530,10 +643,18 @@ public class Dinosaur extends SimulationObject {
         return nutrition / nutritionFull <= 0.5;
     }
 
+    /**
+     * Gets the maximum value of nutrition.
+     * @return The {@link #nutritionFull} value.
+     */
     public double getMaxNutrition() {
         return nutritionFull;
     }
 
+    /**
+     * Gets the maximum value of hydration.
+     * @return The {@link #hydrationFull} value.
+     */
     public double getMaxHydration() {
         return hydrationFull;
     }
