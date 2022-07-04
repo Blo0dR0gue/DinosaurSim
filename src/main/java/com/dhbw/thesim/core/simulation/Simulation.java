@@ -76,6 +76,12 @@ public class Simulation {
      */
     private final SimulationTime simulationTime;
 
+    /**
+     * Defines how many {@link SimulationObject}s can be spawned to the {@link SimulationMap}. <br>
+     * The screen should not be filled with {@link SimulationObject}.
+     */
+    public static final int MAX_SIMULATION_OBJECTS = 100;
+
     //endregion
 
     /**
@@ -393,6 +399,9 @@ public class Simulation {
      * @see #spawnObject(SimulationObject)
      */
     public void makeBaby(Dinosaur mother, Dinosaur father) {
+
+        //Don't spawn to many objects.
+        if (simulationObjects.size() + toBeSpawned.size() >= MAX_SIMULATION_OBJECTS) return;
 
         double strength = inheritValue(mother.getStrength(), father.getStrength());
         double speed = inheritValue(mother.getSpeed(), father.getSpeed());
@@ -789,7 +798,7 @@ public class Simulation {
         Tile startTile = simulationMap.getTileAtPosition(start);
         Tile targetTile = simulationMap.getTileAtPosition(target);
 
-        if(startTile == null || targetTile == null)
+        if (startTile == null || targetTile == null)
             return false;
 
         //Distance between the tiles. (In x and y direction)
