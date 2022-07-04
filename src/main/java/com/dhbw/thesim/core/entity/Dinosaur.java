@@ -8,10 +8,11 @@ import com.dhbw.thesim.gui.Display;
 import javafx.scene.image.Image;
 
 /**
- * Represents a dinosaur object in our simulation.
+ * Represents a dinosaur inside the simulation. <br>
  * Takes care to update each State and switch between them.
  *
  * @author Daniel Czeschner, Kai Grübener, Lucas Schaffer
+ * @see SimulationObject
  * @see com.dhbw.thesim.core.statemachine.StateMachine
  * @see State
  */
@@ -72,7 +73,7 @@ public class Dinosaur extends SimulationObject {
     private final double speed;
 
     /**
-     * The increase rate for the reproduction value.
+     * The increase rate for the reproduction value per update.
      * @see #reproductionValue
      */
     private final double reproductionRate;
@@ -163,12 +164,12 @@ public class Dinosaur extends SimulationObject {
 
     //region constants
     /**
-     * Used as a decrease rate for nutrition  in the simulation.
+     * Used as a decrease rate for nutrition per update.
      */
     private static final double NUTRITION_REDUCTION_RATE = 0.3;
 
     /**
-     * Used as a decrease rate for hydration in the simulation.
+     * Used as a decrease rate for hydration per update.
      */
     private static final double HYDRATION_REDUCTION_RATE = 0.45;
 
@@ -344,7 +345,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Reduces the {@link #nutrition} and {@link #hydration} values of the dinosaur.
+     * Reduces the {@link #nutrition} and {@link #hydration} values of the {@link Dinosaur}.
      *
      * @param deltaTime The time since the last update call in seconds.
      */
@@ -356,7 +357,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Updates the position of the graphical representation for this {@link Dinosaur}-object. <br>
+     * Updates the position of the graphical representation for this {@link Dinosaur}. <br>
      * It also changes the image if necessary.
      */
     @Override
@@ -371,7 +372,7 @@ public class Dinosaur extends SimulationObject {
     //region getter & setter
 
     /**
-     * Gets the diet type of the dinosaur.
+     * Gets the diet type of the {@link Dinosaur}.
      * @return The {@link dietType}.
      */
     public dietType getDiet() {
@@ -395,7 +396,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the current nutrition level of the dinosaur.
+     * Gets the current nutrition level of this {@link Dinosaur}.
      * @return The {@link #nutrition}.
      */
     public double getNutrition() {
@@ -403,7 +404,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the current hydration level of the dinosaur.
+     * Gets the current hydration level of this {@link Dinosaur}.
      * @return The {@link #hydration}.
      */
     public double getHydration() {
@@ -411,7 +412,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the strength of the dinosaur.
+     * Gets the strength of this {@link Dinosaur}.
      * @return The {@link #strength}
      */
     public double getStrength() {
@@ -419,7 +420,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the movement speed of the dinosaur.
+     * Gets the movement speed of this {@link Dinosaur}.
      * @return The {@link #speed}.
      */
     public double getSpeed() {
@@ -427,7 +428,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the weight of the dinosaur.
+     * Gets the weight of this {@link Dinosaur}.
      * @return The {@link #weight}.
      */
     public double getWeight() {
@@ -435,7 +436,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the length of the dinosaur.
+     * Gets the length of this {@link Dinosaur}.
      * @return The {@link #length}.
      */
     public double getLength() {
@@ -443,7 +444,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the height of the dinosaur.
+     * Gets the height of this {@link Dinosaur}.
      * @return The {@link #height}.
      */
     public double getHeight() {
@@ -451,7 +452,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the gender of the dinosaur.
+     * Gets the gender of this {@link Dinosaur}.
      * @return The gender as a char.
      */
     public char getGender() {
@@ -467,8 +468,8 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Does the dinosaur can climb?
-     * @return true, if the dinosaur can climb.
+     * Does this {@link Dinosaur} can climb?
+     * @return true, if the {@link Dinosaur} can climb.
      */
     public boolean canClimb() {
         return canClimb;
@@ -491,7 +492,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the scaled range in pixels a dinosaur can see.
+     * Gets the scaled range in pixels this {@link Dinosaur} can see.
      * @return The {@link #viewRange} adjusted by the cale
      * @see Display#adjustScale(double, double)
      */
@@ -500,7 +501,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the range in pixels a dinosaur can see.
+     * Gets the range in pixels this {@link Dinosaur} can see.
      * @return The {@link #viewRange}
      */
     public double getRealViewRange() {
@@ -524,7 +525,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Sets the time the dinosaur got created.
+     * Sets the time this {@link Dinosaur} got created.
      * @param time The simulation time the dinosaur got created.
      */
     public void setTimeOfBirth(double time) {
@@ -532,7 +533,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Gets the {@link SimulationTime} which holds the time the dinosaur got created.
+     * Gets the {@link SimulationTime} which holds the time this {@link Dinosaur} got created.
      * @return The {@link #timeOfBirth}
      */
     public SimulationTime getTimeOfBirth() {
@@ -540,8 +541,8 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Is the dinosaur chased?
-     * @return true, if another {@link Dinosaur} is chasing this dinosaur.
+     * Is this {@link Dinosaur} chased?
+     * @return true, if another {@link Dinosaur} is chasing this {@link Dinosaur}.
      */
     public boolean isChased() {
         return isChased;
@@ -588,7 +589,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Sets the new target. For example a {@link Plant} the dinosaur wants to eat.
+     * Sets the new target. For example a {@link Plant} this {@link Dinosaur} wants to eat.
      * @param target The new {@link #target} {@link SimulationObject}
      */
     public void setTarget(SimulationObject target) {
@@ -604,8 +605,8 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Force the dinosaur to the {@link com.dhbw.thesim.core.statemachine.state.dinosaur.NoOp} state. <br>
-     * Used when the dinosaur got caught by his hunter.
+     * Force this {@link Dinosaur} to the {@link com.dhbw.thesim.core.statemachine.state.dinosaur.NoOp} state. <br>
+     * Used when the {@link Dinosaur} got caught by his hunter.
      */
     public void forceNoOp() {
         this.forceNoOp = true;
@@ -621,7 +622,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Is the dinosaur forced to the stand state
+     * Is the {@link Dinosaur} forced to the stand state
      *
      * @return true, if it is forced to the stand state.
      */
@@ -635,9 +636,9 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Checks, if the {@link Dinosaur} is hungry. <br>
-     * A dinosaur is hungry, if his {@link #nutrition} is 50% or less of the max level.
+     * A {@link Dinosaur} is hungry, if his {@link #nutrition} is 50% or less of the max level.
      *
-     * @return true, if the dinosaur is hungry.
+     * @return true, if the {@link Dinosaur} is hungry.
      */
     public boolean isHungry() {
         return nutrition / nutritionFull <= 0.5;
@@ -661,9 +662,9 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Checks, if the {@link Dinosaur} is thirsty. <br>
-     * A dinosaur is thirsty, if his {@link #hydration} is 50% or less of the max level.
+     * A {@link Dinosaur} is thirsty, if his {@link #hydration} is 50% or less of the max level.
      *
-     * @return true, if the dinosaur is thirsty.
+     * @return true, if the {@link Dinosaur} is thirsty.
      */
     public boolean isThirsty() {
         return hydration / hydrationFull <= 0.5;
@@ -671,7 +672,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Checks, if the {@link Dinosaur} died of thirst. <br>
-     * A dinosaur died of thirst, if his {@link #hydration} is 0.
+     * A {@link Dinosaur} died of thirst, if his {@link #hydration} is 0.
      *
      * @return true, if the dinosaur died of thirst.
      */
@@ -681,9 +682,9 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Checks, if the {@link Dinosaur} died of starvation. <br>
-     * A dinosaur died of starvation, if his {@link #nutrition} is 0.
+     * A {@link Dinosaur} died of starvation, if his {@link #nutrition} is 0.
      *
-     * @return true, if the dinosaur died of starvation.
+     * @return true, if the {@link Dinosaur} died of starvation.
      */
     public boolean diedOfHunger() {
         return nutrition <= 0;
