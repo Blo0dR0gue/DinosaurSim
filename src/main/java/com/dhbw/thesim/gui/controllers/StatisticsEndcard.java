@@ -9,6 +9,8 @@ import javafx.scene.Node;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -36,7 +38,12 @@ public class StatisticsEndcard extends AnchorPane {
      * is getting to create the specified controller
      */
     public StatisticsEndcard() {
-
+        addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            //Prevent space to trigger the reset button
+            if (event.getCode() == KeyCode.SPACE) {
+                event.consume();
+            }
+        });
     }
 
     /**
