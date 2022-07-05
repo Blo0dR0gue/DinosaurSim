@@ -27,6 +27,8 @@ import java.util.stream.Stream;
  */
 public class SpriteLibrary {
 
+    //region variables
+
     /**
      * The map with all images.
      */
@@ -37,22 +39,26 @@ public class SpriteLibrary {
      */
     private static SpriteLibrary INSTANCE;
 
+    //endregion
+
     /**
      * Constructor
      */
     private SpriteLibrary() {
         imageMap = new HashMap<>();
+        //Export the default images
         exportImagesFromResourcesFolder("/dinosaur");
         exportImagesFromResourcesFolder("/plant");
         exportImagesFromResourcesFolder("/tile");
 
+        //Init the local variables
         loadImages("/dinosaur");
         loadImages("/plant");
         loadImages("/tile");
     }
 
     /**
-     * Gets and/or creates a instance of the {@link SpriteLibrary}
+     * Gets and/or creates an instance of the {@link SpriteLibrary}.
      *
      * @return The {@link SpriteLibrary} {@link #INSTANCE} object.
      */
@@ -84,9 +90,9 @@ public class SpriteLibrary {
     }
 
     /**
-     * Creats a dictonary on the filesystem inside the working directory.
+     * Creates a dictionary inside the working directory.
      *
-     * @param folderName The name of the folder, which should be created. (Needs to start with an "/")
+     * @param folderName The name of the folder which should be created. (Need to start with an "/")
      * @see JsonHandler#getWorkingDirectory()
      */
     private void createDirectory(String folderName) {
@@ -146,7 +152,7 @@ public class SpriteLibrary {
     /**
      * Loads all images inside a folder in the working directory.
      *
-     * @param folderName The name of the folder. (needs to start with an "/")
+     * @param folderName The name of the folder. (need to start with an "/")
      * @see JsonHandler#getWorkingDirectory()
      */
     private void loadImages(String folderName) {
@@ -161,7 +167,7 @@ public class SpriteLibrary {
     }
 
     /**
-     * Gets the defined image or the undefined image
+     * Gets the passed image or the "undefined" image from the resoruces.
      *
      * @param name The name of the image.
      * @return A {@link Image} object

@@ -1,7 +1,6 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
-import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
@@ -20,25 +19,29 @@ import java.util.List;
  */
 public class MoveToFoodSource extends State {
 
+    //region variables
+
     /**
      * Helper {@link Dinosaur} variable, to get dinosaur specific variables
      */
     private final Dinosaur dinosaur;
 
     /**
-     * The target {@link Vector2D} where the dinosaur is walking to.
+     * The targeted position {@link Vector2D} the {@link Dinosaur} is moving to.
      */
     private Vector2D target;
+
+    /**
+     * The direction {@link Vector2D} the {@link #target} from the current position to this {@link #dinosaur}.
+     */
+    private Vector2D direction;
 
     /**
      * The interaction range of the target, which should be hit.
      */
     private double targetInteractionRange;
 
-    /**
-     * The normalized direction {@link Vector2D} to the target
-     */
-    private Vector2D direction;
+    //endregion
 
     /**
      * Constructor
@@ -50,6 +53,12 @@ public class MoveToFoodSource extends State {
         this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
         if (target == null) {
@@ -111,10 +120,16 @@ public class MoveToFoodSource extends State {
         }
     }
 
+    /**
+     * Is called on state exit
+     */
     @Override
     public void onExit() {
     }
 
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
         //The dinosaur died.
@@ -134,19 +149,19 @@ public class MoveToFoodSource extends State {
         addTransition(new StateTransition(StateFactory.States.hunt, simulation -> dinosaur.getTarget() instanceof Dinosaur));
 
         //If we reached the target
-        addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
+        addTransition(new StateTransition(StateFactory.States.ingestion, this::targetReached));
 
         //If we can't reach the target anymore -> transition to moveToFoodSource (check for another food/water source in range). (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, 0, dinosaur.canSwim(), dinosaur.canClimb(), null, true, true, dinosaur.getTarget() != null ? List.of(dinosaur.getTarget()) : null)));
     }
 
     /**
-     * Do we have reached the target?
+     * Checks if the {@link #target} point is reached.
      *
      * @param simulation The current {@link Simulation} data.
      * @return true, if we have reached the target.
      */
-    private boolean reached(Simulation simulation) {
+    private boolean targetReached(Simulation simulation) {
         return simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), target, targetInteractionRange);
     }
 }

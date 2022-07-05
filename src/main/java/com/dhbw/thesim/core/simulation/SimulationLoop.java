@@ -19,25 +19,49 @@ public class SimulationLoop {
     //region variables
 
     /**
-     * Used to specify update rates.
+     * Defines how many updated are called per second.
      */
     private static final int UPDATES_PER_SECOND = 60;
+
+    /**
+     * Defines how often the screen gets updated per second.
+     */
     private static final int FRAMES_PER_SECOND = 30;
+
+    /**
+     * Defines how many updates are called per simulation step (in simulation step proceedings)
+     */
     private static final int UPDATES_PER_STEP = 30;
+
+    /**
+     * The used update rate.
+     */
     private static final double UPDATE_RATE = 1.0d / UPDATES_PER_SECOND;
+
+    /**
+     * The used frame rate.
+     */
     private static final double FRAME_RATE = 1.0d / FRAMES_PER_SECOND;
 
     /**
-     * Is multiplied on the update rate. <1 means more updates per second
+     * Is multiplied on the update rate. value < 1 means more updates per second
      */
     private int simulationSpeedMultiplier;
+
     /**
      * Is multiplied on the amount of steps in the simulation step proceedings
      */
     private final int stepRangeMultiplier;
 
     //region runner variables
+    /**
+     * Is the simulation thread running?
+     */
     private boolean running;
+
+    /**
+     * Is the simulation thread paused?
+     */
     private boolean paused;
 
     //region Status variables (Debug)
@@ -45,6 +69,7 @@ public class SimulationLoop {
     private int fps;
     private int ups;
     //endregion
+
     //endregion
 
     /**
@@ -57,10 +82,13 @@ public class SimulationLoop {
      */
     private Thread simulationLoopThread;
 
+    /**
+     * The current loop time. Used for timing stuff e.g. stats handling.
+     */
     private SimulationTime loopTime;
 
     /**
-     * Max amount of steps.
+     * Max amount of steps in the simulation step proceedings.
      */
     private int maxStepAmount;
 
@@ -70,12 +98,12 @@ public class SimulationLoop {
     private int maxRunTimeInMinutes;
 
     /**
-     * At what percentage of the max run time the stats should be updated
+     * At what percentage of the max run time a new stats point should be added.
      */
     private static final double STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME = 0.05;
 
     /**
-     * Current SimulationOverlay instance for callbacks
+     * Current SimulationOverlay instance for callbacks.
      */
     private SimulationOverlay simulationOverlay;
 
@@ -83,8 +111,10 @@ public class SimulationLoop {
 
     /**
      * Constructor for a simulation runner
+     *
      * @param simulationSpeedMultiplier The speed multiplier for the automatic simulation mode.
      * @param stepRangeMultiplier       The range multiplier for how many update calls are made in the step simulation mode.
+     * @param simulation                The simulation data which should be used/updated.
      * @param maxStepAmount             The max amount of steps, that can be triggered.
      * @param maxRunTimeInMinutes       The max amount of time a simulation is running (In Minutes)
      * @param simulationOverlay         The simulation overlay which is used to display the GUI for the simulation
@@ -123,22 +153,22 @@ public class SimulationLoop {
         runtime.addMinutesTime(maxRunTimeInMinutes);
 
         SimulationTime lastStatisticsUpdateTime = new SimulationTime();
-        int intervalUntilStatisticsUpdateInSeconds = (int) (runtime.getTime()*STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME);
+        int intervalUntilStatisticsUpdateInSeconds = (int) (runtime.getTime() * STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME);
 
         while (running) {
             //update the loop variables.
             currentTime = System.currentTimeMillis();
             double lastUpdateTimeInSeconds = (currentTime - lastUpdate) / 1000d;
-            deltaTime += lastUpdateTimeInSeconds*simulationSpeedMultiplier;
+            deltaTime += lastUpdateTimeInSeconds * simulationSpeedMultiplier;
             frameAccumulator += lastUpdateTimeInSeconds;
             lastUpdate = currentTime;
             //Limit the update rate
             if (deltaTime >= UPDATE_RATE) {
                 while (deltaTime >= UPDATE_RATE) {
                     //If we are not paused, trigger an update.
-                    if (!paused){
+                    if (!paused) {
                         update(deltaTime);
-                        loopTime.addDeltaTime(deltaTime/simulationSpeedMultiplier);
+                        loopTime.addDeltaTime(deltaTime / simulationSpeedMultiplier);
                     }
                     deltaTime -= UPDATE_RATE;
                 }
@@ -156,8 +186,8 @@ public class SimulationLoop {
             printStats();
 
             //adding statistics update at intervals
-            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()),3);
-            if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds){
+            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()), 3);
+            if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds) {
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
                 lastStatisticsUpdateTime = new SimulationTime(loopTime.getTime());
@@ -171,6 +201,13 @@ public class SimulationLoop {
         }
     };
 
+    /**
+     * Rounds a number to a given decimal place.
+     *
+     * @param value  The number which should be rounded.
+     * @param places The amount of decimal places.
+     * @return The rounded value.
+     */
     private double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -179,6 +216,9 @@ public class SimulationLoop {
         return bd.doubleValue();
     }
 
+    /**
+     * Adds a new statistics value to the end statistics.
+     */
     private void updateStatistics() {
         simulationOverlay.getStatistics().addSimulationObjectList(getCurrentSimulation().getSimulationObjects(), loopTime);
     }
@@ -186,7 +226,8 @@ public class SimulationLoop {
     /**
      * Is called each update call. <br>
      * This method calls the {@link SimulationObject#update(double, Simulation)} method.
-     * @param deltaTime The time since the last update call.
+     *
+     * @param deltaTime The time since the last update call. (in seconds)
      */
     private void update(double deltaTime) {
         ups++;
@@ -212,6 +253,7 @@ public class SimulationLoop {
     /**
      * Debug method, which prints out the current updates per second and frames per second. <br>
      * Is only used in the automatic updates.
+     *
      * @see #simLoopRunnable
      */
     private void printStats() {
@@ -224,7 +266,7 @@ public class SimulationLoop {
     }
 
     /**
-     * Triggers updates for the step simulation mode.
+     * Triggers updates for the step proceeding simulation mode.
      */
     public void triggerUpdates() {
         for (int i = 0; i < UPDATES_PER_STEP * stepRangeMultiplier; i++) {
@@ -240,7 +282,8 @@ public class SimulationLoop {
     }
 
     /**
-     * Stats the automatic simulation runner.
+     * Starts the automatic simulation runner.
+     *
      * @see #simulationLoopThread
      */
     public void startSimulationRunner() {
@@ -257,6 +300,7 @@ public class SimulationLoop {
 
     /**
      * Pause/Unpause the automatic simulation runner.
+     *
      * @see #simLoopRunnable
      * @see #simulationLoopThread
      */
@@ -267,6 +311,7 @@ public class SimulationLoop {
 
     /**
      * Gets the current simulation data
+     *
      * @return A {@link Simulation} object
      */
     public Simulation getCurrentSimulation() {
@@ -275,13 +320,19 @@ public class SimulationLoop {
 
     /**
      * Gets the boolean if simulation is currently paused
+     *
      * @return A {@link Boolean} telling if simulation is paused
      */
     public boolean getSimulationPaused() {
         return this.paused;
     }
 
-    public SimulationTime getLoopTime(){
+    /**
+     * Gets the current loop time of the simulation
+     *
+     * @return The {@link #loopTime} object.
+     */
+    public SimulationTime getLoopTime() {
         return loopTime;
     }
 

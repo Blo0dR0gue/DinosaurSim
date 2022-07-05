@@ -15,8 +15,10 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  */
 public class Mate extends State {
 
+    //region variables
+
     /**
-     * The time the dinosaur needs to mate.
+     * The time the {@link Dinosaur} needs to mate.
      */
     private double mateTime = 2;
 
@@ -30,6 +32,8 @@ public class Mate extends State {
      */
     private final Dinosaur dinosaur;
 
+    //endregion
+
     /**
      * Constructor
      *
@@ -40,6 +44,12 @@ public class Mate extends State {
         this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
 
@@ -59,6 +69,9 @@ public class Mate extends State {
 
     }
 
+    /**
+     * Is called on state exit
+     */
     @Override
     public void onExit() {
         if (dinosaur.getPartner() != null && dinosaur.getPartner().getPartner() == dinosaur) {
@@ -67,6 +80,9 @@ public class Mate extends State {
         dinosaur.setPartner(null);
     }
 
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
         //The dinosaur died.
@@ -91,10 +107,4 @@ public class Mate extends State {
 
 
     }
-
-    private boolean stillInReach(Simulation simulation) {
-
-        return simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), dinosaur.getPartner().getPosition(), dinosaur.getPartner().getInteractionRange());
-    }
-
 }

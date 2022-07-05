@@ -16,6 +16,8 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  */
 public class Ingestion extends State {
 
+    //region variables
+
     /**
      * The time the dinosaur needs to eat/drink the source.
      */
@@ -31,8 +33,11 @@ public class Ingestion extends State {
      */
     private final Dinosaur dinosaur;
 
+    //endregion
+
     /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Ingestion(Dinosaur simulationObject) {
@@ -40,6 +45,12 @@ public class Ingestion extends State {
         this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
         ingestionTime -= deltaTime;
@@ -58,11 +69,17 @@ public class Ingestion extends State {
         }
     }
 
+    /**
+     * Is called on state exit
+     */
     @Override
     public void onExit() {
         //Nothing to do here
     }
 
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
         //The dinosaur died.

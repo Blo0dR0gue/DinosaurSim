@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
 
 /**
  * Represents a plant inside the simulation, which can be eaten. <br>
- * Takes care to update each State and switch between them.
+ * Takes care of updating and switching between plant states.
  *
  * @author Daniel Czeschner, Kai Grübener
  * @see SimulationObject
@@ -43,13 +43,14 @@ public class Plant extends SimulationObject {
     /**
      * Constructor for a {@link Plant}-object.
      *
-     * @param name             The name of the plant.
-     * @param image            The image for the graphical illustration.
-     * @param interactionRange The range for interactions with other {@link SimulationObject}-objects.
-     * @param growthRate       The rate for a plant to grow.
+     * @param type             The type of the {@link Plant}.
+     * @param image            The image for the graphical representation.
+     * @param interactionRange The range for interactions with other {@link SimulationObject}-objects. (in pixels)
+     * @param growthRate       The rate this {@link Plant} is growing per update.
+     * @see SimulationObject
      */
-    public Plant(String name, Image image, double interactionRange, double growthRate) {
-        super(name, interactionRange, image);
+    public Plant(String type, Image image, double interactionRange, double growthRate) {
+        super(type, interactionRange, image);
         this.growthRate = growthRate;
 
         //75% chance, that a plant is already grown at the start.
@@ -73,7 +74,9 @@ public class Plant extends SimulationObject {
      */
     @Override
     public void update(double deltaTime, Simulation currentSimulationData) {
+        //Check all transitions for the current state and switch to next state is one met
         stateMachineTick(currentSimulationData);
+        //Update the current state
         currentState.update(deltaTime, currentSimulationData);
     }
 
@@ -87,7 +90,7 @@ public class Plant extends SimulationObject {
     }
 
     /**
-     * Call to eat this {@link Plant}.
+     * Call if this {@link Plant} gets eaten.
      */
     @Override
     public void eat() {

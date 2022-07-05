@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 
 /**
  * Represents a dinosaur inside the simulation. <br>
- * Takes care to update each State and switch between them.
+ * Takes care of updating and switching between dinosaur states.
  *
  * @author Daniel Czeschner, Kai Grübener, Lucas Schaffer
  * @see SimulationObject
@@ -17,21 +17,6 @@ import javafx.scene.image.Image;
  * @see State
  */
 public class Dinosaur extends SimulationObject {
-
-    /**
-     * Enum with all available diet types for a {@link Dinosaur}.
-     */
-    public enum dietType {
-        CARNIVORE("Fleischfresser"),
-        HERBIVORE("Pflanzenfresser"),
-        OMNIVORE("Allesfresser");
-
-        public final String translatedText;
-
-        dietType(String translatedText) {
-            this.translatedText = translatedText;
-        }
-    }
 
     //region variables
 
@@ -74,6 +59,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * The increase rate for the reproduction value per update.
+     *
      * @see #reproductionValue
      */
     private final double reproductionRate;
@@ -110,6 +96,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * The diet type of the dinosaur.
+     *
      * @see dietType
      */
     private final dietType diet;
@@ -132,11 +119,10 @@ public class Dinosaur extends SimulationObject {
     /**
      * The current value of reproduction will. <br>
      * A dinosaur willing to mate, if this value reaches his maximum amount.
+     *
      * @see #REPRODUCTION_VALUE_FULL
      */
     private double reproductionValue;
-
-    //endregion
 
     /**
      * Used, when the {@link Dinosaur} got caught by a hunter. <br>
@@ -161,6 +147,8 @@ public class Dinosaur extends SimulationObject {
      * The current target {@link Dinosaur} for mating.
      */
     private Dinosaur partner;
+
+    //endregion
 
     //region constants
     /**
@@ -187,18 +175,50 @@ public class Dinosaur extends SimulationObject {
 
     //endregion
 
+    /**
+     * Enum with all available diet types for a {@link Dinosaur}.
+     */
+    public enum dietType {
+        CARNIVORE("Fleischfresser"),
+        HERBIVORE("Pflanzenfresser"),
+        OMNIVORE("Allesfresser");
+
+        public final String translatedText;
+
+        dietType(String translatedText) {
+            this.translatedText = translatedText;
+        }
+    }
+
     //endregion
 
-    //region constructors
 
     /**
      * Constructor for a {@link Dinosaur} object.
+     *
+     * @param type             The type of the {@link Dinosaur}
+     * @param image            The image which is used for the graphical representation.
+     * @param nutrition        The maximum level of nutrition.
+     * @param hydration        The maximum level of hydration.
+     * @param strength         The strength of the {@link Dinosaur}.
+     * @param speed            The movement speed.
+     * @param reproductionRate The rate the reproduction will is increasing per update.
+     * @param weight           The wight of the {@link Dinosaur}.
+     * @param length           The length of the {@link Dinosaur}.
+     * @param height           The height of the {@link Dinosaur}.
+     * @param canSwim          Set it to ture if the {@link Dinosaur} can swim.
+     * @param canClimb         Set it to true if the {@link Dinosaur} can climb.
+     * @param diet             The died of the dinosaur as char. 'a'=OMNIVORE, 'f'=CARNIVORE, 'p' and all other chars = CARNIVORE
+     * @param viewRange        The range the {@link Dinosaur} can see. (In pixels)
+     * @param interactionRange The range for interactions with other {@link SimulationObject}-objects. (in pixels)
+     * @param gender           The gender of the {@link Dinosaur} as char.
+     * @see SimulationObject
      */
-    public Dinosaur(String name, Image image, double nutrition, double hydration,
+    public Dinosaur(String type, Image image, double nutrition, double hydration,
                     double strength, double speed, double reproductionRate, double weight, double length, double height,
                     boolean canSwim, boolean canClimb, char diet, double viewRange,
                     double interactionRange, char gender) {
-        super(name, interactionRange, image);
+        super(type, interactionRange, image);
 
         if (diet == 'a')
             this.diet = dietType.OMNIVORE;
@@ -207,6 +227,7 @@ public class Dinosaur extends SimulationObject {
         else
             this.diet = dietType.HERBIVORE;
 
+        //Set dinosaur variables
         this.nutrition = nutrition;
         this.hydration = hydration;
         this.strength = strength;
@@ -230,52 +251,9 @@ public class Dinosaur extends SimulationObject {
         this.target = null;
         this.isChased = false;
 
+        //Init in stand state.
         setState(new Stand(this));
     }
-
-    /**
-     * Private constructor to create a copy of a {@link Dinosaur}.
-     */
-    private Dinosaur(String name, Image image, double nutrition, double hydration,
-                     double strength, double speed, double reproductionRate, double weight, double length, double height,
-                     boolean canSwim, boolean canClimb, char diet, double viewRange,
-                     double interactionRange, char gender, double maxNutrition, double maxHydration, double reproductionValue, SimulationObject target, boolean isChased, State state) {
-        super(name, interactionRange, image);
-
-        if (diet == 'a')
-            this.diet = dietType.OMNIVORE;
-        else if (diet == 'f')
-            this.diet = dietType.CARNIVORE;
-        else
-            this.diet = dietType.HERBIVORE;
-
-        this.nutrition = nutrition;
-        this.hydration = hydration;
-        this.strength = strength;
-        this.speed = speed;
-        this.weight = weight;
-        this.length = length;
-        this.height = height;
-        this.gender = gender;
-        this.canSwim = canSwim;
-        this.canClimb = canClimb;
-        this.reproductionRate = reproductionRate;
-        this.viewRange = viewRange;
-        this.timeOfBirth = new SimulationTime();
-
-        this.nutritionFull = maxNutrition;
-        this.hydrationFull = maxHydration;
-
-        //Initial reproduction value as specified in the software design. This value increases over time.
-        this.reproductionValue = reproductionValue;
-
-        this.target = target;
-        this.isChased = isChased;
-
-        setState(state);
-    }
-
-    //endregion
 
     /**
      * Creates a complete copy of the {@link Dinosaur}.
@@ -308,13 +286,14 @@ public class Dinosaur extends SimulationObject {
     public void update(double deltaTime, Simulation currentSimulationData) {
         //Check all transitions for the current state and switch to next state is one met.
         stateMachineTick(currentSimulationData);
+        //Update the current state
         currentState.update(deltaTime, currentSimulationData);
 
         updateStats(deltaTime);
     }
 
     /**
-     * Call if this dinosaur gets eaten.
+     * Call if this {@link Dinosaur} gets eaten.
      */
     @Override
     public void eat() {
@@ -323,29 +302,23 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Checks, if this {@link Dinosaur} can be eaten by another {@link Dinosaur}.
+     * Checks, if this {@link Dinosaur} can be eaten by another {@link Dinosaur}. <br>
+     * The other {@link Dinosaur} need to be stronger (higher {@link #strength} value) than this one. <br>
+     * This {@link Dinosaur} also needs to be alive. (hydration & nutrition greater than 0)
      *
-     * @param checkValue A value of another object, which is used to check, if the other object can eat this object.
-     * @return true, if the other {@link Dinosaur} can eat this one.
+     * @param checkValue A value of another {@link SimulationObject}, which is used to check, if the other  {@link SimulationObject} can eat this  {@link SimulationObject}.
+     * @return true, if this {@link Dinosaur} ca be eaten by the other one.
      */
     @Override
     public boolean canBeEaten(double checkValue) {
-        //If the other dinosaur is stronger than this one, it can be eaten by the other.
-        //And this dino needs to be alive.
         return checkValue > getStrength() && getHydration() > 0 && getNutrition() > 0;
     }
 
     /**
-     * Checks if this {@link Dinosaur} is willing to mate.
-     *
-     * @return true if the {@link Dinosaur} is willing to mate.
-     */
-    public boolean isWillingToMate() {
-        return reproductionValue >= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty() && !isChased();
-    }
-
-    /**
-     * Reduces the {@link #nutrition} and {@link #hydration} values of the {@link Dinosaur}.
+     * Reduces the {@link #nutrition} and {@link #hydration} and increases the {@link #reproductionValue} values of the {@link Dinosaur}. <br>
+     * Reduces the nutrition by {@link #NUTRITION_REDUCTION_RATE}. <br>
+     * Reduces the hydration by {@link #HYDRATION_REDUCTION_RATE}. <br>
+     * Increases the reproduction will, by {@link #reproductionRate}. <br>
      *
      * @param deltaTime The time since the last update call in seconds.
      */
@@ -357,8 +330,7 @@ public class Dinosaur extends SimulationObject {
     }
 
     /**
-     * Updates the position of the graphical representation for this {@link Dinosaur}. <br>
-     * It also changes the image if necessary.
+     * Updates the position of the graphical representation for this {@link Dinosaur}.
      */
     @Override
     public void updateGraphics() {
@@ -372,7 +344,19 @@ public class Dinosaur extends SimulationObject {
     //region getter & setter
 
     /**
+     * Checks if this {@link Dinosaur} is willing to mate. <br>
+     * The {@link #reproductionValue} must have reached the maximum ({@link #REPRODUCTION_VALUE_FULL}) <br>
+     * In addition, the {@link Dinosaur}  must not be thirsty or hungry.
+     *
+     * @return true if the {@link Dinosaur} is willing to mate.
+     */
+    public boolean isWillingToMate() {
+        return reproductionValue >= REPRODUCTION_VALUE_FULL && !isHungry() && !isThirsty() && !isChased();
+    }
+
+    /**
      * Gets the diet type of the {@link Dinosaur}.
+     *
      * @return The {@link dietType}.
      */
     public dietType getDiet() {
@@ -381,6 +365,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the diet type as char.
+     *
      * @return 'a' for OMNIVORE, 'f' for CARNIVORE and 'p' for HERBIVORE. Default is p.
      */
     public char getCharDiet() {
@@ -397,6 +382,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the current nutrition level of this {@link Dinosaur}.
+     *
      * @return The {@link #nutrition}.
      */
     public double getNutrition() {
@@ -405,6 +391,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the current hydration level of this {@link Dinosaur}.
+     *
      * @return The {@link #hydration}.
      */
     public double getHydration() {
@@ -413,6 +400,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the strength of this {@link Dinosaur}.
+     *
      * @return The {@link #strength}
      */
     public double getStrength() {
@@ -421,6 +409,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the movement speed of this {@link Dinosaur}.
+     *
      * @return The {@link #speed}.
      */
     public double getSpeed() {
@@ -429,6 +418,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the weight of this {@link Dinosaur}.
+     *
      * @return The {@link #weight}.
      */
     public double getWeight() {
@@ -437,6 +427,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the length of this {@link Dinosaur}.
+     *
      * @return The {@link #length}.
      */
     public double getLength() {
@@ -445,6 +436,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the height of this {@link Dinosaur}.
+     *
      * @return The {@link #height}.
      */
     public double getHeight() {
@@ -453,6 +445,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the gender of this {@link Dinosaur}.
+     *
      * @return The gender as a char.
      */
     public char getGender() {
@@ -461,6 +454,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Does the dinosaur can swim?
+     *
      * @return true, if the dinosaur can swim.
      */
     public boolean canSwim() {
@@ -469,6 +463,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Does this {@link Dinosaur} can climb?
+     *
      * @return true, if the {@link Dinosaur} can climb.
      */
     public boolean canClimb() {
@@ -477,6 +472,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets rate the reproduction will is increasing.
+     *
      * @return The {@link #reproductionRate}
      */
     public double getReproductionRate() {
@@ -485,6 +481,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets current reproduction will value.
+     *
      * @return The {@link #reproductionValue}
      */
     public double getReproductionValue() {
@@ -493,6 +490,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the scaled range in pixels this {@link Dinosaur} can see.
+     *
      * @return The {@link #viewRange} adjusted by the cale
      * @see Display#adjustScale(double, double)
      */
@@ -502,6 +500,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the range in pixels this {@link Dinosaur} can see.
+     *
      * @return The {@link #viewRange}
      */
     public double getRealViewRange() {
@@ -510,6 +509,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the current {@link SimulationObject} target.
+     *
      * @return The {@link #target}
      */
     public SimulationObject getTarget() {
@@ -518,6 +518,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the selected mating partner.
+     *
      * @return The {@link #partner}
      */
     public Dinosaur getPartner() {
@@ -526,6 +527,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the time this {@link Dinosaur} got created.
+     *
      * @param time The simulation time the dinosaur got created.
      */
     public void setTimeOfBirth(double time) {
@@ -534,6 +536,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the {@link SimulationTime} which holds the time this {@link Dinosaur} got created.
+     *
      * @return The {@link #timeOfBirth}
      */
     public SimulationTime getTimeOfBirth() {
@@ -542,6 +545,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Is this {@link Dinosaur} chased?
+     *
      * @return true, if another {@link Dinosaur} is chasing this {@link Dinosaur}.
      */
     public boolean isChased() {
@@ -550,6 +554,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the nutrition value.
+     *
      * @param nutrition The new {@link #nutrition}.
      */
     public void setNutrition(double nutrition) {
@@ -558,6 +563,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the hydration value.
+     *
      * @param hydration The new {@link #hydration}.
      */
     public void setHydration(double hydration) {
@@ -566,6 +572,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the maximum value for the hydration.
+     *
      * @param hydrationFull The new {@link #hydrationFull}
      */
     private void setMaxHydration(double hydrationFull) {
@@ -574,6 +581,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the maximum value for the nutrition.
+     *
      * @param nutritionFull The new {@link #nutritionFull}
      */
     private void setMaxNutrition(double nutritionFull) {
@@ -582,6 +590,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the current reproduction will.
+     *
      * @param reproductionValue The new {@link #reproductionValue}
      */
     public void setReproductionValue(double reproductionValue) {
@@ -590,6 +599,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the new target. For example a {@link Plant} this {@link Dinosaur} wants to eat.
+     *
      * @param target The new {@link #target} {@link SimulationObject}
      */
     public void setTarget(SimulationObject target) {
@@ -598,6 +608,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Sets the new mating partner.
+     *
      * @param partner The new {@link #partner} {@link Dinosaur}
      */
     public void setPartner(Dinosaur partner) {
@@ -646,6 +657,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the maximum value of nutrition.
+     *
      * @return The {@link #nutritionFull} value.
      */
     public double getMaxNutrition() {
@@ -654,6 +666,7 @@ public class Dinosaur extends SimulationObject {
 
     /**
      * Gets the maximum value of hydration.
+     *
      * @return The {@link #hydrationFull} value.
      */
     public double getMaxHydration() {

@@ -10,7 +10,7 @@ import com.dhbw.thesim.core.statemachine.state.plant.Grown;
 /**
  * State factory, which creates {@link State}-objects. <br>
  * Using the Factory Pattern. <br>
- * We use this state factory, because we cant create a object when creating a {@link com.dhbw.thesim.core.statemachine.StateTransition}. This would end in a {@link StackOverflowError}
+ * We use this state factory, because we can't create an object when creating a {@link com.dhbw.thesim.core.statemachine.StateTransition}. This would end in a {@link StackOverflowError}
  *
  * @author Daniel Czeschner
  */
@@ -38,6 +38,7 @@ public class StateFactory {
 
     /**
      * Creates a {@link State}-object based on the {@link States} enum.
+     *
      * @param state            The {@link States} enum entry for the next state.
      * @param simulationObject The {@link SimulationObject} which is creating the new state.
      * @return The next {@link State}.
@@ -51,7 +52,8 @@ public class StateFactory {
     }
 
     /**
-     * Creates a State, a {@link Dinosaur} can be in.
+     * Creates a State, a {@link Plant} can be in.
+     *
      * @param state The {@link States} enum entry for the next state.
      * @param plant The {@link Plant} which is creating the new state.
      * @return The next {@link State}.
@@ -66,6 +68,7 @@ public class StateFactory {
 
     /**
      * Creates a State, a {@link Dinosaur} can be in.
+     *
      * @param state    The {@link States} enum entry for the next state.
      * @param dinosaur The {@link Dinosaur} which is creating the new state.
      * @return The next {@link State}.

@@ -96,7 +96,7 @@ public class Simulation {
     }
 
     /**
-     * Constructor
+     * Constructor for a new {@link Simulation}.
      *
      * @param landscapeName             The name of the used landscape.
      * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
@@ -136,7 +136,7 @@ public class Simulation {
     /**
      * Gets all handled {@link SimulationObject}s.
      *
-     * @return The list {@link Simulation#simulationObjects}.
+     * @return The list {@link #simulationObjects}.
      */
     public List<SimulationObject> getSimulationObjects() {
         return simulationObjects;
@@ -145,7 +145,7 @@ public class Simulation {
     /**
      * Checks if a simulation is finished.
      *
-     * @return true when all dinosaurs are extinct.
+     * @return true when all {@link Dinosaur}s are extinct.
      */
     public boolean isOver() {
         for (SimulationObject simulationObject : simulationObjects) {
@@ -157,6 +157,7 @@ public class Simulation {
 
     /**
      * Remove all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
+     * @see #toBeRemoved
      */
     public void removeDeletedObjects() {
         simulationObjects.removeAll(toBeRemoved);
@@ -164,7 +165,7 @@ public class Simulation {
     }
 
     /**
-     * Method, that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects}.
+     * Method that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects} to the map.
      *
      * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
@@ -194,7 +195,7 @@ public class Simulation {
     }
 
     /**
-     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects} to the {@link #toBeRemoved} list.
+     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects}, to the {@link #toBeRemoved} list.
      * The object is also been removed from the visuals.
      *
      * @param simulationObject The {@link SimulationObject} which should be removed.

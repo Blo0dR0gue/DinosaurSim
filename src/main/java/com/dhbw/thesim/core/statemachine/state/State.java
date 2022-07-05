@@ -15,6 +15,8 @@ import java.util.List;
  */
 public abstract class State {
 
+    //region variables
+
     /**
      * List with all {@link StateTransition}s for this {@link State}. They are checked in the order they were added.
      */
@@ -24,6 +26,8 @@ public abstract class State {
      * The {@link SimulationObject} to which this state belongs. (Handled SimulationObject)
      */
     protected SimulationObject simulationObject;
+
+    //endregion
 
     /**
      * Constructor for a normal {@link State}-object.
@@ -43,13 +47,13 @@ public abstract class State {
 
     /**
      * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
-     * @param deltaTime  The delta time since the last update call.
+     * @param deltaTime  The delta time since the last update call. (in seconds)
      * @param simulation The {@link Simulation} data of the currently running simulation.
      */
     public abstract void update(double deltaTime, Simulation simulation);
 
     /**
-     * Method to force states, which implements this abstract class to create transitions.
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
      */
     public abstract void initTransitions();
 

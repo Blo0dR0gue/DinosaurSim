@@ -3,20 +3,29 @@ package com.dhbw.thesim.core.util;
 import java.util.Objects;
 
 /**
- * Represents a 2d-vector for a position on our screen.
+ * Represents a 2d-vector for a position on the screen.
  *
  * @author Daniel Czeschner
  */
 public class Vector2D {
 
+    //region variables
+
     /**
-     * Variables for x and y coordinates
+     * The x coordinate
      */
     private double x;
+
+    /**
+     * The y coordinate
+     */
     private double y;
+
+    //endregion
 
     /**
      * Int constructor
+     *
      * @param xValue The value for the x coordinate
      * @param yValue The value for the y coordinate.
      */
@@ -27,6 +36,7 @@ public class Vector2D {
 
     /**
      * Double constructor
+     *
      * @param xValue The value for the x coordinate.
      * @param yValue The value for the y coordinate.
      */
@@ -37,6 +47,7 @@ public class Vector2D {
 
     /**
      * Gets the squared length of the 2d-vector
+     *
      * @return The square of the length
      */
     public double lengthSq() {
@@ -45,6 +56,7 @@ public class Vector2D {
 
     /**
      * Gets the length of the 2d-vector
+     *
      * @return The length of this vector
      */
     public double length() {
@@ -53,6 +65,7 @@ public class Vector2D {
 
     /**
      * Normalizes the Vector
+     *
      * @return This vector but normalized
      */
     public Vector2D normalize() {
@@ -64,6 +77,7 @@ public class Vector2D {
 
     /**
      * Multiplies a value onto this vector
+     *
      * @param value The amount, which should be multiplied
      * @return A new {@link Vector2D} with the updated values.
      */
@@ -73,6 +87,7 @@ public class Vector2D {
 
     /**
      * Adds another vector to this vector
+     *
      * @param other The other Vector, which should be added
      * @return A new {@link Vector2D} with the updated values.
      */
@@ -82,6 +97,7 @@ public class Vector2D {
 
     /**
      * Adds another Vector to this vector
+     *
      * @param value The amount, which should be added.
      * @return A new {@link Vector2D} with the updated values.
      */
@@ -91,6 +107,7 @@ public class Vector2D {
 
     /**
      * Subtracts another Vector from this vector
+     *
      * @param other The other Vector, which is used to subtract
      * @return A new {@link Vector2D} with the updated values.
      */
@@ -100,6 +117,7 @@ public class Vector2D {
 
     /**
      * Is this vector the zero-vector?
+     *
      * @return True, if it is the zero-vector.
      */
     public boolean isZero() {
@@ -108,6 +126,7 @@ public class Vector2D {
 
     /**
      * Creates a copy of a passed 2d-vector
+     *
      * @param vector The 2d-vector which should be cloned.
      * @return The cloned 2d-vector.
      */
@@ -117,6 +136,7 @@ public class Vector2D {
 
     /**
      * Gets the distance between two vectors.
+     *
      * @param v1 The first vector
      * @param v2 The second vector
      * @return The distance between the first and the second vector.
@@ -128,6 +148,7 @@ public class Vector2D {
 
     /**
      * Calculates the dot product for two 2d-vectors
+     *
      * @param v1 The first 2d-vector
      * @param v2 The second 2d-vector
      * @return The dot product
@@ -138,6 +159,7 @@ public class Vector2D {
 
     /**
      * Calculates the cross product.
+     *
      * @param v1 The first 2d-vector.
      * @param v2 The second 2d-vector.
      * @return The cross product.
@@ -148,6 +170,7 @@ public class Vector2D {
 
     /**
      * Checks, if this vector is in range of a target vector.
+     *
      * @param target         The other target vector.
      * @param proximityRange The range, in which this vector needs to be.
      * @return true, if we are in range.
@@ -159,6 +182,7 @@ public class Vector2D {
     /**
      * Gets the direction vector to a target. <br>
      * <b>Remember:</b> Y increases from the top to the bottom.
+     *
      * @param target The {@link Vector2D} target
      * @return A {@link Vector2D} direction vector.
      */
@@ -169,6 +193,7 @@ public class Vector2D {
     /**
      * Gets the angle of a direction vector. <br>
      * <b>Remember:</b> Y increases from the top to the bottom.
+     *
      * @param direction Used for calculationi the angle
      * @return Angle to vector
      */
@@ -181,6 +206,7 @@ public class Vector2D {
 
     /**
      * Gets the current x coordinate
+     *
      * @return The x coordinate.
      */
     public double getX() {
@@ -189,6 +215,7 @@ public class Vector2D {
 
     /**
      * Sets the current x coordinate
+     *
      * @param x The new x coordinate.
      */
     public void setX(double x) {
@@ -197,6 +224,7 @@ public class Vector2D {
 
     /**
      * Gets the current y coordinate
+     *
      * @return The y coordinate.
      */
     public double getY() {
@@ -205,6 +233,7 @@ public class Vector2D {
 
     /**
      * Sets the current y coordinate
+     *
      * @param y The new y coordinate.
      */
     public void setY(double y) {

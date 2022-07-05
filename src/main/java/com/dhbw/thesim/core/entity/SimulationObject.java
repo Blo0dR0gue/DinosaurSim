@@ -63,9 +63,9 @@ public abstract class SimulationObject extends StateMachine {
     /**
      * Constructor
      *
-     * @param type             The type for this object.
-     * @param interactionRange The range, in which collisions are handled.
-     * @param image            The image, which is used for the representation for this object.
+     * @param type             The type of this {@link SimulationObject}.
+     * @param interactionRange The range, in which collisions with other {@link SimulationObject} are handled. (in pixels)
+     * @param image            The image, which is used for the graphical representation for this {@link SimulationObject}.
      */
     protected SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
@@ -165,6 +165,7 @@ public abstract class SimulationObject extends StateMachine {
 
     /**
      * Gets the current render offset.
+     *
      * @return The {@link #renderOffset} {@link Vector2D}.
      */
     public Vector2D getRenderOffset() {
