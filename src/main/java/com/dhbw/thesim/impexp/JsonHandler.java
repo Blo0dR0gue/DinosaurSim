@@ -102,7 +102,7 @@ public class JsonHandler {
      */
     public static void exportDefaultScenarioConfig() throws IOException {
         //get the default "Scenario" configuration file
-        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration-files/defaultScenarioConfiguration.json");
+        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration/defaultScenarioConfiguration.json");
         if (inputStreamDefaultConfigFile == null) {
             throw new FileNotFoundException("Cannot find resource file 'defaultScenarioConfiguration.json'");
         }
@@ -120,7 +120,7 @@ public class JsonHandler {
      */
     public static void exportDefaultSimulationObjectsConfig() throws IOException {
         //get the default "SimulationObjects" configuration file
-        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration-files/defaultSimulationObjectsConfig.json");
+        InputStream inputStreamDefaultConfigFile = JsonHandler.class.getResourceAsStream("/configuration/defaultSimulationObjectsConfig.json");
         if (inputStreamDefaultConfigFile == null) {
             throw new FileNotFoundException("Cannot find resource file 'defaultSimulationObjectsConfig.json'");
         }

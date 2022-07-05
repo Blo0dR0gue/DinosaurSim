@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -89,6 +90,7 @@ public class Display extends Application {
 
         configScene = new Scene(configScreen);
         primaryStage.setScene(configScene);
+        primaryStage.getIcons().add(new Image("/logo/logo.png"));
 
         //Show the app
         primaryStage.show();

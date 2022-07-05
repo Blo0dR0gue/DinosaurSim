@@ -140,7 +140,7 @@ public class SimulationOverlay extends BorderPane {
             createToggleButton();
         } else {
             //Add the control buttons for manual simulation mode to the sidebar and add a click listener to each
-            Button nextStepButton = addControlButtonToSideBar("/controls/next.png");
+            Button nextStepButton = addControlButtonToSideBar("/control/next.png");
             nextStepButton.setOnAction(e -> nextSimulationStep());
         }
         createStopButton();
@@ -154,10 +154,10 @@ public class SimulationOverlay extends BorderPane {
 
     private void createToggleButton() {
         AtomicBoolean pause = new AtomicBoolean(false);
-        Button toggleButton = addControlButtonToSideBar("/controls/pause.png");
+        Button toggleButton = addControlButtonToSideBar("/control/pause.png");
         toggleButton.setOnAction(e -> {
             simulationLoop.togglePause();
-            String controlImgUrl = pause.get() ? "controls/pause.png" : "controls/play.png";
+            String controlImgUrl = pause.get() ? "control/pause.png" : "control/play.png";
             ImageView graphic = (ImageView) toggleButton.getGraphic();
             graphic.setImage(new Image(controlImgUrl));
             pause.set(!pause.get());
@@ -165,7 +165,7 @@ public class SimulationOverlay extends BorderPane {
     }
 
     private void createStopButton() {
-        Button stopButton = addControlButtonToSideBar("/controls/stop.png");
+        Button stopButton = addControlButtonToSideBar("/control/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
             showStatisticsEndcard();
@@ -320,7 +320,7 @@ public class SimulationOverlay extends BorderPane {
         ListView<LegendListItem> legendListView = new ListView<>();
         legendListView.setPrefHeight(sideBar.getPrefHeight()*0.47);
         legendListView.setId("legendListView");
-        legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
+        legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/styles.css")).toExternalForm());
 
         StatisticsStruct stats = statistics.getSimulationStats();
         for (SimulationMap.TILES tile : SimulationMap.TILES.values()) {
