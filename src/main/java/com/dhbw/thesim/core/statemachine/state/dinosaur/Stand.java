@@ -36,7 +36,7 @@ public class Stand extends State {
     /**
      * Max time, we stay in this state.
      */
-    private final double waitTimeInSeconds = RANDOM.nextDouble(1,5);
+    private final double waitTimeInSeconds = RANDOM.nextDouble(1, 5);
 
     //endregion
 

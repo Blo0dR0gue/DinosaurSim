@@ -42,7 +42,6 @@ public abstract class StateMachine {
         State nextState = currentState.checkTransitions(simulation);
         if (nextState != null) {
             currentState.onExit();
-            System.out.println(this + ": Transition to " + nextState.getClass().getSimpleName());
             setState(nextState);
         }
     }

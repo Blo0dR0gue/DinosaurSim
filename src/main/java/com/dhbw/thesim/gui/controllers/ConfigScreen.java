@@ -22,6 +22,7 @@ import java.util.*;
 
 /**
  * The Control CLass for the Configuration Screen FXML file
+ *
  * @author Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class ConfigScreen extends AnchorPane {
@@ -70,6 +71,7 @@ public class ConfigScreen extends AnchorPane {
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link ConfigScreen}
+     *
      * @return The newly created and initialized {@link ConfigScreen}
      */
     public static ConfigScreen newInstance() {
@@ -78,20 +80,21 @@ public class ConfigScreen extends AnchorPane {
 
     /**
      * Method to initialize the Configuration Screen, its listeners and adding custom controls dynamically
-     * @param dinos The {@link ArrayList} of dino GUI parameters returned by
-     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
-     * @param plants The {@link ArrayList} of plant GUI parameters returned by
-     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     *
+     * @param dinos           The {@link ArrayList} of dino GUI parameters returned by
+     *                        {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     * @param plants          The {@link ArrayList} of plant GUI parameters returned by
+     *                        {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      * @param plantGrowthRate The plant growth rate returned by
-     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
-     * @param landscapeName The name of the desired landscape returned by
-     *              {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     *                        {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     * @param landscapeName   The name of the desired landscape returned by
+     *                        {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      */
     public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
         addScenarioParams(dinos, plants, plantGrowthRate, landscapeName);
 
-        GridPane.setMargin(maxRuntime.slider, new Insets(40.0,40.0,0.0,0.0));
-        GridPane.setMargin(maxSteps.slider, new Insets(40.0,40.0,0.0,0.0));
+        GridPane.setMargin(maxRuntime.slider, new Insets(40.0, 40.0, 0.0, 0.0));
+        GridPane.setMargin(maxSteps.slider, new Insets(40.0, 40.0, 0.0, 0.0));
 
         ScenarioSelector scenarioSelector = ScenarioSelector.newInstance();
         scenarioSelector.initialize(this);
@@ -100,8 +103,8 @@ public class ConfigScreen extends AnchorPane {
 
         initializeListeners();
 
-        Tooltip.install(stepSliderWithLabel,new Tooltip("Dieser Wert spezifiziert, um welchen Faktor die Simulationsgeschwindigkeit erhöht wird."));
-        Tooltip.install(plantGrowthSliderWithLabel,new Tooltip("Dieser Wert wird auf alle existierenden Pflanzen angewandt\nund spezifiziert, wie schnell diese wachsen."));
+        Tooltip.install(stepSliderWithLabel, new Tooltip("Dieser Wert spezifiziert, um welchen Faktor die Simulationsgeschwindigkeit erhöht wird."));
+        Tooltip.install(plantGrowthSliderWithLabel, new Tooltip("Dieser Wert wird auf alle existierenden Pflanzen angewandt\nund spezifiziert, wie schnell diese wachsen."));
     }
 
     /**
@@ -121,7 +124,7 @@ public class ConfigScreen extends AnchorPane {
 
         maxSteps.slider.valueProperty()
                 .addListener((observableValue, oldValue, newValue) -> maxSteps.sliderValueLabel.textProperty().setValue(
-                        String.valueOf(Math.round(newValue.doubleValue()/10)*10)
+                        String.valueOf(Math.round(newValue.doubleValue() / 10) * 10)
                 ));
     }
 
@@ -143,8 +146,7 @@ public class ConfigScreen extends AnchorPane {
             }
             if (items.size() < 2 && listView.equals(dinoListView)) {
                 minDinosSelected = false;
-            }
-            else if (items.size() < 1 && listView.equals(plantListView)) {
+            } else if (items.size() < 1 && listView.equals(plantListView)) {
                 minPlantsSelected = false;
             }
         }
@@ -216,10 +218,11 @@ public class ConfigScreen extends AnchorPane {
 
     /**
      * Method to load all of the params from the specified scenario config to load
-     * @param dinos All of the listed dinos listed retrieved from scenario config
-     * @param plants All of the listed plants listed retrieved from scenario config
+     *
+     * @param dinos           All of the listed dinos listed retrieved from scenario config
+     * @param plants          All of the listed plants listed retrieved from scenario config
      * @param plantGrowthRate The given plant growth rate in scenario config
-     * @param landscapeName The given landscape name in scenario config
+     * @param landscapeName   The given landscape name in scenario config
      */
     public void addScenarioParams(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
         mapListView.getItems().clear();
@@ -236,8 +239,9 @@ public class ConfigScreen extends AnchorPane {
 
     /**
      * Method to populate a given list view with all objects from the {@link ArrayList}
+     *
      * @param objectsList {@link ArrayList} containing all objects to populate the list {@link ListView} with
-     * @param listView The {@link ListView} which should be populated
+     * @param listView    The {@link ListView} which should be populated
      */
     private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItemWithImage> listView, JsonHandler.SimulationObjectType type) throws IOException {
         for (Object[] objects : objectsList) {
@@ -277,7 +281,7 @@ public class ConfigScreen extends AnchorPane {
         }
 
         //Set toggle for landscape from config file as selected (search by text and id of radio button)
-        for (Toggle toggle: mapGroup.getToggles()) {
+        for (Toggle toggle : mapGroup.getToggles()) {
             if (Objects.equals(((RadioButton) toggle).getText(), landscapeName)
                     || Objects.equals(((RadioButton) toggle).getId(), landscapeName)) {
                 toggle.setSelected(true);
@@ -287,15 +291,15 @@ public class ConfigScreen extends AnchorPane {
     }
 
     //region getter & setter
-    public HashMap<String, Integer> getDinoParams(){
+    public HashMap<String, Integer> getDinoParams() {
         return getListItemParams(dinoListView);
     }
 
-    public HashMap<String, Integer> getPlantParams(){
+    public HashMap<String, Integer> getPlantParams() {
         return getListItemParams(plantListView);
     }
 
-    private HashMap<String, Integer> getListItemParams(ListView<ListItemWithImage> listView){
+    private HashMap<String, Integer> getListItemParams(ListView<ListItemWithImage> listView) {
         HashMap<String, Integer> items = new HashMap<>();
 
         for (ListItemWithImage listItem :
@@ -306,27 +310,27 @@ public class ConfigScreen extends AnchorPane {
         return items;
     }
 
-    public RadioButton getMap(){
+    public RadioButton getMap() {
         return (RadioButton) mapGroup.getSelectedToggle();
     }
 
-    public RadioButton getMode(){
+    public RadioButton getMode() {
         return (RadioButton) modeGroup.getSelectedToggle();
     }
 
-    public double getPlantGrowthRate(){
+    public double getPlantGrowthRate() {
         return plantGrowthSliderWithLabel.getValue();
     }
 
-    public double getSimulationSteps(){
+    public double getSimulationSteps() {
         return stepSliderWithLabel.getValue();
     }
 
-    public double getMaxRuntime(){
+    public double getMaxRuntime() {
         return maxRuntime.getValue();
     }
 
-    public double getMaxSteps(){
+    public double getMaxSteps() {
         return maxSteps.getValue();
     }
 

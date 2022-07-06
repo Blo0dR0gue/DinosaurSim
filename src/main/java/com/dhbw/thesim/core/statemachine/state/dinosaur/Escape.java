@@ -58,7 +58,6 @@ public class Escape extends State {
     @Override
     public void update(double deltaTime, Simulation simulation) {
         if (target == null || reachedTarget()) {
-            System.out.println("check");
             if (dinosaur.getTarget() != null && dinosaur.isChased() && dinosaur.getTarget() instanceof Dinosaur hunter) {
                 directionOfHunter = hunter.getPosition().directionToTarget(dinosaur.getPosition());
                 target = simulation.getRandomMovementTargetInRangeInDirection(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(),

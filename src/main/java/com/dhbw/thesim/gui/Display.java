@@ -97,11 +97,11 @@ public class Display extends Application {
     }
 
     /**
-     * @param filename Name of the FXML File
+     * @param filename        Name of the FXML File
      * @param controllerClass Class of the Controller to the corresponding FXML File
      * @return Loads the FXML File into a controller of the given class and returns that controller instance
      */
-    public static Object makeFXMLController(String filename, Class<?> controllerClass){
+    public static Object makeFXMLController(String filename, Class<?> controllerClass) {
         FXMLLoader loader = new FXMLLoader();
 
         // Try to load the fxml into a controller
@@ -125,7 +125,8 @@ public class Display extends Application {
 
     /**
      * Returns the {@link ArrayList} if it is not null otherwise the default value will be returned inside a list
-     * @param list The passed {@link ArrayList} which will be returned when it is not null
+     *
+     * @param list         The passed {@link ArrayList} which will be returned when it is not null
      * @param defaultValue The default value to return in a list if the passed list equals null
      * @return The {@code defaultValue} or the {@code list} depending on whether the list is null
      */

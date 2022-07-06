@@ -157,6 +157,7 @@ public class Simulation {
 
     /**
      * Remove all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
+     *
      * @see #toBeRemoved
      */
     public void removeDeletedObjects() {
@@ -431,8 +432,6 @@ public class Simulation {
         baby.setPosition(spawnPoint);
 
         spawnObject(baby);
-
-        System.out.println("Baby Dinosaur was made");
     }
 
     /**
@@ -457,7 +456,6 @@ public class Simulation {
 
             for (Vector2D pos : positions) {
                 if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null)) {
-                    System.out.println("Spawn position found with range " + range);
                     return pos;
                 }
             }

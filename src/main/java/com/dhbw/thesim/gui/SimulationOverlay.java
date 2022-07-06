@@ -44,7 +44,7 @@ public class SimulationOverlay extends BorderPane {
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
-    private SimulationLoop simulationLoop;
+    private final SimulationLoop simulationLoop;
     public AnchorPane centerPane;
     private SideBar sideBar;
     private final boolean isSimulationModeAuto;
@@ -52,7 +52,7 @@ public class SimulationOverlay extends BorderPane {
     public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
 
-    private Statistics statistics;
+    private final Statistics statistics;
 
     public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) throws IOException {
         //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
@@ -318,7 +318,7 @@ public class SimulationOverlay extends BorderPane {
         legendTitle.setFont(new Font(17.0));
         vBox.getChildren().add(legendTitle);
         ListView<LegendListItem> legendListView = new ListView<>();
-        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.47);
+        legendListView.setPrefHeight(sideBar.getPrefHeight() * 0.47);
         legendListView.setId("legendListView");
         legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/styles.css")).toExternalForm());
 
@@ -328,7 +328,7 @@ public class SimulationOverlay extends BorderPane {
             legendListItem.initialize(SpriteLibrary.getInstance().getImage(tile.imgName), tile.deName);
             legendListView.getItems().add(legendListItem);
         }
-        for (String speciesName : stats.getAllSpecies()) {
+        for (String speciesName : stats.allSpecies()) {
             try {
                 //Retrieve sim object config and instantiating and initializing legend item to add to sidebar legend
                 HashMap<String, Object> dino = Objects.requireNonNull(
@@ -400,13 +400,13 @@ public class SimulationOverlay extends BorderPane {
         List<Text> textList = Arrays.asList(dinoTypeText, dietText, genderText, nutritionText, hydrationText,
                 strengthText, speedText, fertilityText, weightText, lengthText, heightText, canSwimText,
                 canClimbText, isChasedText, survivalTimeText, speciesProportionText);
-        for (int i = 0; i < textList.size(); i++)  {
+        for (int i = 0; i < textList.size(); i++) {
             gridPane.add(textList.get(i), 0, i);
         }
 
         List<Label> labelList = Arrays.asList(dinoType, diet, gender, nutrition, hydration, strength, speed, fertility,
                 weight, length, height, canSwim, canClimb, isChased, survivalTime, speciesProportion);
-        for (int i = 0; i < labelList.size(); i++)  {
+        for (int i = 0; i < labelList.size(); i++) {
             gridPane.add(labelList.get(i), 1, i);
             labelList.get(i).setTextFill(Color.WHITE);
         }

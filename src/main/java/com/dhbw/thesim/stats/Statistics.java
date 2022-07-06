@@ -13,7 +13,7 @@ import java.util.Map;
  * Class responsible for statistics shown in GUI (methods are called from GUI)
  * Functionality splits into singleStatistics for a single entity (Dinosaur) ans SimulationStatistics for an overall view at the simulation's end.
  *
- * @author Kai Grübener
+ * @author Kai Grübener, Tamina Mühlenberg
  * @see Dinosaur
  * @see com.dhbw.thesim.core.entity.Dinosaur
  * @see SimulationObject
@@ -23,8 +23,8 @@ import java.util.Map;
 @SuppressWarnings({"MismatchedQueryAndUpdateOfCollection", "unused"})
 public class Statistics {
 
+    //region variables
     /**
-     * Variables:
      * A list of lists of SimulationObjects -> Evaluating statistics out of multiple SimulationObject-lists to generate an informational graph out of the data
      *
      * @see SimulationObject
@@ -34,15 +34,17 @@ public class Statistics {
     private final List<SimulationTime> simulationTimeList;
     private final long startTime;
 
-    private enum dinosaurType{
+    private enum dinosaurType {
         CHASED,
         PREDATOR
     }
 
-    private enum nutritionType{
+    private enum nutritionType {
         HYDRATION,
         NUTRITION
     }
+
+    //endregion
 
     /**
      * Constructor for class Statistics ->  Called from GUI to generate a statistics-object
@@ -54,17 +56,17 @@ public class Statistics {
     }
 
     /**
-     * Method appends list of SimulationObjects to statSimObjects
+     * Method appends list of SimulationObjects to {@link #statSimObjects}
      *
-     * @param simulationObjectList The list of all current simulationiObjects
-     * @param simulationTime       The simulation time
+     * @param simulationObjectList The list of all current handled {@link SimulationObject}s inside a running {@link com.dhbw.thesim.core.simulation.Simulation}.
+     * @param simulationTime       The current simulation time.
      */
     public void addSimulationObjectList(List<SimulationObject> simulationObjectList, SimulationTime simulationTime) {
 
         List<SimulationObject> iteration = new ArrayList<>();
 
-        for (SimulationObject simulationObject : simulationObjectList){
-            if(simulationObject instanceof Dinosaur dinosaur){
+        for (SimulationObject simulationObject : simulationObjectList) {
+            if (simulationObject instanceof Dinosaur dinosaur) {
                 iteration.add(dinosaur.copyOf());
             }
         }
@@ -83,10 +85,10 @@ public class Statistics {
         List<List<Integer>> livingSpeciesIterations = new ArrayList<>();
         List<Integer> livingPredatorsIterations = new ArrayList<>();
         List<Integer> livingChasedIterations = new ArrayList<>();
-        
+
         HashMap<dinosaurType, List<Double>> averageNutritionIterations = new HashMap<>();
         initDinoTypeDoubleListHashMap(averageNutritionIterations);
-        
+
         HashMap<dinosaurType, List<Double>> averageHydrationIterations = new HashMap<>();
         initDinoTypeDoubleListHashMap(averageHydrationIterations);
 
@@ -104,7 +106,6 @@ public class Statistics {
 
             int iterationLivingPredatorsCounter = 0;
             int iterationLivingChasedCounter = 0;
-
 
 
             HashMap<dinosaurType, List<Double>> iterationNutritionPercentages = new HashMap<>();

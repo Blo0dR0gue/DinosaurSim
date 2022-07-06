@@ -71,28 +71,25 @@ public class JsonHandler {
 
     /**
      * All json-files with "scenario" in their names are returned. (independent if capitalized or not)
+     *
      * @return ArrayList<String> containing the proper file names
      * @throws FileNotFoundException if the "workingDirectory" does not exist yet
      */
     public static ArrayList<String> getExistingScenarioFileNames() throws FileNotFoundException {
-        ArrayList<String> existingScenarioFiles = new ArrayList<>();
 
         //set the directoryPath
         File directoryPath = new File(workingDirectory);
-        if (!directoryPath.isDirectory()){
-            throw new FileNotFoundException("The directory: "+workingDirectory+" does not exist yet.");
+        if (!directoryPath.isDirectory()) {
+            throw new FileNotFoundException("The directory: " + workingDirectory + " does not exist yet.");
         }
         //create a FilenameFilter that filters for all json-Files with scenario (independent if capitalized or not) in its names
-        FilenameFilter textFileFilter = new FilenameFilter(){
-            public boolean accept(File dir, String name) {
-                String lowercaseName = name.toLowerCase();
-                return lowercaseName.endsWith(".json") && lowercaseName.contains("scenario");
-            }
+        FilenameFilter textFileFilter = (dir, name) -> {
+            String lowercaseName = name.toLowerCase();
+            return lowercaseName.endsWith(".json") && lowercaseName.contains("scenario");
         };
         //use the FilenameFilter on all files in the "workingDirectory" and get only the proper ones
-        existingScenarioFiles.addAll(List.of(Objects.requireNonNull(directoryPath.list(textFileFilter))));
 
-        return existingScenarioFiles;
+        return new ArrayList<>(List.of(Objects.requireNonNull(directoryPath.list(textFileFilter))));
     }
 
     /**

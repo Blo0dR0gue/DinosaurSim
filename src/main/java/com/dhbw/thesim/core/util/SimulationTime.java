@@ -61,6 +61,7 @@ public class SimulationTime {
 
     /**
      * Adds a specific amount of minutes to the {@link #timeInSimulation}.
+     *
      * @param minutes The amount of minutes which should be added.
      */
     public void addMinutesTime(double minutes) {
@@ -69,6 +70,7 @@ public class SimulationTime {
 
     /**
      * Calculates the time passed.
+     *
      * @param simulationTime The {@link SimulationTime} from where we want to check.
      * @return The time since the given simulationTime.
      */
@@ -79,6 +81,7 @@ public class SimulationTime {
     /**
      * To get the current time as a string. <br>
      * For debug usage.
+     *
      * @return Debug string.
      */
     @Override

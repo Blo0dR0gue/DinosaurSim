@@ -13,6 +13,7 @@ import java.io.IOException;
 
 /**
  * The Control Class for the side bar FXML file
+ *
  * @author Robin Khatri Chetri
  */
 public class SideBar extends BorderPane {
@@ -43,6 +44,7 @@ public class SideBar extends BorderPane {
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link SideBar}
+     *
      * @return The newly created and initialized {@link SideBar}
      */
     public static SideBar newInstance() {

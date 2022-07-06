@@ -11,15 +11,16 @@ import javafx.scene.layout.HBox;
 
 /**
  * The Custom Control Class provides a map list item for the {@link javafx.scene.control.ListView} of maps
+ *
  * @author Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class MapListItem extends HBox {
     @FXML
     public HBox container;
-        @FXML
-        public RadioButton radioButton;
-        @FXML
-        public ImageView imageView;
+    @FXML
+    public RadioButton radioButton;
+    @FXML
+    public ImageView imageView;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -31,6 +32,7 @@ public class MapListItem extends HBox {
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link MapListItem}
+     *
      * @return The newly created and initialized {@link MapListItem}
      */
     public static MapListItem newInstance() {
@@ -40,7 +42,7 @@ public class MapListItem extends HBox {
     /**
      * Method to initialize the Map list item, its listeners and setting the label text and image url
      */
-    public void initialize(String radioBtnText, Image image){
+    public void initialize(String radioBtnText, Image image) {
         setText(radioBtnText);
         setImage(image);
     }
@@ -58,7 +60,7 @@ public class MapListItem extends HBox {
         return radioButton.textProperty();
     }
 
-    public Image getImage( ) {
+    public Image getImage() {
         return imageProperty().getValue();
     }
 
