@@ -1,12 +1,11 @@
-package com.dhbw.thesim.core.statemachine;
+package com.dhbw.thesim.core.entity;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class StateMachineTest {
+class PlantTest {
 
     @BeforeEach
     void setUp() {
@@ -14,13 +13,5 @@ class StateMachineTest {
 
     @AfterEach
     void tearDown() {
-    }
-
-    @Test
-    void setState() {
-    }
-
-    @Test
-    void stateMachineTick() {
     }
 }
