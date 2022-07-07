@@ -21,8 +21,8 @@ class DinosaurTest {
 
     @BeforeEach
     void setUp() {
-        Image mockImg = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testDinosaur.png")));
-        testDinosaur = new Dinosaur("test", mockImg, 1, 2,
+        Image img = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testDinosaur.png")));
+        testDinosaur = new Dinosaur("test", img, 1, 2,
                 3, 4, 5, 6, 7, 8,
                 true, false, 'a', 9,
                 10, 'f');
