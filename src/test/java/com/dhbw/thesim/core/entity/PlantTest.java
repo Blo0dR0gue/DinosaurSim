@@ -1,17 +1,25 @@
 package com.dhbw.thesim.core.entity;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the {@link Plant} class.
+ *
+ * @author Daniel Czeschner
+ */
 class PlantTest {
 
-    @BeforeEach
-    void setUp() {
+    @Test
+    void eat() {
     }
 
-    @AfterEach
-    void tearDown() {
+    @Test
+    void canBeEaten() {
+    }
+
+    @Test
+    void isGrown() {
     }
 }
