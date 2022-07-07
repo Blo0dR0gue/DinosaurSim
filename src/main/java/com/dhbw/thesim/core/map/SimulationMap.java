@@ -656,7 +656,7 @@ public class SimulationMap {
      * @return A list of {@link Vector2D} with all center coordinates for each {@link Tile}.
      * @see #getTilesInRangeWhereConditionsAre(Tile, int, boolean, boolean)
      */
-    public List<Vector2D> getMidCoordinatesTilesWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+    public List<Vector2D> getMidCoordinatesOfTilesWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable) {
         List<Vector2D> matchingPosition = new ArrayList<>();
 
         Tile startTile = getTileAtPosition(origin);
@@ -680,7 +680,7 @@ public class SimulationMap {
      * @return A list of {@link Vector2D} with all center coordinates of each {@link Tile}.
      * @see #getTilesInRangeWhereConditionsMatch(Tile, int, boolean, boolean)
      */
-    public List<Vector2D> getMidCoordinatesTilesWhereConditionsMatch(Vector2D origin, double range, boolean swimmable, boolean climbable) {
+    public List<Vector2D> getMidCoordinatesOfTilesWhereConditionsMatch(Vector2D origin, double range, boolean swimmable, boolean climbable) {
         List<Vector2D> matchingPosition = new ArrayList<>();
 
         Tile startTile = getTileAtPosition(origin);

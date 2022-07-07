@@ -236,7 +236,7 @@ public class Simulation {
      * @return A {@link Vector2D} target of a water tile or null.
      */
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
-        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesTilesWhereConditionsAre(position, viewRange, true, false);
+        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfTilesWhereConditionsAre(position, viewRange, true, false);
 
         sortByDistance(waterSourcesInRange, position);
 
@@ -446,7 +446,7 @@ public class Simulation {
 
         double internRange = range + Tile.TILE_SIZE;
 
-        List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
+        List<Vector2D> positions = simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
 
         int maximumAttempts = 500;
 
@@ -461,7 +461,7 @@ public class Simulation {
             maximumAttempts--;
             internRange += 1;
 
-            positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
+            positions = simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
         }
         return null;
     }
