@@ -6,6 +6,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Tests for the {@link StateMachine} class.
+ *
+ * @author Daniel Czeschner
+ */
 class StateMachineTest {
 
     @BeforeEach

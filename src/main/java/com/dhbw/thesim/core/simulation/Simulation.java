@@ -236,7 +236,7 @@ public class Simulation {
      * @return A {@link Vector2D} target of a water tile or null.
      */
     public Vector2D getClosestReachableWaterSource(Vector2D position, double viewRange, boolean canSwim, boolean canClimb) {
-        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesOfTilesWhereConditionsAre(position, viewRange, true, false);
+        List<Vector2D> waterSourcesInRange = simulationMap.getMidCoordinatesTilesWhereConditionsAre(position, viewRange, true, false);
 
         sortByDistance(waterSourcesInRange, position);
 

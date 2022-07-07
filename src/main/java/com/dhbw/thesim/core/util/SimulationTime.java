@@ -64,7 +64,7 @@ public class SimulationTime {
      *
      * @param minutes The amount of minutes which should be added.
      */
-    public void addMinutesTime(double minutes) {
+    public void addMinutesToTime(double minutes) {
         timeInSimulation += minutes * 60;
     }
 

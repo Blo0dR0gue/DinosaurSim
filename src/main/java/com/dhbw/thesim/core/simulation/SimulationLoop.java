@@ -150,7 +150,7 @@ public class SimulationLoop {
 
         //The time, when the sim is finished
         SimulationTime runtime = new SimulationTime();
-        runtime.addMinutesTime(maxRunTimeInMinutes);
+        runtime.addMinutesToTime(maxRunTimeInMinutes);
 
         SimulationTime lastStatisticsUpdateTime = new SimulationTime();
         int intervalUntilStatisticsUpdateInSeconds = (int) (runtime.getTime() * STAT_UPDATES_IN_PERCENTAGE_OF_MAX_RUNTIME);
@@ -186,7 +186,7 @@ public class SimulationLoop {
             printStats();
 
             //adding statistics update at intervals
-            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()), 3);
+            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()));
             if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds) {
                 updateStatistics();
                 System.out.println("stat update: " + (runPercentage));
@@ -202,17 +202,14 @@ public class SimulationLoop {
     };
 
     /**
-     * Rounds a number to a given decimal place.
+     * Rounds a number to a three decimal place.
      *
-     * @param value  The number which should be rounded.
-     * @param places The amount of decimal places.
+     * @param value The number which should be rounded.
      * @return The rounded value.
      */
-    private double round(double value, int places) {
-        if (places < 0) throw new IllegalArgumentException();
-
+    private double round(double value) {
         BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        bd = bd.setScale(3, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
 
