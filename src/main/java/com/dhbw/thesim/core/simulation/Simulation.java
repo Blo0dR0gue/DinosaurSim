@@ -121,7 +121,7 @@ public class Simulation {
         //Draw the map
         drawMap();
         //Spawn the objects
-        spawnObjects(simulationOverlay);
+        spawnObjects();
     }
 
     /**
@@ -167,17 +167,15 @@ public class Simulation {
 
     /**
      * Method that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects} to the map.
-     *
-     * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
      */
-    private void spawnObjects(SimulationOverlay simulationOverlay) {
+    private void spawnObjects() {
         //First spawn all plants
         simulationObjects.stream().filter(Plant.class::isInstance).forEach(simulationObject -> {
             Plant plant = (Plant) simulationObject;
             //Plants only can be spawned on tiles, which allow plant growing
             plant.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange() + 10, plant.getRenderOffset()));
-            simulationOverlay.centerPane.getChildren().add(plant.getSelectionRing());
-            simulationOverlay.centerPane.getChildren().add(plant.getJavaFXObj());
+            this.simulationOverlay.centerPane.getChildren().add(plant.getSelectionRing());
+            this.simulationOverlay.centerPane.getChildren().add(plant.getJavaFXObj());
         });
 
         //Then spawn all dinosaurs
@@ -190,8 +188,8 @@ public class Simulation {
             //Add the click listener
             dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> simulationOverlay.dinosaurClicked(dinosaur));
 
-            simulationOverlay.centerPane.getChildren().add(dinosaur.getSelectionRing());
-            simulationOverlay.centerPane.getChildren().add(dinosaur.getJavaFXObj());
+            this.simulationOverlay.centerPane.getChildren().add(dinosaur.getSelectionRing());
+            this.simulationOverlay.centerPane.getChildren().add(dinosaur.getJavaFXObj());
         });
     }
 
