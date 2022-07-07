@@ -6,6 +6,8 @@ import java.util.Objects;
  * Represents a 2d-vector for a position on the screen.
  *
  * @author Daniel Czeschner
+ * @apiNote Notice <a href="https://stackoverflow.com/questions/10786587/java-double-precision-sum-trouble">Double precision loss</a>. We did not converted to {@link java.math.BigDecimal} because we do not need this precision.
+ * Also, this "mistake" was only found at the end of the implementation phase and would require a lot of effort to fix that.
  */
 public class Vector2D {
 
@@ -51,7 +53,7 @@ public class Vector2D {
      * @return The square of the length
      */
     public double lengthSq() {
-        return x * x + y * y;
+        return (x * x) + (y * y);
     }
 
     /**
@@ -125,13 +127,25 @@ public class Vector2D {
     }
 
     /**
-     * Creates a copy of a passed 2d-vector
+     * Checks, if this vector is in range of a target vector.
      *
-     * @param vector The 2d-vector which should be cloned.
-     * @return The cloned 2d-vector.
+     * @param target         The other target vector.
+     * @param proximityRange The range, in which this vector needs to be.
+     * @return true, if we are in range.
      */
-    public static Vector2D copyOf(Vector2D vector) {
-        return new Vector2D(vector.getX(), vector.getY());
+    public boolean isInRangeOf(Vector2D target, double proximityRange) {
+        return Vector2D.distance(this, target) < proximityRange;
+    }
+
+    /**
+     * Gets the direction vector to a target. <br>
+     * <b>Remember:</b> Y increases from the top to the bottom.
+     *
+     * @param target The {@link Vector2D} target
+     * @return A {@link Vector2D} direction vector.
+     */
+    public Vector2D directionToTarget(Vector2D target) {
+        return new Vector2D(target.getX() - x, target.getY() - y).normalize();
     }
 
     /**
@@ -169,28 +183,6 @@ public class Vector2D {
     }
 
     /**
-     * Checks, if this vector is in range of a target vector.
-     *
-     * @param target         The other target vector.
-     * @param proximityRange The range, in which this vector needs to be.
-     * @return true, if we are in range.
-     */
-    public boolean isInRangeOf(Vector2D target, double proximityRange) {
-        return Vector2D.distance(this, target) < proximityRange;
-    }
-
-    /**
-     * Gets the direction vector to a target. <br>
-     * <b>Remember:</b> Y increases from the top to the bottom.
-     *
-     * @param target The {@link Vector2D} target
-     * @return A {@link Vector2D} direction vector.
-     */
-    public Vector2D directionToTarget(Vector2D target) {
-        return new Vector2D(target.getX() - x, target.getY() - y).normalize();
-    }
-
-    /**
      * Gets the angle of a direction vector. <br>
      * <b>Remember:</b> Y increases from the top to the bottom.
      *
@@ -198,7 +190,7 @@ public class Vector2D {
      * @return Angle to vector
      */
     public static double angleToVector(Vector2D direction) {
-        //we need to negate y here, because y increases from the top to the bottom.
+        //we need to negate y here, because y increases from the top to the bottom inside the simulation (JavaFX).
         return Math.atan2(-direction.getY(), direction.getX());
     }
 
