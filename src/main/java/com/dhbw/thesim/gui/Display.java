@@ -26,8 +26,8 @@ import java.util.Optional;
  */
 public class Display extends Application {
 
-    public static final double SCALE_X = Screen.getPrimary().getOutputScaleX();
-    public static final double SCALE_Y = Screen.getPrimary().getOutputScaleY();
+    public static double SCALE_X;
+    public static double SCALE_Y;
     public static Scene configScene;
 
     /**
@@ -41,6 +41,10 @@ public class Display extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
+        //Init variables here for testcase reasons
+        SCALE_X = Screen.getPrimary().getOutputScaleX();
+        SCALE_Y = Screen.getPrimary().getOutputScaleY();
 
         //Init JsonData
         JsonHandler.setDirectory();
