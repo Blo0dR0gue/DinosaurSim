@@ -17,6 +17,8 @@ import java.util.List;
  * @param allLivingDinosaurs          The timestamped count of dinosaurs.
  * @param allLivingSpecies            The timestamped count of dinosaurs divides by species.
  * @param allSpecies                  The overall types of dinosaurs in the previous simulation.
+ * @param allLivingPredators          The timestamped count of dinosaurs who are predators
+ * @param allLivingChased             The timestamped count of chased dinosaurs
  * @param simulationTimeList          The list of simulation times
  * @author Kai Grübener
  * @see Statistics
