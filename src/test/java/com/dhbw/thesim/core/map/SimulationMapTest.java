@@ -116,7 +116,7 @@ class SimulationMapTest {
         //act
         boolean tileMatchedCondition = simulationMap.tileMatchedConditions(gridX, gridY, canSwim, canClimb);
         //assert
-
+        assertEquals(expected, tileMatchedCondition);
     }
 
     @Test
