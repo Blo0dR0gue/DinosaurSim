@@ -6,7 +6,6 @@ import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.state.State;
 import com.dhbw.thesim.core.statemachine.state.StateFactory;
 import com.dhbw.thesim.core.statemachine.state.dinosaur.Stand;
-import com.dhbw.thesim.core.util.Vector2D;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +21,7 @@ class StateMachineTest {
 
     @DisplayName("Check a State transition")
     @Test
-    void stateMachineTickWithTranstion() {
+    void stateMachineTickWithTransition() {
         //arrange
         TestStateMachine testStateMachine = new TestStateMachine();
         Simulation simulation = mock(Simulation.class);

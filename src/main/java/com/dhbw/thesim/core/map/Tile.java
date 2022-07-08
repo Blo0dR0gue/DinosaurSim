@@ -46,7 +46,7 @@ public class Tile {
     /**
      * The square size for one tile (as specified in the requirement's specification)
      */
-    public static final double TILE_SIZE = Display.adjustScale(45, Display.SCALE_X);
+    public static final double TILE_SIZE = Display.adjustScale(45, Display.SCALE_X == 0 ? 1 : Display.SCALE_X);
     //endregion
 
     //endregion
