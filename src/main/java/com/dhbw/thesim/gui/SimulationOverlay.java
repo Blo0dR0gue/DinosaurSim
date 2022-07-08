@@ -54,7 +54,15 @@ public class SimulationOverlay extends BorderPane {
 
     private final Statistics statistics;
 
-    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) throws IOException {
+    /**
+     * Constructor
+     *
+     * @param primaryStage  The instance of the main stage.
+     * @param configScreen  The config screen instance.
+     * @param spriteLibrary The current instance of the {@link SpriteLibrary}
+     * @throws IOException See {@link com.dhbw.thesim.impexp.Json2Objects#initSimObjects(Map, Map, double, SpriteLibrary)}
+     */
+    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen, SpriteLibrary spriteLibrary) throws IOException {
         //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
         centerPane = new AnchorPane();
         centerPane.setMaxWidth(Display.adjustScale(1920, Display.SCALE_X));
@@ -77,7 +85,7 @@ public class SimulationOverlay extends BorderPane {
         //create Statistics
         statistics = new Statistics();
 
-        Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
+        Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate(), spriteLibrary);
 
         simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime(), this);
 
@@ -97,7 +105,7 @@ public class SimulationOverlay extends BorderPane {
         Background bGround = new Background(bImg);
         setBackground(bGround);
 
-        createSideLegend();
+        createSideLegend(spriteLibrary);
         createSideDinosaurStats();
 
         simulationScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -311,7 +319,11 @@ public class SimulationOverlay extends BorderPane {
     private Timer timer = null;
     private static final DecimalFormat dfZero = new DecimalFormat("0.0");
 
-    private void createSideLegend() {
+    /**
+     *
+     * @param spriteLibrary The instance of the {@link SpriteLibrary}
+     */
+    private void createSideLegend(SpriteLibrary spriteLibrary) {
         VBox vBox = new VBox();
         Label legendTitle = new Label("Legende:");
         legendTitle.setTextFill(Color.WHITE);
@@ -325,7 +337,7 @@ public class SimulationOverlay extends BorderPane {
         StatisticsStruct stats = statistics.getSimulationStats();
         for (SimulationMap.TILES tile : SimulationMap.TILES.values()) {
             LegendListItem legendListItem = LegendListItem.newInstance();
-            legendListItem.initialize(SpriteLibrary.getInstance().getImage(tile.imgName), tile.deName);
+            legendListItem.initialize(spriteLibrary.getImage(tile.imgName), tile.deName);
             legendListView.getItems().add(legendListItem);
         }
         for (String speciesName : stats.allSpecies()) {
@@ -335,7 +347,7 @@ public class SimulationOverlay extends BorderPane {
                         JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)
                 ).get(speciesName);
                 LegendListItem legendListItem = LegendListItem.newInstance();
-                legendListItem.initialize(SpriteLibrary.getInstance().getImage((String) dino.get("Bild")), speciesName);
+                legendListItem.initialize(spriteLibrary.getImage((String) dino.get("Bild")), speciesName);
                 legendListView.getItems().add(legendListItem);
             } catch (IOException e) {
                 e.printStackTrace();

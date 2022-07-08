@@ -48,6 +48,11 @@ public class SimulationMap {
      */
     public static final String LANDSCAPE_TWO_NAME = "Landschaft2";
 
+    /**
+     * The instance of the {@link SpriteLibrary}
+     */
+    private final SpriteLibrary spriteLibrary;
+
     //endregion
 
     /**
@@ -82,9 +87,11 @@ public class SimulationMap {
      * The constructor for a new {@link SimulationMap}.
      *
      * @param landscapeName The name for this landscape
+     * @param spriteLibrary The instance of the {@link SpriteLibrary}
      */
-    public SimulationMap(String landscapeName) {
+    public SimulationMap(String landscapeName, SpriteLibrary spriteLibrary) {
         this.landscapeName = landscapeName;
+        this.spriteLibrary = spriteLibrary;
         this.tiles = new Tile[WIDTH][HEIGHT];
 
         //Select a defined landscape based on the name.
@@ -106,60 +113,60 @@ public class SimulationMap {
 
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.GRASS.imgName), x, y, TILES.GRASS.swimmable, TILES.GRASS.climbable, TILES.GRASS.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.GRASS.imgName), x, y, TILES.GRASS.swimmable, TILES.GRASS.climbable, TILES.GRASS.canContainPlants);
             }
         }
 
         //Create river
         for (int x = 0; x < 14; x++) {
             int y = 10;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
         for (int y = 6; y < HEIGHT - 7; y++) {
             int x = 13;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
         for (int x = 13; x < 17; x++) {
             int y = HEIGHT - 7;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
 
         //Create lake
         for (int x = WIDTH - 10; x < WIDTH - 4; x++) {
             for (int y = 8; y < 14; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
-        tiles[WIDTH - 11][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), WIDTH - 11, 8, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
-        tiles[WIDTH - 12][8] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), WIDTH - 12, 8, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        tiles[WIDTH - 11][8] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), WIDTH - 11, 8, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        tiles[WIDTH - 12][8] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), WIDTH - 12, 8, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
 
         //Create desert
-        tiles[WIDTH - 5][13] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), WIDTH - 4, 14, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.WATER.canContainPlants);
+        tiles[WIDTH - 5][13] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), WIDTH - 4, 14, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.WATER.canContainPlants);
         for (int x = WIDTH - 9; x < WIDTH; x++) {
             for (int y = 0; y < 8; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
         for (int x = WIDTH - 4; x < WIDTH; x++) {
             for (int y = 8; y < 14; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
         for (int x = WIDTH - 3; x < WIDTH; x++) {
             for (int y = 14; y < 16; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
 
         //Create mountain
         for (int x = WIDTH - 16; x < WIDTH - 10; x++) {
             for (int y = HEIGHT - 5; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
         for (int x = WIDTH - 20; x < WIDTH - 16; x++) {
             for (int y = HEIGHT - 1; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
 
@@ -167,20 +174,20 @@ public class SimulationMap {
         for (int x = 0; x < 9; x++) {
             if (x < 6)
                 for (int y = 0; y < 6; y++) {
-                    tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                    tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
                 }
             else
-                tiles[x][0] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, 0, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][0] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, 0, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
-        tiles[6][1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), 6, 1, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        tiles[6][1] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), 6, 1, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
 
         //Create small desert
         for (int x = 0; x < 3; x++) {
             for (int y = HEIGHT - 3; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-        tiles[3][HEIGHT - 1] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), 3, HEIGHT - 1, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+        tiles[3][HEIGHT - 1] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), 3, HEIGHT - 1, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
 
     }
 
@@ -192,103 +199,103 @@ public class SimulationMap {
         //initial
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.GRASS.imgName), x, y, TILES.GRASS.swimmable, TILES.GRASS.climbable, TILES.GRASS.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.GRASS.imgName), x, y, TILES.GRASS.swimmable, TILES.GRASS.climbable, TILES.GRASS.canContainPlants);
             }
         }
 
         //create river
         for (int x = 0; x < 7; x++) {
             for (int y = 0; y < 6; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = 0; x < 5; x++) {
             for (int y = 6; y < 9; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = 0; x < 3; x++) {
             for (int y = 9; y < 11; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
-        tiles[0][11] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), 0, 11, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+        tiles[0][11] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), 0, 11, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         for (int x = 7; x < 11; x++) {
             for (int y = 0; y < 3; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
 
         //create second river
         for (int y = 0; y < 3; y++) {
             int x = WIDTH - 7;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
 
         for (int x = WIDTH - 6; x < WIDTH; x++) {
             for (int y = 0; y < 8; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = WIDTH - 4; x < WIDTH; x++) {
             for (int y = 8; y < 11; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
 
         //create lake in the middle
         for (int x = 10; x < 15; x++) {
             for (int y = 10; y < 15; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
             }
         }
         for (int x = 12; x < 15; x++) {
             int y = 15;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.WATER.imgName), x, y, TILES.WATER.swimmable, TILES.WATER.climbable, TILES.WATER.canContainPlants);
         }
 
         //create little dessert in the middle
         for (int y = 11; y < 15; y++) {
             int x = 15;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
         }
         for (int y = 11; y < 13; y++) {
             int x = 16;
-            tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+            tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
         }
 
         //create big right dessert
         for (int x = WIDTH - 11; x < WIDTH; x++) {
             for (int y = 11; y < 17; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
         for (int x = WIDTH - 9; x < WIDTH - 4; x++) {
             for (int y = 8; y < 11; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
         for (int x = WIDTH - 7; x < WIDTH - 3; x++) {
             for (int y = 17; y < 20; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), x, y, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
             }
         }
-        tiles[WIDTH - 8][17] = new Tile(SpriteLibrary.getInstance().getImage(TILES.SAND.imgName), WIDTH - 8, 17, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
+        tiles[WIDTH - 8][17] = new Tile(this.spriteLibrary.getImage(TILES.SAND.imgName), WIDTH - 8, 17, TILES.SAND.swimmable, TILES.SAND.climbable, TILES.SAND.canContainPlants);
 
         //create mountain
         for (int x = WIDTH - 3; x < WIDTH; x++) {
             for (int y = HEIGHT - 7; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
         for (int x = WIDTH - 10; x < WIDTH - 3; x++) {
             for (int y = HEIGHT - 4; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
         for (int x = WIDTH - 13; x < WIDTH - 10; x++) {
             for (int y = HEIGHT - 2; y < HEIGHT; y++) {
-                tiles[x][y] = new Tile(SpriteLibrary.getInstance().getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
+                tiles[x][y] = new Tile(this.spriteLibrary.getImage(TILES.MOUNTAIN.imgName), x, y, TILES.MOUNTAIN.swimmable, TILES.MOUNTAIN.climbable, TILES.MOUNTAIN.canContainPlants);
             }
         }
     }

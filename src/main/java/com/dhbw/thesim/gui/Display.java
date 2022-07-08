@@ -1,5 +1,6 @@
 package com.dhbw.thesim.gui;
 
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
@@ -88,9 +89,12 @@ public class Display extends Application {
         //If landscapeName from the defaultScenarioParams is null, there should be "Landschaft1" returned
         String landscapeName = ((String) getDefaultIfNull(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE), "Landschaft1").get(0)[0]);
 
+        //Init SpriteLibrary
+        SpriteLibrary spriteLibrary = new SpriteLibrary();
+
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), plantGrowthRate, landscapeName);
+        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), plantGrowthRate, landscapeName, spriteLibrary);
 
         configScene = new Scene(configScreen);
         primaryStage.setScene(configScene);

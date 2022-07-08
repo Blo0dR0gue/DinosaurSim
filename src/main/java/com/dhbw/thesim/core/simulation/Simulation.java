@@ -6,6 +6,7 @@ import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.SimulationTime;
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
@@ -104,10 +105,12 @@ public class Simulation {
      * @param dinosaurs                 Map with all dinosaurs, which should be added to this simulation. Key = Dinosaur-Name Value = Amount.
      * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
      * @param plantGrowthRate           The growth rate for each plant.
+     * @param spriteLibrary             The instance of the {@link SpriteLibrary}
+     * @throws IOException see {@link Json2Objects#initSimObjects(Map, Map, double, SpriteLibrary)}
      */
-    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate) throws IOException {
+    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate, SpriteLibrary spriteLibrary) throws IOException {
         this.random = new Random();
-        this.simulationMap = new SimulationMap(landscapeName);
+        this.simulationMap = new SimulationMap(landscapeName, spriteLibrary);
         this.backgroundGraphics = backgroundGraphicsContext;
         this.simulationObjects = new ArrayList<>();
         this.toBeRemoved = new ArrayList<>();
@@ -116,7 +119,7 @@ public class Simulation {
         this.simulationTime = new SimulationTime();
 
         this.simulationOverlay = simulationOverlay;
-        this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
+        this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate, spriteLibrary));
 
         //Draw the map
         drawMap();

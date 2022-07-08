@@ -20,8 +20,7 @@ import java.util.Objects;
 import java.util.stream.Stream;
 
 /**
- * The sprite library for the simulation. <br>
- * Uses the Singleton-Pattern.
+ * The sprite library for the simulation.
  *
  * @author Daniel Czeschnenr
  */
@@ -44,7 +43,7 @@ public class SpriteLibrary {
     /**
      * Constructor
      */
-    private SpriteLibrary() {
+    public SpriteLibrary() {
         imageMap = new HashMap<>();
         //Export the default images
         exportImagesFromResourcesFolder("/dinosaur");
@@ -56,19 +55,6 @@ public class SpriteLibrary {
         loadImages("/plant");
         loadImages("/tile");
     }
-
-    /**
-     * Gets and/or creates an instance of the {@link SpriteLibrary}.
-     *
-     * @return The {@link SpriteLibrary} {@link #INSTANCE} object.
-     */
-    public static SpriteLibrary getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new SpriteLibrary();
-        }
-        return INSTANCE;
-    }
-
     /**
      * Exports an image to the filesystem.
      *

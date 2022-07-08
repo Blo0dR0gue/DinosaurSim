@@ -62,6 +62,11 @@ public class ConfigScreen extends AnchorPane {
     public SliderWithLabel stepSliderWithLabel;
 
     /**
+     * The instance of the {@link SpriteLibrary}
+     */
+    private SpriteLibrary spriteLibrary;
+
+    /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
      * is getting to create the specified controller
      */
@@ -89,8 +94,11 @@ public class ConfigScreen extends AnchorPane {
      *                        {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
      * @param landscapeName   The name of the desired landscape returned by
      *                        {@link Json2Objects#getParamsForGUI(Json2Objects.Type, String)}
+     * @param spriteLibrary   The instance of the {@link SpriteLibrary}.
      */
-    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName) throws IOException {
+    public void initialize(ArrayList<Object[]> dinos, ArrayList<Object[]> plants, double plantGrowthRate, String landscapeName, SpriteLibrary spriteLibrary) throws IOException {
+        this.spriteLibrary = spriteLibrary;
+
         addScenarioParams(dinos, plants, plantGrowthRate, landscapeName);
 
         GridPane.setMargin(maxRuntime.slider, new Insets(40.0, 40.0, 0.0, 0.0));
@@ -152,7 +160,7 @@ public class ConfigScreen extends AnchorPane {
         }
         if (minDinosSelected && minPlantsSelected) {
             try {
-                SimulationOverlay simulationOverlay = new SimulationOverlay(window, this);
+                SimulationOverlay simulationOverlay = new SimulationOverlay(window, this, spriteLibrary);
                 window.setScene(simulationOverlay.getSimulationScene());
                 window.setFullScreen(true);
             } catch (Exception e) {
@@ -246,7 +254,7 @@ public class ConfigScreen extends AnchorPane {
     private void populateListView(ArrayList<Object[]> objectsList, ListView<ListItemWithImage> listView, JsonHandler.SimulationObjectType type) throws IOException {
         for (Object[] objects : objectsList) {
             String name = (String) objects[0];
-            Image image = SpriteLibrary.getInstance().getImage((String) objects[1]);
+            Image image = this.spriteLibrary.getImage((String) objects[1]);
             int amount = (int) objects[2];
 
             ListItemWithImage listItem = ListItemWithImage.newInstance();
