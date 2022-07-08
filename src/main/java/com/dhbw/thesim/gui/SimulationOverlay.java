@@ -2,6 +2,7 @@ package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.map.SimulationMap;
+import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
@@ -49,8 +50,8 @@ public class SimulationOverlay extends BorderPane {
     private SideBar sideBar;
     private final boolean isSimulationModeAuto;
 
-    public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
-    public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
+    public static final double BACKGROUND_WIDTH = Display.adjustScale(SimulationMap.WIDTH * Tile.TILE_SIZE, Display.SCALE_X);
+    public static final double BACKGROUND_HEIGHT = Display.adjustScale(SimulationMap.HEIGHT * Tile.TILE_SIZE, Display.SCALE_Y);
 
     private final Statistics statistics;
 
@@ -320,7 +321,6 @@ public class SimulationOverlay extends BorderPane {
     private static final DecimalFormat dfZero = new DecimalFormat("0.0");
 
     /**
-     *
      * @param spriteLibrary The instance of the {@link SpriteLibrary}
      */
     private void createSideLegend(SpriteLibrary spriteLibrary) {
