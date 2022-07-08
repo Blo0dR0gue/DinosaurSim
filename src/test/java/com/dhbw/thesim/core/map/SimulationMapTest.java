@@ -23,11 +23,13 @@ class SimulationMapTest {
 
     SimulationMap simulationMap;
     SpriteLibrary spriteLibraryMock;
+    Image testImage;
 
     @BeforeEach
     void setUp() {
+        testImage = new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testPlant.png")));
         spriteLibraryMock = mock(SpriteLibrary.class);
-        when(spriteLibraryMock.getImage(anyString())).thenReturn(new Image(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("testPlant.png"))));
+        when(spriteLibraryMock.getImage(anyString())).thenReturn(testImage);
         simulationMap = new SimulationMap(SimulationMap.LANDSCAPE_ONE_NAME, spriteLibraryMock);
     }
 
@@ -102,12 +104,19 @@ class SimulationMapTest {
         }
     }
 
-    @Test
-    void tileMatchedConditions() {
-    }
+    @DisplayName("Check if a tile has specific conditions.")
+    @ParameterizedTest
+    @CsvSource({"0, 0, false, false, false", "-1, 0, false, false, false", "0, 1, false, true, true", "0, 1, false, false, false", "0, 3, true, true, true", "0, 2, false, false, true"})
+    void tileMatchedConditions(int gridX, int gridY, boolean canSwim, boolean canClimb, boolean expected) {
+        //arrange
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, true, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 0, false, false, true);
+        simulationMap.getTiles()[0][3] = new Tile(testImage, 0, 0, false, false, false);
+        //act
+        boolean tileMatchedCondition = simulationMap.tileMatchedConditions(gridX, gridY, canSwim, canClimb);
+        //assert
 
-    @Test
-    void testTileMatchedConditions() {
     }
 
     @Test
