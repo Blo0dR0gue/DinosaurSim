@@ -3,10 +3,7 @@ package com.dhbw.thesim.core.map;
 import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.image.Image;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -65,15 +62,44 @@ class SimulationMapTest {
     }
 
     @Test
+    @Disabled("Not implemented yet.")
     void getWorldPosition() {
     }
 
-    @Test
-    void getTileAtPosition() {
+    @DisplayName("Check if a grid coordinate is inside the grid.")
+    @ParameterizedTest
+    @CsvSource({"0, 0", "-1, 0", "35, 23", "36, 24", "36, 10", "10, 24"})
+    void getTileAtPosition(int gridX, int gridY) {
+        //arrange
+
+        //act
+        Tile tileAt = simulationMap.getTileAtPosition(gridX, gridY);
+        //assert
+        if (simulationMap.isInsideOfGrid(gridX, gridY)) {
+            assertAll("",
+                    () -> assertEquals(gridX, tileAt.getGridX(), "X should be equal"),
+                    () -> assertEquals(gridY, tileAt.getGridY(), "Y should be equal"));
+        } else {
+            assertNull(tileAt, "Tile should be null");
+        }
     }
 
-    @Test
-    void testGetTileAtPosition() {
+    @DisplayName("Check if a grid coordinate is inside the grid.")
+    @ParameterizedTest
+    @CsvSource({"0, 0, 0, 0", "1960, 1080, -1, -1", "35, 23, 0, 0", "36, 46, 0, 1", "1619, 1079, 35, 23", "1620, 1080, -1, -1", "1961, 1080, -1, -1", "-4, 50, -1, -1"})
+    void getTileAtVector(int x, int y, int gridX, int gridY) {
+        //arrange
+        Vector2D vector2D = new Vector2D(x, y);
+        //act
+        Tile tileAt = simulationMap.getTileAtPosition(vector2D);
+        //assert
+        if (simulationMap.isInsideOfGrid(vector2D)) {
+            assertAll("Check tile gird position",
+                    () -> assertEquals(gridX, tileAt.getGridX(), "X should be equal"),
+                    () -> assertEquals(gridY, tileAt.getGridY(), "Y should be equal"));
+        } else {
+            assertNull(tileAt, "Tile should be null");
+        }
     }
 
     @Test
