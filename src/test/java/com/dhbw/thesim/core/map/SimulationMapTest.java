@@ -234,7 +234,7 @@ class SimulationMapTest {
         assertTrue(check);
     }
 
-    @Disabled("Get a centered position of a random tile, where the conditions are as defined.")
+    @DisplayName("Get a centered position of a random tile, where the conditions are as defined.")
     @ParameterizedTest
     @CsvSource({"false, false, false", "true, false, false", "false, true, false", "true, true, true", "true, true, true"})
     void getRandomTileCenterPositionWhereConditionsAre(boolean canSwim, boolean canClimb, boolean allowPlants) {
@@ -249,13 +249,13 @@ class SimulationMapTest {
             assertAll("Check vector conditions",
                     () -> assertNotNull(centerPosition),
                     () -> assertEquals(canClimb, simulationMap.getTileAtPosition(centerPosition).isClimbable(), "Climb condition needs to be equal."),
-                    () -> assertEquals(canSwim, simulationMap.getTileAtPosition(centerPosition).isClimbable(), "Swim condition needs to be equal."),
-                    () -> assertEquals(allowPlants, simulationMap.getTileAtPosition(centerPosition).isClimbable(), "Plant condition needs to be equal.")
+                    () -> assertEquals(canSwim, simulationMap.getTileAtPosition(centerPosition).isSwimmable(), "Swim condition needs to be equal."),
+                    () -> assertEquals(allowPlants, simulationMap.getTileAtPosition(centerPosition).arePlantsAllowed(), "Plant condition needs to be equal.")
             );
         }
     }
 
-    @Disabled("Get the 8 neighbours with the conditions")
+    @DisplayName("Get the 8 neighbours with the conditions")
     @Test
     void getMidCoordinatesTilesWhereConditionsAre() {
         //arrange
@@ -274,7 +274,7 @@ class SimulationMapTest {
         assertEquals(8, tiles.size());
     }
 
-    @Disabled("Get the 3 neighbours with the conditions")
+    @DisplayName("Get the 3 neighbours with the conditions")
     @Test
     void getMidCoordinatesTilesWhereConditionsAreOnly3() {
         //arrange
@@ -294,7 +294,7 @@ class SimulationMapTest {
     }
 
 
-    @Disabled("Get the 8 neighbours where the conditions match")
+    @DisplayName("Get the 8 neighbours where the conditions match")
     @Test
     void getMidCoordinatesOfTilesWhereConditionsMatch() {
         //arrange
@@ -313,7 +313,7 @@ class SimulationMapTest {
         assertEquals(8, tiles.size());
     }
 
-    @Disabled("Get the 3 neighbours with the conditions match")
+    @DisplayName("Get the 3 neighbours with the conditions match")
     @Test
     void getMidCoordinatesOfTilesWhereConditionsMatchOnly3() {
         //arrange
