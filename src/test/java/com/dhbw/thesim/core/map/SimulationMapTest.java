@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.Objects;
+import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -119,12 +120,33 @@ class SimulationMapTest {
         assertEquals(expected, tileMatchedCondition);
     }
 
-    @Test
-    void getRandomTile() {
+    @DisplayName("Check if a tile has specific conditions.")
+    @ParameterizedTest
+    @CsvSource({"false, false","true, false", "false, true", "true, true"})
+    void getRandomTile(boolean canSwim, boolean canClimb) {
+        //act
+        Tile tile = simulationMap.getRandomTile(canSwim, canClimb, new Random());
+        //assert
+        assertNotNull(tile);
     }
 
-    @Test
-    void getRandomTileWhereConditionsAre() {
+    @DisplayName("Check if a tile has specific conditions.")
+    @ParameterizedTest
+    @CsvSource({"false, false, false","true, false, false", "false, true, false", "true, true, false"})
+    void getRandomTileWhereConditionsAre(boolean canSwim, boolean canClimb, boolean allowPlants) {
+        //act
+        Tile tile = simulationMap.getRandomTileWhereConditionsAre(canSwim, canClimb, allowPlants, new Random());
+        //assert
+        if((canSwim || canClimb) && allowPlants ||canSwim && canClimb){
+            assertNull(tile);
+        }else{
+            assertAll("Check conditions",
+                    () -> assertNotNull(tile),
+                    () -> assertEquals(canSwim, tile.isSwimmable(), "Can swim"),
+                    () -> assertEquals(canClimb, tile.isClimbable(), "Can climb"),
+                    () -> assertEquals(allowPlants, tile.arePlantsAllowed(), "Allow plants")
+            );
+        }
     }
 
     @Test

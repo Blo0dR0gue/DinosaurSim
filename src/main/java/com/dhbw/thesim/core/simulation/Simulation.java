@@ -548,7 +548,7 @@ public class Simulation {
     public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
         //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
-        while (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
+        while (target == null || doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
                 || !simulationMap.checkIfNeighborTilesMatchConditions(target, canSwim, canClimb, interactionRange)) {
             target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
         }
@@ -567,7 +567,7 @@ public class Simulation {
     public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
         //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
-        while (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
+        while (target == null || doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
                 || !simulationMap.checkIfNeighborTilesHasConditions(target, swimmable, climbable, allowPlants, interactionRange)) {
             target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
         }

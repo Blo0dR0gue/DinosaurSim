@@ -522,6 +522,8 @@ public class SimulationMap {
      * @see #tileMatchedConditions(Tile, boolean, boolean)
      */
     public Tile getRandomTile(boolean canSwim, boolean canClimb, Random random) {
+        if(canSwim && canClimb) return null;
+
         Tile tile = getTileAtPosition(random.nextInt(0, WIDTH), random.nextInt(0, HEIGHT));
 
         if (!tileMatchedConditions(tile, canSwim, canClimb)) {
@@ -541,6 +543,8 @@ public class SimulationMap {
      * @see #tileConditionsAre(Tile, boolean, boolean)
      */
     public Tile getRandomTileWhereConditionsAre(boolean canSwim, boolean canClimb, boolean allowPlants, Random random) {
+        if((canSwim || canClimb) && allowPlants || canSwim && canClimb) return null;
+
         Tile tile = getTileAtPosition(random.nextInt(0, WIDTH), random.nextInt(0, HEIGHT));
 
         if (!tileConditionsAre(tile, canSwim, canClimb) || tile.arePlantsAllowed() != allowPlants) {
@@ -568,7 +572,11 @@ public class SimulationMap {
      * @return A random {@link Vector2D} word position matching the conditions.
      */
     public Vector2D getRandomTileCenterPosition(boolean canSwim, boolean canClimb, Random random) {
-        return getCenterPositionOfTile(getRandomTile(canSwim, canClimb, random));
+        Tile tile = getRandomTile(canSwim, canClimb, random);
+        if(tile != null)
+            return getCenterPositionOfTile(tile);
+        else
+            return null;
     }
 
     /**
@@ -650,7 +658,10 @@ public class SimulationMap {
      * @return A random {@link Vector2D} word position matching the conditions.
      */
     public Vector2D getRandomTileCenterPositionWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, Random random) {
-        return getCenterPositionOfTile(getRandomTileWhereConditionsAre(swimmable, climbable, allowPlants, random));
+        Tile tile = getRandomTileWhereConditionsAre(swimmable, climbable, allowPlants, random);
+        if(tile != null)
+            return getCenterPositionOfTile(tile);
+        return null;
     }
 
     /**
