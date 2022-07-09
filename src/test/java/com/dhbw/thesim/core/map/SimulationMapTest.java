@@ -64,9 +64,23 @@ class SimulationMapTest {
         assertEquals(expected, isInsideOfGrid, "The check should be correct.");
     }
 
-    @Test
-    @Disabled("Not implemented yet.")
-    void getWorldPosition() {
+    @DisplayName("Get world position")
+    @ParameterizedTest
+    @CsvSource({"0, 0, 0, 0", "-1, 0, -1, -1", "35, 23, 1575, 1035", "36, 24, -1, -1", "36, 10, -1, -1", "10, 24, -1, -1"})
+    void getWorldPosition(int gridX, int gridY, int expectedX, int expectedY) {
+        //arrange
+
+        //act
+        Vector2D worldPosition = simulationMap.getWorldPosition(gridX, gridY);
+        //assert
+        if(simulationMap.isInsideOfGrid(gridX, gridY)){
+            assertAll("Check values",
+                    () -> assertNotNull(worldPosition),
+                    () -> assertEquals(expectedX, worldPosition.getX(), "X need to be equal"),
+                    () -> assertEquals(expectedY, worldPosition.getY(), "Y need to be equal"));
+        }else{
+            assertNull(worldPosition);
+        }
     }
 
     @DisplayName("Check if a grid coordinate is inside the grid.")
@@ -151,25 +165,66 @@ class SimulationMapTest {
 
     @Test
     void getRandomTileCenterPosition() {
+        //arrange
+
+        //act
+        Vector2D center = simulationMap.getRandomTileCenterPosition(true, true, new Random());
+        //assert
+        assertNull(center);
     }
 
     @Test
+    @Disabled("TODO")
     void checkIfNeighborTilesMatchConditions() {
+        //arrange
+
+        //act
+
+        //assert
+
     }
 
     @Test
+    @Disabled("TODO")
     void checkIfNeighborTilesHasConditions() {
+        //arrange
+
+        //act
+
+        //assert
+
     }
 
     @Test
+    @Disabled("TODO")
     void getRandomTileCenterPositionWhereConditionsAre() {
+        //arrange
+
+        //act
+
+        //assert
+
     }
 
     @Test
+    @Disabled("TODO")
     void getMidCoordinatesTilesWhereConditionsAre() {
+        //arrange
+
+        //act
+
+        //assert
+
     }
 
     @Test
+    @Disabled("TODO")
     void getMidCoordinatesOfTilesWhereConditionsMatch() {
+        //arrange
+
+        //act
+
+        //assert
+
     }
 }
