@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -73,12 +74,12 @@ class SimulationMapTest {
         //act
         Vector2D worldPosition = simulationMap.getWorldPosition(gridX, gridY);
         //assert
-        if(simulationMap.isInsideOfGrid(gridX, gridY)){
+        if (simulationMap.isInsideOfGrid(gridX, gridY)) {
             assertAll("Check values",
                     () -> assertNotNull(worldPosition),
                     () -> assertEquals(expectedX, worldPosition.getX(), "X need to be equal"),
                     () -> assertEquals(expectedY, worldPosition.getY(), "Y need to be equal"));
-        }else{
+        } else {
             assertNull(worldPosition);
         }
     }
@@ -126,34 +127,37 @@ class SimulationMapTest {
         //arrange
         simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
         simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, true, false);
-        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 0, false, false, true);
-        simulationMap.getTiles()[0][3] = new Tile(testImage, 0, 0, false, false, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, false, false, true);
+        simulationMap.getTiles()[0][3] = new Tile(testImage, 0, 3, false, false, false);
         //act
         boolean tileMatchedCondition = simulationMap.tileMatchedConditions(gridX, gridY, canSwim, canClimb);
         //assert
         assertEquals(expected, tileMatchedCondition);
     }
 
-    @DisplayName("Check if a tile has specific conditions.")
+    @DisplayName("Get a random tile")
     @ParameterizedTest
-    @CsvSource({"false, false","true, false", "false, true", "true, true"})
+    @CsvSource({"false, false", "true, false", "false, true", "true, true"})
     void getRandomTile(boolean canSwim, boolean canClimb) {
         //act
         Tile tile = simulationMap.getRandomTile(canSwim, canClimb, new Random());
         //assert
-        assertNotNull(tile);
+        if (canClimb && canSwim)
+            assertNull(tile);
+        else
+            assertNotNull(tile);
     }
 
     @DisplayName("Check if a tile has specific conditions.")
     @ParameterizedTest
-    @CsvSource({"false, false, false","true, false, false", "false, true, false", "true, true, false"})
+    @CsvSource({"false, false, false", "true, false, false", "false, true, false", "true, true, false"})
     void getRandomTileWhereConditionsAre(boolean canSwim, boolean canClimb, boolean allowPlants) {
         //act
         Tile tile = simulationMap.getRandomTileWhereConditionsAre(canSwim, canClimb, allowPlants, new Random());
         //assert
-        if((canSwim || canClimb) && allowPlants ||canSwim && canClimb){
+        if ((canSwim || canClimb) && allowPlants || canSwim && canClimb) {
             assertNull(tile);
-        }else{
+        } else {
             assertAll("Check conditions",
                     () -> assertNotNull(tile),
                     () -> assertEquals(canSwim, tile.isSwimmable(), "Can swim"),
@@ -173,58 +177,159 @@ class SimulationMapTest {
         assertNull(center);
     }
 
+    @DisplayName("Check Neighbor conditions.")
+    @ParameterizedTest
+    @CsvSource({"false, false, false", "true, false, false", "false, true, false", "true, true, true"})
+    void checkIfNeighborTilesMatchConditions(boolean canSwim, boolean canClimb, boolean expected) {
+        //arrange
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, true, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, false, false, true);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, false, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, false, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, false, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, false, false, true);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, false, true, false);
+        //act
+        boolean check = simulationMap.checkIfNeighborTilesMatchConditions(simulationMap.getWorldPosition(1, 1), canSwim, canClimb, Tile.TILE_SIZE + 5);
+        //assert
+        assertEquals(expected, check);
+    }
+
+    @DisplayName("Check Neighbor has conditions. (false)")
+    @ParameterizedTest
+    @CsvSource({"false, false, false", "true, false, false", "false, true, false", "true, true, true", "true, true, true"})
+    void checkIfNeighborTilesHasConditions(boolean canSwim, boolean canClimb, boolean allowPlants) {
+        //arrange
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, true, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, false, false, true);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, false, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, false, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, false, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, false, false, true);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, false, true, false);
+        //act
+        boolean check = simulationMap.checkIfNeighborTilesHasConditions(simulationMap.getWorldPosition(1, 1), canSwim, canClimb, allowPlants, Tile.TILE_SIZE + 5);
+        //assert
+        assertFalse(check);
+    }
+
+    @DisplayName("Check Neighbor has conditions. (true)")
     @Test
-    @Disabled("TODO")
-    void checkIfNeighborTilesMatchConditions() {
+    void checkIfNeighborTilesHasConditionsSuccess() {
+        //arrange
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, true, false, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, true, false, false);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, true, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, true, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, false, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, true, false, false);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, true, false, false);
+        simulationMap.getTiles()[1][2] = new Tile(testImage, 1, 2, true, false, false);
+        //act
+        boolean check = simulationMap.checkIfNeighborTilesHasConditions(simulationMap.getWorldPosition(1, 1), true, false, false, Tile.TILE_SIZE + 5);
+        //assert
+        assertTrue(check);
+    }
+
+    @Disabled("Get a centered position of a random tile, where the conditions are as defined.")
+    @ParameterizedTest
+    @CsvSource({"false, false, false", "true, false, false", "false, true, false", "true, true, true", "true, true, true"})
+    void getRandomTileCenterPositionWhereConditionsAre(boolean canSwim, boolean canClimb, boolean allowPlants) {
         //arrange
 
         //act
-
+        Vector2D centerPosition = simulationMap.getRandomTileCenterPositionWhereConditionsAre(canSwim, canClimb, allowPlants, new Random());
         //assert
-
+        if ((canSwim || canClimb) && allowPlants || canSwim && canClimb) {
+            assertNull(centerPosition, "Should be null, if a invalid conditions is given.");
+        } else {
+            assertAll("Check vector conditions",
+                    () -> assertNotNull(centerPosition),
+                    () -> assertEquals(canClimb, simulationMap.getTileAtPosition(centerPosition).isClimbable(), "Climb condition needs to be equal."),
+                    () -> assertEquals(canSwim, simulationMap.getTileAtPosition(centerPosition).isClimbable(), "Swim condition needs to be equal."),
+                    () -> assertEquals(allowPlants, simulationMap.getTileAtPosition(centerPosition).isClimbable(), "Plant condition needs to be equal.")
+            );
+        }
     }
 
+    @Disabled("Get the 8 neighbours with the conditions")
     @Test
-    @Disabled("TODO")
-    void checkIfNeighborTilesHasConditions() {
-        //arrange
-
-        //act
-
-        //assert
-
-    }
-
-    @Test
-    @Disabled("TODO")
-    void getRandomTileCenterPositionWhereConditionsAre() {
-        //arrange
-
-        //act
-
-        //assert
-
-    }
-
-    @Test
-    @Disabled("TODO")
     void getMidCoordinatesTilesWhereConditionsAre() {
         //arrange
-
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, true, false, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, true, false, false);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, true, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, true, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, false, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, true, false, false);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, true, false, false);
+        simulationMap.getTiles()[1][2] = new Tile(testImage, 1, 2, true, false, false);
         //act
-
+        List<Vector2D> tiles = simulationMap.getMidCoordinatesTilesWhereConditionsAre(simulationMap.getWorldPosition(1, 1), Tile.TILE_SIZE, true, false);
         //assert
-
+        assertEquals(8, tiles.size());
     }
 
+    @Disabled("Get the 3 neighbours with the conditions")
     @Test
-    @Disabled("TODO")
+    void getMidCoordinatesTilesWhereConditionsAreOnly3() {
+        //arrange
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, false, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, false, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, true, false, false);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, true, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, true, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, true, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, false, false, false);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, false, false, false);
+        simulationMap.getTiles()[1][2] = new Tile(testImage, 1, 2, false, false, false);
+        //act
+        List<Vector2D> tiles = simulationMap.getMidCoordinatesTilesWhereConditionsAre(simulationMap.getWorldPosition(1, 1), Tile.TILE_SIZE, true, false);
+        //assert
+        assertEquals(3, tiles.size());
+    }
+
+
+    @Disabled("Get the 8 neighbours where the conditions match")
+    @Test
     void getMidCoordinatesOfTilesWhereConditionsMatch() {
         //arrange
-
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, false, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, true, false, false);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, true, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, false, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, false, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, true, false, false);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, true, false, false);
+        simulationMap.getTiles()[1][2] = new Tile(testImage, 1, 2, true, false, false);
         //act
-
+        List<Vector2D> tiles = simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(simulationMap.getWorldPosition(1, 1), Tile.TILE_SIZE, true, false);
         //assert
-
+        assertEquals(8, tiles.size());
     }
+
+    @Disabled("Get the 3 neighbours with the conditions match")
+    @Test
+    void getMidCoordinatesOfTilesWhereConditionsMatchOnly3() {
+        //arrange
+        simulationMap.getTiles()[0][0] = new Tile(testImage, 0, 0, true, false, false);
+        simulationMap.getTiles()[0][1] = new Tile(testImage, 0, 1, false, false, false);
+        simulationMap.getTiles()[0][2] = new Tile(testImage, 0, 2, true, false, false);
+        simulationMap.getTiles()[1][0] = new Tile(testImage, 1, 0, true, false, false);
+        simulationMap.getTiles()[2][0] = new Tile(testImage, 2, 0, true, false, false);
+        simulationMap.getTiles()[2][1] = new Tile(testImage, 2, 1, true, true, false);
+        simulationMap.getTiles()[2][2] = new Tile(testImage, 2, 2, false, false, false);
+        simulationMap.getTiles()[1][1] = new Tile(testImage, 1, 1, false, false, false);
+        simulationMap.getTiles()[1][2] = new Tile(testImage, 1, 2, false, false, false);
+        //act
+        List<Vector2D> tiles = simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(simulationMap.getWorldPosition(1, 1), Tile.TILE_SIZE, false, false);
+        //assert
+        assertEquals(3, tiles.size());
+    }
+
 }
