@@ -7,6 +7,7 @@ import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
@@ -44,6 +45,7 @@ class SimulationTest {
         simulation = null;
     }
 
+    @DisplayName("Sort a list by the distance to a vector")
     @Test
     void sortByDistanceRandomTest() {
 
@@ -78,4 +80,55 @@ class SimulationTest {
 
     }
 
+    @Test
+    void isOver() {
+    }
+
+    @Test
+    void getClosestReachableWaterSource() {
+    }
+
+    @Test
+    void getClosestReachableFoodSourceInRange() {
+    }
+
+    @Test
+    void findReachableFoodSourcesInRange() {
+    }
+
+    @Test
+    void getClosestReachableSuitablePartnerInRange() {
+    }
+
+    @Test
+    void makeBaby() {
+    }
+
+    @Test
+    void getNearestPositionInMapWhereConditionsAre() {
+    }
+
+    @Test
+    void getFreePositionInMap() {
+    }
+
+    @Test
+    void getFreePositionInMapWhereConditionsAre() {
+    }
+
+    @Test
+    void canMoveTo() {
+    }
+
+    @Test
+    void getRandomMovementTargetInRange() {
+    }
+
+    @Test
+    void getRandomMovementTargetInRangeInDirection() {
+    }
+
+    @Test
+    void doTheCirclesIntersect() {
+    }
 }
