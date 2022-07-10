@@ -186,10 +186,8 @@ public class SimulationLoop {
             printStats();
 
             //adding statistics update at intervals
-            double runPercentage = round((loopTime.getTime()) / (runtime.getTime()));
             if (Math.abs(loopTime.timeSince(lastStatisticsUpdateTime)) > intervalUntilStatisticsUpdateInSeconds) {
                 updateStatistics();
-                System.out.println("stat update: " + (runPercentage));
                 lastStatisticsUpdateTime = new SimulationTime(loopTime.getTime());
             }
 
@@ -200,18 +198,6 @@ public class SimulationLoop {
             }
         }
     };
-
-    /**
-     * Rounds a number to a three decimal place.
-     *
-     * @param value The number which should be rounded.
-     * @return The rounded value.
-     */
-    private double round(double value) {
-        BigDecimal bd = BigDecimal.valueOf(value);
-        bd = bd.setScale(3, RoundingMode.HALF_UP);
-        return bd.doubleValue();
-    }
 
     /**
      * Adds a new statistics value to the end statistics.

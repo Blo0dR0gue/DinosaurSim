@@ -42,6 +42,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 public class SimulationOverlay extends BorderPane {
 
+    //region variables
+
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
@@ -54,6 +56,59 @@ public class SimulationOverlay extends BorderPane {
     public static final double BACKGROUND_HEIGHT = Display.adjustScale(SimulationMap.HEIGHT * Tile.TILE_SIZE, Display.SCALE_Y);
 
     private final Statistics statistics;
+
+    //region variables dinosaur stats
+
+    /**
+     * The last/current selected dinosaur
+     */
+    private Dinosaur lastSelectedDinosaur;
+
+    private static final String NO_DINO_SELECTED = "Kein Dino";
+
+    private final Text dinoTypeText = new Text("Dinosaurierart: ");
+    private final Text dietText = new Text("Nahrungart: ");
+    private final Text genderText = new Text("Geschlecht: ");
+    private final Text nutritionText = new Text("Nahrung: ");
+    private final Text hydrationText = new Text("Hydration: ");
+    private final Text strengthText = new Text("Stärke: ");
+    private final Text speedText = new Text("Höchstgeschwindigkeit: ");
+    private final Text fertilityText = new Text("Fortpflanzungswille: ");
+    private final Text weightText = new Text("Gewicht: ");
+    private final Text lengthText = new Text("Länge: ");
+    private final Text heightText = new Text("Höhe: ");
+    private final Text canSwimText = new Text("Kann schwimmen: ");
+    private final Text canClimbText = new Text("Kann klettern: ");
+    private final Text isChasedText = new Text("Wird gejagt: ");
+    private final Text survivalTimeText = new Text("Überlebenszeit: ");
+    private final Text speciesProportionText = new Text("Artenanteil: ");
+
+    private final Label dinoType = new Label(NO_DINO_SELECTED);
+    private final Label diet = new Label(NO_DINO_SELECTED);
+    private final Label gender = new Label(NO_DINO_SELECTED);
+    private final Label nutrition = new Label(NO_DINO_SELECTED);
+    private final Label hydration = new Label(NO_DINO_SELECTED);
+    private final Label strength = new Label(NO_DINO_SELECTED);
+    private final Label speed = new Label(NO_DINO_SELECTED);
+    private final Label fertility = new Label(NO_DINO_SELECTED);
+    private final Label weight = new Label(NO_DINO_SELECTED);
+    private final Label length = new Label(NO_DINO_SELECTED);
+    private final Label height = new Label(NO_DINO_SELECTED);
+    private final Label canSwim = new Label(NO_DINO_SELECTED);
+    private final Label canClimb = new Label(NO_DINO_SELECTED);
+    private final Label isChased = new Label(NO_DINO_SELECTED);
+    private final Label survivalTime = new Label(NO_DINO_SELECTED);
+    private final Label speciesProportion = new Label(NO_DINO_SELECTED);
+
+    /**
+     * Stats display update timer
+     */
+    private Timer timer = null;
+    private static final DecimalFormat dfZero = new DecimalFormat("0.0");
+    //endregion
+
+
+    //endregion
 
     /**
      * Constructor
@@ -225,8 +280,12 @@ public class SimulationOverlay extends BorderPane {
         }
     }
 
-    private Dinosaur lastSelectedDinosaur;
-
+    /**
+     * Starts a timer for the stats update. <br>
+     * Updated each second.
+     *
+     * @param dinosaur The selected {@link Dinosaur}
+     */
     private void startStatsTimer(Dinosaur dinosaur) {
         if (timer != null)
             timer.cancel();
@@ -251,9 +310,12 @@ public class SimulationOverlay extends BorderPane {
                     }
                 });
             }
-        }, 0, 2000);
+        }, 0, 1000);
     }
 
+    /**
+     * Updates the stats in the sidebar.
+     */
     private void triggerDinosaurSingleStatsUpdate() {
         if (lastSelectedDinosaur != null && !lastSelectedDinosaur.diedOfHunger() && !lastSelectedDinosaur.diedOfThirst())
             setSideBarStats(statistics.getSingleStats(lastSelectedDinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects()), simulationLoop.getCurrentSimulation().getCurrentSimulationTime()));
@@ -261,6 +323,9 @@ public class SimulationOverlay extends BorderPane {
             resetStatsScreen();
     }
 
+    /**
+     * Resets the stats display in the sidebar
+     */
     private void resetStatsScreen() {
         lastSelectedDinosaur = null;
         dinoType.setText(NO_DINO_SELECTED);
@@ -280,45 +345,6 @@ public class SimulationOverlay extends BorderPane {
         survivalTime.setText(NO_DINO_SELECTED);
         speciesProportion.setText(NO_DINO_SELECTED);
     }
-
-    private static final String NO_DINO_SELECTED = "Kein Dino";
-
-    private final Text dinoTypeText = new Text("Dinosaurierart: ");
-    private final Text dietText = new Text("Nahrungart: ");
-    private final Text genderText = new Text("Geschlecht: ");
-    private final Text nutritionText = new Text("Nahrung: ");
-    private final Text hydrationText = new Text("Hydration: ");
-    private final Text strengthText = new Text("Stärke: ");
-    private final Text speedText = new Text("Höchstgeschwindigkeit: ");
-    private final Text fertilityText = new Text("Fortpflanzungswille: ");
-    private final Text weightText = new Text("Gewicht: ");
-    private final Text lengthText = new Text("Länge: ");
-    private final Text heightText = new Text("Höhe: ");
-    private final Text canSwimText = new Text("Kann schwimmen: ");
-    private final Text canClimbText = new Text("Kann klettern: ");
-    private final Text isChasedText = new Text("Wird gejagt: ");
-    private final Text survivalTimeText = new Text("Überlebenszeit: ");
-    private final Text speciesProportionText = new Text("Artenanteil: ");
-
-    private final Label dinoType = new Label(NO_DINO_SELECTED);
-    private final Label diet = new Label(NO_DINO_SELECTED);
-    private final Label gender = new Label(NO_DINO_SELECTED);
-    private final Label nutrition = new Label(NO_DINO_SELECTED);
-    private final Label hydration = new Label(NO_DINO_SELECTED);
-    private final Label strength = new Label(NO_DINO_SELECTED);
-    private final Label speed = new Label(NO_DINO_SELECTED);
-    private final Label fertility = new Label(NO_DINO_SELECTED);
-    private final Label weight = new Label(NO_DINO_SELECTED);
-    private final Label length = new Label(NO_DINO_SELECTED);
-    private final Label height = new Label(NO_DINO_SELECTED);
-    private final Label canSwim = new Label(NO_DINO_SELECTED);
-    private final Label canClimb = new Label(NO_DINO_SELECTED);
-    private final Label isChased = new Label(NO_DINO_SELECTED);
-    private final Label survivalTime = new Label(NO_DINO_SELECTED);
-    private final Label speciesProportion = new Label(NO_DINO_SELECTED);
-
-    private Timer timer = null;
-    private static final DecimalFormat dfZero = new DecimalFormat("0.0");
 
     /**
      * @param spriteLibrary The instance of the {@link SpriteLibrary}
@@ -363,6 +389,12 @@ public class SimulationOverlay extends BorderPane {
         sideBar.getBody().add(vBox);
     }
 
+    /**
+     * Sets the display for the stats of a selected dinosaur.
+     *
+     * @param dinosaurStats The stats of the selected dinosaur.
+     * @see Statistics#getSimulationStats()
+     */
     private void setSideBarStats(Map<String, Double> dinosaurStats) {
 
         dinoType.setText(lastSelectedDinosaur.getType());
@@ -400,6 +432,9 @@ public class SimulationOverlay extends BorderPane {
         speciesProportion.setText(dfZero.format(dinosaurStats.get("Artenanteil") * 100) + " %");
     }
 
+    /**
+     * Creates the sidebar stats display.
+     */
     private void createSideDinosaurStats() {
         Label statsTitle = new Label("Statistik / Eigenschaften:");
         statsTitle.setTextFill(Color.WHITE);
