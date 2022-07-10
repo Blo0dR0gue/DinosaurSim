@@ -166,7 +166,7 @@ public class Dinosaur extends SimulationObject {
      *
      * @see #reproductionValue
      */
-    private static final double REPRODUCTION_VALUE_FULL = 100;
+    public static final double REPRODUCTION_VALUE_FULL = 100;
 
     /**
      * Defines the proximity range of a dinosaur to a target point.

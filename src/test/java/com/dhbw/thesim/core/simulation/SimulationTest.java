@@ -5,21 +5,16 @@ import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
-import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,9 +36,6 @@ class SimulationTest {
     @Mock
     GraphicsContext graphicsContext;
 
-    @Mock
-    SpriteLibrary spriteLibrary;
-
     Image testImage;
 
     Simulation simulation;
@@ -58,7 +50,6 @@ class SimulationTest {
         testMidCoordinatesWhereConditionsAre.add(new Vector2D(10, 10));
         testMidCoordinatesWhereConditionsAre.add(new Vector2D(50, 50));
 
-        when(simulationMap.getMidCoordinatesTilesWhereConditionsAre(any(), anyDouble(), anyBoolean(), anyBoolean())).thenReturn(testMidCoordinatesWhereConditionsAre);
         simulation = new Simulation(simulationMap, graphicsContext, new Random());
     }
 
@@ -81,8 +72,6 @@ class SimulationTest {
         for (int i = 0; i < 50; i++) {
             plant = mock(Plant.class);
             when(plant.getPosition()).thenReturn(new Vector2D(random.nextDouble(0, 1860), random.nextDouble(0, 1080)));
-            when(plant.getInteractionRange()).thenReturn(2d);
-            when(plant.getGrowthRate()).thenReturn(2d);
             simulationObjectList.add(plant);
         }
 
@@ -126,13 +115,14 @@ class SimulationTest {
         //arrange
         when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
         when(simulationMap.getTileAtPosition(any())).thenReturn(new Tile(testImage, 0, 0, false, false, true));
+        when(simulationMap.getMidCoordinatesTilesWhereConditionsAre(any(), anyDouble(), anyBoolean(), anyBoolean())).thenReturn(testMidCoordinatesWhereConditionsAre);
         //act
         Vector2D closestWater = simulation.getClosestReachableWaterSource(new Vector2D(0, 0), 500, true, false);
         //assert
         assertAll("Get closes Water source",
                 () -> assertNotNull(closestWater, "There is a test target."),
                 () -> assertEquals(10, closestWater.getX(), "Need to be the closest test data. (X)"),
-                () -> assertEquals(10, closestWater.getY(), "Need to be the closest test data. (X)")
+                () -> assertEquals(10, closestWater.getY(), "Need to be the closest test data. (Y)")
         );
 
     }
@@ -148,34 +138,102 @@ class SimulationTest {
         assertNull(closestWater, "There is a no test target.");
     }
 
+    @DisplayName("Get the closest food source.")
     @Test
     void getClosestReachableFoodSourceInRange() {
         //arrange
+        Dinosaur testDinosaur = new Dinosaur("test", testImage, 1, 2,
+                3, 4, 5, 6, 7, 8,
+                true, false, 'a', 500,
+                10, 'f');
+        testDinosaur.setPosition(new Vector2D(10, 10));
+
+        Dinosaur testDinosaurEat = new Dinosaur("test2", testImage, 1, 2,
+                2, 4, 5, 6, 7, 8,
+                true, false, 'a', 500,
+                10, 'p');
+
+        testDinosaurEat.setPosition(new Vector2D(70, 70));
+
+        simulation.getSimulationObjects().add(testDinosaur);
+        simulation.getSimulationObjects().add(testDinosaurEat);
+
+        when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
+        when(simulationMap.getTileAtPosition(any())).thenReturn(new Tile(testImage, 0, 0, false, false, true));
+        when(simulationMap.tileMatchedConditions(any(), anyBoolean(), anyBoolean())).thenReturn(true);
 
         //act
-
+        SimulationObject closest = simulation.getClosestReachableFoodSourceInRange(testDinosaur.getPosition(), testDinosaur.getViewRange(), testDinosaur.getInteractionRange(),
+                testDinosaur.getDiet(), testDinosaur.getType(), testDinosaur.canSwim(), testDinosaur.canClimb(), testDinosaur.getStrength());
         //assert
-
+        assertAll("Check",
+                () -> assertNotNull(closest, "There is a test dinosaur."),
+                () -> assertEquals("test2", closest.getType(), "Closest needs to be the other test dinosaur."));
     }
 
+    @DisplayName("Get the closest dinosaur for a partner")
     @Test
     void getClosestReachableSuitablePartnerInRange() {
         //arrange
+        Dinosaur testDinosaur = new Dinosaur("test", testImage, 1, 2,
+                3, 4, 5, 6, 7, 8,
+                true, false, 'a', 500,
+                10, 'm');
+
+        testDinosaur.setPosition(new Vector2D(10, 10));
+
+        Dinosaur partner = new Dinosaur("test", testImage, 1, 2,
+                2, 4, 5, 6, 7, 8,
+                true, false, 'a', 500,
+                10, 'f');
+
+        partner.setPosition(new Vector2D(70, 70));
+        partner.setReproductionValue(Dinosaur.REPRODUCTION_VALUE_FULL);
+
+        simulation.getSimulationObjects().add(testDinosaur);
+        simulation.getSimulationObjects().add(partner);
+
+        when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
+        when(simulationMap.getTileAtPosition(any())).thenReturn(new Tile(testImage, 0, 0, false, false, true));
 
         //act
-
+        SimulationObject closest = simulation.getClosestReachableSuitablePartnerInRange(testDinosaur.getPosition(), testDinosaur.getViewRange(), testDinosaur.getType(), testDinosaur.canSwim(), testDinosaur.canClimb(), testDinosaur.getGender());
         //assert
-
+        assertAll("Check",
+                () -> assertNotNull(closest, "There is a test dinosaur."),
+                () -> assertEquals(70, closest.getPosition().getX(), "Closest needs to be the other test dinosaur."),
+                () -> assertEquals(70, closest.getPosition().getY(), "Closest needs to be the other test dinosaur.")
+        );
     }
 
+    @DisplayName("There is not partner who is willing to mate.")
     @Test
-    void makeBaby() {
+    void getClosestReachableSuitablePartnerInRangeNull() {
         //arrange
+        Dinosaur testDinosaur = new Dinosaur("test", testImage, 1, 2,
+                3, 4, 5, 6, 7, 8,
+                true, false, 'a', 500,
+                10, 'm');
+
+        testDinosaur.setPosition(new Vector2D(10, 10));
+
+        Dinosaur partner = new Dinosaur("test", testImage, 1, 2,
+                2, 4, 5, 6, 7, 8,
+                true, false, 'a', 500,
+                10, 'f');
+
+        partner.setPosition(new Vector2D(70, 70));
+        partner.setReproductionValue(Dinosaur.REPRODUCTION_VALUE_FULL-1);
+
+        simulation.getSimulationObjects().add(testDinosaur);
+        simulation.getSimulationObjects().add(partner);
 
         //act
-
+        SimulationObject closest = simulation.getClosestReachableSuitablePartnerInRange(testDinosaur.getPosition(), testDinosaur.getViewRange(), testDinosaur.getType(), testDinosaur.canSwim(), testDinosaur.canClimb(), testDinosaur.getGender());
         //assert
-
+        assertAll("Check",
+                () -> assertNull(closest, "There is a no test dinosaur who is willing to mate.")
+        );
     }
 
     @Test

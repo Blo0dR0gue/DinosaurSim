@@ -76,8 +76,8 @@ public abstract class SimulationObject extends StateMachine {
         this.renderOffset = new Vector2D(0, 0);
 
         imageObj.setPreserveRatio(true);
-        imageObj.setFitHeight(Display.adjustScale(interactionRange * 2, Display.SCALE_Y));
-        imageObj.setFitWidth(Display.adjustScale(interactionRange * 2, Display.SCALE_X));
+        imageObj.setFitHeight(Display.adjustScale(interactionRange * 2, Display.SCALE_Y==0?1:Display.SCALE_Y));
+        imageObj.setFitWidth(Display.adjustScale(interactionRange * 2, Display.SCALE_X==0?1:Display.SCALE_X));
 
         selectionRing = new Circle(0, 0, getInteractionRange());
         selectionRing.setVisible(false);
@@ -178,7 +178,7 @@ public abstract class SimulationObject extends StateMachine {
      * @return The collision range.
      */
     public double getInteractionRange() {
-        return Display.adjustScale(interactionRange - 10, Display.SCALE_X);
+        return Display.adjustScale(interactionRange - 10, Display.SCALE_X==0?1:Display.SCALE_X);
     }
 
     public double getRealInteractionRange() {
