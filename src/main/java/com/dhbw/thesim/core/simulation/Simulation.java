@@ -55,12 +55,12 @@ public class Simulation {
     /**
      * A List with all {@link SimulationObject}s, which will be removed at the end of a {@link SimulationLoop} update.
      */
-    private List<SimulationObject> toBeRemoved;
+    private final List<SimulationObject> toBeRemoved;
 
     /**
      * A List with all {@link SimulationObject}s, which will be spawned at the end of a {@link SimulationLoop} update.
      */
-    private List<SimulationObject> toBeSpawned;
+    private final List<SimulationObject> toBeSpawned;
 
     /**
      * The SimulationOverlay, on which the elements get spawned.
@@ -86,14 +86,19 @@ public class Simulation {
     //endregion
 
     /**
-     * Constructor used for test cases
+     * Constructor used for test cases. <br>
+     * We need this test contractor because {@link Json2Objects} is static and can't be mocked.
+     *
+     * @apiNote Do not use in production
      */
-    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, Map<String, Integer> dinosaurs, Map<String, Integer> plants, int plantGrowthRate, Random random) {
+    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, Random random) {
         this.simulationMap = simulationMap;
         this.simulationObjects = new ArrayList<>();
         this.backgroundGraphics = backgroundGraphics;
         this.simulationTime = new SimulationTime();
         this.random = random;
+        this.toBeRemoved = new ArrayList<>();
+        this.toBeSpawned = new ArrayList<>();
     }
 
     /**
@@ -132,6 +137,7 @@ public class Simulation {
      *
      * @return The currently used {@link SimulationMap}
      */
+    @SuppressWarnings("unused")
     public SimulationMap getSimulationMap() {
         return simulationMap;
     }
@@ -306,8 +312,8 @@ public class Simulation {
      * @param type             The type of the seeker. (e.g. Tyrannosaurus Rex)
      * @return A list with all eatable {@link SimulationObject}s in range.
      */
-    public List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, double interactionRange, Dinosaur.dietType dietType, String type,
-                                                                  boolean canSwim, boolean canClimb, double strength) {
+    private List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, double interactionRange, Dinosaur.dietType dietType, String type,
+                                                                   boolean canSwim, boolean canClimb, double strength) {
 
         List<SimulationObject> inRange = new ArrayList<>();
 
