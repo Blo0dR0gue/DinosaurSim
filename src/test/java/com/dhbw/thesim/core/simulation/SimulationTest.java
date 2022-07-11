@@ -268,34 +268,61 @@ class SimulationTest {
         );
     }
 
+    @DisplayName("Can move to a target position")
     @Test
     void canMoveTo() {
         //arrange
 
+        when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
+        when(simulationMap.getTileAtPosition(any())).thenReturn(new Tile(testImage, 0, 0, false, false, true));
+        when(simulationMap.tileMatchedConditions(any(), anyBoolean(), anyBoolean())).thenReturn(true);
+
         //act
-
+        boolean canMoveTo = simulation.canMoveTo(new Vector2D(10,10), new Vector2D(100, 100), 20, true, false, new Vector2D(10, 10), false, false, new ArrayList<>());
         //assert
-
+        assertTrue(canMoveTo);
     }
 
+    @DisplayName("Can not move to a target position")
+    @Test
+    void canNotMoveTo() {
+        //arrange
+        when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
+        when(simulationMap.tileMatchedConditions(any(), anyBoolean(), anyBoolean())).thenReturn(false);
+
+        //act
+        boolean canMoveTo = simulation.canMoveTo(new Vector2D(10,10), new Vector2D(10, 700), 20, false, false, new Vector2D(10, 10), false, false, new ArrayList<>());
+        //assert
+        assertFalse(canMoveTo);
+    }
+
+    @DisplayName("Get a random movement target")
     @Test
     void getRandomMovementTargetInRange() {
         //arrange
+        when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
+        when(simulationMap.getTileAtPosition(any())).thenReturn(new Tile(testImage, 0, 0, false, false, true));
+        when(simulationMap.tileMatchedConditions(any(), anyBoolean(), anyBoolean())).thenReturn(true);
 
         //act
-
+        Vector2D target = simulation.getRandomMovementTargetInRange(new Vector2D(15, 15), 100, 20, true, false, new Vector2D(10, 10));
         //assert
-
+        assertNotNull(target);
     }
 
-    @Test
+    @DisplayName("Get a random movement target in a specific direction")
+    @RepeatedTest(25)
     void getRandomMovementTargetInRangeInDirection() {
         //arrange
-
+        when(simulationMap.isInsideOfGrid(any())).thenReturn(true);
+        when(simulationMap.getTileAtPosition(any())).thenReturn(new Tile(testImage, 0, 0, false, false, true));
+        when(simulationMap.tileMatchedConditions(any(), anyBoolean(), anyBoolean())).thenReturn(true);
         //act
-
+        Vector2D target = simulation.getRandomMovementTargetInRangeInDirection(new Vector2D(15, 15), 100, 20, true, false, new Vector2D(10, 10), new Vector2D(15, 15).directionToTarget(new Vector2D(15, 50)));
         //assert
-
+        assertAll("Test new target",
+                () -> assertNotNull(target),
+                () -> assertTrue(target.getY()>=15, "The target needs to be in the direction."));
     }
 
     @DisplayName("Check if two circles (interaction ranges) intersect.")
