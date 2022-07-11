@@ -83,6 +83,11 @@ public class Simulation {
      */
     public static final int MAX_SIMULATION_OBJECTS = 100;
 
+    /**
+     * Helper variable to determinate of we are testing or not.
+     */
+    private boolean simulationIsRunning;
+
     //endregion
 
     /**
@@ -130,6 +135,8 @@ public class Simulation {
         drawMap();
         //Spawn the objects
         spawnObjects();
+
+        simulationIsRunning = true;
     }
 
     /**
@@ -451,7 +458,7 @@ public class Simulation {
      * @param interactionRange The interaction range of the target, who wants to get this point.
      * @return A possible {@link Vector2D} point.
      */
-    public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
+    private Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
 
         double internRange = range + Tile.TILE_SIZE;
 
@@ -509,8 +516,12 @@ public class Simulation {
         }
 
         this.toBeSpawned.add(simulationObject);
-        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getSelectionRing()));
-        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
+
+        //Don't do JavaFX related stuff in test mode
+        if(simulationIsRunning){
+            Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getSelectionRing()));
+            Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
+        }
     }
 
     /**
@@ -551,7 +562,7 @@ public class Simulation {
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
+    private Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
         //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
         while (target == null || doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
@@ -570,7 +581,7 @@ public class Simulation {
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
+    private Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
         //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
         while (target == null || doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)

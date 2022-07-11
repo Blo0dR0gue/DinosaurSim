@@ -237,33 +237,35 @@ class SimulationTest {
     }
 
     @Test
-    void getNearestPositionInMapWhereConditionsAre() {
+    void makeBaby() {
         //arrange
+        Dinosaur father = new Dinosaur("test", testImage, 10, 15,
+                3, 12, 5, 600, 27, 5,
+                true, false, 'a', 500,
+                10, 'm');
+
+        simulation.getSimulationObjects().add(father);
+
+        Dinosaur mother = new Dinosaur("test", testImage, 20, 25,
+                3, 12, 3, 600, 27, 5,
+                true, false, 'a', 500,
+                10, 'f');
+
+        simulation.getSimulationObjects().add(mother);
+
+        List<Vector2D> testCords = new ArrayList<>();
+        testCords.add(new Vector2D(150, 150));
+        when(simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(any(), anyDouble(), anyBoolean(), anyBoolean())).thenReturn(testCords);
 
         //act
-
+        simulation.makeBaby(father, mother);
+        simulation.spawnNewObjects();
         //assert
-
-    }
-
-    @Test
-    void getFreePositionInMap() {
-        //arrange
-
-        //act
-
-        //assert
-
-    }
-
-    @Test
-    void getFreePositionInMapWhereConditionsAre() {
-        //arrange
-
-        //act
-
-        //assert
-
+        assertAll("Test new dinosaur",
+                () -> assertEquals(3, simulation.getSimulationObjects().size()),
+                () -> assertNotEquals(father, simulation.getSimulationObjects().get(2)),
+                () -> assertNotEquals(mother, simulation.getSimulationObjects().get(2))
+        );
     }
 
     @Test
