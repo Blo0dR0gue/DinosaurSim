@@ -101,11 +101,6 @@ public class StatisticsTest {
         NUTRITION
     }
 
-    enum DinoType {
-        PREDATOR,
-        CHASED
-    }
-
     @BeforeEach
     void setUp(){
         startTime = System.currentTimeMillis(); //hopefully this will be the same startTime that statistics has. otherwise, System.currentTimeMillis needs to be mocked
