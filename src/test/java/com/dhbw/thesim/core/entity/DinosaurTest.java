@@ -140,6 +140,7 @@ class DinosaurTest {
         );
     }
 
+    @DisplayName("Check if a dinosaur is willing to mate.")
     @Test
     void isWillingToMate() {
         boolean reproductionValueNotFull = testDinosaur.isWillingToMate();
@@ -158,6 +159,7 @@ class DinosaurTest {
         );
     }
 
+    @DisplayName("Check if a dinosaur died of thirst")
     @Test
     void diedOfThirst() {
         boolean isNotDead = testDinosaur.diedOfThirst();
@@ -176,6 +178,7 @@ class DinosaurTest {
         );
     }
 
+    @DisplayName("Check if a dinosaur died of hunger")
     @Test
     void diedOfHunger() {
         boolean isNotDead = testDinosaur.diedOfThirst();

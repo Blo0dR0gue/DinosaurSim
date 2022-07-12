@@ -236,6 +236,7 @@ class SimulationTest {
         );
     }
 
+    @DisplayName("Add a dinosaur to the map. (mating)")
     @Test
     void makeBaby() {
         //arrange
