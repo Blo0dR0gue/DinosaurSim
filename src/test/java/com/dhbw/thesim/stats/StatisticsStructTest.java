@@ -18,7 +18,7 @@ class StatisticsStructTest {
 
     StatisticsStruct statisticsStruct;
 
-    private List<Integer> integerList = IntStream.rangeClosed(0, 10).boxed().collect(Collectors.toList());
+    private List<Integer> integerList = List.of(10, 9, 8, 8, 7, 6, 5, 4);
 
     private long simulationTime = 10;
     private double averageNutritionPredators = 0.5;
@@ -28,11 +28,11 @@ class StatisticsStructTest {
     private double absolutePercentagePredators = 0.6;
     private double absolutePercentageChased = 0.4;
     private List<Integer> allLivingDinosaurs = new ArrayList<>(integerList);
-    private List<List<Integer>> allLivingSpecies = new ArrayList<>();   //TODO fill with values
-    private List<String> allSpecies = new ArrayList<>();    //TODO fill with values
-    private List<Integer> allLivingPredators = new ArrayList<>();   //TODO fill with values
-    private List<Integer> allLivingChased = new ArrayList<>();  //TODO fill with values
-    private List<SimulationTime> simulationTimeList = new ArrayList<>(); //TODO fill with values
+    private List<List<Integer>> allLivingSpecies = List.of(integerList, integerList);
+    private List<String> allSpecies = List.of("Species1", "Species2");
+    private List<Integer> allLivingPredators = integerList;
+    private List<Integer> allLivingChased = integerList;
+    private List<SimulationTime> simulationTimeList = List.of(new SimulationTime(), new SimulationTime(10), new SimulationTime(20));
 
     @BeforeEach
     void setUp(){
@@ -71,7 +71,7 @@ class StatisticsStructTest {
         //assert
         long expected = simulationTime;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -81,7 +81,7 @@ class StatisticsStructTest {
 
         double expected = averageNutritionPredators;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
 
     }
 
@@ -91,7 +91,7 @@ class StatisticsStructTest {
 
         double expected = averageNutritionChased;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -100,7 +100,7 @@ class StatisticsStructTest {
 
         double expected = averageHydrationPredators;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -109,7 +109,7 @@ class StatisticsStructTest {
 
         double expected = averageHydrationChased;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -118,7 +118,7 @@ class StatisticsStructTest {
 
         double expected = absolutePercentagePredators;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
     }
 
     @Test
@@ -128,7 +128,7 @@ class StatisticsStructTest {
 
         double expected = absolutePercentageChased;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
 
     }
 
@@ -139,39 +139,69 @@ class StatisticsStructTest {
 
         List<Integer> expected = allLivingDinosaurs;
 
-        assertEquals(result, expected);
+        assertEquals(expected, result);
 
     }
 
     @Test
-    @Disabled("not yet implemented")
     void getAllLivingSpecies(){
 
+        List<List<Integer>> result = statisticsStruct.allLivingSpecies();
 
+        List<List<Integer>> expected = allLivingSpecies;
+
+        assertEquals(expected, result);
 
     }
 
     @Test
-    @Disabled("not yet implemented")
     void getAllSpecies(){
 
+        List<String> result = statisticsStruct.allSpecies();
+
+        List<String> expected = allSpecies;
+
+        assertEquals(expected, result);
     }
 
     @Test
-    @Disabled("not yet implemented")
     void getAllLivingPredators(){
+        List<Integer> result = statisticsStruct.allLivingPredators();
 
+        List<Integer> expected = allLivingPredators;
+
+        assertEquals(expected, result);
     }
 
     @Test
-    @Disabled("not yet implemented")
     void getAllLivingChased(){
+        List<Integer> result = statisticsStruct.allLivingChased();
 
+        List<Integer> expected = allLivingChased;
+
+        assertEquals(expected, result);
     }
 
     @Test
-    @Disabled("not yet implemented")
     void getSimulationTimeList(){
+        List<SimulationTime> result = statisticsStruct.simulationTimeList();
 
+        List<Double> resultAsDoubles = getSimulationTimesAsDoubles(result);
+
+        List<SimulationTime> expected = simulationTimeList;
+
+        List<Double> expectedAsDoubles = getSimulationTimesAsDoubles(expected);
+
+        assertEquals(expected, result);
+    }
+
+    private List<Double> getSimulationTimesAsDoubles(List<SimulationTime> simulationTimes) {
+        List<Double> simulationTimesAsDoubles = new ArrayList<>();
+
+        for (int i = 0; i < simulationTimes.size(); i++) {
+            simulationTimesAsDoubles.add(simulationTimes.get(i).getTime());
+        }
+
+        return simulationTimesAsDoubles;
     }
 }
