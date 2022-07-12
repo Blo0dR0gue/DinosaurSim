@@ -558,16 +558,6 @@ public class StatisticsTest {
         return speciesMap;
     }
 
-    private double getExpectedPercentageForDinoType(int amountOfPredators, int amountOfHerbivores, DinoType dinoType) {
-        double allDinos = amountOfPredators + amountOfHerbivores;
-
-        if (dinoType == DinoType.PREDATOR) {
-            return amountOfPredators / allDinos;
-        } else {
-            return amountOfHerbivores / allDinos;
-        }
-    }
-
     private double getExpectedAverageDietForDinosPerUpdate(Map<Dinosaur, Integer> dinosaurs, double attributeMultiplier, DietType dietType){
 
         List<Double> percentages = new ArrayList<>();
