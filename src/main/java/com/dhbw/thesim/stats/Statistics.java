@@ -240,6 +240,11 @@ public class Statistics {
         return iterationLivingSpeciesCounter;
     }
 
+    /**
+     *
+     * @param averageList
+     * @return sum of all averages in List
+     */
     private double getTotalOfAllAverages(List<Double> averageList) {
         double helper = 0;
         for (double avg :
