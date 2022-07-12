@@ -53,9 +53,12 @@ class JsonHandlerTest {
     void getExistingScenarioFileNames() {
         try {//if the method getExistingScenarioFileNames() returns not null -> check if the right file names were selected
             JsonHandler.setDirectory();
+            JsonHandler.exportDefaultScenarioConfig();
             var existingScenarioFiles = JsonHandler.getExistingScenarioFileNames();
             existingScenarioFiles.forEach(file -> assertTrue(file.toLowerCase().contains("scenario") && file.toLowerCase().endsWith(".json")));
         } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -65,6 +68,7 @@ class JsonHandlerTest {
     void importSimulationObjectsConfigPlants() {
         try {
             JsonHandler.setDirectory();
+            JsonHandler.exportDefaultSimulationObjectsConfig();
 
             var plants = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
 
@@ -93,6 +97,7 @@ class JsonHandlerTest {
     void importSimulationObjectsConfigDinosaurs() {
         try {
             JsonHandler.setDirectory();
+            JsonHandler.exportDefaultSimulationObjectsConfig();
 
             var dinosaurs = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
 
@@ -150,6 +155,9 @@ class JsonHandlerTest {
     @DisplayName("Create Simulation Objects and check if they are converted correctly into a JSONObject inside a JSONArray")
     void createScenarioConfigSimulationObjects() {
         try {
+            JsonHandler.setDirectory();
+            JsonHandler.exportDefaultSimulationObjectsConfig();
+
             var method = JsonHandler.class.getDeclaredMethod("createScenarioConfigSimulationObjects", HashMap.class);
 
             var testSimulationObjects = new HashMap<String, Integer>();
@@ -176,6 +184,8 @@ class JsonHandlerTest {
             }
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -183,6 +193,11 @@ class JsonHandlerTest {
     @DisplayName("Check if the landscape name is imported correctly out of the defaultScenarioConfiguration.json")
     void importScenarioConfigLandscape() {
         JsonHandler.setDirectory();
+        try {
+            JsonHandler.exportDefaultScenarioConfig();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         try {
             var importedScenarioConfig = JsonHandler.importScenarioConfig("defaultScenarioConfiguration", JsonHandler.ScenarioConfigParams.LANDSCAPE);
             assertAll(
@@ -198,6 +213,11 @@ class JsonHandlerTest {
     @DisplayName("Check if the dinosaur values are imported correctly out of the defaultScenarioConfiguration.json")
     void importScenarioConfigDinosaurs() {
         JsonHandler.setDirectory();
+        try {
+            JsonHandler.exportDefaultScenarioConfig();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         try {
             var importedScenarioConfig = JsonHandler.importScenarioConfig("defaultScenarioConfiguration", JsonHandler.ScenarioConfigParams.DINO);
             assertAll(
