@@ -14,6 +14,11 @@ import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Diese Klasse Testet die Funktionalität der stats.StatisticsStruct Klasse
+ *
+ * @author Tamina Mühlenberg
+ */
 class StatisticsStructTest {
 
     StatisticsStruct statisticsStruct;
