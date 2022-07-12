@@ -15,6 +15,13 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Diese Klasse Testet die Funktionalität der stats.Statistics Klasse
+ *
+ * Einige Tests, die mit Double Werten arbeiten kann es zu rundungsfehlern kommen.
+ *
+ * @author Tamina Mühlenberg
+ */
 public class StatisticsTest {
 
     Statistics statistics;
