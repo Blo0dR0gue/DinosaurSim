@@ -3,14 +3,14 @@ package com.dhbw.thesim.stats;
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
-import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.util.SimulationTime;
 import org.junit.jupiter.api.*;
 
 import javafx.scene.image.Image;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -96,6 +96,16 @@ public class StatisticsTest {
     10
     );
 
+    enum DietType {
+        HYDRATION,
+        NUTRITION
+    }
+
+    enum DinoType {
+        PREDATOR,
+        CHASED
+    }
+
     @BeforeEach
     void setUp(){
         startTime = System.currentTimeMillis(); //hopefully this will be the same startTime that statistics has. otherwise, System.currentTimeMillis needs to be mocked
@@ -130,72 +140,374 @@ public class StatisticsTest {
 
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAverageNutritionPredators(){
-        statistics.getSimulationStats().averageNutritionPredators();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAverageNutritionPredators(int withOmnivores){
+        DietType dietType = DietType.NUTRITION;
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 2;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, 1, 0, attributeMultiplier);
+        double update1 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseCarnivore(), amountOfCarnivores, getBaseOmnivore(), amountOfOmnivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, 0, 0, attributeMultiplier);
+        double update2 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseCarnivore(), amountOfCarnivores, getBaseOmnivore(), amountOfOmnivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, 0, 0, attributeMultiplier);
+        double update3 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseCarnivore(), amountOfCarnivores, getBaseOmnivore(), amountOfOmnivores), attributeMultiplier, dietType);
+
+        double expected = (update1 + update2 + update3) / 3;
+
+        double result = statistics.getSimulationStats().averageNutritionPredators();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAverageNutritionChased(){
-        statistics.getSimulationStats().averageNutritionChased();
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAverageNutritionChased(int withOmnivores){
+        DietType dietType = DietType.NUTRITION;
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 3;
+        int amountOfHerbivores = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        double update1 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseHerbivore(), amountOfHerbivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        double update2 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseHerbivore(), amountOfHerbivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        double update3 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseHerbivore(), amountOfHerbivores), attributeMultiplier, dietType);
+
+        double expected = (update1 + update2 + update3) / 3;
+
+        double result = statistics.getSimulationStats().averageNutritionChased();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAverageHydrationPredators(){
-        statistics.getSimulationStats().averageHydrationPredators();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAverageHydrationPredators(int withOmnivores){
+        DietType dietType = DietType.HYDRATION;
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 2;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, 1, 0, attributeMultiplier);
+        double update1 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseCarnivore(), amountOfCarnivores, getBaseOmnivore(), amountOfOmnivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, 0, 0, attributeMultiplier);
+        double update2 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseCarnivore(), amountOfCarnivores, getBaseOmnivore(), amountOfOmnivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, 0, 0, attributeMultiplier);
+        double update3 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseCarnivore(), amountOfCarnivores, getBaseOmnivore(), amountOfOmnivores), attributeMultiplier, dietType);
+
+        double expected = (update1 + update2 + update3) / 3;
+
+        double result = statistics.getSimulationStats().averageHydrationPredators();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAverageHydrationChased(){
-        statistics.getSimulationStats().averageHydrationChased();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAverageHydrationChased(int withOmnivores){
+        DietType dietType = DietType.HYDRATION;
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 3;
+        int amountOfHerbivores = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        double update1 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseHerbivore(), amountOfHerbivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        double update2 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseHerbivore(), amountOfHerbivores), attributeMultiplier, dietType);
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        double update3 = getExpectedAverageDietForDinosPerUpdate(Map.of(getBaseHerbivore(), amountOfHerbivores), attributeMultiplier, dietType);
+
+        double expected = (update1 + update2 + update3) / 3;
+
+        double result = statistics.getSimulationStats().averageHydrationChased();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAbsolutePercentagePredators(){
-        statistics.getSimulationStats().absolutePercentagePredators();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAbsolutePercentagePredators(int withOmnivores){
+
+        int sumOfPredators = 0;
+        int sumOfChased = 0;
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 3;
+        int amountOfHerbivores = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        sumOfPredators += amountOfOmnivores + amountOfCarnivores;
+        sumOfChased += amountOfHerbivores;
+
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        sumOfPredators += amountOfOmnivores + amountOfCarnivores;
+        sumOfChased += amountOfHerbivores;
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        sumOfPredators += amountOfOmnivores + amountOfCarnivores;
+        sumOfChased += amountOfHerbivores;
+
+        double expected = ((double) sumOfPredators) / ((double) (sumOfChased+sumOfPredators));
+
+        double result = statistics.getSimulationStats().absolutePercentagePredators();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAbsolutePercentageChased(){
-        statistics.getSimulationStats().absolutePercentageChased();
+
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAbsolutePercentageChased(int withOmnivores){
+
+        int sumOfPredators = 0;
+        int sumOfChased = 0;
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 3;
+        int amountOfHerbivores = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        sumOfPredators += amountOfOmnivores + amountOfCarnivores;
+        sumOfChased += amountOfHerbivores;
+
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        sumOfPredators += amountOfOmnivores + amountOfCarnivores;
+        sumOfChased += amountOfHerbivores;
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        sumOfPredators += amountOfOmnivores + amountOfCarnivores;
+        sumOfChased += amountOfHerbivores;
+
+        double expected = ((double) sumOfChased) / ((double) (sumOfChased+sumOfPredators));
+
+        double result = statistics.getSimulationStats().absolutePercentageChased();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAllLivingDinosaurs(){
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAllLivingDinosaurs(int withOmnivores){
 
-        statistics.getSimulationStats().allLivingDinosaurs();
+
+        int amountOfOmnivores = 2 * withOmnivores;
+        int amountOfCarnivores = 3;
+        int amountOfHerbivores = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        int update1 = amountOfOmnivores + amountOfCarnivores + amountOfHerbivores;
+
+
+        amountOfOmnivores = 1 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        int update2 = amountOfOmnivores + amountOfCarnivores + amountOfHerbivores;
+
+        amountOfOmnivores = 0 * withOmnivores;
+        amountOfCarnivores = 2;
+        amountOfHerbivores = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores, amountOfCarnivores, amountOfHerbivores, 0, attributeMultiplier);
+        int update3 = amountOfOmnivores + amountOfCarnivores + amountOfHerbivores;
+
+        List<Integer> expected = List.of(update1, update2, update3);
+
+        List<Integer> result = statistics.getSimulationStats().allLivingDinosaurs();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAllLivingSpecies(){
-        statistics.getSimulationStats().allSpecies();
-        statistics.getSimulationStats().allLivingSpecies();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAllLivingSpecies(int withOmnivores){
+
+        int amountOfOmnivores1 = 2 * withOmnivores;
+        int amountOfCarnivores1 = 3;
+        int amountOfHerbivores1 = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores1, amountOfCarnivores1, amountOfHerbivores1, 0, attributeMultiplier);
+
+
+
+        int amountOfOmnivores2 = 1 * withOmnivores;
+        int amountOfCarnivores2 = 2;
+        int amountOfHerbivores2 = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores2, amountOfCarnivores2, amountOfHerbivores2, 0, attributeMultiplier);
+
+
+        int amountOfOmnivores3 = 0 * withOmnivores;
+        int amountOfCarnivores3 = 2;
+        int amountOfHerbivores3 = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores3, amountOfCarnivores3, amountOfHerbivores3, 0, attributeMultiplier);
+
+
+        Map<String, List<Integer>> expected = new HashMap<>(Map.of(
+                "omnivore", List.of(amountOfOmnivores1, amountOfOmnivores2, amountOfOmnivores3),
+                "carnivore", List.of(amountOfCarnivores1, amountOfCarnivores2, amountOfCarnivores3),
+                "herbivore", List.of(amountOfHerbivores1, amountOfHerbivores2, amountOfHerbivores3)
+        ));
+        if (withOmnivores==0) {
+            expected.remove("omnivore");
+        }
+
+        List<String> speciesList = statistics.getSimulationStats().allSpecies();
+        List<List<Integer>> result = statistics.getSimulationStats().allLivingSpecies();
+        Map<String, List<Integer>> speciesMap = mapToSpecies(speciesList, result);
+
+        assertAll("All Species Lists must be equivalent",
+                () -> assertEquals(expected.get("omnivore"), speciesMap.get("omnivore")),
+                () -> assertEquals(expected.get("carnivore"), speciesMap.get("carnivore")),
+                () -> assertEquals(expected.get("herbivore"), speciesMap.get("herbivore"))
+        );
+
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAllSpecies(){
-        statistics.getSimulationStats().allSpecies();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAllSpecies(int withOmnivores){
+        int amountOfOmnivores1 = 2 * withOmnivores;
+        int amountOfCarnivores1 = 3;
+        int amountOfHerbivores1 = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores1, amountOfCarnivores1, amountOfHerbivores1, 0, attributeMultiplier);
+
+        List<String> expected = new ArrayList<>(List.of("omnivore", "carnivore", "herbivore"));
+        if (withOmnivores==0) {
+            expected.remove("omnivore");
+        }
+
+        List<String> result = statistics.getSimulationStats().allSpecies();
+
+        assertEquals(expected, result);
+
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAllLivingPredators(){
-        statistics.getSimulationStats().allLivingPredators();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAllLivingPredators(int withOmnivores){
+        int amountOfOmnivores1 = 2 * withOmnivores;
+        int amountOfCarnivores1 = 3;
+        int amountOfHerbivores1 = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores1, amountOfCarnivores1, amountOfHerbivores1, 0, attributeMultiplier);
+
+
+
+        int amountOfOmnivores2 = 1 * withOmnivores;
+        int amountOfCarnivores2 = 2;
+        int amountOfHerbivores2 = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores2, amountOfCarnivores2, amountOfHerbivores2, 0, attributeMultiplier);
+
+
+        int amountOfOmnivores3 = 0 * withOmnivores;
+        int amountOfCarnivores3 = 2;
+        int amountOfHerbivores3 = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores3, amountOfCarnivores3, amountOfHerbivores3, 0, attributeMultiplier);
+
+        List<Integer> expected = List.of(amountOfOmnivores1+amountOfCarnivores1, amountOfOmnivores2+amountOfCarnivores2, amountOfOmnivores3+amountOfCarnivores3);
+
+        List<Integer> result = statistics.getSimulationStats().allLivingPredators();
+
+        assertEquals(expected, result);
     }
 
-    @Test
-    @Disabled("not yet implemented")
-    void getAllLivingChased(){
-        statistics.getSimulationStats().allLivingChased();
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void getAllLivingChased(int withOmnivores){
+        int amountOfOmnivores1 = 2 * withOmnivores;
+        int amountOfCarnivores1 = 3;
+        int amountOfHerbivores1 = 3;
+        double attributeMultiplier = 1;
+        addNewStatsUpdate(10, amountOfOmnivores1, amountOfCarnivores1, amountOfHerbivores1, 0, attributeMultiplier);
+
+
+
+        int amountOfOmnivores2 = 1 * withOmnivores;
+        int amountOfCarnivores2 = 2;
+        int amountOfHerbivores2 = 3;
+        attributeMultiplier = 1.2;
+        addNewStatsUpdate(10, amountOfOmnivores2, amountOfCarnivores2, amountOfHerbivores2, 0, attributeMultiplier);
+
+
+        int amountOfOmnivores3 = 0 * withOmnivores;
+        int amountOfCarnivores3 = 2;
+        int amountOfHerbivores3 = 1;
+        attributeMultiplier = 0.5;
+        addNewStatsUpdate(10, amountOfOmnivores3, amountOfCarnivores3, amountOfHerbivores3, 0, attributeMultiplier);
+
+        List<Integer> expected = List.of(amountOfHerbivores1, amountOfHerbivores2, amountOfHerbivores3);
+
+        List<Integer> result = statistics.getSimulationStats().allLivingChased();
+
+        assertEquals(expected, result);
     }
 
     @Test
@@ -230,6 +542,66 @@ public class StatisticsTest {
         );
     }
 
+    private Map<String, List<Integer>> mapToSpecies(List<String> speciesList, List<List<Integer>> listList) {
+        Map<String, List<Integer>> speciesMap = new HashMap<>();
+
+        for (int i = 0; i < speciesList.size(); i++) {
+            String speciesName = speciesList.get(i);
+            speciesMap.put(speciesName, new ArrayList<>());
+
+
+            for (List<Integer> update :
+                    listList) {
+                speciesMap.get(speciesName).add(update.get(i));
+            }
+        }
+        return speciesMap;
+    }
+
+    private double getExpectedPercentageForDinoType(int amountOfPredators, int amountOfHerbivores, DinoType dinoType) {
+        double allDinos = amountOfPredators + amountOfHerbivores;
+
+        if (dinoType == DinoType.PREDATOR) {
+            return amountOfPredators / allDinos;
+        } else {
+            return amountOfHerbivores / allDinos;
+        }
+    }
+
+    private double getExpectedAverageDietForDinosPerUpdate(Map<Dinosaur, Integer> dinosaurs, double attributeMultiplier, DietType dietType){
+
+        List<Double> percentages = new ArrayList<>();
+
+        for (Dinosaur baseDinosaur:
+                dinosaurs.keySet()) {
+            for (int i = 0; i < dinosaurs.get(baseDinosaur); i++) {
+                percentages.add(getDietPercentage(baseDinosaur, attributeMultiplier, dietType));
+            }
+        }
+
+        double sumPercentage = 0;
+        for (double percentage:
+             percentages) {
+            sumPercentage += percentage;
+        }
+
+        return percentages.size() != 0 ? sumPercentage / percentages.size() : 0;
+
+    }
+
+    private double getDietPercentage(Dinosaur baseDinosaur, double attributeMultiplier, DietType dietType) {
+        double max = switch(dietType) {
+            case NUTRITION -> baseDinosaur.getMaxNutrition();
+            default -> baseDinosaur.getMaxHydration();
+        };
+
+        double current = switch (dietType) {
+            case NUTRITION -> baseDinosaur.getNutrition();
+            default -> baseDinosaur.getHydration();
+        };
+
+        return multiplyAttribute(current, max, attributeMultiplier) / max;
+    }
 
     private void addNewStatsUpdate(int timeSince, int amountOfOmnivores, int amountOfCarnivores, int amountOfHerbivores, int amountOfPlants, double attributeMultiplier){
         statistics.addSimulationObjectList(
@@ -317,7 +689,7 @@ public class StatisticsTest {
         Dinosaur dinosaur;
         dinosaur = baseCarnivore.copyOf();
         dinosaur.setNutrition(baseCarnivoreNutrition);
-        dinosaur.setNutrition(baseCarnivoreHydration);
+        dinosaur.setHydration(baseCarnivoreHydration);
         return dinosaur;
     }
 
