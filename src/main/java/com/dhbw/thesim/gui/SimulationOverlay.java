@@ -2,6 +2,7 @@ package com.dhbw.thesim.gui;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
 import com.dhbw.thesim.core.map.SimulationMap;
+import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.simulation.SimulationLoop;
 import com.dhbw.thesim.core.util.SpriteLibrary;
@@ -32,6 +33,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Represents the Simulation Overlay containing the control panel and drawn simulation-objects and grid-background
@@ -40,21 +42,83 @@ import java.util.*;
  */
 public class SimulationOverlay extends BorderPane {
 
+    //region variables
+
     private final Scene simulationScene;
     private Canvas backgroundCanvas;
     private GraphicsContext canvasGraphics;
-    private SimulationLoop simulationLoop;
+    private final SimulationLoop simulationLoop;
     public AnchorPane centerPane;
-    private Boolean simulationIsRunning;
     private SideBar sideBar;
     private final boolean isSimulationModeAuto;
 
-    public static final double BACKGROUND_WIDTH = Display.adjustScale(1620, Display.SCALE_X);
-    public static final double BACKGROUND_HEIGHT = Display.adjustScale(1080, Display.SCALE_Y);
+    public static final double BACKGROUND_WIDTH = Display.adjustScale(SimulationMap.WIDTH * Tile.TILE_SIZE, Display.SCALE_X);
+    public static final double BACKGROUND_HEIGHT = Display.adjustScale(SimulationMap.HEIGHT * Tile.TILE_SIZE, Display.SCALE_Y);
 
-    private Statistics statistics;
+    private final Statistics statistics;
 
-    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen) throws IOException {
+    //region variables dinosaur stats
+
+    /**
+     * The last/current selected dinosaur
+     */
+    private Dinosaur lastSelectedDinosaur;
+
+    private static final String NO_DINO_SELECTED = "Kein Dino";
+
+    private final Text dinoTypeText = new Text("Dinosaurierart: ");
+    private final Text dietText = new Text("Nahrungart: ");
+    private final Text genderText = new Text("Geschlecht: ");
+    private final Text nutritionText = new Text("Nahrung: ");
+    private final Text hydrationText = new Text("Hydration: ");
+    private final Text strengthText = new Text("Stärke: ");
+    private final Text speedText = new Text("Höchstgeschwindigkeit: ");
+    private final Text fertilityText = new Text("Fortpflanzungswille: ");
+    private final Text weightText = new Text("Gewicht: ");
+    private final Text lengthText = new Text("Länge: ");
+    private final Text heightText = new Text("Höhe: ");
+    private final Text canSwimText = new Text("Kann schwimmen: ");
+    private final Text canClimbText = new Text("Kann klettern: ");
+    private final Text isChasedText = new Text("Wird gejagt: ");
+    private final Text survivalTimeText = new Text("Überlebenszeit: ");
+    private final Text speciesProportionText = new Text("Artenanteil: ");
+
+    private final Label dinoType = new Label(NO_DINO_SELECTED);
+    private final Label diet = new Label(NO_DINO_SELECTED);
+    private final Label gender = new Label(NO_DINO_SELECTED);
+    private final Label nutrition = new Label(NO_DINO_SELECTED);
+    private final Label hydration = new Label(NO_DINO_SELECTED);
+    private final Label strength = new Label(NO_DINO_SELECTED);
+    private final Label speed = new Label(NO_DINO_SELECTED);
+    private final Label fertility = new Label(NO_DINO_SELECTED);
+    private final Label weight = new Label(NO_DINO_SELECTED);
+    private final Label length = new Label(NO_DINO_SELECTED);
+    private final Label height = new Label(NO_DINO_SELECTED);
+    private final Label canSwim = new Label(NO_DINO_SELECTED);
+    private final Label canClimb = new Label(NO_DINO_SELECTED);
+    private final Label isChased = new Label(NO_DINO_SELECTED);
+    private final Label survivalTime = new Label(NO_DINO_SELECTED);
+    private final Label speciesProportion = new Label(NO_DINO_SELECTED);
+
+    /**
+     * Stats display update timer
+     */
+    private Timer timer = null;
+    private static final DecimalFormat dfZero = new DecimalFormat("0.0");
+    //endregion
+
+
+    //endregion
+
+    /**
+     * Constructor
+     *
+     * @param primaryStage  The instance of the main stage.
+     * @param configScreen  The config screen instance.
+     * @param spriteLibrary The current instance of the {@link SpriteLibrary}
+     * @throws IOException See {@link com.dhbw.thesim.impexp.Json2Objects#initSimObjects(Map, Map, double, SpriteLibrary)}
+     */
+    public SimulationOverlay(Stage primaryStage, ConfigScreen configScreen, SpriteLibrary spriteLibrary) throws IOException {
         //Create another pane which acts as a container for the simulation overlay which allows for centering in fullscreen mode
         centerPane = new AnchorPane();
         centerPane.setMaxWidth(Display.adjustScale(1920, Display.SCALE_X));
@@ -77,7 +141,7 @@ public class SimulationOverlay extends BorderPane {
         //create Statistics
         statistics = new Statistics();
 
-        Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate());
+        Simulation sim = new Simulation(configScreen.getMap().getId(), canvasGraphics, this, configScreen.getDinoParams(), configScreen.getPlantParams(), configScreen.getPlantGrowthRate(), spriteLibrary);
 
         simulationLoop = new SimulationLoop((int) configScreen.getSimulationSteps(), (int) configScreen.getSimulationSteps(), sim, (int) configScreen.getMaxSteps(), (int) configScreen.getMaxRuntime(), this);
 
@@ -97,7 +161,7 @@ public class SimulationOverlay extends BorderPane {
         Background bGround = new Background(bImg);
         setBackground(bGround);
 
-        createSideLegend();
+        createSideLegend(spriteLibrary);
         createSideDinosaurStats();
 
         simulationScene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -137,12 +201,10 @@ public class SimulationOverlay extends BorderPane {
         //Check if automatic simulation mode was selected from the config screen, then add needed controls to sidebar
         if (isSimulationModeAuto) {
             //Add the control buttons for automatic simulation mode to the sidebar and add a click listener to each
-            createToggleButton("/controls/play.png", false);
-
-            createToggleButton("/controls/pause.png", true);
+            createToggleButton();
         } else {
             //Add the control buttons for manual simulation mode to the sidebar and add a click listener to each
-            Button nextStepButton = addControlButtonToSideBar("/controls/next.png");
+            Button nextStepButton = addControlButtonToSideBar("/control/next.png");
             nextStepButton.setOnAction(e -> nextSimulationStep());
         }
         createStopButton();
@@ -154,17 +216,20 @@ public class SimulationOverlay extends BorderPane {
         triggerDinosaurSingleStatsUpdate();
     }
 
-    private void createToggleButton(String controlImgUrl, Boolean shouldPauseSimulation) {
-        Button toggleButton = addControlButtonToSideBar(controlImgUrl);
+    private void createToggleButton() {
+        AtomicBoolean pause = new AtomicBoolean(false);
+        Button toggleButton = addControlButtonToSideBar("/control/pause.png");
         toggleButton.setOnAction(e -> {
-            if (simulationLoop.getSimulationPaused() != shouldPauseSimulation) {
-                simulationLoop.togglePause();
-            }
+            simulationLoop.togglePause();
+            String controlImgUrl = pause.get() ? "control/pause.png" : "control/play.png";
+            ImageView graphic = (ImageView) toggleButton.getGraphic();
+            graphic.setImage(new Image(controlImgUrl));
+            pause.set(!pause.get());
         });
     }
 
     private void createStopButton() {
-        Button stopButton = addControlButtonToSideBar("/controls/stop.png");
+        Button stopButton = addControlButtonToSideBar("/control/stop.png");
         stopButton.setOnAction(e -> {
             simulationLoop.stopSimulationRunner();
             showStatisticsEndcard();
@@ -215,8 +280,12 @@ public class SimulationOverlay extends BorderPane {
         }
     }
 
-    private Dinosaur lastSelectedDinosaur;
-
+    /**
+     * Starts a timer for the stats update. <br>
+     * Updated each second.
+     *
+     * @param dinosaur The selected {@link Dinosaur}
+     */
     private void startStatsTimer(Dinosaur dinosaur) {
         if (timer != null)
             timer.cancel();
@@ -241,9 +310,12 @@ public class SimulationOverlay extends BorderPane {
                     }
                 });
             }
-        }, 0, 2000);
+        }, 0, 1000);
     }
 
+    /**
+     * Updates the stats in the sidebar.
+     */
     private void triggerDinosaurSingleStatsUpdate() {
         if (lastSelectedDinosaur != null && !lastSelectedDinosaur.diedOfHunger() && !lastSelectedDinosaur.diedOfThirst())
             setSideBarStats(statistics.getSingleStats(lastSelectedDinosaur, List.copyOf(simulationLoop.getCurrentSimulation().getSimulationObjects()), simulationLoop.getCurrentSimulation().getCurrentSimulationTime()));
@@ -251,6 +323,9 @@ public class SimulationOverlay extends BorderPane {
             resetStatsScreen();
     }
 
+    /**
+     * Resets the stats display in the sidebar
+     */
     private void resetStatsScreen() {
         lastSelectedDinosaur = null;
         dinoType.setText(NO_DINO_SELECTED);
@@ -271,70 +346,34 @@ public class SimulationOverlay extends BorderPane {
         speciesProportion.setText(NO_DINO_SELECTED);
     }
 
-    private static final String NO_DINO_SELECTED = "Kein Dino";
-
-    private final Text dinoTypeText = new Text("Dinosaurierart: ");
-    private final Text dietText = new Text("Nahrungart: ");
-    private final Text genderText = new Text("Geschlecht: ");
-    private final Text nutritionText = new Text("Nahrung: ");
-    private final Text hydrationText = new Text("Hydration: ");
-    private final Text strengthText = new Text("Stärke: ");
-    private final Text speedText = new Text("Höchstgeschwindigkeit: ");
-    private final Text fertilityText = new Text("Fortpflanzungswille: ");
-    private final Text weightText = new Text("Gewicht: ");
-    private final Text lengthText = new Text("Länge: ");
-    private final Text heightText = new Text("Höhe: ");
-    private final Text canSwimText = new Text("Kann schwimmen: ");
-    private final Text canClimbText = new Text("Kann klettern: ");
-    private final Text isChasedText = new Text("Wird gejagt: ");
-    private final Text survivalTimeText = new Text("Überlebenszeit: ");
-    private final Text speciesProportionText = new Text("Artenanteil: ");
-
-    private final Label dinoType = new Label(NO_DINO_SELECTED);
-    private final Label diet = new Label(NO_DINO_SELECTED);
-    private final Label gender = new Label(NO_DINO_SELECTED);
-    private final Label nutrition = new Label(NO_DINO_SELECTED);
-    private final Label hydration = new Label(NO_DINO_SELECTED);
-    private final Label strength = new Label(NO_DINO_SELECTED);
-    private final Label speed = new Label(NO_DINO_SELECTED);
-    private final Label fertility = new Label(NO_DINO_SELECTED);
-    private final Label weight = new Label(NO_DINO_SELECTED);
-    private final Label length = new Label(NO_DINO_SELECTED);
-    private final Label height = new Label(NO_DINO_SELECTED);
-    private final Label canSwim = new Label(NO_DINO_SELECTED);
-    private final Label canClimb = new Label(NO_DINO_SELECTED);
-    private final Label isChased = new Label(NO_DINO_SELECTED);
-    private final Label survivalTime = new Label(NO_DINO_SELECTED);
-    private final Label speciesProportion = new Label(NO_DINO_SELECTED);
-
-    private Timer timer = null;
-    private static final DecimalFormat dfZero = new DecimalFormat("0.0");
-
-    private void createSideLegend() {
+    /**
+     * @param spriteLibrary The instance of the {@link SpriteLibrary}
+     */
+    private void createSideLegend(SpriteLibrary spriteLibrary) {
         VBox vBox = new VBox();
         Label legendTitle = new Label("Legende:");
         legendTitle.setTextFill(Color.WHITE);
         legendTitle.setFont(new Font(17.0));
         vBox.getChildren().add(legendTitle);
         ListView<LegendListItem> legendListView = new ListView<>();
-        legendListView.setPrefHeight(sideBar.getPrefHeight()*0.47);
+        legendListView.setPrefHeight(sideBar.getPrefHeight() * 0.47);
         legendListView.setId("legendListView");
-        legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/styles/styles.css")).toExternalForm());
+        legendListView.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/style/styles.css")).toExternalForm());
 
         StatisticsStruct stats = statistics.getSimulationStats();
         for (SimulationMap.TILES tile : SimulationMap.TILES.values()) {
             LegendListItem legendListItem = LegendListItem.newInstance();
-            legendListItem.initialize(SpriteLibrary.getInstance().getImage(tile.imgName), tile.deName);
+            legendListItem.initialize(spriteLibrary.getImage(tile.imgName), tile.deName);
             legendListView.getItems().add(legendListItem);
         }
-        for (String speciesName : stats.getAllSpecies()) {
+        for (String speciesName : stats.allSpecies()) {
             try {
                 //Retrieve sim object config and instantiating and initializing legend item to add to sidebar legend
                 HashMap<String, Object> dino = Objects.requireNonNull(
                         JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)
                 ).get(speciesName);
                 LegendListItem legendListItem = LegendListItem.newInstance();
-                legendListItem.initialize(SpriteLibrary.getInstance().getImage((String) dino.get("Bild")), speciesName);
+                legendListItem.initialize(spriteLibrary.getImage((String) dino.get("Bild")), speciesName);
                 legendListView.getItems().add(legendListItem);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -350,6 +389,12 @@ public class SimulationOverlay extends BorderPane {
         sideBar.getBody().add(vBox);
     }
 
+    /**
+     * Sets the display for the stats of a selected dinosaur.
+     *
+     * @param dinosaurStats The stats of the selected dinosaur.
+     * @see Statistics#getSimulationStats()
+     */
     private void setSideBarStats(Map<String, Double> dinosaurStats) {
 
         dinoType.setText(lastSelectedDinosaur.getType());
@@ -387,6 +432,9 @@ public class SimulationOverlay extends BorderPane {
         speciesProportion.setText(dfZero.format(dinosaurStats.get("Artenanteil") * 100) + " %");
     }
 
+    /**
+     * Creates the sidebar stats display.
+     */
     private void createSideDinosaurStats() {
         Label statsTitle = new Label("Statistik / Eigenschaften:");
         statsTitle.setTextFill(Color.WHITE);
@@ -399,13 +447,13 @@ public class SimulationOverlay extends BorderPane {
         List<Text> textList = Arrays.asList(dinoTypeText, dietText, genderText, nutritionText, hydrationText,
                 strengthText, speedText, fertilityText, weightText, lengthText, heightText, canSwimText,
                 canClimbText, isChasedText, survivalTimeText, speciesProportionText);
-        for (int i = 0; i < textList.size(); i++)  {
+        for (int i = 0; i < textList.size(); i++) {
             gridPane.add(textList.get(i), 0, i);
         }
 
         List<Label> labelList = Arrays.asList(dinoType, diet, gender, nutrition, hydration, strength, speed, fertility,
                 weight, length, height, canSwim, canClimb, isChased, survivalTime, speciesProportion);
-        for (int i = 0; i < labelList.size(); i++)  {
+        for (int i = 0; i < labelList.size(); i++) {
             gridPane.add(labelList.get(i), 1, i);
             labelList.get(i).setTextFill(Color.WHITE);
         }
@@ -423,18 +471,11 @@ public class SimulationOverlay extends BorderPane {
         return simulationScene;
     }
 
-    public Canvas getBackgroundCanvas() {
-        return backgroundCanvas;
-    }
-
-    public GraphicsContext getCanvasGraphics() {
-        return canvasGraphics;
+    public Statistics getStatistics() {
+        return statistics;
     }
 
     //endregion
 
-    public Statistics getStatistics() {
-        return statistics;
-    }
 
 }

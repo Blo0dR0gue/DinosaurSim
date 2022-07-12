@@ -15,20 +15,33 @@ import com.dhbw.thesim.core.util.Vector2D;
  */
 public class Escape extends State {
 
+    //region variables.
+
     /**
      * Helper {@link Dinosaur} variable, to get dinosaur specific variables
      */
     private final Dinosaur dinosaur;
 
     /**
-     * {@link Vector2D}-variables for paths
+     * The targeted position {@link Vector2D} the {@link Dinosaur} is moving to.
      */
     private Vector2D target;
-    private Vector2D directionOfHunter;
+
+    /**
+     * The direction the {@link #target} from the current position to this {@link #dinosaur}.
+     */
     private Vector2D direction;
 
     /**
+     * The direction {@link Vector2D} of the hunter to this {@link #dinosaur}.
+     */
+    private Vector2D directionOfHunter;
+
+    //endregion
+
+    /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Escape(Dinosaur simulationObject) {
@@ -36,10 +49,15 @@ public class Escape extends State {
         this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
         if (target == null || reachedTarget()) {
-            System.out.println("check");
             if (dinosaur.getTarget() != null && dinosaur.isChased() && dinosaur.getTarget() instanceof Dinosaur hunter) {
                 directionOfHunter = hunter.getPosition().directionToTarget(dinosaur.getPosition());
                 target = simulation.getRandomMovementTargetInRangeInDirection(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(),
@@ -58,10 +76,16 @@ public class Escape extends State {
         }
     }
 
+    /**
+     * Is called on state exit
+     */
     @Override
     public void onExit() {
     }
 
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
         //The dinosaur died.
@@ -75,13 +99,17 @@ public class Escape extends State {
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> target == null));
 
         //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
-        addTransition(new StateTransition(StateFactory.States.escape, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false, null)
-        ));
+        addTransition(new StateTransition(StateFactory.States.escape, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), target, dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), false, false, null)));
 
         //If the dinosaur is no longer been chased.
         addTransition(new StateTransition(StateFactory.States.wander, simulation -> !dinosaur.isChased()));
     }
 
+    /**
+     * Checks if the {@link #target} point is reached.
+     *
+     * @return true if the dinosaur is in the {@link Dinosaur#PROXIMITY_RANGE} to the {@link #target}.
+     */
     private boolean reachedTarget() {
         return target != null && simulationObject.getPosition().isInRangeOf(target, Dinosaur.PROXIMITY_RANGE);
     }

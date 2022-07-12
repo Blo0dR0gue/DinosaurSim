@@ -14,14 +14,19 @@ import com.dhbw.thesim.core.statemachine.state.State;
  */
 public abstract class StateMachine {
 
+    //region variables
+
     /**
-     * The current State an {@link com.dhbw.thesim.core.entity.SimulationObject} is in.
+     * The current {@link State} a {@link com.dhbw.thesim.core.entity.SimulationObject} is in.
      */
     protected State currentState;
 
+    //endregion
+
     /**
-     * Sets the {@link #currentState}
-     * @param state The state, which now should be used.
+     * Sets the {@link #currentState}.
+     *
+     * @param state The {@link State}, which now should be used.
      */
     public void setState(State state) {
         this.currentState = state;
@@ -30,13 +35,13 @@ public abstract class StateMachine {
     /**
      * Needs to be called each update call. <br>
      * This method handles state transitions.
+     *
      * @param simulation The current {@link Simulation} data.
      */
     public void stateMachineTick(Simulation simulation) {
         State nextState = currentState.checkTransitions(simulation);
         if (nextState != null) {
             currentState.onExit();
-            System.out.println(this + ": Transition to " + nextState.getClass().getSimpleName());
             setState(nextState);
         }
     }

@@ -6,6 +6,7 @@ import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.map.SimulationMap;
 import com.dhbw.thesim.core.map.Tile;
 import com.dhbw.thesim.core.util.SimulationTime;
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.core.util.Vector2D;
 import com.dhbw.thesim.gui.SimulationOverlay;
 import com.dhbw.thesim.impexp.Json2Objects;
@@ -54,12 +55,12 @@ public class Simulation {
     /**
      * A List with all {@link SimulationObject}s, which will be removed at the end of a {@link SimulationLoop} update.
      */
-    private List<SimulationObject> toBeRemoved;
+    private final List<SimulationObject> toBeRemoved;
 
     /**
      * A List with all {@link SimulationObject}s, which will be spawned at the end of a {@link SimulationLoop} update.
      */
-    private List<SimulationObject> toBeSpawned;
+    private final List<SimulationObject> toBeSpawned;
 
     /**
      * The SimulationOverlay, on which the elements get spawned.
@@ -76,21 +77,37 @@ public class Simulation {
      */
     private final SimulationTime simulationTime;
 
+    /**
+     * Defines how many {@link SimulationObject}s can be spawned to the {@link SimulationMap}. <br>
+     * The screen should not be filled with {@link SimulationObject}.
+     */
+    public static final int MAX_SIMULATION_OBJECTS = 100;
+
+    /**
+     * Helper variable to determinate of we are testing or not.
+     */
+    private boolean simulationIsRunning;
+
     //endregion
 
     /**
-     * Constructor used for test cases
+     * Constructor used for test cases. <br>
+     * We need this test contractor because {@link Json2Objects} is static and can't be mocked.
+     *
+     * @apiNote Do not use in production
      */
-    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, Map<String, Integer> dinosaurs, Map<String, Integer> plants, int plantGrowthRate, Random random) {
+    public Simulation(SimulationMap simulationMap, GraphicsContext backgroundGraphics, Random random) {
         this.simulationMap = simulationMap;
         this.simulationObjects = new ArrayList<>();
         this.backgroundGraphics = backgroundGraphics;
         this.simulationTime = new SimulationTime();
         this.random = random;
+        this.toBeRemoved = new ArrayList<>();
+        this.toBeSpawned = new ArrayList<>();
     }
 
     /**
-     * Constructor
+     * Constructor for a new {@link Simulation}.
      *
      * @param landscapeName             The name of the used landscape.
      * @param backgroundGraphicsContext The {@link GraphicsContext} for the background canvas.
@@ -98,10 +115,12 @@ public class Simulation {
      * @param dinosaurs                 Map with all dinosaurs, which should be added to this simulation. Key = Dinosaur-Name Value = Amount.
      * @param plants                    Map with all plants, which should be added to this simulation. Key = Plant-Name Value = Amount.
      * @param plantGrowthRate           The growth rate for each plant.
+     * @param spriteLibrary             The instance of the {@link SpriteLibrary}
+     * @throws IOException see {@link Json2Objects#initSimObjects(Map, Map, double, SpriteLibrary)}
      */
-    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate) throws IOException {
+    public Simulation(String landscapeName, GraphicsContext backgroundGraphicsContext, SimulationOverlay simulationOverlay, Map<String, Integer> dinosaurs, Map<String, Integer> plants, double plantGrowthRate, SpriteLibrary spriteLibrary) throws IOException {
         this.random = new Random();
-        this.simulationMap = new SimulationMap(landscapeName);
+        this.simulationMap = new SimulationMap(landscapeName, spriteLibrary);
         this.backgroundGraphics = backgroundGraphicsContext;
         this.simulationObjects = new ArrayList<>();
         this.toBeRemoved = new ArrayList<>();
@@ -110,12 +129,14 @@ public class Simulation {
         this.simulationTime = new SimulationTime();
 
         this.simulationOverlay = simulationOverlay;
-        this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate));
+        this.simulationObjects.addAll(Json2Objects.initSimObjects(dinosaurs, plants, plantGrowthRate, spriteLibrary));
 
         //Draw the map
         drawMap();
         //Spawn the objects
-        spawnObjects(simulationOverlay);
+        spawnObjects();
+
+        simulationIsRunning = true;
     }
 
     /**
@@ -123,6 +144,7 @@ public class Simulation {
      *
      * @return The currently used {@link SimulationMap}
      */
+    @SuppressWarnings("unused")
     public SimulationMap getSimulationMap() {
         return simulationMap;
     }
@@ -130,7 +152,7 @@ public class Simulation {
     /**
      * Gets all handled {@link SimulationObject}s.
      *
-     * @return The list {@link Simulation#simulationObjects}.
+     * @return The list {@link #simulationObjects}.
      */
     public List<SimulationObject> getSimulationObjects() {
         return simulationObjects;
@@ -139,7 +161,7 @@ public class Simulation {
     /**
      * Checks if a simulation is finished.
      *
-     * @return true when all dinosaurs are extinct.
+     * @return true when all {@link Dinosaur}s are extinct.
      */
     public boolean isOver() {
         for (SimulationObject simulationObject : simulationObjects) {
@@ -151,6 +173,8 @@ public class Simulation {
 
     /**
      * Remove all tagged {@link SimulationObject} out of the handled {@link #simulationObjects}.
+     *
+     * @see #toBeRemoved
      */
     public void removeDeletedObjects() {
         simulationObjects.removeAll(toBeRemoved);
@@ -158,18 +182,16 @@ public class Simulation {
     }
 
     /**
-     * Method, that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects}.
-     *
-     * @param simulationOverlay The {@link SimulationOverlay} object on which the {@link SimulationObject} are spawned.
+     * Method that spawns the {@link SimulationObject}s of the list {@link Simulation#simulationObjects} to the map.
      */
-    private void spawnObjects(SimulationOverlay simulationOverlay) {
+    private void spawnObjects() {
         //First spawn all plants
         simulationObjects.stream().filter(Plant.class::isInstance).forEach(simulationObject -> {
             Plant plant = (Plant) simulationObject;
             //Plants only can be spawned on tiles, which allow plant growing
             plant.setPosition(getFreePositionInMapWhereConditionsAre(false, false, true, plant.getInteractionRange() + 10, plant.getRenderOffset()));
-            simulationOverlay.centerPane.getChildren().add(plant.getSelectionRing());
-            simulationOverlay.centerPane.getChildren().add(plant.getJavaFXObj());
+            this.simulationOverlay.centerPane.getChildren().add(plant.getSelectionRing());
+            this.simulationOverlay.centerPane.getChildren().add(plant.getJavaFXObj());
         });
 
         //Then spawn all dinosaurs
@@ -182,13 +204,13 @@ public class Simulation {
             //Add the click listener
             dinosaur.getJavaFXObj().addEventHandler(MouseEvent.MOUSE_CLICKED, event -> simulationOverlay.dinosaurClicked(dinosaur));
 
-            simulationOverlay.centerPane.getChildren().add(dinosaur.getSelectionRing());
-            simulationOverlay.centerPane.getChildren().add(dinosaur.getJavaFXObj());
+            this.simulationOverlay.centerPane.getChildren().add(dinosaur.getSelectionRing());
+            this.simulationOverlay.centerPane.getChildren().add(dinosaur.getJavaFXObj());
         });
     }
 
     /**
-     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects} to the {@link #toBeRemoved} list.
+     * Add a {@link SimulationObject}, which should be removed from the handled {@link #simulationObjects}, to the {@link #toBeRemoved} list.
      * The object is also been removed from the visuals.
      *
      * @param simulationObject The {@link SimulationObject} which should be removed.
@@ -297,8 +319,8 @@ public class Simulation {
      * @param type             The type of the seeker. (e.g. Tyrannosaurus Rex)
      * @return A list with all eatable {@link SimulationObject}s in range.
      */
-    public List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, double interactionRange, Dinosaur.dietType dietType, String type,
-                                                                  boolean canSwim, boolean canClimb, double strength) {
+    private List<SimulationObject> findReachableFoodSourcesInRange(Vector2D position, double viewRange, double interactionRange, Dinosaur.dietType dietType, String type,
+                                                                   boolean canSwim, boolean canClimb, double strength) {
 
         List<SimulationObject> inRange = new ArrayList<>();
 
@@ -394,6 +416,9 @@ public class Simulation {
      */
     public void makeBaby(Dinosaur mother, Dinosaur father) {
 
+        //Don't spawn to many objects.
+        if (simulationObjects.size() + toBeSpawned.size() >= MAX_SIMULATION_OBJECTS) return;
+
         double strength = inheritValue(mother.getStrength(), father.getStrength());
         double speed = inheritValue(mother.getSpeed(), father.getSpeed());
         double reproductionRate = inheritValue(mother.getReproductionRate(), father.getReproductionRate());
@@ -411,14 +436,16 @@ public class Simulation {
 
         Dinosaur baby = new Dinosaur(
                 mother.getType(), mother.getJavaFXObj().getImage(), nutrition, hydration, strength, speed,
-                reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getViewRange(), mother.getInteractionRange(), gender);
+                reproductionRate, weight, length, height, mother.canSwim(), mother.canClimb(), mother.getCharDiet(), mother.getRealViewRange(), mother.getRealInteractionRange(), gender);
 
+        Vector2D spawnPoint = getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange());
 
-        baby.setPosition(getNearestPositionInMapWhereConditionsAre(mother.getPosition(), mother.getInteractionRange(), baby.canSwim(), baby.canClimb(), baby.getInteractionRange()));
+        //Cancel if no point was found
+        if (spawnPoint == null) return;
+
+        baby.setPosition(spawnPoint);
 
         spawnObject(baby);
-
-        System.out.println("Baby Dinosaur was made");
     }
 
     /**
@@ -431,18 +458,28 @@ public class Simulation {
      * @param interactionRange The interaction range of the target, who wants to get this point.
      * @return A possible {@link Vector2D} point.
      */
-    public Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
+    private Vector2D getNearestPositionInMapWhereConditionsAre(Vector2D origin, double range, boolean swimmable, boolean climbable, double interactionRange) {
 
-        List<Vector2D> positions = simulationMap.getMidCoordinatesTilesWhereConditionsMatch(origin, range + Tile.TILE_SIZE, swimmable, climbable);
+        double internRange = range + Tile.TILE_SIZE;
 
-        for (Vector2D pos : positions) {
-            if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, Arrays.asList(origin))) {
-                System.out.println("Spawn position found with range " + range);
-                return pos;
+        List<Vector2D> positions = simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
+
+        int maximumAttempts = 500;
+
+        while (maximumAttempts > 0) {
+
+            for (Vector2D pos : positions) {
+                if (!doesPointWithRangeIntersectAnyInteractionRange(pos, interactionRange, null)) {
+                    return pos;
+                }
             }
-        }
 
-        return getNearestPositionInMapWhereConditionsAre(origin, range + 1, swimmable, climbable, interactionRange);
+            maximumAttempts--;
+            internRange += 1;
+
+            positions = simulationMap.getMidCoordinatesOfTilesWhereConditionsMatch(origin, internRange, swimmable, climbable);
+        }
+        return null;
     }
 
     /**
@@ -479,8 +516,12 @@ public class Simulation {
         }
 
         this.toBeSpawned.add(simulationObject);
-        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getSelectionRing()));
-        Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
+
+        //Don't do JavaFX related stuff in test mode
+        if(simulationIsRunning){
+            Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getSelectionRing()));
+            Platform.runLater(() -> simulationOverlay.centerPane.getChildren().add(simulationObject.getJavaFXObj()));
+        }
     }
 
     /**
@@ -521,11 +562,12 @@ public class Simulation {
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
+    private Vector2D getFreePositionInMap(boolean canSwim, boolean canClimb, double interactionRange, Vector2D renderOffset) {
+        //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
+        while (target == null || doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
                 || !simulationMap.checkIfNeighborTilesMatchConditions(target, canSwim, canClimb, interactionRange)) {
-            return getFreePositionInMap(canSwim, canClimb, interactionRange, renderOffset);
+            target = simulationMap.getRandomTileCenterPosition(canSwim, canClimb, random);
         }
         return target;
     }
@@ -539,11 +581,12 @@ public class Simulation {
      * @param interactionRange The interaction range for the object, which wants to check this position, so that the target does not intersect with any other interaction range.
      * @return A random {@link Vector2D} position.
      */
-    public Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
+    private Vector2D getFreePositionInMapWhereConditionsAre(boolean swimmable, boolean climbable, boolean allowPlants, double interactionRange, Vector2D renderOffset) {
+        //Iterative because of stackoverflow errors
         Vector2D target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
-        if (doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
+        while (target == null || doesPointWithRangeIntersectAnyInteractionRange(target, interactionRange, null) || SimulationObject.willBeRenderedOutside(target, renderOffset)
                 || !simulationMap.checkIfNeighborTilesHasConditions(target, swimmable, climbable, allowPlants, interactionRange)) {
-            return getFreePositionInMapWhereConditionsAre(swimmable, climbable, allowPlants, interactionRange, renderOffset);
+            target = simulationMap.getRandomTileCenterPositionWhereConditionsAre(swimmable, climbable, allowPlants, random);
         }
         return target;
     }
@@ -557,8 +600,6 @@ public class Simulation {
      * @return true, if the check circle intersect with any interaction range.
      */
     private boolean doesPointWithRangeIntersectAnyInteractionRange(Vector2D target, double interactionRange, List<Vector2D> ignore) {
-        if (ignore != null)
-            ignore.add(target);
         if (isPointInsideAnyInteractionRange(target, ignore)) {
             return true;
         }
@@ -790,6 +831,10 @@ public class Simulation {
     private boolean targetTileCanBeReached(Vector2D start, Vector2D target, boolean canSwim, boolean canClimb, boolean ignoreTargetTile) {
         Tile startTile = simulationMap.getTileAtPosition(start);
         Tile targetTile = simulationMap.getTileAtPosition(target);
+
+        if (startTile == null || targetTile == null)
+            return false;
+
         //Distance between the tiles. (In x and y direction)
         int dx = targetTile.getGridX() - startTile.getGridX();
         int dy = targetTile.getGridY() - startTile.getGridY();

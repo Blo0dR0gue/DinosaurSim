@@ -14,9 +14,9 @@
          <Font size="17.0"/>
       </font>
    </Label>
-   <ListView fx:id="scenarioListView" stylesheets="@../styles/styles.css" />
+   <ListView fx:id="scenarioListView" stylesheets="@../style/styles.css" />
    <fx:define>
-      <Image fx:id="loadBtnImage" url="/controls/load.png"/>
+      <Image fx:id="loadBtnImage" url="/control/load.png"/>
    </fx:define>
    <Button fx:id="loadButton" style="-fx-background-color: transparent;">
       <VBox.margin>
@@ -44,7 +44,7 @@
       </VBox.margin>
    </TextField>
    <fx:define>
-      <Image fx:id="saveBtnImage" url="/controls/save.png"/>
+      <Image fx:id="saveBtnImage" url="/control/save.png"/>
    </fx:define>
    <Button fx:id="saveButton" style="-fx-background-color: transparent;">
       <VBox.margin>

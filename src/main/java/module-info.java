@@ -10,6 +10,7 @@ module com.dhbw.thesim {
     exports com.dhbw.thesim.core.statemachine;
     exports com.dhbw.thesim.core.simulation;
     exports com.dhbw.thesim.core.util;
+    exports com.dhbw.thesim.core.statemachine.state;
     exports com.dhbw.thesim.core.statemachine.state.dinosaur;
     exports com.dhbw.thesim.core.statemachine.state.plant;
     exports com.dhbw.thesim.gui;

@@ -2,21 +2,15 @@
 
 <?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 <fx:root fx:id="root" type="javafx.scene.layout.BorderPane" xmlns="http://javafx.com/javafx"
          xmlns:fx="http://javafx.com/fxml" style="-fx-background-color: #808080">
     <top>
-        <Label text="Dinosaurier&#13;Simulation" textFill="white" prefHeight="${root.height*0.15}"
-               textAlignment="CENTER" BorderPane.alignment="TOP_CENTER">
-            <font>
-                <Font size="20.0"/>
-            </font>
-            <StackPane.margin>
-                <Insets top="10.0"/>
-            </StackPane.margin>
-        </Label>
+        <ImageView fitHeight="${root.height*0.15}" preserveRatio="true" BorderPane.alignment="TOP_CENTER">
+            <Image url="@../logo/logo.png"/>
+        </ImageView>
     </top>
     <center>
         <VBox fx:id="centerContainer">

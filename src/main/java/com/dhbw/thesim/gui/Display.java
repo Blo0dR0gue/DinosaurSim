@@ -1,5 +1,6 @@
 package com.dhbw.thesim.gui;
 
+import com.dhbw.thesim.core.util.SpriteLibrary;
 import com.dhbw.thesim.gui.controllers.ConfigScreen;
 import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
@@ -7,6 +8,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -25,8 +27,8 @@ import java.util.Optional;
  */
 public class Display extends Application {
 
-    public static final double SCALE_X = Screen.getPrimary().getOutputScaleX();
-    public static final double SCALE_Y = Screen.getPrimary().getOutputScaleY();
+    public static double SCALE_X;
+    public static double SCALE_Y;
     public static Scene configScene;
 
     /**
@@ -40,6 +42,10 @@ public class Display extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
+
+        //Init variables here for testcase reasons
+        SCALE_X = Screen.getPrimary().getOutputScaleX();
+        SCALE_Y = Screen.getPrimary().getOutputScaleY();
 
         //Init JsonData
         JsonHandler.setDirectory();
@@ -83,23 +89,27 @@ public class Display extends Application {
         //If landscapeName from the defaultScenarioParams is null, there should be "Landschaft1" returned
         String landscapeName = ((String) getDefaultIfNull(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE), "Landschaft1").get(0)[0]);
 
+        //Init SpriteLibrary
+        SpriteLibrary spriteLibrary = new SpriteLibrary();
+
         //Creates the Configuration Screen and sets its scene as the current one on the primary stage
         ConfigScreen configScreen = ConfigScreen.newInstance();
-        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), plantGrowthRate, landscapeName);
+        configScreen.initialize(defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.DINO), defaultScenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT), plantGrowthRate, landscapeName, spriteLibrary);
 
         configScene = new Scene(configScreen);
         primaryStage.setScene(configScene);
+        primaryStage.getIcons().add(new Image("/logo/logo.png"));
 
         //Show the app
         primaryStage.show();
     }
 
     /**
-     * @param filename Name of the FXML File
+     * @param filename        Name of the FXML File
      * @param controllerClass Class of the Controller to the corresponding FXML File
      * @return Loads the FXML File into a controller of the given class and returns that controller instance
      */
-    public static Object makeFXMLController(String filename, Class<?> controllerClass){
+    public static Object makeFXMLController(String filename, Class<?> controllerClass) {
         FXMLLoader loader = new FXMLLoader();
 
         // Try to load the fxml into a controller
@@ -123,7 +133,8 @@ public class Display extends Application {
 
     /**
      * Returns the {@link ArrayList} if it is not null otherwise the default value will be returned inside a list
-     * @param list The passed {@link ArrayList} which will be returned when it is not null
+     *
+     * @param list         The passed {@link ArrayList} which will be returned when it is not null
      * @param defaultValue The default value to return in a list if the passed list equals null
      * @return The {@code defaultValue} or the {@code list} depending on whether the list is null
      */

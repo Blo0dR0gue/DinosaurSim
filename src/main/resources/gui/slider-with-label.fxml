@@ -13,7 +13,7 @@
         </font>
     </Label>
     <Slider fx:id="slider" showTickMarks="true" showTickLabels="true" majorTickUnit="5.0" minorTickCount="4"
-            snapToTicks="true" prefWidth="300.0" stylesheets="@../styles/styles.css"
+            snapToTicks="true" prefWidth="300.0" stylesheets="@../style/styles.css"
             max="10.0" GridPane.valignment="CENTER">
         <GridPane.margin>
             <Insets top="40.0" right="20.0"/>

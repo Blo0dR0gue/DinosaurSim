@@ -31,7 +31,7 @@
       <bottom>
          <HBox fx:id="hbox_inner" BorderPane.alignment="CENTER">
             <fx:define>
-               <Image fx:id="removeBtnImage" url="@../controls/minus.png"/>
+               <Image fx:id="removeBtnImage" url="@../control/minus.png"/>
             </fx:define>
             <Button fx:id="button_remove" style="-fx-background-color: transparent;">
                <graphic>
