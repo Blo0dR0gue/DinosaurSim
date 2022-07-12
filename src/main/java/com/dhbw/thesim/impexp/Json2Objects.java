@@ -25,7 +25,7 @@ public class Json2Objects {
      * Get the amount of the simulation objects as specified in the scenario configuration file also with the names of their pictures. Needed especially for the GUI.
      * Hereby it is also important to check, if the simulation objects specified in the configuration file even exist.
      *
-     * @param type                   tells whether all simulation objects should be loaded with the amount of 0 or the amount specified in some scenario configuration file
+     * @param type tells whether all simulation objects should be loaded with the amount of 0 or the amount specified in some scenario configuration file
      * @param scenarioConfigFileName is the name of the scenario configuration file, which should be read
      * @return a HashMap containing all simulation objects (that exist in the locally stored "defaultSimulationObjectsConfig.json"
      * @throws IOException if the scenarioConfigFileName file is not found
@@ -90,6 +90,13 @@ public class Json2Objects {
         return allFormattedSimulationObjects;
     }
 
+    /**
+     * Read the scenario configuration values and save for each simulationObject the name, picture name and the amount
+     *
+     * @param simulationObjects contains the names and picture names
+     * @param importedScenarioConfigValues contains the amount of simulationObjects
+     * @return an ArrayList with Objects, containing the name, picture name and the amount
+     */
     private static ArrayList<Object[]> addSimulationObjectsWithScenarioFile(HashMap<String, HashMap<String, Object>> simulationObjects, HashMap<String, Object> importedScenarioConfigValues) {
         ArrayList<Object[]> oneKindOfFormattedSimulationObjects;
         oneKindOfFormattedSimulationObjects = new ArrayList<>();
@@ -107,6 +114,12 @@ public class Json2Objects {
         return oneKindOfFormattedSimulationObjects;
     }
 
+    /**
+     * Save the name, picture name and the amount of 0, because no scenario configuration file is read
+     *
+     * @param simulationObjects contains the names and picture names
+     * @return an ArrayList with Objects, containing the name, picture name and the amount of 0
+     */
     private static ArrayList<Object[]> addSimulationObjectsNoScenarioFile(HashMap<String, HashMap<String, Object>> simulationObjects) {
         ArrayList<Object[]> oneKindOfFormattedSimulationObjects;
         oneKindOfFormattedSimulationObjects = new ArrayList<>();
