@@ -5,15 +5,13 @@ import com.dhbw.thesim.core.entity.Plant;
 import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.util.SimulationTime;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import javafx.scene.image.Image;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -111,83 +109,93 @@ public class StatisticsTest {
     }
 
     @Test
-    @Disabled("not yet implemented")
-    void getSimulationTime(){
+    @Timeout(value=200, unit= TimeUnit.MILLISECONDS)
+    @Disabled("Testing with System.currentTimeMillis() and timeouts is too unreliable")
+    @DisplayName("Test if Simulation Time from initialisation of statistics to call of getSimulationStats() calculates the time correctly")
+    void getSimulationTime() throws InterruptedException {
+
+        addNewStatsUpdate(0,0,0,0,0,1);
+
+
+        long currentTime = System.currentTimeMillis();
+
+        //TODO timeout for x millis and get difference
+        int delay = 100;
+
+        TimeUnit.MILLISECONDS.sleep(delay);
+        long expected = delay+(currentTime-startTime);
+
+        long result = statistics.getSimulationStats().simulationTime();
+        assertEquals(expected, result);
 
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAverageNutritionPredators(){
-
-
-
+        statistics.getSimulationStats().averageNutritionPredators();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAverageNutritionChased(){
-
+        statistics.getSimulationStats().averageNutritionChased();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAverageHydrationPredators(){
-
+        statistics.getSimulationStats().averageHydrationPredators();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAverageHydrationChased(){
-
+        statistics.getSimulationStats().averageHydrationChased();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAbsolutePercentagePredators(){
-
+        statistics.getSimulationStats().absolutePercentagePredators();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAbsolutePercentageChased(){
-
-
-
+        statistics.getSimulationStats().absolutePercentageChased();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAllLivingDinosaurs(){
 
-
-
+        statistics.getSimulationStats().allLivingDinosaurs();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAllLivingSpecies(){
-
-
-
+        statistics.getSimulationStats().allSpecies();
+        statistics.getSimulationStats().allLivingSpecies();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAllSpecies(){
-
+        statistics.getSimulationStats().allSpecies();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAllLivingPredators(){
-
+        statistics.getSimulationStats().allLivingPredators();
     }
 
     @Test
     @Disabled("not yet implemented")
     void getAllLivingChased(){
-
+        statistics.getSimulationStats().allLivingChased();
     }
 
     @Test
