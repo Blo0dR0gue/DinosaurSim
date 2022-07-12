@@ -65,7 +65,8 @@ class DinosaurTest {
                 () -> assertEquals(testDinosaur.getMaxNutrition(), copy.getMaxNutrition(), "Max nutrition need to be equal"),
                 () -> assertEquals(testDinosaur.getTimeOfBirth().getTime(), copy.getTimeOfBirth().getTime(), "Time of birth needs to be equal"),
                 () -> assertEquals(testDinosaur.isChased(), copy.isChased(), "Chased state need to be equal"),
-                () -> assertEquals(testDinosaur.isForcedToNoOp(), copy.isForcedToNoOp(), "Force NoOp state need to be equal")
+                () -> assertEquals(testDinosaur.isForcedToNoOp(), copy.isForcedToNoOp(), "Force NoOp state need to be equal"),
+                () -> assertEquals(testDinosaur.getReproductionValue(), copy.getReproductionValue(), "Reproduction value needs to be equal")
         );
 
         //changes
@@ -181,13 +182,13 @@ class DinosaurTest {
     @DisplayName("Check if a dinosaur died of hunger")
     @Test
     void diedOfHunger() {
-        boolean isNotDead = testDinosaur.diedOfThirst();
-
-        testDinosaur.setNutrition(0);
-        boolean didNotDiedOfHunger = testDinosaur.diedOfThirst();
+        boolean isNotDead = testDinosaur.diedOfHunger();
 
         testDinosaur.setHydration(0);
-        boolean diedOfHunger = testDinosaur.diedOfThirst();
+        boolean didNotDiedOfHunger = testDinosaur.diedOfHunger();
+
+        testDinosaur.setNutrition(0);
+        boolean diedOfHunger = testDinosaur.diedOfHunger();
 
         //assert
         assertAll("Dinosaur is willing to mate?",
