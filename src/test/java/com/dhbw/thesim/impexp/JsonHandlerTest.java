@@ -68,8 +68,6 @@ class JsonHandlerTest {
 
             var plants = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
 
-            System.out.println(plants);
-
             var checkKeySet = new HashSet<String>();
             checkKeySet.add("Farn");
             checkKeySet.add("Ginkgoales");
@@ -202,7 +200,6 @@ class JsonHandlerTest {
         JsonHandler.setDirectory();
         try {
             var importedScenarioConfig = JsonHandler.importScenarioConfig("defaultScenarioConfiguration", JsonHandler.ScenarioConfigParams.DINO);
-            System.out.println(importedScenarioConfig);
             assertAll(
                     () -> assertNotNull(importedScenarioConfig),
                     () -> assertEquals(4, importedScenarioConfig.get("Deinosuchus")),
