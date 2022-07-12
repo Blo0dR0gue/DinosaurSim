@@ -12,13 +12,25 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  */
 public class StateTransition {
 
+    //region variables
+
+    /**
+     * The next {@link State} if a {@link State} exits using this transition.
+     */
     StateFactory.States nextState;
+
+    /**
+     * The {@link ITransition} which is used for the checks.
+     */
     ITransition stateTransition;
+
+    //endregion
 
     /**
      * Constructor for a normal {@link StateTransition}-object.
-     * @param nextState nextState
-     * @param stateTransition stateTransition
+     *
+     * @param nextState       The next {@link State}.
+     * @param stateTransition The handled {@link ITransition}.
      */
     public StateTransition(StateFactory.States nextState, ITransition stateTransition) {
         this.nextState = nextState;
@@ -27,6 +39,7 @@ public class StateTransition {
 
     /**
      * Should we transition to the {@link #nextState}.
+     *
      * @return true, if the condition of {@link #stateTransition} is met.
      */
     public boolean shouldTransition(Simulation simulation) {
@@ -35,6 +48,7 @@ public class StateTransition {
 
     /**
      * Gets the next {@link State} using the {@link StateFactory}.
+     *
      * @param simulationObject The {@link SimulationObject} which is transition to the next state.
      * @return The next {@link State}.
      */

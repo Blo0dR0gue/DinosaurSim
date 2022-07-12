@@ -14,11 +14,15 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 /**
- * Represents an object, which is handled in our simulation
+ * Represents an object, which is handled in our simulation. <br>
+ * Extends the {@link StateMachine}.
  *
  * @author Daniel Czeschner
+ * @see StateMachine
  */
 public abstract class SimulationObject extends StateMachine {
+
+    //region variables
 
     /**
      * The representation object for this {@link SimulationObject}.
@@ -54,26 +58,28 @@ public abstract class SimulationObject extends StateMachine {
      */
     protected final Circle selectionRing;
 
+    //endregion
+
     /**
      * Constructor
      *
-     * @param type             The type for this object.
-     * @param interactionRange The range, in which collisions are handled.
-     * @param image            The image, which is used for the representation for this object.
+     * @param type             The type of this {@link SimulationObject}.
+     * @param interactionRange The range, in which collisions with other {@link SimulationObject} are handled. (in pixels)
+     * @param image            The image, which is used for the graphical representation for this {@link SimulationObject}.
      */
     protected SimulationObject(String type, double interactionRange, Image image) {
         this.type = type;
-        this.interactionRange = Display.adjustScale(interactionRange, Display.SCALE_X);
+        this.interactionRange = interactionRange;
         this.imageObj = new ImageView();
 
         this.position = new Vector2D(0, 0);
         this.renderOffset = new Vector2D(0, 0);
 
         imageObj.setPreserveRatio(true);
-        imageObj.setFitHeight(Display.adjustScale(interactionRange * 2, Display.SCALE_X));
-        imageObj.setFitWidth(Display.adjustScale(interactionRange * 2, Display.SCALE_Y));
+        imageObj.setFitHeight(Display.adjustScale(interactionRange * 2, Display.SCALE_Y==0?1:Display.SCALE_Y));
+        imageObj.setFitWidth(Display.adjustScale(interactionRange * 2, Display.SCALE_X==0?1:Display.SCALE_X));
 
-        selectionRing = new Circle(0, 0, interactionRange);
+        selectionRing = new Circle(0, 0, getInteractionRange());
         selectionRing.setVisible(false);
         selectionRing.setFill(Color.TRANSPARENT);
         selectionRing.setStroke(Color.YELLOW);
@@ -95,12 +101,14 @@ public abstract class SimulationObject extends StateMachine {
     public abstract void updateGraphics();
 
     /**
-     * Eats this object
+     * Eats this {@link SimulationObject}.
      */
     public abstract void eat();
 
+    //region getter & setter
+
     /**
-     * Sets the visibility for the selection ring of this object.
+     * Sets the visibility for the selection ring of this {@link SimulationObject}.
      *
      * @param visible true, if the rind should be visible.
      */
@@ -118,10 +126,10 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
-     * Checks, if a other object can eat this object.
+     * Checks, if this {@link SimulationObject} can eat by another {@link SimulationObject}.
      *
-     * @param checkValue A value of another object, which is used to check, if the other object can eat this object.
-     * @return true if this object can be eaten by the other object.
+     * @param checkValue A value of another {@link SimulationObject}, which is used to check, if the other {@link SimulationObject} can eat this {@link SimulationObject}.
+     * @return true if this {@link SimulationObject} can be eaten by the other {@link SimulationObject}.
      */
     public abstract boolean canBeEaten(double checkValue);
 
@@ -155,6 +163,11 @@ public abstract class SimulationObject extends StateMachine {
         return position;
     }
 
+    /**
+     * Gets the current render offset.
+     *
+     * @return The {@link #renderOffset} {@link Vector2D}.
+     */
     public Vector2D getRenderOffset() {
         return renderOffset;
     }
@@ -165,7 +178,11 @@ public abstract class SimulationObject extends StateMachine {
      * @return The collision range.
      */
     public double getInteractionRange() {
-        return interactionRange - 10;
+        return Display.adjustScale(interactionRange - 10, Display.SCALE_X==0?1:Display.SCALE_X);
+    }
+
+    public double getRealInteractionRange() {
+        return interactionRange;
     }
 
     /**
@@ -191,7 +208,8 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
-     * Sets/Overrides the position of this {@link SimulationObject}
+     * Sets/Overrides the position of this {@link SimulationObject}. <br>
+     * Resets it to 0,0 if is outside the screen-borders.
      *
      * @param position The new {@link Vector2D} for the position.
      */
@@ -203,17 +221,27 @@ public abstract class SimulationObject extends StateMachine {
     }
 
     /**
-     * Gets the current JavaFX object.
+     * Gets the current JavaFX object for the graphical representation for this {@link SimulationObject}.
      *
-     * @return An {@link ImageView}. It's the representation for this {@link SimulationObject}
+     * @return An {@link ImageView}.
      */
     public ImageView getJavaFXObj() {
         return imageObj;
     }
 
+    /**
+     * Checks if a point would be rendered outside the screen.
+     *
+     * @param targetPosition The target {@link Vector2D} position.
+     * @param renderOffset   The {@link Vector2D} offset to the center of the target position.
+     * @return true if it would be rendered outside.
+     */
     public static boolean willBeRenderedOutside(Vector2D targetPosition, Vector2D renderOffset) {
         return (targetPosition.getX() - renderOffset.getX()) < 0 || (targetPosition.getY() - renderOffset.getY()) < 0 ||
                 targetPosition.getX() + renderOffset.getX() > SimulationOverlay.BACKGROUND_WIDTH ||
                 targetPosition.getY() + renderOffset.getY() > SimulationOverlay.BACKGROUND_HEIGHT;
     }
+
+    //endregion
+
 }

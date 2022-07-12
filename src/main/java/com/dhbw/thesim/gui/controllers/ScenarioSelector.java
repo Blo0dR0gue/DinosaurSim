@@ -5,6 +5,7 @@ import com.dhbw.thesim.impexp.Json2Objects;
 import com.dhbw.thesim.impexp.JsonHandler;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -17,6 +18,7 @@ import java.util.*;
 
 /**
  * The Custom Control Class provides a scenario selector area including the scenario list and save and load button
+ *
  * @author Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class ScenarioSelector extends VBox {
@@ -45,15 +47,16 @@ public class ScenarioSelector extends VBox {
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
      * is getting to create the specified controller
      */
-    public ScenarioSelector(){
+    public ScenarioSelector() {
 
     }
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link ScenarioSelector}
+     *
      * @return The newly created and initialized {@link ScenarioSelector}
      */
-    public static ScenarioSelector newInstance(){
+    public static ScenarioSelector newInstance() {
         return (ScenarioSelector) Display.makeFXMLController("scenario-selector.fxml", ScenarioSelector.class);
     }
 
@@ -61,10 +64,10 @@ public class ScenarioSelector extends VBox {
      * Method to initialize the scenario selector, its listeners and initializing the list of scenario configs
      * Also a tooltip is set for additional information to dinosaur and/ or plant species.
      */
-    public void initialize(ConfigScreen configScreen){
+    public void initialize(ConfigScreen configScreen) {
         this.scenarioToggleGroup = new ToggleGroup();
         try {
-            for (String scenarioName:
+            for (String scenarioName :
                     JsonHandler.getExistingScenarioFileNames()) {
                 ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
                 scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
@@ -85,12 +88,13 @@ public class ScenarioSelector extends VBox {
 
     /**
      * Updates the scenario list with all exisiting scenario configs
+     *
      * @param fileName The file name which is display as the text for the radio button
      */
-    private void updateScenarioList(String fileName){
+    private void updateScenarioList(String fileName) {
         scenarioListView.getItems().clear();
         try {
-            for (String scenarioName:
+            for (String scenarioName :
                     JsonHandler.getExistingScenarioFileNames()) {
                 ScenarioListItem scenarioListItem = ScenarioListItem.newInstance();
                 scenarioListItem.initialize(scenarioName, scenarioToggleGroup);
@@ -108,15 +112,16 @@ public class ScenarioSelector extends VBox {
     /**
      * Adds all specified event handlers to the specified {@link javafx.scene.Node}
      */
-    private void initializeListeners(){
+    private void initializeListeners() {
         saveButton.setOnAction(event -> {
-            String file = filename.getText().replace(" ","");
+            Node node = (Node) event.getSource();
+            Stage window = (Stage) node.getScene().getWindow();
+            String file = filename.getText().replace(" ", "");
             if (!file.equals("")) {
                 try {
                     JsonHandler.exportScenarioConfig(configScreen.getDinoParams(), configScreen.getPlantParams(),
                             configScreen.getLandscapeName(), configScreen.getPlantGrowthRate(), file);
 
-                    Stage window = (Stage) loadButton.getScene().getWindow();
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Szenarioerstellung");
                     alert.setHeaderText(String.format("Die Szenario-Konfigurationsdatei %s.json wurde erfolgreich gespeichert!", file));
@@ -130,7 +135,6 @@ public class ScenarioSelector extends VBox {
                 updateScenarioList(file);
                 filename.clear();
             } else {
-                Stage window = (Stage) saveButton.getScene().getWindow();
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Szenarioerstellungsfehler");
                 alert.setHeaderText("Fehler während des Erstellens der Szenario-Konfiguration!");
@@ -150,7 +154,8 @@ public class ScenarioSelector extends VBox {
                         (double) scenarioParams.get(JsonHandler.ScenarioConfigParams.PLANT_GROWTH).get(0)[0],
                         (String) scenarioParams.get(JsonHandler.ScenarioConfigParams.LANDSCAPE).get(0)[0]);
 
-                Stage window = (Stage) loadButton.getScene().getWindow();
+                Node node = (Node) event.getSource();
+                Stage window = (Stage) node.getScene().getWindow();
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Konfigurationswechsel");
                 alert.setHeaderText("Die ausgewählte Szenario-Konfigurationsdatei wurde erfolgreich geladen!");
@@ -188,8 +193,10 @@ public class ScenarioSelector extends VBox {
     }
 
     //region getter & setter
+
     /**
      * Retrieves the file name of the currently selected scenario config
+     *
      * @return The {@link String} containing the file name of the selected scenario
      */
     public String getSelectedScenario() {

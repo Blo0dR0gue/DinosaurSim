@@ -17,16 +17,24 @@ import java.util.List;
  */
 public class Hunt extends State {
 
+    //region variables
+
     /**
      * Helper {@link Dinosaur} variable, to get dinosaur specific variables
      */
     private final Dinosaur dinosaur;
 
     /**
-     * {@link Vector2D}-variables for paths.
+     * The targeted position {@link Vector2D} the {@link Dinosaur} is moving to.
      */
     private Vector2D target;
+
+    /**
+     * The direction {@link Vector2D} the {@link #target} from the current position to this {@link #dinosaur}.
+     */
     private Vector2D direction;
+
+    //endregion
 
     /**
      * Constructor
@@ -38,6 +46,12 @@ public class Hunt extends State {
         this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
         //Init
@@ -70,6 +84,10 @@ public class Hunt extends State {
         }
     }
 
+
+    /**
+     * Is called on state exit
+     */
     @Override
     public void onExit() {
         //reset the target
@@ -78,6 +96,9 @@ public class Hunt extends State {
         }
     }
 
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
         //The dinosaur died.
@@ -95,7 +116,7 @@ public class Hunt extends State {
                 !simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getViewRange() + Dinosaur.PROXIMITY_RANGE, dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange())));
 
         //If we reached the target
-        addTransition(new StateTransition(StateFactory.States.ingestion, this::reached));
+        addTransition(new StateTransition(StateFactory.States.ingestion, this::targetReached));
 
         //If we have a simulationobject target (e.g. a dinosaur or plant, and it can no longer be eaten (because the object got eaten), transition to moveToFoodSource.
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.getTarget() != null && !dinosaur.getTarget().canBeEaten(dinosaur.getStrength())));
@@ -104,9 +125,16 @@ public class Hunt extends State {
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> !simulation.canMoveTo(dinosaur.getPosition(), dinosaur.getTarget().getPosition(), 0, dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset(), true, false, List.of(dinosaur.getTarget()))));
     }
 
-    private boolean reached(Simulation simulation) {
+    /**
+     * Checks if the hunted {@link Dinosaur} got reached.
+     *
+     * @param simulation The current {@link Simulation} data.
+     * @return true if the target got reached.
+     */
+    private boolean targetReached(Simulation simulation) {
         boolean caught = simulation.doTheCirclesIntersect(dinosaur.getPosition(), dinosaur.getInteractionRange(), dinosaur.getTarget().getPosition(), dinosaur.getTarget().getInteractionRange());
         if (caught) {
+            //Force the hunted dinosaur in the noop state.
             Dinosaur huntedDino = (Dinosaur) dinosaur.getTarget();
             huntedDino.forceNoOp();
         }

@@ -48,7 +48,7 @@
     <SideBar fx:id="sideBar" prefWidth="${container.width*0.2}" prefHeight="${container.height}" AnchorPane.rightAnchor="0.0">
         <footer>
             <fx:define>
-                <Image fx:id="restartBtnImage" url="@../controls/restart.png"/>
+                <Image fx:id="restartBtnImage" url="@../control/restart.png"/>
             </fx:define>
             <Button fx:id="restartSimulationButton" style="-fx-background-color: transparent;">
                 <HBox.margin>

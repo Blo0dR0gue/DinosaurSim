@@ -16,11 +16,18 @@ import com.dhbw.thesim.core.statemachine.state.StateFactory;
  */
 public class NoOp extends State {
 
+    //region variables
 
-    private Dinosaur dinosaur;
+    /**
+     * Helper {@link Dinosaur} variable, to get dinosaur specific variables
+     */
+    private final Dinosaur dinosaur;
+
+    //endregion
 
     /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public NoOp(Dinosaur simulationObject) {
@@ -28,16 +35,29 @@ public class NoOp extends State {
         this.dinosaur = simulationObject;
     }
 
+
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
         //Nothing to do here
     }
 
+    /**
+     * Is called on state exit
+     */
     @Override
     public void onExit() {
         //Nothing to do here
     }
 
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
         //The dinosaur got eaten.

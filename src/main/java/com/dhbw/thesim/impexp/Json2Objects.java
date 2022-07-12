@@ -139,14 +139,15 @@ public class Json2Objects {
      * @param dinosaursAmount HashMap<String, Integer> contains the amount of each dinosaur species
      * @param plantsAmount    HashMap<String, Integer> contains the amount of each plant species
      * @param plantGrowth     double value containing the plant growth
+     * @param spriteLibrary   The instance of the {@link SpriteLibrary}
      * @return an ArrayList containing all SimulationObjects
      * @throws IOException if the simulation objects configuration file can not be found
      */
-    public static List<SimulationObject> initSimObjects(Map<String, Integer> dinosaursAmount, Map<String, Integer> plantsAmount, double plantGrowth) throws IOException {
+    public static List<SimulationObject> initSimObjects(Map<String, Integer> dinosaursAmount, Map<String, Integer> plantsAmount, double plantGrowth, SpriteLibrary spriteLibrary) throws IOException {
         List<SimulationObject> allSimulationObjects = new ArrayList<>();
 
-        allSimulationObjects.addAll(initDinos(dinosaursAmount));
-        allSimulationObjects.addAll(initPlants(plantsAmount, plantGrowth));
+        allSimulationObjects.addAll(initDinos(dinosaursAmount, spriteLibrary));
+        allSimulationObjects.addAll(initPlants(plantsAmount, plantGrowth, spriteLibrary));
 
         return allSimulationObjects;
     }
@@ -191,7 +192,7 @@ public class Json2Objects {
      * @return all created dinosaurs (as SimulationObjects) in an ArrayList
      * @throws IOException if the simulation objects configuration file can not be found
      */
-    private static List<Dinosaur> initDinos(Map<String, Integer> dinosaursAmount) throws IOException {
+    private static List<Dinosaur> initDinos(Map<String, Integer> dinosaursAmount, SpriteLibrary spriteLibrary) throws IOException {
         List<Dinosaur> dinosaurs = new ArrayList<>();
 
         Map<String, HashMap<String, Object>> DinosaurSpecies = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO);
@@ -202,7 +203,7 @@ public class Json2Objects {
                 assert DinosaurSpecies != null;
                 Dinosaur dino = new Dinosaur(
                         speciesName,
-                        SpriteLibrary.getInstance().getImage((String) DinosaurSpecies.get(speciesName).get("Bild")),
+                        spriteLibrary.getImage((String) DinosaurSpecies.get(speciesName).get("Bild")),
                         returnValueInBetween((DinosaurSpecies.get(speciesName)).get("Nahrung")),
                         returnValueInBetween((DinosaurSpecies.get(speciesName)).get("Hydration")),
                         returnValueInBetween((DinosaurSpecies.get(speciesName)).get("Staerke")),
@@ -231,7 +232,7 @@ public class Json2Objects {
      * @return all created plants (as SimulationObjects) in an ArrayList
      * @throws IOException if the simulation objects configuration file can not be found
      */
-    private static List<Plant> initPlants(Map<String, Integer> plantsAmount, double plantGrowth) throws IOException {
+    private static List<Plant> initPlants(Map<String, Integer> plantsAmount, double plantGrowth, SpriteLibrary spriteLibrary) throws IOException {
         List<Plant> plants = new ArrayList<>();
 
         Map<String, HashMap<String, Object>> PlantSpecies = JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT);
@@ -242,7 +243,7 @@ public class Json2Objects {
                 assert PlantSpecies != null;
                 Plant plant = new Plant(
                         speciesName,
-                        SpriteLibrary.getInstance().getImage((String) PlantSpecies.get(speciesName).get("Bild")),
+                        spriteLibrary.getImage((String) PlantSpecies.get(speciesName).get("Bild")),
                         returnValueInBetween((PlantSpecies.get(speciesName)).get("Interaktionsweite")),
                         plantGrowth
                 );

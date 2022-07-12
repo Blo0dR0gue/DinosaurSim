@@ -15,17 +15,18 @@ import java.io.IOException;
 
 /**
  * The Custom Control Class provides a {@link Slider} and {@link Label} controls
+ *
  * @author Tamina Mühlenberg, Robin Khatri Chetri
  */
 public class SliderWithLabel extends GridPane {
     @FXML
     public GridPane gridPane;
-        @FXML
-        public Label label;
-        @FXML
-        public Slider slider;
-        @FXML
-        public Label sliderValueLabel;
+    @FXML
+    public Label label;
+    @FXML
+    public Slider slider;
+    @FXML
+    public Label sliderValueLabel;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -47,6 +48,7 @@ public class SliderWithLabel extends GridPane {
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link SliderWithLabel}
+     *
      * @return The newly created and initialized {@link SliderWithLabel}
      */
     public static SliderWithLabel newInstance() {
@@ -71,8 +73,9 @@ public class SliderWithLabel extends GridPane {
 
     /**
      * Used to create a change listener on the given {@code slider} to update the corresponding {@code label}
+     *
      * @param slider The {@link Slider} node which the listener gets added to
-     * @param label The {@link Label} node which will be updated with the current value of the Slider as it is being dragged
+     * @param label  The {@link Label} node which will be updated with the current value of the Slider as it is being dragged
      */
     private void addListener(Slider slider, Label label) {
         slider.valueProperty()
@@ -98,7 +101,7 @@ public class SliderWithLabel extends GridPane {
         return valueProperty().doubleValue();
     }
 
-    public void setValue(double value){
+    public void setValue(double value) {
         valueProperty().set(value);
     }
 

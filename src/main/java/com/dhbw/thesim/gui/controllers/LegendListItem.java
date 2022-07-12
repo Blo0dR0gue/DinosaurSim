@@ -12,15 +12,16 @@ import javafx.scene.layout.HBox;
 
 /**
  * The Custom Control Class provides a legend item for the legend of all dinosaur species
+ *
  * @author Robin Khatri Chetri
  */
 public class LegendListItem extends HBox {
     @FXML
     public HBox root;
-        @FXML
-        public ImageView imageView;
-        @FXML
-        public Label legendLabel;
+    @FXML
+    public ImageView imageView;
+    @FXML
+    public Label legendLabel;
 
     /**
      * The {@code Constructor} of this class which {@link Display#makeFXMLController(String, Class)}
@@ -32,6 +33,7 @@ public class LegendListItem extends HBox {
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link LegendListItem}
+     *
      * @return The newly created and initialized {@link LegendListItem}
      */
     public static LegendListItem newInstance() {
@@ -41,13 +43,13 @@ public class LegendListItem extends HBox {
     /**
      * Method to initialize the Map list item, its listeners and setting the label text and image url
      */
-    public void initialize(Image image, String legendLabelText){
+    public void initialize(Image image, String legendLabelText) {
         setImage(image);
         setText(legendLabelText);
     }
 
     //region getter & setter
-    public Image getImage( ) {
+    public Image getImage() {
         return imageProperty().getValue();
     }
 

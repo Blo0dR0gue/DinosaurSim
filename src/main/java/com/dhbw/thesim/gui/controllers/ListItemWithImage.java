@@ -27,6 +27,7 @@ import java.util.Objects;
 
 /**
  * The Custom Control Class provides a list item for the {@link ListView} of dinos or plants
+ *
  * @author Tamina Mühlenberg, Robin Khatri Chetri, Eric Stefan
  */
 public class ListItemWithImage extends HBox {
@@ -57,9 +58,10 @@ public class ListItemWithImage extends HBox {
 
     /**
      * This method creates and initializes a new instance of from the FXML {@link ListItemWithImage}
+     *
      * @return The newly created and initialized {@link ListItemWithImage}
      */
-    public static ListItemWithImage newInstance(){
+    public static ListItemWithImage newInstance() {
         return (ListItemWithImage) Display.makeFXMLController("list-item-with-image.fxml", ListItemWithImage.class);
     }
 
@@ -73,42 +75,42 @@ public class ListItemWithImage extends HBox {
         setCount(amount);
 
         //this variable contains the content which will be inside the tooltip
-        String temp="";
+        String temp = "";
 
-        if (type == JsonHandler.SimulationObjectType.DINO){ //create the tooltip for dinosaurs
-            HashMap<String,Object> dino = Objects.requireNonNull(JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)).get(labelText);
+        if (type == JsonHandler.SimulationObjectType.DINO) { //create the tooltip for dinosaurs
+            HashMap<String, Object> dino = Objects.requireNonNull(JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.DINO)).get(labelText);
 
-            temp+="Eigenschaften:\n";
+            temp += "Eigenschaften:\n";
             switch (dino.get("Nahrungsart").toString()) {
                 case "p" -> temp += "Nahrungsart: Pflanzenfresser\n";
                 case "f" -> temp += "Nahrungsart: Fleischfresser\n";
                 case "a" -> temp += "Nahrungsart: Allesfresser\n";
             }
-            temp+="Gewicht: "+dino.get("Gewicht")+" kg\n";
-            temp+="Länge: "+dino.get("Laenge")+" m\n";
-            temp+="Höhe: "+dino.get("Hoehe")+" m\n";
-            temp+="Kann schwimmen: "+(dino.get("KannSchwimmen")=="true"?"ja":"nein")+"\n";
-            temp+="Kann Klettern: "+(dino.get("KannKlettern")=="true"?"ja":"nein")+"\n";
-            temp+="\n";
+            temp += "Gewicht: " + dino.get("Gewicht") + " kg\n";
+            temp += "Länge: " + dino.get("Laenge") + " m\n";
+            temp += "Höhe: " + dino.get("Hoehe") + " m\n";
+            temp += "Kann schwimmen: " + (dino.get("KannSchwimmen") == "true" ? "ja" : "nein") + "\n";
+            temp += "Kann Klettern: " + (dino.get("KannKlettern") == "true" ? "ja" : "nein") + "\n";
+            temp += "\n";
 
-            temp+="Technische Parameter:\n";
-            temp+="Nahrung: "+((double[])(dino.get("Nahrung")))[0]+", "+((double[])(dino.get("Nahrung")))[1]+"\n";
-            temp+="Hydration: "+((double[])(dino.get("Hydration")))[0]+", "+((double[])(dino.get("Hydration")))[1]+"\n";
-            temp+="Stärke: "+((double[])(dino.get("Staerke")))[0]+", "+((double[])(dino.get("Staerke")))[1]+"\n";
-            temp+="Geschwindigkeit: "+((double[])(dino.get("Geschwindigkeit")))[0]+", "+((double[])(dino.get("Geschwindigkeit")))[1]+"\n";
-            temp+="Fortpflanzungswilligkeit: "+((double[])(dino.get("Fortpflanzungswilligkeit")))[0]+", "+((double[])(dino.get("Fortpflanzungswilligkeit")))[1]+"\n";
-            temp+="Sichtweite: "+((double[])(dino.get("Sichtweite")))[0]+", "+((double[])(dino.get("Sichtweite")))[1]+"\n";
-            temp+="Interaktionsweite: "+((double[])(dino.get("Interaktionsweite")))[0]+", "+((double[])(dino.get("Interaktionsweite")))[1];
+            temp += "Technische Parameter:\n";
+            temp += "Nahrung: " + ((double[]) (dino.get("Nahrung")))[0] + ", " + ((double[]) (dino.get("Nahrung")))[1] + "\n";
+            temp += "Hydration: " + ((double[]) (dino.get("Hydration")))[0] + ", " + ((double[]) (dino.get("Hydration")))[1] + "\n";
+            temp += "Stärke: " + ((double[]) (dino.get("Staerke")))[0] + ", " + ((double[]) (dino.get("Staerke")))[1] + "\n";
+            temp += "Geschwindigkeit: " + ((double[]) (dino.get("Geschwindigkeit")))[0] + ", " + ((double[]) (dino.get("Geschwindigkeit")))[1] + "\n";
+            temp += "Fortpflanzungswilligkeit: " + ((double[]) (dino.get("Fortpflanzungswilligkeit")))[0] + ", " + ((double[]) (dino.get("Fortpflanzungswilligkeit")))[1] + "\n";
+            temp += "Sichtweite: " + ((double[]) (dino.get("Sichtweite")))[0] + ", " + ((double[]) (dino.get("Sichtweite")))[1] + "\n";
+            temp += "Interaktionsweite: " + ((double[]) (dino.get("Interaktionsweite")))[0] + ", " + ((double[]) (dino.get("Interaktionsweite")))[1];
 
         } else if (type == JsonHandler.SimulationObjectType.PLANT) { //create the tooltip for plants
-            HashMap<String,Object> plant = Objects.requireNonNull(JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT)).get(labelText);
+            HashMap<String, Object> plant = Objects.requireNonNull(JsonHandler.importSimulationObjectsConfig(JsonHandler.SimulationObjectType.PLANT)).get(labelText);
 
-            temp+="Technische Parameter:\n";
-            temp+="Interaktionsweite: "+((double[])(plant.get("Interaktionsweite")))[0]+", "+((double[])(plant.get("Interaktionsweite")))[1];
+            temp += "Technische Parameter:\n";
+            temp += "Interaktionsweite: " + ((double[]) (plant.get("Interaktionsweite")))[0] + ", " + ((double[]) (plant.get("Interaktionsweite")))[1];
         }
 
         Tooltip tooltip = new Tooltip(temp);
-        Tooltip.install(container,tooltip);
+        Tooltip.install(container, tooltip);
 
         initializeListeners();
     }
@@ -141,7 +143,7 @@ public class ListItemWithImage extends HBox {
         return label_name.textProperty();
     }
 
-    public Image getImage( ) {
+    public Image getImage() {
         return imageProperty().getValue();
     }
 

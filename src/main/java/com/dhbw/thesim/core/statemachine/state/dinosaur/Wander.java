@@ -1,7 +1,6 @@
 package com.dhbw.thesim.core.statemachine.state.dinosaur;
 
 import com.dhbw.thesim.core.entity.Dinosaur;
-import com.dhbw.thesim.core.entity.SimulationObject;
 import com.dhbw.thesim.core.simulation.Simulation;
 import com.dhbw.thesim.core.statemachine.StateTransition;
 import com.dhbw.thesim.core.statemachine.state.State;
@@ -16,13 +15,15 @@ import com.dhbw.thesim.core.util.Vector2D;
  */
 public class Wander extends State {
 
+    //region variables.
+
     /**
-     * The target {@link Vector2D} position.
+     * The targeted position {@link Vector2D} the {@link Dinosaur} is moving to.
      */
     private Vector2D target;
 
     /**
-     * The normalized direction {@link Vector2D}
+     * The direction the {@link #target} from the current position to this {@link #dinosaur}.
      */
     private Vector2D direction;
 
@@ -31,8 +32,11 @@ public class Wander extends State {
      */
     private final Dinosaur dinosaur;
 
+    //endregion
+
     /**
      * Constructor
+     *
      * @param simulationObject The handled {@link Dinosaur}
      */
     public Wander(Dinosaur simulationObject) {
@@ -40,18 +44,18 @@ public class Wander extends State {
         this.dinosaur = (Dinosaur) this.simulationObject;
     }
 
-    @Override
-    public void onExit() {
-        //Nothing to do here
-    }
-
+    /**
+     * Is called each update call in the {@link com.dhbw.thesim.core.simulation.SimulationLoop}.
+     *
+     * @param deltaTime  The delta time since the last update call. (in seconds)
+     * @param simulation The {@link Simulation} data of the currently running simulation.
+     */
     @Override
     public void update(double deltaTime, Simulation simulation) {
         if (target == null) {
             target = simulation.getRandomMovementTargetInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getRenderOffset());
             if (target != null) {
                 direction = simulationObject.getPosition().directionToTarget(target);
-                System.out.println("Moving to " + target);
                 dinosaur.flipImage(direction);
             }
         }
@@ -59,6 +63,17 @@ public class Wander extends State {
             simulationObject.setPosition(simulationObject.getPosition().add(direction.multiply(dinosaur.getSpeed() * deltaTime)));
     }
 
+    /**
+     * Is called on state exit
+     */
+    @Override
+    public void onExit() {
+        //Nothing to do here
+    }
+
+    /**
+     * Use to initialize all transitions using {@link #addTransition(StateTransition)}.
+     */
     @Override
     public void initTransitions() {
 
@@ -71,7 +86,7 @@ public class Wander extends State {
         addTransition(new StateTransition(StateFactory.States.stand, simulation -> target == null));
 
         //When target is reached -> transition to Stand-state.
-        addTransition(new StateTransition(StateFactory.States.stand, simulation -> arrived()));
+        addTransition(new StateTransition(StateFactory.States.stand, simulation -> targetReached()));
 
         //If the dinosaur can no longer move to the target. (Maybe because another dinosaur blocked the direction.)
         addTransition(new StateTransition(StateFactory.States.wander,
@@ -90,6 +105,7 @@ public class Wander extends State {
         addTransition(new StateTransition(StateFactory.States.moveToFoodSource, simulation -> dinosaur.isHungry()
                 && simulation.getClosestReachableFoodSourceInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getInteractionRange(), dinosaur.getDiet(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getStrength()) != null));
 
+        //If there is a partner in range, transition to moveToPartner
         addTransition(new StateTransition(StateFactory.States.moveToPartner, simulation -> (dinosaur.isWillingToMate()
                 && simulation.getClosestReachableSuitablePartnerInRange(dinosaur.getPosition(), dinosaur.getViewRange(), dinosaur.getType(), dinosaur.canSwim(), dinosaur.canClimb(), dinosaur.getGender()) != null)
                 || dinosaur.getPartner() != null));
@@ -97,10 +113,11 @@ public class Wander extends State {
     }
 
     /**
-     * Are we in range of our {@link #target}
-     * @return true, if we are in the {@link Dinosaur#PROXIMITY_RANGE} to the {@link #target}.
+     * Checks if the dinosaur reached the {@link #target}
+     *
+     * @return true if the dinosaur is in the {@link Dinosaur#PROXIMITY_RANGE} to the {@link #target}.
      */
-    private boolean arrived() {
+    private boolean targetReached() {
         return target != null && simulationObject.getPosition().isInRangeOf(target, Dinosaur.PROXIMITY_RANGE);
     }
 }
