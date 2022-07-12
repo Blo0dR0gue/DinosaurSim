@@ -134,6 +134,7 @@ public class JsonHandler {
     /**
      * Parse the locally stored "defaultSimulationObjectsConfig.json" and return all dinosaurs or plants in a HashMap
      *
+     * @param type specifies which kind of SimulationObjectType should be returned (dinosaurs or plants)
      * @return HashMap containing dinosaurs or plants each nested in an HashMap with its names
      * @throws IOException when the "defaultSimulationObjectsConfig.json" cannot be found in the appdata folder "TheSim"
      */
@@ -171,22 +172,22 @@ public class JsonHandler {
         for (int i = 0; jsonArrayChosenSimulationObjects.length() > i; i++) {
             HashMap<String, Object> simulationObject = new HashMap<>();
             String currentName = "";
-            JSONObject jsonObjectDino = (JSONObject) jsonArrayChosenSimulationObjects.get(i);
-            for (String key : jsonObjectDino.keySet()) {
+            JSONObject jsonObject = (JSONObject) jsonArrayChosenSimulationObjects.get(i);
+            for (String key : jsonObject.keySet()) {
                 //the value for the key "Name" will be the key of the HashMap "simulationObjects",
                 //which is why it should not be added into the "simulationObject" HashMap
                 if (key.equals("Name")) {
-                    currentName = (jsonObjectDino.get(key)).toString();
+                    currentName = (jsonObject.get(key)).toString();
                 } else {
                     //Convert all inner Json Arrays into normal double-Arrays
-                    if (jsonObjectDino.get(key).getClass() == JSONArray.class) {
-                        JSONArray innerJsonArray = (JSONArray) jsonObjectDino.get(key);
+                    if (jsonObject.get(key).getClass() == JSONArray.class) {
+                        JSONArray innerJsonArray = (JSONArray) jsonObject.get(key);
                         double[] convertedArray = new double[2];
                         convertedArray[0] = innerJsonArray.getDouble(0);
                         convertedArray[1] = innerJsonArray.getDouble(1);
                         simulationObject.put(key, convertedArray);
                     } else {
-                        simulationObject.put(key, jsonObjectDino.get(key));
+                        simulationObject.put(key, jsonObject.get(key));
                     }
                 }
             }
