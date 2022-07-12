@@ -471,18 +471,11 @@ public class SimulationOverlay extends BorderPane {
         return simulationScene;
     }
 
-    public Canvas getBackgroundCanvas() {
-        return backgroundCanvas;
-    }
-
-    public GraphicsContext getCanvasGraphics() {
-        return canvasGraphics;
+    public Statistics getStatistics() {
+        return statistics;
     }
 
     //endregion
 
-    public Statistics getStatistics() {
-        return statistics;
-    }
 
 }
